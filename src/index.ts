@@ -1,3 +1,12 @@
+/**
+ * SysProM — System Provenance Model
+ *
+ * A recursive, decision-driven model for recording where every part of a
+ * system came from, what decisions shaped it, and how it reached its current form.
+ *
+ * @packageDocumentation
+ */
+
 // Schema types, validators, enums, labels
 export {
   // Types
@@ -46,6 +55,7 @@ export {
   jsonToMarkdownSingle,
   jsonToMarkdownMultiDoc,
   jsonToMarkdown,
+  type ConvertOptions,
 } from "./json-to-md.js";
 
 // Converters: Markdown to JSON
@@ -85,7 +95,7 @@ export {
 } from "./mutate.js";
 
 // Utilities
-export { canonicalise } from "./canonical-json.js";
+export { canonicalise, type FormatOptions } from "./canonical-json.js";
 export {
   textToString,
   textToLines,
@@ -121,6 +131,7 @@ export {
   generateTasks,
   generateChecklist,
   generateSpecKitProject,
+  type ParseResult,
 } from "./speckit/index.js";
 
 // Temporal query

@@ -19,7 +19,7 @@ interface Section {
   children: Section[];
 }
 
-interface ParseResult {
+export interface ParseResult {
   nodes: Node[];
   relationships: Relationship[];
 }

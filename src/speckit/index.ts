@@ -14,6 +14,7 @@ export {
   parseTasks,
   parseChecklist,
   parseSpecKitFeature,
+  type ParseResult,
 } from "./parse.js";
 
 export {
