@@ -1,8 +1,21 @@
 {
   "name": "sysprom",
   "version": "1.0.0",
-  "description": "SysProM — System Provenance Model CLI",
+  "description": "SysProM — System Provenance Model CLI and library",
   "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist/src/**/*.js",
+    "dist/src/**/*.d.ts",
+    "schema.json"
+  ],
   "bin": {
     "sysprom": "./dist/src/cli/index.js"
   },
@@ -15,11 +28,13 @@
     "json2md": "tsx src/cli/index.ts json2md",
     "md2json": "tsx src/cli/index.ts md2json"
   },
+  "dependencies": {
+    "zod": "4.3.6"
+  },
   "devDependencies": {
     "@types/node": "25.5.0",
     "c8": "11.0.0",
     "tsx": "4.19.4",
-    "typescript": "5.9.3",
-    "zod": "4.3.6"
+    "typescript": "5.9.3"
   }
 }
