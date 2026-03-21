@@ -100,3 +100,25 @@ export {
   type Format,
   type LoadedDocument,
 } from "./io.js";
+
+// Spec-Kit interoperability
+export {
+  detectSpecKitProject,
+  listFeatures,
+  getFeature,
+  resolveConstitution,
+  type SpecKitProject,
+  type SpecKitFeature,
+  parseConstitution,
+  parseSpec,
+  parsePlan,
+  parseTasks,
+  parseChecklist,
+  parseSpecKitFeature,
+  generateConstitution,
+  generateSpec,
+  generatePlan,
+  generateTasks,
+  generateChecklist,
+  generateSpecKitProject,
+} from "./speckit/index.js";
