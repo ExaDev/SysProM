@@ -1,12 +1,19 @@
 {
+  "name": "sysprom",
+  "version": "1.0.0",
+  "description": "SysProM — System Provenance Model CLI",
   "type": "module",
+  "bin": {
+    "sysprom": "./dist/src/cli/index.js"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "pnpm typecheck && tsx src/generate-schema.ts",
+    "compile": "tsc",
+    "build": "pnpm typecheck && pnpm compile && tsx src/generate-schema.ts",
     "test": "tsx --test tests/*.test.ts",
     "test:coverage": "c8 --src src --exclude 'src/cli/**' --exclude 'src/generate-schema.ts' tsx --test tests/*.test.ts",
-    "json2md": "tsx src/cli/json2md.ts",
-    "md2json": "tsx src/cli/md2json.ts"
+    "json2md": "tsx src/cli/index.ts json2md",
+    "md2json": "tsx src/cli/index.ts md2json"
   },
   "devDependencies": {
     "@types/node": "25.5.0",
