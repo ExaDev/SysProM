@@ -1,0 +1,436 @@
+import { resolve, dirname } from "node:path";
+import { existsSync } from "node:fs";
+import { loadDocument, saveDocument } from "../io.js";
+import type { SysProMDocument, Node, Relationship } from "../schema.js";
+import {
+  parseSpecKitFeature,
+  parseConstitution,
+  parseSpec,
+  parsePlan,
+  parseTasks,
+  parseChecklist,
+} from "../speckit/parse.js";
+import {
+  generateSpecKitProject,
+  generateConstitution,
+  generateSpec,
+  generatePlan,
+  generateTasks,
+  generateChecklist,
+} from "../speckit/generate.js";
+import { detectSpecKitProject } from "../speckit/project.js";
+
+// ============================================================================
+// Flag parsing helper
+// ============================================================================
+
+function parseFlags(args: string[]): {
+  positional: string[];
+  prefix: string | null;
+} {
+  const positional: string[] = [];
+  let prefix: string | null = null;
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--prefix" && i + 1 < args.length) {
+      prefix = args[++i];
+    } else {
+      positional.push(args[i]);
+    }
+  }
+  return { positional, prefix };
+}
+
+// ============================================================================
+// Format detection helper
+// ============================================================================
+
+function detectFormat(outputPath: string): "json" | "single-md" | "multi-md" {
+  if (outputPath.endsWith(".json") || outputPath.endsWith(".spm.json")) {
+    return "json";
+  }
+  if (outputPath.endsWith(".md") || outputPath.endsWith(".spm.md")) {
+    return "single-md";
+  }
+  return "json"; // default
+}
+
+// ============================================================================
+// Sync/Diff helper: compare nodes by ID
+// ============================================================================
+
+interface NodeDiff {
+  added: Node[];
+  modified: Array<{ old: Node; new: Node }>;
+  removed: Node[];
+}
+
+function compareDocuments(
+  oldDoc: SysProMDocument,
+  newDoc: SysProMDocument,
+): NodeDiff {
+  const oldNodes = new Map((oldDoc.nodes ?? []).map((n) => [n.id, n]));
+  const newNodes = new Map((newDoc.nodes ?? []).map((n) => [n.id, n]));
+
+  const added: Node[] = [];
+  const modified: Array<{ old: Node; new: Node }> = [];
+  const removed: Node[] = [];
+
+  // Find added and modified
+  for (const [id, newNode] of newNodes) {
+    const oldNode = oldNodes.get(id);
+    if (!oldNode) {
+      added.push(newNode);
+    } else if (JSON.stringify(oldNode) !== JSON.stringify(newNode)) {
+      modified.push({ old: oldNode, new: newNode });
+    }
+  }
+
+  // Find removed
+  for (const [id, oldNode] of oldNodes) {
+    if (!newNodes.has(id)) {
+      removed.push(oldNode);
+    }
+  }
+
+  return { added, modified, removed };
+}
+
+// ============================================================================
+// IMPORT subcommand
+// ============================================================================
+
+function runImport(args: string[]): void {
+  const { positional, prefix } = parseFlags(args);
+
+  if (positional.length < 2) {
+    console.error(
+      "Usage: sysprom speckit import <speckit-dir> <output> [--prefix FEAT]",
+    );
+    process.exit(1);
+  }
+
+  const specKitDir = resolve(positional[0]);
+  const outputPath = resolve(positional[1]);
+
+  if (!existsSync(specKitDir)) {
+    console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
+    process.exit(1);
+  }
+
+  // Determine the prefix: use flag if provided, otherwise use directory name
+  let idPrefix = prefix;
+  if (!idPrefix) {
+    // Extract the feature directory name (e.g., "001-feature-name")
+    const dirName = specKitDir.split("/").pop() || "FEAT";
+    idPrefix = dirName;
+  }
+
+  // Find constitution file by detecting the project from parent directories
+  let constitutionPath: string | undefined;
+  let searchDir = dirname(specKitDir);
+  for (let i = 0; i < 5; i++) {
+    // Search up to 5 levels
+    const project = detectSpecKitProject(searchDir);
+    if (project.constitutionPath) {
+      constitutionPath = project.constitutionPath;
+      break;
+    }
+    const parent = dirname(searchDir);
+    if (parent === searchDir) break; // reached root
+    searchDir = parent;
+  }
+
+  // Parse Spec-Kit feature
+  const doc = parseSpecKitFeature(specKitDir, idPrefix, constitutionPath);
+
+  // Determine output format
+  const format = detectFormat(outputPath);
+
+  // Save document
+  saveDocument(doc, format, outputPath);
+
+  // Print summary
+  const nodeCount = doc.nodes?.length ?? 0;
+  const relationshipCount = doc.relationships?.length ?? 0;
+  console.log(`Imported Spec-Kit from ${specKitDir} to ${outputPath}`);
+  console.log(`  ${nodeCount} nodes, ${relationshipCount} relationships`);
+}
+
+// ============================================================================
+// EXPORT subcommand
+// ============================================================================
+
+function runExport(args: string[]): void {
+  const { positional, prefix } = parseFlags(args);
+
+  if (positional.length < 2) {
+    console.error(
+      "Usage: sysprom speckit export <input> <speckit-dir> [--prefix FEAT]",
+    );
+    process.exit(1);
+  }
+
+  const inputPath = resolve(positional[0]);
+  const specKitDir = resolve(positional[1]);
+
+  if (!prefix) {
+    console.error(
+      "Error: --prefix flag is required for export (identifies which nodes to export)",
+    );
+    process.exit(1);
+  }
+
+  // Load SysProM document
+  const { doc } = loadDocument(inputPath);
+
+  // Generate Spec-Kit project
+  generateSpecKitProject(doc, specKitDir, prefix);
+
+  // Print summary
+  console.log(`Exported SysProM document from ${inputPath} to ${specKitDir}`);
+  console.log(`  Generated Spec-Kit files with prefix: ${prefix}`);
+}
+
+// ============================================================================
+// SYNC subcommand
+// ============================================================================
+
+function runSync(args: string[]): void {
+  const { positional, prefix } = parseFlags(args);
+
+  if (positional.length < 2) {
+    console.error(
+      "Usage: sysprom speckit sync <input> <speckit-dir> [--prefix FEAT]",
+    );
+    process.exit(1);
+  }
+
+  const inputPath = resolve(positional[0]);
+  const specKitDir = resolve(positional[1]);
+
+  if (!existsSync(inputPath)) {
+    console.error(`Error: Input file does not exist: ${inputPath}`);
+    process.exit(1);
+  }
+
+  if (!existsSync(specKitDir)) {
+    console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
+    process.exit(1);
+  }
+
+  // Determine the prefix: use flag if provided, otherwise use directory name
+  let idPrefix = prefix;
+  if (!idPrefix) {
+    const dirName = specKitDir.split("/").pop() || "FEAT";
+    idPrefix = dirName;
+  }
+
+  // Load SysProM document
+  const { doc: syspromDoc, format } = loadDocument(inputPath);
+
+  // Find constitution file
+  let constitutionPath: string | undefined;
+  let searchDir = dirname(specKitDir);
+  for (let i = 0; i < 5; i++) {
+    const project = detectSpecKitProject(searchDir);
+    if (project.constitutionPath) {
+      constitutionPath = project.constitutionPath;
+      break;
+    }
+    const parent = dirname(searchDir);
+    if (parent === searchDir) break;
+    searchDir = parent;
+  }
+
+  // Parse Spec-Kit feature
+  const specKitDoc = parseSpecKitFeature(
+    specKitDir,
+    idPrefix,
+    constitutionPath,
+  );
+
+  // Compare documents
+  const diff = compareDocuments(syspromDoc, specKitDoc);
+
+  // Merge: Spec-Kit wins for content (description, status), SysProM wins for structure
+  const mergedNodes = new Map((syspromDoc.nodes ?? []).map((n) => [n.id, n]));
+  const specKitNodes = new Map((specKitDoc.nodes ?? []).map((n) => [n.id, n]));
+
+  for (const [id, specKitNode] of specKitNodes) {
+    const syspromNode = mergedNodes.get(id);
+    if (!syspromNode) {
+      // Add new node from Spec-Kit
+      mergedNodes.set(id, specKitNode);
+    } else {
+      // Merge: Spec-Kit content wins, SysProM structure wins
+      const merged: Node = {
+        ...syspromNode,
+        description: specKitNode.description ?? syspromNode.description,
+        status: specKitNode.status ?? syspromNode.status,
+        context: specKitNode.context ?? syspromNode.context,
+        options: specKitNode.options ?? syspromNode.options,
+        selected: specKitNode.selected ?? syspromNode.selected,
+        rationale: specKitNode.rationale ?? syspromNode.rationale,
+        scope: specKitNode.scope ?? syspromNode.scope,
+        operations: specKitNode.operations ?? syspromNode.operations,
+        plan: specKitNode.plan ?? syspromNode.plan,
+      };
+      mergedNodes.set(id, merged);
+    }
+  }
+
+  // Remove nodes that were deleted in Spec-Kit
+  for (const node of diff.removed) {
+    mergedNodes.delete(node.id);
+  }
+
+  // Update merged document
+  const mergedDoc: SysProMDocument = {
+    ...syspromDoc,
+    nodes: Array.from(mergedNodes.values()),
+    relationships: syspromDoc.relationships, // Keep original relationships
+  };
+
+  // Save updated SysProM document
+  saveDocument(mergedDoc, format, inputPath);
+
+  // Re-generate Spec-Kit files from merged document
+  generateSpecKitProject(mergedDoc, specKitDir, idPrefix);
+
+  // Print what changed
+  console.log(`Synced SysProM document with Spec-Kit directory`);
+  if (diff.added.length > 0) {
+    console.log(`  Added: ${diff.added.length} node(s)`);
+  }
+  if (diff.modified.length > 0) {
+    console.log(`  Modified: ${diff.modified.length} node(s)`);
+  }
+  if (diff.removed.length > 0) {
+    console.log(`  Removed: ${diff.removed.length} node(s)`);
+  }
+}
+
+// ============================================================================
+// DIFF subcommand
+// ============================================================================
+
+function runDiff(args: string[]): void {
+  const { positional, prefix } = parseFlags(args);
+
+  if (positional.length < 2) {
+    console.error(
+      "Usage: sysprom speckit diff <input> <speckit-dir> [--prefix FEAT]",
+    );
+    process.exit(1);
+  }
+
+  const inputPath = resolve(positional[0]);
+  const specKitDir = resolve(positional[1]);
+
+  if (!existsSync(inputPath)) {
+    console.error(`Error: Input file does not exist: ${inputPath}`);
+    process.exit(1);
+  }
+
+  if (!existsSync(specKitDir)) {
+    console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
+    process.exit(1);
+  }
+
+  // Determine the prefix: use flag if provided, otherwise use directory name
+  let idPrefix = prefix;
+  if (!idPrefix) {
+    const dirName = specKitDir.split("/").pop() || "FEAT";
+    idPrefix = dirName;
+  }
+
+  // Load SysProM document
+  const { doc: syspromDoc } = loadDocument(inputPath);
+
+  // Find constitution file
+  let constitutionPath: string | undefined;
+  let searchDir = dirname(specKitDir);
+  for (let i = 0; i < 5; i++) {
+    const project = detectSpecKitProject(searchDir);
+    if (project.constitutionPath) {
+      constitutionPath = project.constitutionPath;
+      break;
+    }
+    const parent = dirname(searchDir);
+    if (parent === searchDir) break;
+    searchDir = parent;
+  }
+
+  // Parse Spec-Kit feature
+  const specKitDoc = parseSpecKitFeature(
+    specKitDir,
+    idPrefix,
+    constitutionPath,
+  );
+
+  // Compare documents
+  const diff = compareDocuments(syspromDoc, specKitDoc);
+
+  // Print what would change (read-only)
+  console.log(`Diff between SysProM document and Spec-Kit directory:`);
+  if (
+    diff.added.length === 0 &&
+    diff.modified.length === 0 &&
+    diff.removed.length === 0
+  ) {
+    console.log(`  (no changes)`);
+  } else {
+    if (diff.added.length > 0) {
+      console.log(`  Added: ${diff.added.length} node(s)`);
+      for (const node of diff.added) {
+        console.log(`    - ${node.id}: ${node.name}`);
+      }
+    }
+    if (diff.modified.length > 0) {
+      console.log(`  Modified: ${diff.modified.length} node(s)`);
+      for (const { old, new: newNode } of diff.modified) {
+        console.log(`    - ${old.id}: ${old.name}`);
+      }
+    }
+    if (diff.removed.length > 0) {
+      console.log(`  Removed: ${diff.removed.length} node(s)`);
+      for (const node of diff.removed) {
+        console.log(`    - ${node.id}: ${node.name}`);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Main dispatcher
+// ============================================================================
+
+export function run(args: string[]): void {
+  if (args.length < 1) {
+    console.error("Usage: sysprom speckit <import|export|sync|diff> [options]");
+    process.exit(1);
+  }
+
+  const subcommand = args[0];
+  const subcommandArgs = args.slice(1);
+
+  switch (subcommand) {
+    case "import":
+      runImport(subcommandArgs);
+      break;
+    case "export":
+      runExport(subcommandArgs);
+      break;
+    case "sync":
+      runSync(subcommandArgs);
+      break;
+    case "diff":
+      runDiff(subcommandArgs);
+      break;
+    default:
+      console.error(
+        `Unknown subcommand: ${subcommand}. Expected: import, export, sync, or diff`,
+      );
+      process.exit(1);
+  }
+}
