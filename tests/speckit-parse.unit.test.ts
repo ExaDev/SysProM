@@ -450,64 +450,44 @@ describe("parseTasks", () => {
     assert(protocolNode, "implementation protocol node should exist");
   });
 
-  it("creates 3 stage nodes for phases", () => {
+  it("creates phase change nodes (CHG-1, CHG-2, CHG-3)", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
     const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
     assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const stages = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "stage",
+    const changes = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
     );
-    assert.equal(stages?.length, 3, "should have 3 stage nodes for phases");
+    assert.equal(changes?.length, 3, "should have 3 phase-level change nodes");
   });
 
-  it("stages have part_of relationships to protocol", () => {
+  it("phase change nodes have must_follow relationships in order", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
     const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
     assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const stages = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "stage",
+    const changes = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
     );
     const subsystemRels = protocolNode.subsystem?.relationships ?? [];
 
-    for (const stage of stages ?? []) {
-      const rel = subsystemRels.find(
-        (r) => r.from === stage.id && r.to === "PROT-IMPL" && r.type === "part_of",
-      );
-      assert(
-        rel,
-        `stage ${stage.id} should have part_of relationship to protocol`,
-      );
-    }
-  });
-
-  it("stages have must_follow relationships in order", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const stages = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "stage",
-    );
-    const subsystemRels = protocolNode.subsystem?.relationships ?? [];
-
-    const sortedStages = (stages ?? []).sort((a, b) => {
+    const sortedChanges = (changes ?? []).sort((a, b) => {
       const aNum = parseInt(a.id.split("-").pop() || "0");
       const bNum = parseInt(b.id.split("-").pop() || "0");
       return aNum - bNum;
     });
 
-    // Check that consecutive phases have must_follow relationships
-    for (let i = 1; i < sortedStages.length; i++) {
-      const stage = sortedStages[i];
-      const prevStage = sortedStages[i - 1];
+    // Check that consecutive phase changes have must_follow relationships
+    for (let i = 1; i < sortedChanges.length; i++) {
+      const change = sortedChanges[i];
+      const prevChange = sortedChanges[i - 1];
       const mustFollowRel = subsystemRels.find(
         (r) =>
-          r.from === stage.id &&
-          r.to === prevStage.id &&
+          r.from === change.id &&
+          r.to === prevChange.id &&
           r.type === "must_follow",
       );
       assert(
         mustFollowRel,
-        `stage ${stage.id} should have must_follow relationship to previous stage`,
+        `change ${change.id} should have must_follow relationship to previous change`,
       );
     }
   });

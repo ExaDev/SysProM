@@ -2,10 +2,12 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   initDocument,
-  addPhase,
+  addTask,
   planStatus,
   planProgress,
   checkGate,
+  isTaskDone,
+  countTasks,
   type PlanStatus,
   type PhaseProgress,
 } from "../src/speckit/plan.js";
@@ -115,51 +117,51 @@ describe("initDocument", () => {
 });
 
 // ============================================================================
-// Test addPhase
+// Test addTask
 // ============================================================================
 
-describe("addPhase", () => {
-  it("first addPhase creates PH-1 and CHG-PH1", () => {
+describe("addTask", () => {
+  it("first addTask creates CHG-1 at top level", () => {
     const doc = initDocument("FEAT", "My Feature");
-    const updated = addPhase(doc, "FEAT");
+    const updated = addTask(doc, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const phaseIds = protImpl?.subsystem?.nodes?.map((n) => n.id);
-    assert.deepEqual(phaseIds, ["PH-1", "CHG-PH1"]);
+    const taskIds = protImpl?.subsystem?.nodes?.map((n) => n.id);
+    assert.deepEqual(taskIds, ["CHG-1"]);
   });
 
-  it("first addPhase does not create must_follow", () => {
+  it("first addTask does not create must_follow", () => {
     const doc = initDocument("FEAT", "My Feature");
-    const updated = addPhase(doc, "FEAT");
+    const updated = addTask(doc, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
     const rels = protImpl?.subsystem?.relationships;
     const mustFollow = rels?.filter((r) => r.type === "must_follow");
-    assert.equal(mustFollow?.length, 0, "first phase should not have must_follow");
+    assert.equal(mustFollow?.length, 0, "first task should not have must_follow");
   });
 
-  it("second addPhase creates PH-2 and CHG-PH2", () => {
+  it("second addTask creates CHG-2", () => {
     const doc = initDocument("FEAT", "My Feature");
-    let updated = addPhase(doc, "FEAT");
-    updated = addPhase(updated, "FEAT");
+    let updated = addTask(doc, "FEAT");
+    updated = addTask(updated, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const phaseIds = protImpl?.subsystem?.nodes?.map((n) => n.id).sort();
-    assert.deepEqual(phaseIds, ["CHG-PH1", "CHG-PH2", "PH-1", "PH-2"]);
+    const taskIds = protImpl?.subsystem?.nodes?.map((n) => n.id).sort();
+    assert.deepEqual(taskIds, ["CHG-1", "CHG-2"]);
   });
 
-  it("second addPhase creates PH-2 must_follow PH-1", () => {
+  it("second addTask creates CHG-2 must_follow CHG-1", () => {
     const doc = initDocument("FEAT", "My Feature");
-    let updated = addPhase(doc, "FEAT");
-    updated = addPhase(updated, "FEAT");
+    let updated = addTask(doc, "FEAT");
+    updated = addTask(updated, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
     const mustFollow = protImpl?.subsystem?.relationships?.filter(
       (r) => r.type === "must_follow",
     );
     assert.equal(mustFollow?.length, 1);
-    assert.equal(mustFollow?.[0].from, "PH-2");
-    assert.equal(mustFollow?.[0].to, "PH-1");
+    assert.equal(mustFollow?.[0].from, "CHG-2");
+    assert.equal(mustFollow?.[0].to, "CHG-1");
   });
 
   it("does not mutate original document", () => {
@@ -167,7 +169,7 @@ describe("addPhase", () => {
     const protImplBefore = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
     const nodeCountBefore = protImplBefore?.subsystem?.nodes?.length;
 
-    addPhase(doc, "FEAT");
+    addTask(doc, "FEAT");
 
     const protImplAfter = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
     const nodeCountAfter = protImplAfter?.subsystem?.nodes?.length;
@@ -175,35 +177,47 @@ describe("addPhase", () => {
     assert.equal(nodeCountBefore, nodeCountAfter, "original doc should not change");
   });
 
-  it("third addPhase creates PH-3 must_follow PH-2", () => {
+  it("third addTask creates CHG-3 must_follow CHG-2", () => {
     let doc = initDocument("FEAT", "My Feature");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
 
     const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const ph3Follow = protImpl?.subsystem?.relationships?.find(
-      (r) => r.from === "PH-3" && r.type === "must_follow",
+    const chg3Follow = protImpl?.subsystem?.relationships?.find(
+      (r) => r.from === "CHG-3" && r.type === "must_follow",
     );
-    assert.equal(ph3Follow?.to, "PH-2");
+    assert.equal(chg3Follow?.to, "CHG-2");
   });
 
-  it("addPhase with custom name uses that name", () => {
+  it("addTask with custom name uses that name", () => {
     const doc = initDocument("FEAT", "My Feature");
-    const updated = addPhase(doc, "FEAT", "Setup");
+    const updated = addTask(doc, "FEAT", "Setup");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const stage = protImpl?.subsystem?.nodes?.find((n) => n.id === "PH-1");
-    assert.equal(stage?.name, "Setup");
+    const change = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
+    assert.equal(change?.name, "Setup");
   });
 
-  it("addPhase without name defaults to Phase N", () => {
+  it("addTask without name defaults to Task N", () => {
     const doc = initDocument("FEAT", "My Feature");
-    const updated = addPhase(doc, "FEAT");
+    const updated = addTask(doc, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const stage = protImpl?.subsystem?.nodes?.find((n) => n.id === "PH-1");
-    assert.equal(stage?.name, "Phase 1");
+    const change = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
+    assert.equal(change?.name, "Task 1");
+  });
+
+  it("addTask with parentId creates nested task", () => {
+    let doc = initDocument("FEAT", "My Feature");
+    doc = addTask(doc, "FEAT", "Phase 1");
+    doc = addTask(doc, "FEAT", "Subtask 1", "CHG-1");
+
+    const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
+    const parent = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
+    const child = parent?.subsystem?.nodes?.find((n) => n.id === "CHG-1-1");
+    assert.ok(child);
+    assert.equal(child?.name, "Subtask 1");
   });
 });
 
@@ -323,27 +337,27 @@ describe("planStatus", () => {
   });
 
   it("counts tasks across all change nodes", () => {
-    const doc = initDocument("FEAT", "My Feature");
-    let updated = addPhase(doc, "FEAT");
-    updated = addPhase(updated, "FEAT");
+    let doc = initDocument("FEAT", "My Feature");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
 
-    // Add tasks to phases
-    const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-PH1");
+    // Add tasks to change nodes
+    const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
+    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
     if (chg1) {
       chg1.plan = [
         { description: "Task 1", done: false },
         { description: "Task 2", done: true },
       ];
     }
-    const chg2 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-PH2");
+    const chg2 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-2");
     if (chg2) {
       chg2.plan = [
         { description: "Task 3", done: false },
       ];
     }
 
-    const status = planStatus(updated, "FEAT");
+    const status = planStatus(doc, "FEAT");
     assert.equal(status.tasks.total, 3);
     assert.equal(status.tasks.done, 1);
   });
@@ -381,9 +395,9 @@ describe("planProgress", () => {
     assert.deepEqual(progress, []);
   });
 
-  it("phases with no tasks show 0%", () => {
+  it("tasks with no items show 0%", () => {
     const doc = initDocument("FEAT", "My Feature");
-    const updated = addPhase(doc, "FEAT");
+    const updated = addTask(doc, "FEAT");
 
     const progress = planProgress(updated, "FEAT");
     assert.equal(progress.length, 1);
@@ -392,12 +406,12 @@ describe("planProgress", () => {
     assert.equal(progress[0].total, 0);
   });
 
-  it("phase with 4/5 tasks shows 80%", () => {
+  it("task with 4/5 items shows 80%", () => {
     const doc = initDocument("FEAT", "My Feature");
-    let updated = addPhase(doc, "FEAT");
+    let updated = addTask(doc, "FEAT");
 
     const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const chg = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-PH1");
+    const chg = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
     if (chg) {
       chg.plan = [
         { description: "T1", done: true },
@@ -414,11 +428,11 @@ describe("planProgress", () => {
     assert.equal(progress[0].total, 5);
   });
 
-  it("multiple phases returned in topological order", () => {
+  it("multiple tasks returned in topological order", () => {
     let doc = initDocument("FEAT", "My Feature");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
 
     const progress = planProgress(doc, "FEAT");
     assert.equal(progress.length, 3);
@@ -427,10 +441,10 @@ describe("planProgress", () => {
     assert.equal(progress[2].phase, 3);
   });
 
-  it("phase names are returned", () => {
+  it("task names are returned", () => {
     let doc = initDocument("FEAT", "My Feature");
-    doc = addPhase(doc, "FEAT", "Setup");
-    doc = addPhase(doc, "FEAT", "Build");
+    doc = addTask(doc, "FEAT", "Setup");
+    doc = addTask(doc, "FEAT", "Build");
 
     const progress = planProgress(doc, "FEAT");
     assert.equal(progress[0].name, "Setup");
@@ -530,14 +544,14 @@ describe("checkGate", () => {
     assert.equal(result.ready, true);
   });
 
-  it("phase 2 with incomplete phase 1 tasks: not ready", () => {
+  it("task 2 with incomplete task 1 items: not ready", () => {
     let doc = initDocument("FEAT", "My Feature");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
 
-    // Add incomplete tasks to phase 1
+    // Add incomplete items to task 1
     const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-PH1");
+    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
     if (chg1) {
       chg1.plan = [
         { description: "T1", done: false },
@@ -554,14 +568,14 @@ describe("checkGate", () => {
     assert.equal((issue as any).remaining, 1);
   });
 
-  it("phase 2 with all phase 1 tasks done: ready (if no other issues)", () => {
+  it("task 2 with all task 1 items done: ready (if no other issues)", () => {
     let doc = initDocument("FEAT", "My Feature");
-    doc = addPhase(doc, "FEAT");
-    doc = addPhase(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
+    doc = addTask(doc, "FEAT");
 
-    // Add complete tasks to phase 1
+    // Add complete items to task 1
     const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
-    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-PH1");
+    const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
     if (chg1) {
       chg1.plan = [
         { description: "T1", done: true },
