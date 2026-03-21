@@ -399,11 +399,47 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
   const title = protocol.name;
   let output = `# Task List: ${title}\n\n`;
 
-  // Find stage nodes that are part_of the protocol
-  const stageRels = findRelationshipsTo(doc, implProtocolId, "part_of");
-  const stageIds = stageRels.map((r) => r.from).map((id) => findNode(doc, id));
+  // Extract subsystem from the protocol node.
+  // The subsystem contains local-ID nodes (e.g. PH-1, CHG-PH1).
+  const subsystem = protocol.subsystem;
+  if (!subsystem || !subsystem.nodes || subsystem.nodes.length === 0) {
+    output += "*(No phases defined)*\n\n";
+    return output.trim();
+  }
 
-  // Sort stages by must_follow order
+  // Helper functions to work with subsystem data
+  function findNodeInSubsystem(id: string): Node | null {
+    return subsystem.nodes?.find((n) => n.id === id) ?? null;
+  }
+
+  function findRelationshipsFromInSubsystem(
+    fromId: string,
+    relationType?: string,
+  ): Relationship[] {
+    return (subsystem.relationships ?? []).filter((r) => {
+      if (r.from !== fromId) return false;
+      if (relationType && r.type !== relationType) return false;
+      return true;
+    });
+  }
+
+  function findRelationshipsToInSubsystem(
+    toId: string,
+    relationType?: string,
+  ): Relationship[] {
+    return (subsystem.relationships ?? []).filter((r) => {
+      if (r.to !== toId) return false;
+      if (relationType && r.type !== relationType) return false;
+      return true;
+    });
+  }
+
+  // Find stage nodes within the subsystem (all stages belong to this protocol).
+  const stageIds = (subsystem.nodes ?? [])
+    .filter((n) => n.type === "stage")
+    .map((n) => n as Node | null);
+
+  // Sort stages by must_follow order using topological sort.
   const sortedStages: (Node | null)[] = [];
   const processedIds = new Set<string>();
 
@@ -411,24 +447,24 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
     if (!stageId || processedIds.has(stageId)) return;
     processedIds.add(stageId);
 
-    const stage = findNode(doc, stageId);
+    const stage = findNodeInSubsystem(stageId);
     if (stage) {
       sortedStages.push(stage);
     }
 
-    // Find stages that must_follow this stage (i.e., come after it)
+    // Find stages that must_follow this stage (i.e., come after it).
     // must_follow relationship: { from: nextStage, to: thisStage } means nextStage follows thisStage
-    const followersRels = findRelationshipsTo(doc, stageId, "must_follow");
+    const followersRels = findRelationshipsToInSubsystem(stageId, "must_follow");
     for (const rel of followersRels) {
       addStageInOrder(rel.from);
     }
   }
 
-  // Start with stages that don't must_follow any other stage (first stages)
-  // A stage is first if it has no outgoing must_follow relationship
+  // Start with stages that don't must_follow any other stage (first stages).
+  // A stage is first if it has no outgoing must_follow relationship.
   for (const stage of stageIds) {
     if (!stage) continue;
-    const precedingRels = findRelationshipsFrom(doc, stage.id, "must_follow");
+    const precedingRels = findRelationshipsFromInSubsystem(stage.id, "must_follow");
     if (precedingRels.length === 0) {
       addStageInOrder(stage.id);
     }
@@ -446,9 +482,9 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
     return output.trim();
   }
 
-  // Collect all change nodes in the document
-  const allChanges = (doc.nodes ?? []).filter(
-    (n) => n.type === "change" && n.id.startsWith(prefix),
+  // Collect all change nodes in the subsystem.
+  const allChanges = (subsystem.nodes ?? []).filter(
+    (n) => n.type === "change",
   );
 
   let taskCounter = 1;
@@ -459,34 +495,34 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 
     output += `## Phase ${phaseIdx + 1}: ${stage.name}\n\n`;
 
-    // Find change nodes related to this stage
+    // Find change nodes related to this stage within the subsystem.
     const phaseNum = phaseIdx + 1;
-    const phaseChangeId = `${prefix}-CHG-PH${phaseNum}`;
-    const phaseChange = findNode(doc, phaseChangeId);
+    const phaseChangeId = `CHG-PH${phaseNum}`;
+    const phaseChange = findNodeInSubsystem(phaseChangeId);
 
-    // Find change nodes linked FROM or TO stage via any relationship
-    const changeRelsFrom = findRelationshipsFrom(doc, stage.id);
-    const changeRelsTo = findRelationshipsTo(doc, stage.id);
+    // Find change nodes linked FROM or TO stage via any relationship in the subsystem.
+    const changeRelsFrom = findRelationshipsFromInSubsystem(stage.id);
+    const changeRelsTo = findRelationshipsToInSubsystem(stage.id);
 
     const linkedChangeIds = new Set<string>();
     for (const r of changeRelsFrom) {
-      const n = findNode(doc, r.to);
+      const n = findNodeInSubsystem(r.to);
       if (n?.type === "change") linkedChangeIds.add(n.id);
     }
     for (const r of changeRelsTo) {
-      const n = findNode(doc, r.from);
+      const n = findNodeInSubsystem(r.from);
       if (n?.type === "change") linkedChangeIds.add(n.id);
     }
 
-    // Collect changes for this phase
+    // Collect changes for this phase.
     const phaseChanges: Node[] = [];
     if (phaseChange) phaseChanges.push(phaseChange);
     for (const id of linkedChangeIds) {
-      const n = findNode(doc, id);
+      const n = findNodeInSubsystem(id);
       if (n && !phaseChanges.some((c) => c.id === n.id)) phaseChanges.push(n);
     }
 
-    // If no changes found by relationship or prefix, try matching by phase suffix
+    // If no changes found by relationship or prefix, try matching by phase suffix.
     if (phaseChanges.length === 0) {
       for (const change of allChanges) {
         if (
@@ -501,9 +537,18 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
     for (const change of phaseChanges) {
       const tasks = parseTasks(change);
 
-      // Find capability that this change implements
-      const implRels = findRelationshipsFrom(doc, change.id, "implements");
-      const usStory = implRels.length > 0 ? getIdSuffix(implRels[0].to) : null;
+      // Find capability that this change implements.
+      // Check subsystem relationships first, then top-level document relationships.
+      let usStory: string | null = null;
+      const implRelsSubsystem = findRelationshipsFromInSubsystem(change.id, "implements");
+      if (implRelsSubsystem.length > 0) {
+        usStory = getIdSuffix(implRelsSubsystem[0].to);
+      } else {
+        const implRelsDoc = findRelationshipsFrom(doc, change.id, "implements");
+        if (implRelsDoc.length > 0) {
+          usStory = getIdSuffix(implRelsDoc[0].to);
+        }
+      }
 
       for (const task of tasks) {
         const checkbox = task.done ? "[x]" : "[ ]";
