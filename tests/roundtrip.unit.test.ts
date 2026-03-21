@@ -165,6 +165,36 @@ describe("round trip: single file", () => {
     assert.equal(result.metadata?.title, "Round Trip Test");
     assert.equal(result.metadata?.doc_type, "sysprom");
   });
+
+  it("round-trips lifecycle date values", () => {
+    const original: SysProMDocument = {
+      metadata: { title: "Lifecycle Date Test" },
+      nodes: [
+        {
+          id: "D1",
+          type: "decision",
+          name: "Test Decision",
+          lifecycle: {
+            proposed: "2025-06-01",
+            accepted: "2025-07-15",
+            implemented: false,
+            reviewed: true,
+          },
+        },
+      ],
+    };
+    const md = jsonToMarkdownSingle(original);
+    const result = markdownSingleToJson(md);
+
+    const d1 = result.nodes.find((n) => n.id === "D1");
+    assert.ok(d1?.lifecycle, "D1 missing lifecycle");
+    // Date values should be preserved as strings
+    assert.equal(d1.lifecycle.proposed, "2025-06-01");
+    assert.equal(d1.lifecycle.accepted, "2025-07-15");
+    // Boolean values should remain booleans
+    assert.equal(d1.lifecycle.implemented, false);
+    assert.equal(d1.lifecycle.reviewed, true);
+  });
 });
 
 // ---------------------------------------------------------------------------
