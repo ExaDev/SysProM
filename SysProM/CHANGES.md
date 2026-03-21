@@ -470,3 +470,44 @@ Replace manual process.argv parsing across all CLI command files with Commander.
 - [ ] implemented (2026-03-21)
 - [ ] proposed (2026-03-21)
 
+### CH19 — Add TypeDoc Documentation Pipeline
+
+Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.
+
+- Implements: D21
+
+- Status: complete
+
+Scope:
+- EL3
+
+Operations:
+- add — Create typedoc.json and typedoc.html.json configuration files
+- add — Create scripts/generate-cli-docs.ts for auto-generating CLI docs from Commander metadata
+- update — Add @param and @returns JSDoc tags to all public functions
+
+#### Lifecycle
+
+- [ ] proposed (2026-03-21)
+- [ ] implemented (2026-03-21)
+
+### CH20 — Add Turborepo Build Orchestration
+
+Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
+
+- Implements: D22
+
+- Status: complete
+
+Scope:
+- EL3
+
+Operations:
+- add — Create turbo.json with task dependency graph and input/output declarations
+- update — Restructure package.json scripts into atomic tasks with turbo entry points
+
+#### Lifecycle
+
+- [ ] proposed (2026-03-21)
+- [ ] implemented (2026-03-21)
+

@@ -523,3 +523,49 @@ Rationale: Commander.js has zero dependencies, the lowest migration effort from 
 - [ ] accepted (2026-03-21)
 - [ ] proposed (2026-03-21)
 
+### D21 — Adopt TypeDoc for Documentation
+
+Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The library has a rich public API (~70 exports) but no automated documentation generation. TypeDoc generates browsable docs from TypeScript source and JSDoc comments. The typedoc-plugin-zod plugin resolves rendering issues with Zod-inferred types.
+
+Options:
+- D21-OPT-A: TypeDoc with typedoc-plugin-markdown for markdown output and typedoc-plugin-zod for clean Zod type rendering. Supports projectDocuments for including CLI docs in the HTML site.
+- D21-OPT-B: Docusaurus, Starlight, or VitePress for a full documentation site framework. More features but heavier dependencies and over-engineered for a small project.
+
+Chosen: D21-OPT-A
+
+Rationale: TypeDoc directly generates docs from TypeScript source with minimal configuration. The typedoc-plugin-zod plugin resolves the z.infer rendering issue without requiring explicit interfaces. The projectDocuments feature allows CLI docs to be included in the same HTML site.
+
+#### Lifecycle
+
+- [ ] proposed (2026-03-21)
+- [ ] accepted (2026-03-21)
+
+### D22 — Adopt Turborepo for Build Orchestration
+
+Choose Turborepo for build task orchestration with dependency management and output caching.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The build pipeline has multiple tasks with dependencies (typecheck, compile, schema generation, doc generation) managed via chained pnpm scripts. Turborepo provides task dependency graphs, parallel execution, and output caching.
+
+Options:
+- D22-OPT-A: Turborepo with task dependency graph, input/output declarations, and automatic caching. Handles output directory cleaning on cache hits.
+- D22-OPT-B: Keep chained pnpm scripts with && operators. Simpler but no caching, no parallelism, no dependency graph.
+
+Chosen: D22-OPT-A
+
+Rationale: Turborepo provides automatic caching (FULL TURBO on repeat builds), parallel task execution, and explicit dependency declarations in turbo.json. It manages output directory cleaning automatically.
+
+#### Lifecycle
+
+- [ ] proposed (2026-03-21)
+- [ ] accepted (2026-03-21)
+

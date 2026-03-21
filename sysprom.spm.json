@@ -2977,6 +2977,106 @@
 			"name": "Migrate CLI to Commander.js",
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "The library has a rich public API (~70 exports) but no automated documentation generation. TypeDoc generates browsable docs from TypeScript source and JSDoc comments. The typedoc-plugin-zod plugin resolves rendering issues with Zod-inferred types.",
+			"description": "Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.",
+			"id": "D21",
+			"lifecycle": {
+				"proposed": "2026-03-21",
+				"accepted": "2026-03-21"
+			},
+			"name": "Adopt TypeDoc for Documentation",
+			"options": [
+				{
+					"description": "TypeDoc with typedoc-plugin-markdown for markdown output and typedoc-plugin-zod for clean Zod type rendering. Supports projectDocuments for including CLI docs in the HTML site.",
+					"id": "D21-OPT-A"
+				},
+				{
+					"description": "Docusaurus, Starlight, or VitePress for a full documentation site framework. More features but heavier dependencies and over-engineered for a small project.",
+					"id": "D21-OPT-B"
+				}
+			],
+			"rationale": "TypeDoc directly generates docs from TypeScript source with minimal configuration. The typedoc-plugin-zod plugin resolves the z.infer rendering issue without requiring explicit interfaces. The projectDocuments feature allows CLI docs to be included in the same HTML site.",
+			"selected": "D21-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.",
+			"id": "CH19",
+			"lifecycle": {
+				"proposed": "2026-03-21",
+				"implemented": "2026-03-21"
+			},
+			"name": "Add TypeDoc Documentation Pipeline",
+			"operations": [
+				{
+					"description": "Create typedoc.json and typedoc.html.json configuration files",
+					"type": "add"
+				},
+				{
+					"description": "Create scripts/generate-cli-docs.ts for auto-generating CLI docs from Commander metadata",
+					"type": "add"
+				},
+				{
+					"description": "Add @param and @returns JSDoc tags to all public functions",
+					"type": "update"
+				}
+			],
+			"scope": [
+				"EL3"
+			],
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"context": "The build pipeline has multiple tasks with dependencies (typecheck, compile, schema generation, doc generation) managed via chained pnpm scripts. Turborepo provides task dependency graphs, parallel execution, and output caching.",
+			"description": "Choose Turborepo for build task orchestration with dependency management and output caching.",
+			"id": "D22",
+			"lifecycle": {
+				"proposed": "2026-03-21",
+				"accepted": "2026-03-21"
+			},
+			"name": "Adopt Turborepo for Build Orchestration",
+			"options": [
+				{
+					"description": "Turborepo with task dependency graph, input/output declarations, and automatic caching. Handles output directory cleaning on cache hits.",
+					"id": "D22-OPT-A"
+				},
+				{
+					"description": "Keep chained pnpm scripts with && operators. Simpler but no caching, no parallelism, no dependency graph.",
+					"id": "D22-OPT-B"
+				}
+			],
+			"rationale": "Turborepo provides automatic caching (FULL TURBO on repeat builds), parallel task execution, and explicit dependency declarations in turbo.json. It manages output directory cleaning automatically.",
+			"selected": "D22-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.",
+			"id": "CH20",
+			"lifecycle": {
+				"proposed": "2026-03-21",
+				"implemented": "2026-03-21"
+			},
+			"name": "Add Turborepo Build Orchestration",
+			"operations": [
+				{
+					"description": "Create turbo.json with task dependency graph and input/output declarations",
+					"type": "add"
+				},
+				{
+					"description": "Restructure package.json scripts into atomic tasks with turbo entry points",
+					"type": "update"
+				}
+			],
+			"scope": [
+				"EL3"
+			],
+			"status": "complete",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -3863,6 +3963,26 @@
 		},
 		{
 			"from": "D20",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH19",
+			"to": "D21",
+			"type": "implements"
+		},
+		{
+			"from": "D21",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH20",
+			"to": "D22",
+			"type": "implements"
+		},
+		{
+			"from": "D22",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
