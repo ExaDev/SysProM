@@ -27,6 +27,10 @@ const TRACE_TYPES = new Set(["refines", "realises", "implements"]);
 
 /**
  * Query nodes with optional filters.
+ *
+ * @param doc - The SysProM document to query.
+ * @param filters - Optional filters for node type and status.
+ * @returns Matching nodes.
  */
 export function queryNodes(
   doc: SysProMDocument,
@@ -44,6 +48,10 @@ export function queryNodes(
 
 /**
  * Query a single node by ID with its relationships.
+ *
+ * @param doc - The SysProM document to query.
+ * @param id - The node ID to look up.
+ * @returns The node with its incoming and outgoing relationships, or undefined.
  */
 export function queryNode(doc: SysProMDocument, id: string): NodeDetail | undefined {
   const node = doc.nodes.find((n) => n.id === id);
@@ -57,6 +65,10 @@ export function queryNode(doc: SysProMDocument, id: string): NodeDetail | undefi
 
 /**
  * Query relationships with optional filters.
+ *
+ * @param doc - The SysProM document to query.
+ * @param filters - Optional filters for from, to, and type.
+ * @returns Matching relationships.
  */
 export function queryRelationships(
   doc: SysProMDocument,
@@ -78,6 +90,10 @@ export function queryRelationships(
 /**
  * Trace refinement chain from a node (follows refines, realises, implements).
  * Returns a tree structure where children are nodes that refine/realise/implement the parent.
+ *
+ * @param doc - The SysProM document to trace through.
+ * @param startId - The root node ID to start tracing from.
+ * @returns A tree of traced nodes.
  */
 export function traceFromNode(doc: SysProMDocument, startId: string): TraceNode {
   const visited = new Set<string>();

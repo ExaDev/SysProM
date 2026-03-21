@@ -29,6 +29,9 @@ export interface NodeState {
  * timestamp. Subsystem nodes are processed recursively.
  *
  * Results are sorted by timestamp, earliest first.
+ *
+ * @param doc - The SysProM document to extract events from.
+ * @returns Timeline events sorted by timestamp, earliest first.
  */
 export function timeline(doc: SysProMDocument): TimelineEvent[] {
   const events: TimelineEvent[] = [];
@@ -76,6 +79,10 @@ export function timeline(doc: SysProMDocument): TimelineEvent[] {
  * Searches for the node by ID (recursively in subsystems) and returns all
  * timestamped lifecycle entries. Returns an empty array if the node is not
  * found or has no lifecycle entries with timestamps.
+ *
+ * @param doc - The SysProM document to search.
+ * @param nodeId - The ID of the node to retrieve history for.
+ * @returns Timestamped lifecycle events for the node, or an empty array if not found.
  */
 export function nodeHistory(
   doc: SysProMDocument,
@@ -140,6 +147,10 @@ export function nodeHistory(
  * Returns an array of nodes with at least one active state, sorted by nodeId.
  * Uses simple string comparison for ISO 8601 date ordering (this works correctly
  * for well-formed ISO dates).
+ *
+ * @param doc - The SysProM document to query.
+ * @param timestamp - An ISO 8601 date string to query against.
+ * @returns Nodes with active states at the given timestamp, sorted by nodeId.
  */
 export function stateAt(
   doc: SysProMDocument,

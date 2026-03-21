@@ -16,6 +16,9 @@ export interface DocumentStats {
 
 /**
  * Computes statistics about a SysProM document.
+ *
+ * @param doc - The SysProM document to analyse.
+ * @returns Aggregated statistics including node and relationship counts and lifecycle data.
  */
 export function stats(doc: SysProMDocument): DocumentStats {
   // Node counts by type

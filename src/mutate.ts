@@ -14,6 +14,10 @@ export interface RemoveResult {
 /**
  * Add a node to the document. Returns a new document.
  * Throws if a node with the same ID already exists.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param node - The node to add.
+ * @returns A new document containing the added node.
  */
 export function addNode(doc: SysProMDocument, node: Node): SysProMDocument {
   if (doc.nodes.some((n) => n.id === node.id)) {
@@ -28,6 +32,10 @@ export function addNode(doc: SysProMDocument, node: Node): SysProMDocument {
 /**
  * Remove a node and all relationships involving it. Returns a new document and warnings.
  * Also removes the node from view includes and external references.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param id - The ID of the node to remove.
+ * @returns The updated document and any warnings about remaining references.
  */
 export function removeNode(doc: SysProMDocument, id: string): RemoveResult {
   const nodeIdx = doc.nodes.findIndex((n) => n.id === id);
@@ -87,6 +95,11 @@ export function removeNode(doc: SysProMDocument, id: string): RemoveResult {
 /**
  * Update specified fields on a node. Returns a new document.
  * Throws if the node is not found.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param id - The ID of the node to update.
+ * @param fields - Partial node fields to merge onto the existing node.
+ * @returns A new document with the updated node.
  */
 export function updateNode(
   doc: SysProMDocument,
@@ -110,6 +123,10 @@ export function updateNode(
 /**
  * Add a relationship to the document. Returns a new document.
  * Throws if either endpoint node does not exist.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param rel - The relationship to add.
+ * @returns A new document containing the added relationship.
  */
 export function addRelationship(
   doc: SysProMDocument,
@@ -132,6 +149,12 @@ export function addRelationship(
 /**
  * Remove a relationship matching from, type, and to. Returns a new document.
  * Throws if the relationship is not found.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param from - Source node ID.
+ * @param type - Relationship type.
+ * @param to - Target node ID.
+ * @returns A new document without the matching relationship.
  */
 export function removeRelationship(
   doc: SysProMDocument,
@@ -159,6 +182,10 @@ export function removeRelationship(
 
 /**
  * Update metadata fields. Returns a new document.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param fields - Metadata fields to merge.
+ * @returns A new document with updated metadata.
  */
 export function updateMetadata(
   doc: SysProMDocument,
@@ -173,6 +200,11 @@ export function updateMetadata(
 /**
  * Append a new task to a change node's plan array. Returns a new document.
  * Throws if the node is not found.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param changeId - ID of the change node.
+ * @param description - Task description text.
+ * @returns A new document with the task appended to the change node's plan.
  */
 export function addPlanTask(
   doc: SysProMDocument,
@@ -190,6 +222,12 @@ export function addPlanTask(
 /**
  * Set the done status of a task in a change node's plan array. Returns a new document.
  * Throws if the node is not found or the task index is out of range.
+ *
+ * @param doc - The SysProM document to modify.
+ * @param changeId - ID of the change node.
+ * @param taskIndex - Zero-based index of the task in the plan.
+ * @param done - Whether the task is complete.
+ * @returns A new document with the updated task status.
  */
 export function updatePlanTask(
   doc: SysProMDocument,

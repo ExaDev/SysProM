@@ -1,4 +1,6 @@
 /**
+ * @module canonical-json
+ *
  * JSON serialisation with RFC 8785 key ordering and value semantics,
  * optionally pretty-printed with configurable indentation.
  *
@@ -9,10 +11,17 @@
  * - undefined values omitted from objects
  */
 
-interface FormatOptions {
+export interface FormatOptions {
   indent?: string;
 }
 
+/**
+ * Serialise a value to canonical JSON with RFC 8785 key ordering.
+ *
+ * @param value - The value to serialise.
+ * @param options - Formatting options (e.g. indentation).
+ * @returns The canonical JSON string.
+ */
 export function canonicalise(
   value: unknown,
   options: FormatOptions = {},

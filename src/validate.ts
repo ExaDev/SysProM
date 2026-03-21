@@ -32,6 +32,9 @@ const DOMAIN_TYPES = new Set([
  * - INV2: Changes must reference at least one decision
  * - INV3: Decisions affecting domain nodes must have must_preserve
  * - INV13: Decisions must have options and selected
+ *
+ * @param doc - The SysProM document to validate.
+ * @returns Validation result with issues, node count, and relationship count.
  */
 export function validate(doc: SysProMDocument): ValidationResult {
   const issues: string[] = [];
