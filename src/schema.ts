@@ -296,8 +296,8 @@ export const node = defineSchema(
       description: text.optional(),
       status: nodeStatus.optional(),
       lifecycle: z
-        .record(z.string(), z.boolean())
-        .describe("Map of lifecycle state names to completion status.")
+        .record(z.string(), z.union([z.boolean(), z.string()]))
+        .describe("Map of lifecycle state names to completion status. Values may be boolean or an ISO date string indicating when the state was reached.")
         .optional(),
       context: text
         .describe(

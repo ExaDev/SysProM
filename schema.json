@@ -216,9 +216,16 @@
 					},
 					"lifecycle": {
 						"additionalProperties": {
-							"type": "boolean"
+							"anyOf": [
+								{
+									"type": "boolean"
+								},
+								{
+									"type": "string"
+								}
+							]
 						},
-						"description": "Map of lifecycle state names to completion status.",
+						"description": "Map of lifecycle state names to completion status. Values may be boolean or an ISO date string indicating when the state was reached.",
 						"propertyNames": {
 							"type": "string"
 						},
