@@ -24,3 +24,15 @@ export {
   generateChecklist,
   generateSpecKitProject,
 } from "./generate.js";
+
+export {
+  initDocument,
+  addPhase,
+  planStatus,
+  planProgress,
+  checkGate,
+  type PlanStatus,
+  type PhaseProgress,
+  type GateIssue,
+  type GateResult,
+} from "./plan.js";
