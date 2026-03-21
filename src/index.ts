@@ -122,3 +122,12 @@ export {
   generateChecklist,
   generateSpecKitProject,
 } from "./speckit/index.js";
+
+// Temporal query
+export {
+  timeline,
+  nodeHistory,
+  stateAt,
+  type TimelineEvent,
+  type NodeState,
+} from "./temporal.js";
