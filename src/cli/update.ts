@@ -142,7 +142,17 @@ export function run(args: string[]): void {
         process.exit(1);
       }
       const key = kv.slice(0, eqIdx);
-      const val = kv.slice(eqIdx + 1) === "true";
+      const rawVal = kv.slice(eqIdx + 1);
+      let val: boolean | string;
+      if (rawVal === "true") {
+        val = true;
+      } else if (rawVal === "false") {
+        val = false;
+      } else if (/^\d{4}-\d{2}-\d{2}/.test(rawVal)) {
+        val = rawVal; // ISO date string
+      } else {
+        val = rawVal === "true"; // fallback to boolean
+      }
       lifecycle[key] = val;
     }
     fields.lifecycle = lifecycle;

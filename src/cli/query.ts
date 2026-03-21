@@ -6,6 +6,7 @@ import {
   queryRelationships,
   traceFromNode,
 } from "../query.js";
+import { timeline, nodeHistory, stateAt } from "../temporal.js";
 import type { Node } from "../schema.js";
 import type { TraceNode } from "../query.js";
 
@@ -154,9 +155,51 @@ export function run(args: string[]): void {
       break;
     }
 
+    case "timeline": {
+      const nodeId = parseFlag(filterArgs, "--node");
+      const events = nodeId ? nodeHistory(doc, nodeId) : timeline(doc);
+      if (asJson) {
+        console.log(JSON.stringify(events, null, 2));
+      } else {
+        if (events.length === 0) {
+          console.log("(no timestamped events)");
+        } else {
+          for (const event of events) {
+            console.log(
+              `${event.timestamp}  ${event.nodeId} (${event.nodeType})  ${event.state}`
+            );
+          }
+        }
+      }
+      break;
+    }
+
+    case "state-at": {
+      const timestamp = parseFlag(filterArgs, "--time");
+      if (!timestamp) {
+        console.error("Usage: sysprom query <input> state-at --time TIMESTAMP");
+        process.exit(1);
+      }
+      const result = stateAt(doc, timestamp);
+      if (asJson) {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        if (result.length === 0) {
+          console.log(`(no active states at ${timestamp})`);
+        } else {
+          for (const nodeState of result) {
+            console.log(
+              `${nodeState.nodeId} (${nodeState.nodeName}): ${nodeState.activeStates.join(", ")}`
+            );
+          }
+        }
+      }
+      break;
+    }
+
     default:
       console.error(`Unknown query type: ${queryType}`);
-      console.error("Valid types: nodes, node, rels, trace");
+      console.error("Valid types: nodes, node, rels, trace, timeline, state-at");
       process.exit(1);
   }
 }

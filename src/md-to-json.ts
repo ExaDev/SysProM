@@ -138,13 +138,28 @@ function parseNodeId(heading: string): { id: string; name: string } | null {
   return { id: match[1], name: match[2] };
 }
 
-function parseLifecycle(section: Section): Record<string, boolean> | undefined {
-  const lifecycle: Record<string, boolean> = {};
+function parseLifecycle(section: Section): Record<string, boolean | string> | undefined {
+  const lifecycle: Record<string, boolean | string> = {};
   let found = false;
   for (const line of section.body.split("\n")) {
     const m = line.match(/^- \[([ x])\] (.+)$/);
     if (m) {
-      lifecycle[m[2].replace(/ /g, "_")] = m[1] === "x";
+      const isChecked = m[1] === "x";
+      const text = m[2];
+
+      // Check if the text ends with a parenthesised date
+      const dateMatch = text.match(/(.+?)\s*\((\d{4}-\d{2}-\d{2}(?:T[^\)]+)?)\)$/);
+
+      const key = dateMatch ? dateMatch[1].replace(/ /g, "_") : text.replace(/ /g, "_");
+
+      // If a date is found, use the date string as the value regardless of checkbox state
+      if (dateMatch) {
+        lifecycle[key] = dateMatch[2];
+      } else {
+        // Otherwise, use boolean value
+        lifecycle[key] = isChecked;
+      }
+
       found = true;
     }
   }
@@ -290,7 +305,15 @@ function parseNodeFromSection(section: Section, allSections: Section[]): { node:
       node.lifecycle = parseLifecycle(child);
     }
     if (child.heading === "Propagation") {
-      node.propagation = parseLifecycle(child);
+      const parsed = parseLifecycle(child);
+      // Propagation values are always boolean — coerce any date strings to true.
+      if (parsed) {
+        const booleanOnly: Record<string, boolean> = {};
+        for (const [k, v] of Object.entries(parsed)) {
+          booleanOnly[k] = !!v;
+        }
+        node.propagation = booleanOnly;
+      }
     }
     if (child.heading === "Plan") {
       const plan: { description: string; done?: boolean }[] = [];

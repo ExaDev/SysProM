@@ -58,10 +58,15 @@ function indexRelationshipsFrom(rels: Relationship[]): RelIndex {
 // Node rendering
 // ---------------------------------------------------------------------------
 
-function renderLifecycle(lifecycle: Record<string, boolean>): string[] {
-  return Object.entries(lifecycle).map(
-    ([state, done]) => `- [${done ? "x" : " "}] ${state.replace(/_/g, " ")}`,
-  );
+function renderLifecycle(lifecycle: Record<string, boolean | string>): string[] {
+  return Object.entries(lifecycle).map(([state, done]) => {
+    const checkbox = typeof done === "boolean" ? (done ? "x" : " ") : " ";
+    const label = state.replace(/_/g, " ");
+    if (typeof done === "string") {
+      return `- [${checkbox}] ${label} (${done})`;
+    }
+    return `- [${checkbox}] ${label}`;
+  });
 }
 
 function renderNodeRelationships(
