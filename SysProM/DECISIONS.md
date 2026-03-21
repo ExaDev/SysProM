@@ -82,9 +82,9 @@ Rationale: The three-way split matches how real systems distinguish structural g
 
 #### Lifecycle
 
-- [x] accepted
+- [ ] accepted (2025-06-22T14:30:00Z)
 - [x] implemented
-- [x] proposed
+- [ ] proposed (2025-06-10T09:15:00Z)
 - [ ] superseded
 
 ### D4 — Add Process Modelling
@@ -497,4 +497,29 @@ Options:
 Chosen: D19-OPT-B
 
 Rationale: One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.
+
+### D20 — Adopt Commander.js for CLI
+
+Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The CLI uses manual process.argv parsing with parseFlag() helpers duplicated across 11 command files. Usage text is embedded in console.error() strings, making automatic documentation generation impossible. A structured CLI framework is needed to enable programmatic access to command metadata for doc generation.
+
+Options:
+- D20-OPT-A: Zero dependencies, lowest migration effort, programmatic command tree access. No built-in markdown export but command metadata is accessible via public API.
+- D20-OPT-B: Built-in doc generation via oclif readme. Higher dependency count (~28), slower startup (~100ms), requires class-per-command refactor, uses colon-delimited subcommands.
+- D20-OPT-C: Modern TypeScript-first alternatives (Citty, Clipanion, Stricli). Zero dependencies but none have built-in markdown doc generation.
+- D20-OPT-D: Keep manual process.argv parsing. No migration effort but no automatic doc generation possible.
+
+Chosen: D20-OPT-A
+
+Rationale: Commander.js has zero dependencies, the lowest migration effort from manual argv parsing, and exposes a public API for walking the command tree programmatically. This enables a simple doc generation script without adopting a heavier framework.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-21)
+- [ ] proposed (2026-03-21)
 

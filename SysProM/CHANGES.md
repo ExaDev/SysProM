@@ -457,3 +457,16 @@ Extended lifecycle schema to accept ISO date strings alongside booleans. Added t
 
 - Status: complete
 
+### CH18 — Migrate CLI to Commander.js
+
+Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.
+
+- Implements: D20
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-21)
+- [ ] proposed (2026-03-21)
+

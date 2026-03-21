@@ -2934,6 +2934,49 @@
 			"name": "Implement Temporal Support",
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "The CLI uses manual process.argv parsing with parseFlag() helpers duplicated across 11 command files. Usage text is embedded in console.error() strings, making automatic documentation generation impossible. A structured CLI framework is needed to enable programmatic access to command metadata for doc generation.",
+			"description": "Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.",
+			"id": "D20",
+			"lifecycle": {
+				"accepted": "2026-03-21",
+				"proposed": "2026-03-21"
+			},
+			"name": "Adopt Commander.js for CLI",
+			"options": [
+				{
+					"description": "Zero dependencies, lowest migration effort, programmatic command tree access. No built-in markdown export but command metadata is accessible via public API.",
+					"id": "D20-OPT-A"
+				},
+				{
+					"description": "Built-in doc generation via oclif readme. Higher dependency count (~28), slower startup (~100ms), requires class-per-command refactor, uses colon-delimited subcommands.",
+					"id": "D20-OPT-B"
+				},
+				{
+					"description": "Modern TypeScript-first alternatives (Citty, Clipanion, Stricli). Zero dependencies but none have built-in markdown doc generation.",
+					"id": "D20-OPT-C"
+				},
+				{
+					"description": "Keep manual process.argv parsing. No migration effort but no automatic doc generation possible.",
+					"id": "D20-OPT-D"
+				}
+			],
+			"rationale": "Commander.js has zero dependencies, the lowest migration effort from manual argv parsing, and exposes a public API for walking the command tree programmatically. This enables a simple doc generation script without adopting a heavier framework.",
+			"selected": "D20-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.",
+			"id": "CH18",
+			"lifecycle": {
+				"implemented": "2026-03-21",
+				"proposed": "2026-03-21"
+			},
+			"name": "Migrate CLI to Commander.js",
+			"status": "complete",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -3810,6 +3853,16 @@
 		},
 		{
 			"from": "D19",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH18",
+			"to": "D20",
+			"type": "implements"
+		},
+		{
+			"from": "D20",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
