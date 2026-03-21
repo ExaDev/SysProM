@@ -18,7 +18,7 @@ function makeDoc(
   relationships: Relationship[] = [],
 ): SysProMDocument {
   return {
-    nodes: nodes.length > 0 ? nodes : undefined,
+    nodes,
     relationships: relationships.length > 0 ? relationships : undefined,
     metadata: {
       title: "Test Document",
@@ -577,12 +577,12 @@ describe("generateTasks", () => {
             {
               from: "CHG-PH1",
               to: "PH-1",
-              type: "realizes",
+              type: "realises",
             },
             {
               from: "CHG-PH2",
               to: "PH-2",
-              type: "realizes",
+              type: "realises",
             },
           ],
         },
@@ -624,7 +624,7 @@ describe("generateTasks", () => {
             {
               from: "CHG-1",
               to: "PH-1",
-              type: "realizes",
+              type: "realises",
             },
           ],
         },
@@ -665,7 +665,7 @@ describe("generateTasks", () => {
             {
               from: "CHG-1",
               to: "PH-1",
-              type: "realizes",
+              type: "realises",
             },
           ],
         },
@@ -706,7 +706,7 @@ describe("generateTasks", () => {
             {
               from: "CHG-1",
               to: "PH-1",
-              type: "realizes",
+              type: "realises",
             },
           ],
         },

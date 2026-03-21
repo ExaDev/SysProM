@@ -22,7 +22,7 @@ function makeDoc(
   relationships: Relationship[] = [],
 ): SysProMDocument {
   return {
-    nodes: nodes.length > 0 ? nodes : undefined,
+    nodes,
     relationships: relationships.length > 0 ? relationships : undefined,
     metadata: {
       title: "Test Document",
