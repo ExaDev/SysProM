@@ -3,6 +3,7 @@ import type {
   Node,
   Relationship,
   RelationshipType,
+  Task,
 } from "./schema.js";
 
 export interface RemoveResult {
@@ -43,7 +44,10 @@ export function removeNode(doc: SysProMDocument, id: string): RemoveResult {
   const nodesWithIncludes = newNodes.map((n) => {
     if (n.includes?.includes(id)) {
       const newIncludes = n.includes.filter((i) => i !== id);
-      return { ...n, includes: newIncludes.length > 0 ? newIncludes : undefined };
+      return {
+        ...n,
+        includes: newIncludes.length > 0 ? newIncludes : undefined,
+      };
     }
     return n;
   });
@@ -164,4 +168,46 @@ export function updateMetadata(
     ...doc,
     metadata: { ...doc.metadata, ...fields },
   };
+}
+
+/**
+ * Append a new task to a change node's plan array. Returns a new document.
+ * Throws if the node is not found.
+ */
+export function addPlanTask(
+  doc: SysProMDocument,
+  changeId: string,
+  description: string,
+): SysProMDocument {
+  const node = doc.nodes.find((n) => n.id === changeId);
+  if (!node) {
+    throw new Error(`Node not found: ${changeId}`);
+  }
+  const newTask: Task = { description, done: false };
+  return updateNode(doc, changeId, { plan: [...(node.plan ?? []), newTask] });
+}
+
+/**
+ * Set the done status of a task in a change node's plan array. Returns a new document.
+ * Throws if the node is not found or the task index is out of range.
+ */
+export function updatePlanTask(
+  doc: SysProMDocument,
+  changeId: string,
+  taskIndex: number,
+  done: boolean,
+): SysProMDocument {
+  const node = doc.nodes.find((n) => n.id === changeId);
+  if (!node) {
+    throw new Error(`Node not found: ${changeId}`);
+  }
+  const plan = node.plan ?? [];
+  if (taskIndex < 0 || taskIndex >= plan.length) {
+    throw new Error(
+      `Task index ${taskIndex} out of range (plan has ${plan.length} task(s))`,
+    );
+  }
+  const newPlan = [...plan];
+  newPlan[taskIndex] = { ...newPlan[taskIndex], done };
+  return updateNode(doc, changeId, { plan: newPlan });
 }
