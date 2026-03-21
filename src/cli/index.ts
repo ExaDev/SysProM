@@ -10,6 +10,7 @@ import { run as update } from "./update.js";
 import { run as stats } from "./stats.js";
 import { run as speckit } from "./speckit.js";
 import { run as task } from "./task.js";
+import { run as plan } from "./plan.js";
 
 const VERSION = "1.0.0";
 
@@ -28,6 +29,7 @@ update <input> <node-id> [fields]     Update a node, relationship, or metadata
 stats <input>                         Print document summary
 speckit <sub> [options]               Spec-Kit import/export/sync/diff
 task <sub> [options]                  Task list/add/done/undone on change plans
+plan <sub> [options]                  Plan management and gate checking
 
 Options:
 --help, -h       Show this help message
@@ -92,6 +94,9 @@ switch (command) {
     break;
   case "task":
     task(subArgs);
+    break;
+  case "plan":
+    plan(subArgs);
     break;
   default:
     console.error(`Unknown command: ${command}`);
