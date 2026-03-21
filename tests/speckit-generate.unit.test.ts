@@ -527,64 +527,68 @@ describe("generateTasks", () => {
         id: "TEST-PROT-IMPL",
         type: "protocol",
         name: "Implementation Protocol",
-      },
-      {
-        id: "TEST-PH-1",
-        type: "stage",
-        name: "Setup",
-      },
-      {
-        id: "TEST-PH-2",
-        type: "stage",
-        name: "Core Auth",
-      },
-      {
-        id: "TEST-CHG-PH1",
-        type: "change",
-        name: "Phase 1 Tasks",
-        plan: [
-          { description: "Create project structure", done: false },
-          { description: "Initialize TypeScript", done: false },
-        ],
-      },
-      {
-        id: "TEST-CHG-PH2",
-        type: "change",
-        name: "Phase 2 Tasks",
-        plan: [
-          { description: "Create User model", done: false },
-          { description: "Implement login endpoint", done: false },
-        ],
+        subsystem: {
+          nodes: [
+            {
+              id: "PH-1",
+              type: "stage",
+              name: "Setup",
+            },
+            {
+              id: "PH-2",
+              type: "stage",
+              name: "Core Auth",
+            },
+            {
+              id: "CHG-PH1",
+              type: "change",
+              name: "Phase 1 Tasks",
+              plan: [
+                { description: "Create project structure", done: false },
+                { description: "Initialize TypeScript", done: false },
+              ],
+            },
+            {
+              id: "CHG-PH2",
+              type: "change",
+              name: "Phase 2 Tasks",
+              plan: [
+                { description: "Create User model", done: false },
+                { description: "Implement login endpoint", done: false },
+              ],
+            },
+          ],
+          relationships: [
+            {
+              from: "PH-1",
+              to: "TEST-PROT-IMPL",
+              type: "part_of",
+            },
+            {
+              from: "PH-2",
+              to: "TEST-PROT-IMPL",
+              type: "part_of",
+            },
+            {
+              from: "PH-2",
+              to: "PH-1",
+              type: "must_follow",
+            },
+            {
+              from: "CHG-PH1",
+              to: "PH-1",
+              type: "realizes",
+            },
+            {
+              from: "CHG-PH2",
+              to: "PH-2",
+              type: "realizes",
+            },
+          ],
+        },
       },
     ];
-    const relationships: Relationship[] = [
-      {
-        from: "TEST-PH-1",
-        to: "TEST-PROT-IMPL",
-        type: "part_of",
-      },
-      {
-        from: "TEST-PH-2",
-        to: "TEST-PROT-IMPL",
-        type: "part_of",
-      },
-      {
-        from: "TEST-PH-2",
-        to: "TEST-PH-1",
-        type: "must_follow",
-      },
-      {
-        from: "TEST-CHG-PH1",
-        to: "TEST-PH-1",
-        type: "realizes",
-      },
-      {
-        from: "TEST-CHG-PH2",
-        to: "TEST-PH-2",
-        type: "realizes",
-      },
-    ];
-    const doc = makeDoc(nodes, relationships);
+    const doc = makeDoc(nodes);
 
     const output = generateTasks(doc, "TEST");
     assert.match(output, /## Phase 1/, "output should contain Phase 1");
@@ -597,32 +601,36 @@ describe("generateTasks", () => {
         id: "TEST-PROT-IMPL",
         type: "protocol",
         name: "Implementation Protocol",
-      },
-      {
-        id: "TEST-PH-1",
-        type: "stage",
-        name: "Phase 1",
-      },
-      {
-        id: "TEST-CHG-1",
-        type: "change",
-        name: "Tasks",
-        plan: [{ description: "Incomplete task", done: false }],
+        subsystem: {
+          nodes: [
+            {
+              id: "PH-1",
+              type: "stage",
+              name: "Phase 1",
+            },
+            {
+              id: "CHG-1",
+              type: "change",
+              name: "Tasks",
+              plan: [{ description: "Incomplete task", done: false }],
+            },
+          ],
+          relationships: [
+            {
+              from: "PH-1",
+              to: "TEST-PROT-IMPL",
+              type: "part_of",
+            },
+            {
+              from: "CHG-1",
+              to: "PH-1",
+              type: "realizes",
+            },
+          ],
+        },
       },
     ];
-    const relationships: Relationship[] = [
-      {
-        from: "TEST-PH-1",
-        to: "TEST-PROT-IMPL",
-        type: "part_of",
-      },
-      {
-        from: "TEST-CHG-1",
-        to: "TEST-PH-1",
-        type: "realizes",
-      },
-    ];
-    const doc = makeDoc(nodes, relationships);
+    const doc = makeDoc(nodes);
 
     const output = generateTasks(doc, "TEST");
     assert.match(output, /- \[ \]/, "output should contain unchecked checkbox");
@@ -634,32 +642,36 @@ describe("generateTasks", () => {
         id: "TEST-PROT-IMPL",
         type: "protocol",
         name: "Implementation Protocol",
-      },
-      {
-        id: "TEST-PH-1",
-        type: "stage",
-        name: "Phase 1",
-      },
-      {
-        id: "TEST-CHG-1",
-        type: "change",
-        name: "Tasks",
-        plan: [{ description: "Completed task", done: true }],
+        subsystem: {
+          nodes: [
+            {
+              id: "PH-1",
+              type: "stage",
+              name: "Phase 1",
+            },
+            {
+              id: "CHG-1",
+              type: "change",
+              name: "Tasks",
+              plan: [{ description: "Completed task", done: true }],
+            },
+          ],
+          relationships: [
+            {
+              from: "PH-1",
+              to: "TEST-PROT-IMPL",
+              type: "part_of",
+            },
+            {
+              from: "CHG-1",
+              to: "PH-1",
+              type: "realizes",
+            },
+          ],
+        },
       },
     ];
-    const relationships: Relationship[] = [
-      {
-        from: "TEST-PH-1",
-        to: "TEST-PROT-IMPL",
-        type: "part_of",
-      },
-      {
-        from: "TEST-CHG-1",
-        to: "TEST-PH-1",
-        type: "realizes",
-      },
-    ];
-    const doc = makeDoc(nodes, relationships);
+    const doc = makeDoc(nodes);
 
     const output = generateTasks(doc, "TEST");
     assert.match(output, /- \[x\]/, "output should contain checked checkbox");
@@ -671,32 +683,36 @@ describe("generateTasks", () => {
         id: "TEST-PROT-IMPL",
         type: "protocol",
         name: "Implementation Protocol",
-      },
-      {
-        id: "TEST-PH-1",
-        type: "stage",
-        name: "Phase 1",
-      },
-      {
-        id: "TEST-CHG-1",
-        type: "change",
-        name: "Tasks",
-        plan: [{ description: "Create project structure", done: false }],
+        subsystem: {
+          nodes: [
+            {
+              id: "PH-1",
+              type: "stage",
+              name: "Phase 1",
+            },
+            {
+              id: "CHG-1",
+              type: "change",
+              name: "Tasks",
+              plan: [{ description: "Create project structure", done: false }],
+            },
+          ],
+          relationships: [
+            {
+              from: "PH-1",
+              to: "TEST-PROT-IMPL",
+              type: "part_of",
+            },
+            {
+              from: "CHG-1",
+              to: "PH-1",
+              type: "realizes",
+            },
+          ],
+        },
       },
     ];
-    const relationships: Relationship[] = [
-      {
-        from: "TEST-PH-1",
-        to: "TEST-PROT-IMPL",
-        type: "part_of",
-      },
-      {
-        from: "TEST-CHG-1",
-        to: "TEST-PH-1",
-        type: "realizes",
-      },
-    ];
-    const doc = makeDoc(nodes, relationships);
+    const doc = makeDoc(nodes);
 
     const output = generateTasks(doc, "TEST");
     assert.match(
