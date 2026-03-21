@@ -36,12 +36,12 @@
 		"doc_type": "sysprom",
 		"scope": "system",
 		"status": "active",
-		"title": "SysProM \u2014 System Provenance Model",
+		"title": "SysProM — System Provenance Model",
 		"version": 1
 	},
 	"nodes": [
 		{
-			"description": "Enable any system \u2014 regardless of domain \u2014 to record where every part came from, what decisions shaped it, and how it reached its current form.",
+			"description": "Enable any system — regardless of domain — to record where every part came from, what decisions shaped it, and how it reached its current form.",
 			"id": "I1",
 			"name": "System Provenance",
 			"type": "intent"
@@ -59,7 +59,7 @@
 			"description": [
 				"Systems evolve through explicit decisions.",
 				"Decisions select between alternatives, affect nodes, and must preserve invariants.",
-				"Decisions are never deleted \u2014 they are superseded."
+				"Decisions are never deleted — they are superseded."
 			],
 			"id": "CN2",
 			"name": "Decision-Driven Evolution",
@@ -301,7 +301,7 @@
 			"type": "invariant"
 		},
 		{
-			"description": "Every node MUST be addressable \u2014 reachable by its identifier from any point in the graph.",
+			"description": "Every node MUST be addressable — reachable by its identifier from any point in the graph.",
 			"id": "INV17",
 			"name": "Node Addressability",
 			"type": "invariant"
@@ -366,49 +366,49 @@
 		{
 			"description": "Implementations SHOULD ensure integrity of node identities.",
 			"id": "POL7",
-			"name": "Security \u2014 Node Identity Integrity",
+			"name": "Security — Node Identity Integrity",
 			"type": "policy"
 		},
 		{
 			"description": "Implementations SHOULD ensure consistency of relationships.",
 			"id": "POL8",
-			"name": "Security \u2014 Relationship Consistency",
+			"name": "Security — Relationship Consistency",
 			"type": "policy"
 		},
 		{
 			"description": "Implementations SHOULD ensure controlled modification of decisions and changes.",
 			"id": "POL9",
-			"name": "Security \u2014 Controlled Modification",
+			"name": "Security — Controlled Modification",
 			"type": "policy"
 		},
 		{
 			"description": "A conformant system MUST define nodes with types.",
 			"id": "CONF1",
-			"name": "Conformance \u2014 Typed Nodes",
+			"name": "Conformance — Typed Nodes",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define relationships between nodes.",
 			"id": "CONF2",
-			"name": "Conformance \u2014 Relationships",
+			"name": "Conformance — Relationships",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define lifecycle states for decisions and changes.",
 			"id": "CONF3",
-			"name": "Conformance \u2014 Lifecycle States",
+			"name": "Conformance — Lifecycle States",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define at least one invariant.",
 			"id": "CONF4",
-			"name": "Conformance \u2014 At Least One Invariant",
+			"name": "Conformance — At Least One Invariant",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST support traceability across abstraction layers.",
 			"id": "CONF5",
-			"name": "Conformance \u2014 Traceability",
+			"name": "Conformance — Traceability",
 			"type": "invariant"
 		},
 		{
@@ -1323,11 +1323,11 @@
 			"name": "Support External Resources via Reference and Internalisation",
 			"options": [
 				{
-					"description": "No external reference support \u2014 all content must be internalised",
+					"description": "No external reference support — all content must be internalised",
 					"id": "D8-O1"
 				},
 				{
-					"description": "External references only \u2014 all content is by pointer",
+					"description": "External references only — all content is by pointer",
 					"id": "D8-O2"
 				},
 				{
@@ -1515,7 +1515,14 @@
 					"type": "add"
 				}
 			],
-			"scope": ["CN7", "CP8", "EL7", "INV19", "INV20", "POL6"],
+			"scope": [
+				"CN7",
+				"CP8",
+				"EL7",
+				"INV19",
+				"INV20",
+				"POL6"
+			],
 			"type": "change"
 		},
 		{
@@ -1541,7 +1548,11 @@
 					"type": "add"
 				}
 			],
-			"scope": ["PROT1", "PROT2", "PROT3"],
+			"scope": [
+				"PROT1",
+				"PROT2",
+				"PROT3"
+			],
 			"type": "change"
 		},
 		{
@@ -1621,15 +1632,15 @@
 			"name": "Allow Array-of-Lines for Text Fields",
 			"options": [
 				{
-					"description": "Single string only \u2014 use \\n for newlines",
+					"description": "Single string only — use \\n for newlines",
 					"id": "D9-O1"
 				},
 				{
-					"description": "Array of strings only \u2014 always use arrays",
+					"description": "Array of strings only — always use arrays",
 					"id": "D9-O2"
 				},
 				{
-					"description": "Either form accepted \u2014 string for short content, array for multiline",
+					"description": "Either form accepted — string for short content, array for multiline",
 					"id": "D9-O3"
 				}
 			],
@@ -1668,12 +1679,15 @@
 					"type": "update"
 				},
 				{
-					"description": "Specification updated with \u00a76.2 Text Fields",
+					"description": "Specification updated with §6.2 Text Fields",
 					"target": "R1",
 					"type": "update"
 				}
 			],
-			"scope": ["INV21", "D8"],
+			"scope": [
+				"INV21",
+				"D8"
+			],
 			"type": "change"
 		},
 		{
@@ -1702,11 +1716,11 @@
 			"name": "Use Strict Enums for Core Types",
 			"options": [
 				{
-					"description": "Open strings with examples \u2014 any value accepted, core types documented only",
+					"description": "Open strings with examples — any value accepted, core types documented only",
 					"id": "D10-O1"
 				},
 				{
-					"description": "Strict enums \u2014 only declared values accepted, extensions must add to the enum",
+					"description": "Strict enums — only declared values accepted, extensions must add to the enum",
 					"id": "D10-O2"
 				}
 			],
@@ -1745,7 +1759,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["INV22", "D8", "R5"],
+			"scope": [
+				"INV22",
+				"D8",
+				"R5"
+			],
 			"type": "change"
 		},
 		{
@@ -1769,7 +1787,7 @@
 			"name": "Only Link to Present Files in README",
 			"options": [
 				{
-					"description": "Always link to all files \u2014 accept dead links as informational",
+					"description": "Always link to all files — accept dead links as informational",
 					"id": "D11-O1"
 				},
 				{
@@ -1804,7 +1822,7 @@
 					"id": "D12-O2"
 				},
 				{
-					"description": "Remove both \u2014 the filenames are self-documenting",
+					"description": "Remove both — the filenames are self-documenting",
 					"id": "D12-O3"
 				}
 			],
@@ -1836,7 +1854,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["POL19", "D8", "R1"],
+			"scope": [
+				"POL19",
+				"D8",
+				"R1"
+			],
 			"type": "change"
 		},
 		{
@@ -1855,7 +1877,10 @@
 					"type": "update"
 				}
 			],
-			"scope": ["D8", "R1"],
+			"scope": [
+				"D8",
+				"R1"
+			],
 			"type": "change"
 		},
 		{
@@ -1887,14 +1912,14 @@
 					"id": "D13-O3"
 				},
 				{
-					"description": "MUST when affecting domain nodes, SHOULD when affecting only non-domain nodes \u2014 determined automatically from affects relationships",
+					"description": "MUST when affecting domain nodes, SHOULD when affecting only non-domain nodes — determined automatically from affects relationships",
 					"id": "D13-O4"
 				}
 			],
 			"rationale": [
 				"Automatic classification from affects relationships means no user burden.",
-				"Domain nodes define what the system IS \u2014 decisions affecting them must consider invariants.",
-				"Non-domain nodes define how the system works \u2014 decisions affecting only these are operational.",
+				"Domain nodes define what the system IS — decisions affecting them must consider invariants.",
+				"Non-domain nodes define how the system works — decisions affecting only these are operational.",
 				"Leverages the existing layer model rather than adding new concepts."
 			],
 			"selected": "D13-O4",
@@ -1919,7 +1944,10 @@
 					"type": "update"
 				}
 			],
-			"scope": ["INV3", "D8"],
+			"scope": [
+				"INV3",
+				"D8"
+			],
 			"type": "change"
 		},
 		{
@@ -1940,7 +1968,7 @@
 					{
 						"description": [
 							"C4 covers multi-level structure (Context, Container, Component, Code).",
-							"It is static \u2014 no decisions, changes, or time. SysProM adds all three."
+							"It is static — no decisions, changes, or time. SysProM adds all three."
 						],
 						"id": "CMP-C4",
 						"name": "C4 Comparison",
@@ -2003,7 +2031,7 @@
 					{
 						"description": [
 							"Git provides temporal mechanics (append-only history, branching, merging).",
-							"No semantic structure \u2014 just file diffs. SysProM adds typed nodes and relationships."
+							"No semantic structure — just file diffs. SysProM adds typed nodes and relationships."
 						],
 						"id": "CMP-GIT",
 						"name": "Git Comparison",
@@ -2011,7 +2039,7 @@
 					},
 					{
 						"description": [
-							"MBSE is the closest formal equivalent \u2014 requirements, structure, behaviour, constraints.",
+							"MBSE is the closest formal equivalent — requirements, structure, behaviour, constraints.",
 							"SysProM can be understood as a lightweight, human-readable, decision-centric MBSE."
 						],
 						"id": "CMP-MBSE",
@@ -2415,7 +2443,7 @@
 				"Comparisons become an artefact node (ART1) with comparison summaries as subsystem concepts.",
 				"Worked examples become artefact nodes (ART2, ART3) with example SysProM graphs as subsystems.",
 				"Naming rationale is already captured in D8.",
-				"Specification is already captured as the JSON itself \u2014 distilled/Specification.md is redundant."
+				"Specification is already captured as the JSON itself — distilled/Specification.md is redundant."
 			],
 			"id": "CH12",
 			"lifecycle": {
@@ -2438,7 +2466,11 @@
 					"type": "add"
 				}
 			],
-			"scope": ["ART1", "ART2", "ART3"],
+			"scope": [
+				"ART1",
+				"ART2",
+				"ART3"
+			],
 			"type": "change"
 		},
 		{
@@ -2467,11 +2499,11 @@
 			"name": "Size-Based Subsystem Splitting",
 			"options": [
 				{
-					"description": "Split only by file type count \u2014 single type always stays as one file",
+					"description": "Split only by file type count — single type always stays as one file",
 					"id": "D15-O1"
 				},
 				{
-					"description": "Split by file type count AND line count \u2014 single type files over 100 lines become folders",
+					"description": "Split by file type count AND line count — single type files over 100 lines become folders",
 					"id": "D15-O2"
 				}
 			],
@@ -2483,7 +2515,7 @@
 			"description": [
 				"Subsystems that would produce a single file over 100 lines are now split into multi-document folders.",
 				"Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).",
-				"Both heuristics are automatic \u2014 no user configuration needed."
+				"Both heuristics are automatic — no user configuration needed."
 			],
 			"id": "CH13",
 			"lifecycle": {
@@ -2507,7 +2539,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["POL20", "D8", "R1"],
+			"scope": [
+				"POL20",
+				"D8",
+				"R1"
+			],
 			"type": "change"
 		},
 		{
@@ -2684,15 +2720,15 @@
 			"name": "Add Bidirectional Spec-Kit Interoperability",
 			"options": [
 				{
-					"description": "Import-only \u2014 parse Spec-Kit files into SysProM nodes, no export",
+					"description": "Import-only — parse Spec-Kit files into SysProM nodes, no export",
 					"id": "D16-O1"
 				},
 				{
-					"description": "Export-only \u2014 generate Spec-Kit files from SysProM nodes, no import",
+					"description": "Export-only — generate Spec-Kit files from SysProM nodes, no import",
 					"id": "D16-O2"
 				},
 				{
-					"description": "Full bidirectional with sync \u2014 import, export, sync, and diff commands",
+					"description": "Full bidirectional with sync — import, export, sync, and diff commands",
 					"id": "D16-O3"
 				}
 			],
@@ -2703,7 +2739,7 @@
 		{
 			"description": [
 				"New speckit/ module provides bidirectional conversion between Spec-Kit project files and SysProM nodes.",
-				"Parser maps constitution.md \u2192 invariant/protocol nodes, spec.md \u2192 artefact/capability/invariant nodes, plan.md \u2192 artefact/element/gate nodes, tasks.md \u2192 stage/change nodes, checklist.md \u2192 gate nodes.",
+				"Parser maps constitution.md → invariant/protocol nodes, spec.md → artefact/capability/invariant nodes, plan.md → artefact/element/gate nodes, tasks.md → stage/change nodes, checklist.md → gate nodes.",
 				"Generator reverses the mapping to produce valid Spec-Kit markdown from SysProM graph data.",
 				"CLI adds import, export, sync, and diff subcommands under sysprom speckit.",
 				"Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 cases), plus round-trip fidelity."
@@ -2760,77 +2796,117 @@
 					"type": "update"
 				}
 			],
-			"scope": ["D16", "EL3", "CMP-SPECKIT"],
+			"scope": [
+				"D16",
+				"EL3",
+				"CMP-SPECKIT"
+			],
 			"type": "change"
 		},
 		{
-			"id": "D17",
-			"type": "decision",
-			"name": "Add Task Subcommand for Change Plan Tracking",
 			"context": [
 				"Change nodes have a plan field (array of {description, done} tasks) defined in the schema, but no CLI command existed to manipulate it.",
 				"Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.",
 				"A dedicated task command enables fully CLI-driven subagent workflows against sysprom.spm.json files."
 			],
-			"options": [
-				{
-					"id": "D17-O1",
-					"description": "Extend the update command with --plan-add and --plan-done flags"
-				},
-				{
-					"id": "D17-O2",
-					"description": "Add a dedicated top-level task command with list/add/done/undone subcommands"
-				}
-			],
-			"selected": "D17-O2",
-			"rationale": "A dedicated command keeps the update command focused on node fields and provides a cleaner interface for agents scripting task workflows. The speckit command established this subcommand pattern.",
+			"id": "D17",
 			"lifecycle": {
-				"proposed": true,
 				"accepted": true,
 				"implemented": true,
+				"proposed": true,
 				"superseded": false
-			}
+			},
+			"name": "Add Task Subcommand for Change Plan Tracking",
+			"options": [
+				{
+					"description": "Extend the update command with --plan-add and --plan-done flags",
+					"id": "D17-O1"
+				},
+				{
+					"description": "Add a dedicated top-level task command with list/add/done/undone subcommands",
+					"id": "D17-O2"
+				}
+			],
+			"rationale": "A dedicated command keeps the update command focused on node fields and provides a cleaner interface for agents scripting task workflows. The speckit command established this subcommand pattern.",
+			"selected": "D17-O2",
+			"type": "decision"
 		},
 		{
-			"id": "CH15",
-			"type": "change",
-			"name": "Implement task CLI Command for Subagent Plan Tracking",
 			"description": [
 				"New task command provides list, add, done, and undone subcommands for manipulating the plan array on change nodes.",
 				"Two new mutate helpers (addPlanTask, updatePlanTask) follow the immutable doc-in/doc-out pattern of the existing mutate module.",
 				"task list supports --pending and --json flags enabling agent scripting via jq.",
 				"AGENTS.md documents the complete subagent workflow: discover, claim, progress, complete."
 			],
-			"scope": ["D17", "CH14"],
+			"id": "CH15",
+			"lifecycle": {
+				"complete": true,
+				"defined": true,
+				"introduced": true
+			},
+			"name": "Implement task CLI Command for Subagent Plan Tracking",
 			"operations": [
 				{
-					"type": "add",
-					"target": "src/cli/task.ts"
+					"target": "src/cli/task.ts",
+					"type": "add"
 				},
 				{
-					"type": "add",
-					"target": "tests/task-cli.unit.test.ts"
+					"target": "tests/task-cli.unit.test.ts",
+					"type": "add"
 				},
 				{
-					"type": "add",
-					"target": "AGENTS.md"
+					"target": "AGENTS.md",
+					"type": "add"
 				},
 				{
-					"type": "update",
+					"description": "Add addPlanTask() and updatePlanTask()",
 					"target": "src/mutate.ts",
-					"description": "Add addPlanTask() and updatePlanTask()"
+					"type": "update"
 				},
 				{
-					"type": "update",
+					"description": "Register task command",
 					"target": "src/cli/index.ts",
-					"description": "Register task command"
+					"type": "update"
 				}
 			],
+			"scope": [
+				"D17",
+				"CH14"
+			],
+			"type": "change"
+		},
+		{
+			"context": "The spec-kit planning integration initially used stage nodes for phases and change nodes for tasks, with flat plan:Task[] arrays for leaf items. This created three separate mechanisms for what is conceptually the same thing.",
+			"description": "Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.",
+			"id": "D18",
 			"lifecycle": {
-				"defined": true,
-				"introduced": true,
-				"complete": true
-			}
+				"options": false
+			},
+			"name": "Recursive Change Nodes for Planning",
+			"rationale": "A phase is just a task with children. Using change nodes with recursive subsystems provides unlimited nesting depth, eliminates the stage node type from planning, and reuses SysProM's existing subsystem recursion rather than inventing a parallel mechanism.",
+			"status": "accepted",
+			"type": "decision",
+			"options": [
+				{
+					"id": "D18-OPT-A",
+					"description": "Keep separate stage nodes for phases and change nodes for tasks (three-layer model)"
+				},
+				{
+					"id": "D18-OPT-B",
+					"description": "Use recursive change nodes with subsystems for unlimited nesting depth (single mechanism)"
+				}
+			],
+			"selected": "D18-OPT-B"
+		},
+		{
+			"description": "New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.",
+			"id": "CH16",
+			"name": "Implement Plan Command with Recursive Task Model",
+			"scope": [
+				"[\"EL-CLI\",\"EL-SPECKIT\"]"
+			],
+			"status": "complete",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -3689,6 +3765,16 @@
 			"from": "D17",
 			"to": "CH14",
 			"type": "affects"
+		},
+		{
+			"from": "CH16",
+			"to": "D18",
+			"type": "implements"
+		},
+		{
+			"from": "D18",
+			"to": "INV2",
+			"type": "must_preserve"
 		}
 	]
 }

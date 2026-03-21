@@ -50,9 +50,9 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
 ### CH2 — Add Process Modelling
 
@@ -80,9 +80,9 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
 ### CH3 — Add File Representation Conventions
 
@@ -124,33 +124,18 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH4 — Rename to SysProM
-
-Adopts SysProM (System Provenance Model) as the name, replacing the working title RDSM.
-
-- Affects: D8
-
-Scope:
-- D8
-
-Operations:
-- update — All documents renamed to use SysProM
-
-#### Lifecycle
-
-- [x] defined
-- [x] introduced
-- [x] complete
-
-### CH5 — Add External Resources Model
+### CH4 — Add External Resources Model
 
 Adds the external reference and internalisation mechanism with typed roles.
 
-- Affects: D9
+- Affects:
+  - D8
+  - D4
+  - D2
 
 Scope:
 - CN7
@@ -167,11 +152,11 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH6 — Add Lifecycle Protocols
+### CH5 — Add Lifecycle Protocols
 
 Adds the decision, change, and node lifecycle state machines as protocols with stages and ordering.
 
@@ -189,11 +174,11 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH7 — Encode Full Normative Specification
+### CH6 — Encode Full Normative Specification
 
 Adds conformance requirements, missing invariants, security and extensibility policies, non-linear evolution capabilities, and complete node/relationship type vocabularies to make the JSON self-contained.
 
@@ -232,87 +217,87 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH8 — Add Text Field Duality
+### CH7 — Add Text Field Duality
 
 Adds support for text fields (description, context, rationale, internalised) to accept either a string or an array of strings.
 Updates the JSON schema, Zod definitions, and specification.
 
-- Affects: D10
+- Affects: D9
 
 Scope:
 - INV21
-- D10
+- D8
 
 Operations:
 - add INV21
-- add D10
+- add D8
 - update R5 — JSON schema updated to accept string | string[] for text fields
 - update R1 — Specification updated with §6.2 Text Fields
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH9 — Switch to Strict Enums with Labelled Definitions
+### CH8 — Switch to Strict Enums with Labelled Definitions
 
 Replaces open z.string() types with z.enum() for node types, statuses, relationship types, and external reference roles.
 Introduces labelledEnum() helper that defines values and labels in one place.
 Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label maps.
 
-- Affects: D11
+- Affects: D10
 
 Scope:
 - INV22
-- D11
+- D8
 - R5
 
 Operations:
 - add INV22
-- add D11
+- add D8
 - update R5 — JSON schema now uses enum instead of string with examples
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH10 — Fix Dead Links in Subsystem READMEs
+### CH9 — Fix Dead Links in Subsystem READMEs
 
 README generator now only links to files that contain nodes for the given subsystem.
 
-- Affects: D12
+- Affects: D11
 
 Scope:
 - POL19
-- D12
+- D8
 - R1
 
 Operations:
 - add POL19
-- add D12
+- add D8
 - update R1 — json-to-md updated to check present node types before generating links
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH11 — Remove Navigation and Document Roles from README
+### CH10 — Remove Navigation and Document Roles from README
 
 Removes the Navigation section and Document Roles table from generated READMEs. The file naming convention is self-documenting.
 
-- Affects: D13
+- Affects: D12
 
 Scope:
-- D13
+- D8
 - R1
 
 Operations:
@@ -320,31 +305,31 @@ Operations:
 
 #### Lifecycle
 
+- [ ] complete
 - [x] defined
 - [ ] introduced
-- [ ] complete
 
-### CH12 — Make Invariant Preservation Layer-Dependent
+### CH11 — Make Invariant Preservation Layer-Dependent
 
 Updates INV3 to require must_preserve only when a decision affects domain nodes.
 Decisions affecting only non-domain nodes (realisations, policies, process nodes) should but are not required to identify preserved invariants.
 
-- Affects: D14
+- Affects: D13
 
 Scope:
 - INV3
-- D14
+- D8
 
 Operations:
 - update INV3 — Reworded to distinguish domain and non-domain affects
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH13 — Internalise Design Archive
+### CH12 — Internalise Design Archive
 
 Internalises content from distilled/ into the SysProM JSON.
 Comparisons become an artefact node (ART1) with comparison summaries as subsystem concepts.
@@ -352,7 +337,7 @@ Worked examples become artefact nodes (ART2, ART3) with example SysProM graphs a
 Naming rationale is already captured in D8.
 Specification is already captured as the JSON itself — distilled/Specification.md is redundant.
 
-- Affects: D15
+- Affects: D14
 
 Scope:
 - ART1
@@ -366,38 +351,101 @@ Operations:
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
-- [x] complete
 
-### CH14 — Implement Spec-Kit File Support
+### CH13 — Add Size-Based Subsystem Splitting and Auto-Grouping
+
+Subsystems that would produce a single file over 100 lines are now split into multi-document folders.
+Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).
+Both heuristics are automatic — no user configuration needed.
+
+- Affects: D15
 
 Scope:
-- EL3
+- POL20
+- D8
+- R1
 
 Operations:
-- add src/speckit/parse.ts — Parse Spec-Kit markdown files into SysProM nodes
-- add src/speckit/generate.ts — Generate Spec-Kit markdown files from SysProM nodes
-- add src/speckit/project.ts — Spec-Kit project structure detection
-- add src/speckit/index.ts — Barrel export
-- add src/cli/speckit.ts — CLI import/export/sync/diff commands
-- update src/cli/index.ts — Register speckit CLI command
-- update src/index.ts — Export speckit module
-- add tests/speckit-parse.unit.test.ts — Parser tests (38 tests)
-- add tests/speckit-generate.unit.test.ts — Generator tests (28 tests)
-
-#### Plan
-
-- [x] Create speckit project structure detection module
-- [x] Implement Spec-Kit file parsers (constitution, spec, plan, tasks, checklist)
-- [x] Implement Spec-Kit file generators (reverse of parsers)
-- [x] Create CLI commands (import, export, sync, diff)
-- [x] Integrate into main index and CLI
-- [x] Write and pass all tests
+- add POL20
+- add D8
+- update R1 — json-to-md updated with line count threshold and auto-grouping
 
 #### Lifecycle
 
+- [x] complete
 - [x] defined
 - [x] introduced
+
+### CH14 — Implement Spec-Kit File Support
+
+New speckit/ module provides bidirectional conversion between Spec-Kit project files and SysProM nodes.
+Parser maps constitution.md → invariant/protocol nodes, spec.md → artefact/capability/invariant nodes, plan.md → artefact/element/gate nodes, tasks.md → stage/change nodes, checklist.md → gate nodes.
+Generator reverses the mapping to produce valid Spec-Kit markdown from SysProM graph data.
+CLI adds import, export, sync, and diff subcommands under sysprom speckit.
+Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 cases), plus round-trip fidelity.
+
+- Affects: D16
+
+Scope:
+- D16
+- EL3
+- CMP-SPECKIT
+
+Operations:
+- add src/speckit/parse.ts
+- add src/speckit/generate.ts
+- add src/speckit/project.ts
+- add src/speckit/index.ts
+- add src/cli/speckit.ts
+- add tests/speckit-parse.unit.test.ts
+- add tests/speckit-generate.unit.test.ts
+- update src/cli/index.ts — Register speckit command
+- update src/index.ts — Export speckit modules
+- update CMP-SPECKIT — Expand description to reflect interoperability
+
+#### Lifecycle
+
 - [x] complete
+- [x] defined
+- [x] introduced
+
+### CH15 — Implement task CLI Command for Subagent Plan Tracking
+
+New task command provides list, add, done, and undone subcommands for manipulating the plan array on change nodes.
+Two new mutate helpers (addPlanTask, updatePlanTask) follow the immutable doc-in/doc-out pattern of the existing mutate module.
+task list supports --pending and --json flags enabling agent scripting via jq.
+AGENTS.md documents the complete subagent workflow: discover, claim, progress, complete.
+
+- Affects: D17
+
+Scope:
+- D17
+- CH14
+
+Operations:
+- add src/cli/task.ts
+- add tests/task-cli.unit.test.ts
+- add AGENTS.md
+- update src/mutate.ts — Add addPlanTask() and updatePlanTask()
+- update src/cli/index.ts — Register task command
+
+#### Lifecycle
+
+- [x] complete
+- [x] defined
+- [x] introduced
+
+### CH16 — Implement Plan Command with Recursive Task Model
+
+New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.
+
+- Implements: D18
+
+- Status: complete
+
+Scope:
+- ["EL-CLI","EL-SPECKIT"]
 

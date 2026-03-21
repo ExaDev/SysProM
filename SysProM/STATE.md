@@ -565,6 +565,7 @@ SysProM can be understood as a lightweight, human-readable, decision-centric MBS
 Spec Kit is a spec-driven development toolkit where specifications become executable.
 Can be fully modelled within SysProM as a protocol with stages, artefacts, and artefact flows.
 SysProM adds invariants, decision supersession, and graph-native traceability.
+Bidirectional interoperability: SysProM can import Spec-Kit project files (spec.md, plan.md, tasks.md, constitution.md, checklist.md) into typed nodes and export them back, enabling round-trip editing in either format.
 
 ##### CMP-RALPLAN — Ralplan Comparison
 
@@ -675,9 +676,9 @@ Rationale: Execution location is a realisation concern.
 
 ###### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 
 ### ART3 — Planning Workflow Example
 

@@ -30,9 +30,9 @@ Domain structure should not be tangled with process mechanics or evolution histo
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D2 — Make Decisions First-Class Entities
@@ -56,9 +56,9 @@ Graph nodes with typed relationships make decisions queryable, traceable, and en
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D3 — Distinguish Invariants From Principles From Policies
@@ -82,9 +82,9 @@ Rationale: The three-way split matches how real systems distinguish structural g
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D4 — Add Process Modelling
@@ -108,9 +108,9 @@ Full process modelling makes the model capable of encoding systems like Spec Kit
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D5 — Format-Agnostic With Markdown as Primary Representation
@@ -132,9 +132,9 @@ Other formats remain valid.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D6 — Recursive Composition Using Same Conventions
@@ -155,9 +155,9 @@ Rationale: Recursive consistency means any node can be understood in isolation u
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
 ### D7 — Append-Only History
@@ -177,62 +177,52 @@ Rationale: Append-only preserves the full provenance chain.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
-- [ ] superseded
-
-### D8 — Name the Model SysProM
-
-Context: The working title 'Recursive, Decision-Driven System Model' is descriptive but clunky.
-A better name should describe what the model provides.
-
-Options:
-- D8-O1: RDSM (Recursive, Decision-Driven System Model)
-- D8-O2: RADAR (Recursive Abstractions, Decisions, Artefacts, and Relationships)
-- D8-O3: CLADE (Composable Layers of Abstraction, Decisions, and Evolution)
-- D8-O4: SysProM (System Provenance Model)
-
-Chosen: D8-O4
-
-Rationale: System Provenance Model describes what the model provides in three words.
-SysProM is pronounceable, follows naming conventions of similar specs (SysML, SysOps), and does not require a backronym.
-
-#### Lifecycle
-
 - [x] proposed
-- [x] accepted
-- [x] implemented
 - [ ] superseded
 
-### D9 — Support External Resources via Reference and Internalisation
+### D8 — Support External Resources via Reference and Internalisation
 
-- Affects: EL7
+- Affects:
+  - EL7
+  - R5
+  - R1
+  - INV3
+  - ART1
+  - ART2
+  - ART3
 - Must preserve:
   - INV19
   - INV20
+  - INV21
+  - INV22
+  - INV18
+  - POL19
+  - INV3
+  - POL20
 
 Context: Nodes often relate to resources outside the graph.
 The model must handle this without coupling to a specific serialisation format.
 
 Options:
-- D9-O1: No external reference support — all content must be internalised
-- D9-O2: External references only — all content is by pointer
-- D9-O3: Both approaches supported independently or together, with serialisation-specific identifiers and typed roles
+- D8-O1: No external reference support — all content must be internalised
+- D8-O2: External references only — all content is by pointer
+- D8-O3: Both approaches supported independently or together, with serialisation-specific identifiers and typed roles
 
-Chosen: D9-O3
+Chosen: D8-O3
 
 Rationale: Internalisation enables portability. References enable traceability.
 Supporting both gives implementors flexibility without losing either property.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D10 — Allow Array-of-Lines for Text Fields
+### D9 — Allow Array-of-Lines for Text Fields
 
 - Affects:
   - R5
@@ -244,11 +234,11 @@ Long descriptions serialised as single strings with embedded \n are hard to read
 An array of lines preserves readability in serialised form.
 
 Options:
-- D10-O1: Single string only — use \n for newlines
-- D10-O2: Array of strings only — always use arrays
-- D10-O3: Either form accepted — string for short content, array for multiline
+- D9-O1: Single string only — use \n for newlines
+- D9-O2: Array of strings only — always use arrays
+- D9-O3: Either form accepted — string for short content, array for multiline
 
-Chosen: D10-O3
+Chosen: D9-O3
 
 Rationale: Short descriptions gain nothing from being wrapped in an array.
 Long descriptions gain readability and diff quality from line-per-element arrays.
@@ -256,12 +246,12 @@ Accepting both avoids forcing a style while enabling better ergonomics where it 
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D11 — Use Strict Enums for Core Types
+### D10 — Use Strict Enums for Core Types
 
 - Affects: R5
 - Must preserve:
@@ -273,22 +263,22 @@ If relationship types, node types, and statuses are arbitrary strings, layer con
 The extensibility section says extensions MUST NOT violate core constraints, but an open string type makes that unenforceable.
 
 Options:
-- D11-O1: Open strings with examples — any value accepted, core types documented only
-- D11-O2: Strict enums — only declared values accepted, extensions must add to the enum
+- D10-O1: Open strings with examples — any value accepted, core types documented only
+- D10-O2: Strict enums — only declared values accepted, extensions must add to the enum
 
-Chosen: D11-O2
+Chosen: D10-O2
 
 Rationale: Strict enums enable schema-level validation, type-safe label derivation, and enforceable layer constraints.
 The DRY labelledEnum pattern ensures each type is defined once with its label, eliminating duplication.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D12 — Only Link to Present Files in README
+### D11 — Only Link to Present Files in README
 
 - Affects: R1
 - Must preserve: POL19
@@ -297,21 +287,21 @@ Context: The README generator was producing navigation links and document role e
 This created dead links in subsystem READMEs.
 
 Options:
-- D12-O1: Always link to all files — accept dead links as informational
-- D12-O2: Only link to files that will be created based on present node types
+- D11-O1: Always link to all files — accept dead links as informational
+- D11-O2: Only link to files that will be created based on present node types
 
-Chosen: D12-O2
+Chosen: D11-O2
 
 Rationale: Dead links mislead readers and break tooling. Links should reflect reality.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D13 — Remove Navigation and Document Roles from README
+### D12 — Remove Navigation and Document Roles from README
 
 - Affects: R1
 
@@ -319,22 +309,22 @@ Context: The README contained a Navigation section and a Document Roles table th
 Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain.
 
 Options:
-- D13-O1: Keep both Navigation and Document Roles
-- D13-O2: Keep Document Roles table only
-- D13-O3: Remove both — the filenames are self-documenting
+- D12-O1: Keep both Navigation and Document Roles
+- D12-O2: Keep Document Roles table only
+- D12-O3: Remove both — the filenames are self-documenting
 
-Chosen: D13-O3
+Chosen: D12-O3
 
 Rationale: Removing redundant sections reduces noise and maintenance burden. The file naming convention is the documentation.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [ ] implemented
+- [x] proposed
 - [ ] superseded
 
-### D14 — Layer-Dependent Invariant Preservation
+### D13 — Layer-Dependent Invariant Preservation
 
 - Affects: INV3
 - Must preserve: INV3
@@ -345,12 +335,12 @@ Forcing must_preserve on these creates friction that discourages recording decis
 SysProM already distinguishes domain nodes (intent, concept, capability, element, invariant) from non-domain nodes (realisation, policy, protocol, etc.).
 
 Options:
-- D14-O1: Keep INV3 as MUST for all decisions
-- D14-O2: Soften INV3 to SHOULD for all decisions
-- D14-O3: Add decision type/level classification
-- D14-O4: MUST when affecting domain nodes, SHOULD when affecting only non-domain nodes — determined automatically from affects relationships
+- D13-O1: Keep INV3 as MUST for all decisions
+- D13-O2: Soften INV3 to SHOULD for all decisions
+- D13-O3: Add decision type/level classification
+- D13-O4: MUST when affecting domain nodes, SHOULD when affecting only non-domain nodes — determined automatically from affects relationships
 
-Chosen: D14-O4
+Chosen: D13-O4
 
 Rationale: Automatic classification from affects relationships means no user burden.
 Domain nodes define what the system IS — decisions affecting them must consider invariants.
@@ -359,12 +349,12 @@ Leverages the existing layer model rather than adding new concepts.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D15 — Internalise Design Archive into SysProM JSON
+### D14 — Internalise Design Archive into SysProM JSON
 
 - Affects:
   - ART1
@@ -377,39 +367,116 @@ The specification is already captured as the JSON itself.
 The comparisons, examples, and naming rationale could be modelled as artefact nodes with subsystems.
 
 Options:
-- D15-O1: Keep distilled/ as separate files, reference from JSON
-- D15-O2: Internalise key content as artefact nodes with subsystems in the JSON
+- D14-O1: Keep distilled/ as separate files, reference from JSON
+- D14-O2: Internalise key content as artefact nodes with subsystems in the JSON
 
-Chosen: D15-O2
+Chosen: D14-O2
 
 Rationale: Internalising makes the JSON self-contained. Artefact nodes with subsystems naturally model documents that contain structured content.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
 - [ ] superseded
 
-### D16 — Add Bidirectional Spec-Kit File Interoperability
+### D15 — Size-Based Subsystem Splitting
 
-SysProM can model Spec-Kit workflows as nodes and relationships but cannot read or write actual Spec-Kit files (spec.md, plan.md, tasks.md, constitution.md, checklist.md). Users working with both systems need bidirectional conversion.
+- Affects: R1
+- Must preserve: POL20
+
+Context: Small subsystems (e.g. 6 node type definitions) are cleaner as single .spm.md files.
+Large subsystems (e.g. 24 relationship type definitions at 107 lines) become unwieldy in a single file.
+The file type count heuristic alone doesn't catch single-type subsystems that are too long.
 
 Options:
-- D16-O1: Import-only — parse Spec-Kit files into SysProM nodes
-- D16-O2: Export-only — generate Spec-Kit files from SysProM nodes
-- D16-O3: Full bidirectional with import, export, sync, and diff
+- D15-O1: Split only by file type count — single type always stays as one file
+- D15-O2: Split by file type count AND line count — single type files over 100 lines become folders
 
-Chosen: D16-O3
+Chosen: D15-O2
 
-Rationale: Full bidirectional support enables true interoperability. Users can start with Spec-Kit workflows, import into SysProM for provenance tracking, make changes in either system, and keep them synchronized. This preserves SysProM's role as the provenance substrate while respecting Spec-Kit as a workflow tool.
-
-- Affects: EL3
-- Must preserve: INV4, INV5, INV6, INV21, INV22
+Rationale: Combining both heuristics keeps small subsystems compact while splitting large ones for readability.
 
 #### Lifecycle
 
-- [x] proposed
 - [x] accepted
 - [x] implemented
+- [x] proposed
+- [ ] superseded
+
+### D16 — Add Bidirectional Spec-Kit Interoperability
+
+- Affects: EL3
+- Must preserve:
+  - INV4
+  - INV5
+  - INV6
+  - INV21
+  - INV22
+
+Context: SysProM can model Spec-Kit workflows as nodes and relationships, but could not read or write actual Spec-Kit files.
+Users working with Spec-Kit (spec.md, plan.md, tasks.md, constitution.md, checklist.md) had no way to import their existing work into SysProM or export SysProM graphs to Spec-Kit format.
+A parser+generator pair enables lossless round-trips between both ecosystems.
+
+Options:
+- D16-O1: Import-only — parse Spec-Kit files into SysProM nodes, no export
+- D16-O2: Export-only — generate Spec-Kit files from SysProM nodes, no import
+- D16-O3: Full bidirectional with sync — import, export, sync, and diff commands
+
+Chosen: D16-O3
+
+Rationale: Full bidirectional support allows users to start in either ecosystem and keep both in sync. Import-only or export-only would force a one-way migration rather than enabling collaborative workflows.
+
+#### Lifecycle
+
+- [x] accepted
+- [x] implemented
+- [x] proposed
+- [ ] superseded
+
+### D17 — Add Task Subcommand for Change Plan Tracking
+
+- Affects: CH14
+
+Context: Change nodes have a plan field (array of {description, done} tasks) defined in the schema, but no CLI command existed to manipulate it.
+Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.
+A dedicated task command enables fully CLI-driven subagent workflows against sysprom.spm.json files.
+
+Options:
+- D17-O1: Extend the update command with --plan-add and --plan-done flags
+- D17-O2: Add a dedicated top-level task command with list/add/done/undone subcommands
+
+Chosen: D17-O2
+
+Rationale: A dedicated command keeps the update command focused on node fields and provides a cleaner interface for agents scripting task workflows. The speckit command established this subcommand pattern.
+
+#### Lifecycle
+
+- [x] accepted
+- [x] implemented
+- [x] proposed
+- [ ] superseded
+
+### D18 — Recursive Change Nodes for Planning
+
+Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The spec-kit planning integration initially used stage nodes for phases and change nodes for tasks, with flat plan:Task[] arrays for leaf items. This created three separate mechanisms for what is conceptually the same thing.
+
+Options:
+- D18-OPT-A: Keep separate stage nodes for phases and change nodes for tasks (three-layer model)
+- D18-OPT-B: Use recursive change nodes with subsystems for unlimited nesting depth (single mechanism)
+
+Chosen: D18-OPT-B
+
+Rationale: A phase is just a task with children. Using change nodes with recursive subsystems provides unlimited nesting depth, eliminates the stage node type from planning, and reuses SysProM's existing subsystem recursion rather than inventing a parallel mechanism.
+
+#### Lifecycle
+
+- [ ] options
 
