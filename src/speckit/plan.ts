@@ -606,7 +606,7 @@ export function planStatus(
   const checklistLifecycle = checklist?.lifecycle ?? {};
   const checklistItemCount = Object.keys(checklistLifecycle).length;
   const checklistDoneCount = Object.values(checklistLifecycle).filter(
-    (v) => v === true,
+    (v) => !!v, // Counts `true` and date strings (truthy values) as done
   ).length;
 
   // Determine nextStep

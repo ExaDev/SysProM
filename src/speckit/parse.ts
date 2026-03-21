@@ -869,7 +869,7 @@ export function parseSpecKitFeature(
       title: featureName,
       doc_type: "speckit",
     },
-    nodes: nodes.length > 0 ? nodes : undefined,
+    nodes,
     relationships: relationships.length > 0 ? relationships : undefined,
   };
 

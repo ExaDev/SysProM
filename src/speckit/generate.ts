@@ -400,15 +400,15 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
   let output = `# Task List: ${title}\n\n`;
 
   // Extract subsystem from the protocol node.
-  const subsystem = protocol.subsystem;
-  if (!subsystem || !subsystem.nodes || subsystem.nodes.length === 0) {
+  if (!protocol.subsystem?.nodes?.length) {
     output += "*(No phases defined)*\n\n";
     return output.trim();
   }
+  const subsystem = protocol.subsystem;
 
   // Helper functions to work with subsystem data
   function findNodeInSubsystem(id: string): Node | null {
-    return subsystem.nodes?.find((n) => n.id === id) ?? null;
+    return subsystem.nodes.find((n) => n.id === id) ?? null;
   }
 
   function findRelationshipsFromInSubsystem(
@@ -585,7 +585,7 @@ export function generateChecklist(
 
   const sections: Map<
     string,
-    Array<{ key: string; done: boolean }>
+    Array<{ key: string; done: boolean | string }>
   > = new Map();
   let currentSection = "Items";
 
