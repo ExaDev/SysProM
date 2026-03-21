@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["./src/index.ts"],
   "out": "site",
-  "plugin": [],
+  "plugin": ["typedoc-plugin-zod"],
   "name": "SysProM",
   "readme": "README.md",
   "projectDocuments": ["docs/cli/README.md"],

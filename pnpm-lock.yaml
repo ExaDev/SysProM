@@ -33,6 +33,9 @@ importers:
       typedoc-plugin-markdown:
         specifier: 4.11.0
         version: 4.11.0(typedoc@0.28.17(typescript@5.9.3))
+      typedoc-plugin-zod:
+        specifier: 1.4.3
+        version: 1.4.3(typedoc@0.28.17(typescript@5.9.3))
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -512,6 +515,11 @@ packages:
     peerDependencies:
       typedoc: 0.28.x
 
+  typedoc-plugin-zod@1.4.3:
+    resolution: {integrity: sha512-j3kb4dGGK5OegtiIOH4F4etYdqq2lh+sTx6sABTmptPJJm8qx9XHyNlzfLYqW86ZVfL0hFR3+B/Ij9YXQw9TsA==}
+    peerDependencies:
+      typedoc: 0.23.x || 0.24.x || 0.25.x || 0.26.x || 0.27.x || 0.28.x
+
   typedoc@0.28.17:
     resolution: {integrity: sha512-ZkJ2G7mZrbxrKxinTQMjFqsCoYY6a5Luwv2GKbTnBCEgV2ihYm5CflA9JnJAwH0pZWavqfYxmDkFHPt4yx2oDQ==}
     engines: {node: '>= 18', pnpm: '>= 10'}
@@ -962,6 +970,10 @@ snapshots:
       '@turbo/windows-arm64': 2.8.20
 
   typedoc-plugin-markdown@4.11.0(typedoc@0.28.17(typescript@5.9.3)):
+    dependencies:
+      typedoc: 0.28.17(typescript@5.9.3)
+
+  typedoc-plugin-zod@1.4.3(typedoc@0.28.17(typescript@5.9.3)):
     dependencies:
       typedoc: 0.28.17(typescript@5.9.3)
 
