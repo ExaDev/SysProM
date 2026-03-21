@@ -621,16 +621,8 @@ export function parsePlan(content: string, idPrefix: string): ParseResult {
 export function parseTasks(content: string, idPrefix: string): ParseResult {
   const sections = parseSections(content);
   const allSections = flattenSections(sections);
-  const nodes: Node[] = [];
-  const relationships: Relationship[] = [];
-
-  // Create implementation protocol
-  const protocolId = `${idPrefix}-PROT-IMPL`;
-  nodes.push({
-    id: protocolId,
-    type: "protocol",
-    name: "Implementation Protocol",
-  });
+  const topLevelNodes: Node[] = [];
+  const topLevelRelationships: Relationship[] = [];
 
   // Parse phases (## Phase N: Title)
   const phases: Array<{
@@ -657,31 +649,28 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
     }
   }
 
-  // Create stage nodes for each phase and link via must_follow
-  const stageIds: string[] = [];
+  // Build subsystem nodes and relationships
+  const subsystemNodes: Node[] = [];
+  const subsystemRelationships: Relationship[] = [];
+
+  // Create stage nodes for each phase (with LOCAL IDs) and link via must_follow
+  const stageLocalIds: string[] = [];
   for (let i = 0; i < phases.length; i++) {
     const phase = phases[i];
-    const stageId = `${idPrefix}-PH-${phase.phaseNum}`;
-    stageIds.push(stageId);
+    const stageLocalId = `PH-${phase.phaseNum}`;
+    stageLocalIds.push(stageLocalId);
 
-    nodes.push({
-      id: stageId,
+    subsystemNodes.push({
+      id: stageLocalId,
       type: "stage",
       name: phase.title,
     });
 
-    // Link to protocol
-    relationships.push({
-      from: stageId,
-      to: protocolId,
-      type: "part_of",
-    });
-
-    // Link to previous phase via must_follow
+    // Link to previous stage via must_follow (using LOCAL IDs)
     if (i > 0) {
-      relationships.push({
-        from: stageId,
-        to: stageIds[i - 1],
+      subsystemRelationships.push({
+        from: stageLocalId,
+        to: stageLocalIds[i - 1],
         type: "must_follow",
       });
     }
@@ -710,40 +699,41 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
     }
   }
 
-  // Create change nodes for user stories
+  // Create change nodes for user stories (with LOCAL IDs in subsystem)
   for (const [storyKey, tasks] of Object.entries(changesByStory)) {
-    const changeId = `${idPrefix}-CHG-${storyKey}`;
+    const changeLocalId = `CHG-${storyKey}`;
     const plan = tasks.map((t) => ({
       description: t.text,
       done: t.done,
     }));
 
-    nodes.push({
-      id: changeId,
+    subsystemNodes.push({
+      id: changeLocalId,
       type: "change",
       name: storyKey,
       plan,
     });
 
-    // Link to the capability
-    relationships.push({
-      from: changeId,
+    // Link to the capability at the top level (using GLOBAL ID format)
+    const changeGlobalId = `${idPrefix}-CHG-${storyKey}`;
+    topLevelRelationships.push({
+      from: changeGlobalId,
       to: `${idPrefix}-${storyKey}`,
       type: "implements",
     });
   }
 
-  // Create change nodes for phase-level tasks
+  // Create change nodes for phase-level tasks (with LOCAL IDs in subsystem)
   for (const [phaseNum, tasks] of Object.entries(changesByPhase)) {
     if (tasks.length > 0) {
-      const changeId = `${idPrefix}-CHG-PH${phaseNum}`;
+      const changeLocalId = `CHG-PH${phaseNum}`;
       const plan = tasks.map((t) => ({
         description: t.text,
         done: t.done,
       }));
 
-      nodes.push({
-        id: changeId,
+      subsystemNodes.push({
+        id: changeLocalId,
         type: "change",
         name: `Phase ${phaseNum} Tasks`,
         plan,
@@ -751,7 +741,28 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
     }
   }
 
-  return { nodes, relationships };
+  // Add stages to subsystem (with LOCAL IDs and part_of relationships)
+  for (const stageLocalId of stageLocalIds) {
+    subsystemRelationships.push({
+      from: stageLocalId,
+      to: "PROT-IMPL",
+      type: "part_of",
+    });
+  }
+
+  // Create implementation protocol with subsystem
+  const protocolId = `${idPrefix}-PROT-IMPL`;
+  topLevelNodes.push({
+    id: protocolId,
+    type: "protocol",
+    name: "Implementation Protocol",
+    subsystem: {
+      nodes: subsystemNodes,
+      relationships: subsystemRelationships,
+    },
+  });
+
+  return { nodes: topLevelNodes, relationships: topLevelRelationships };
 }
 
 // ---------------------------------------------------------------------------
