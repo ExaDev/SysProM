@@ -449,3 +449,11 @@ New spm plan command with five subcommands: init (scaffold feature skeleton), ad
 Scope:
 - ["EL-CLI","EL-SPECKIT"]
 
+### CH17 — Implement Temporal Support
+
+Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.
+
+- Implements: D19
+
+- Status: complete
+

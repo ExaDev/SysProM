@@ -1104,9 +1104,9 @@
 			],
 			"id": "D1",
 			"lifecycle": {
-				"accepted": true,
+				"accepted": "2025-06-15",
 				"implemented": true,
-				"proposed": true,
+				"proposed": "2025-06-01",
 				"superseded": false
 			},
 			"name": "Separate Domain From Process From Evolution",
@@ -1135,9 +1135,9 @@
 			"context": "Systems evolve through choices, but most models bury decisions in prose or lose them entirely.",
 			"id": "D2",
 			"lifecycle": {
-				"accepted": true,
+				"accepted": "2025-06-20",
 				"implemented": true,
-				"proposed": true,
+				"proposed": "2025-06-05",
 				"superseded": false
 			},
 			"name": "Make Decisions First-Class Entities",
@@ -1166,9 +1166,9 @@
 			"context": "Systems have rules at different levels of rigidity. Collapsing all rules into one type loses critical information.",
 			"id": "D3",
 			"lifecycle": {
-				"accepted": true,
+				"accepted": "2025-06-22T14:30:00Z",
 				"implemented": true,
-				"proposed": true,
+				"proposed": "2025-06-10T09:15:00Z",
 				"superseded": false
 			},
 			"name": "Distinguish Invariants From Principles From Policies",
@@ -2883,20 +2883,20 @@
 				"options": false
 			},
 			"name": "Recursive Change Nodes for Planning",
-			"rationale": "A phase is just a task with children. Using change nodes with recursive subsystems provides unlimited nesting depth, eliminates the stage node type from planning, and reuses SysProM's existing subsystem recursion rather than inventing a parallel mechanism.",
-			"status": "accepted",
-			"type": "decision",
 			"options": [
 				{
-					"id": "D18-OPT-A",
-					"description": "Keep separate stage nodes for phases and change nodes for tasks (three-layer model)"
+					"description": "Keep separate stage nodes for phases and change nodes for tasks (three-layer model)",
+					"id": "D18-OPT-A"
 				},
 				{
-					"id": "D18-OPT-B",
-					"description": "Use recursive change nodes with subsystems for unlimited nesting depth (single mechanism)"
+					"description": "Use recursive change nodes with subsystems for unlimited nesting depth (single mechanism)",
+					"id": "D18-OPT-B"
 				}
 			],
-			"selected": "D18-OPT-B"
+			"rationale": "A phase is just a task with children. Using change nodes with recursive subsystems provides unlimited nesting depth, eliminates the stage node type from planning, and reuses SysProM's existing subsystem recursion rather than inventing a parallel mechanism.",
+			"selected": "D18-OPT-B",
+			"status": "accepted",
+			"type": "decision"
 		},
 		{
 			"description": "New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.",
@@ -2905,6 +2905,33 @@
 			"scope": [
 				"[\"EL-CLI\",\"EL-SPECKIT\"]"
 			],
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"context": "SysProM had no temporal support. The lifecycle field tracked state completion but not when states were reached.",
+			"description": "Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.",
+			"id": "D19",
+			"name": "Extend Lifecycle with Temporal Timestamps",
+			"options": [
+				{
+					"description": "Add separate timestamp fields (created_at, updated_at) to nodes",
+					"id": "D19-OPT-A"
+				},
+				{
+					"description": "Extend lifecycle values from boolean to boolean | string (ISO date)",
+					"id": "D19-OPT-B"
+				}
+			],
+			"rationale": "One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.",
+			"selected": "D19-OPT-B",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.",
+			"id": "CH17",
+			"name": "Implement Temporal Support",
 			"status": "complete",
 			"type": "change"
 		}
@@ -3773,6 +3800,16 @@
 		},
 		{
 			"from": "D18",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH17",
+			"to": "D19",
+			"type": "implements"
+		},
+		{
+			"from": "D19",
 			"to": "INV2",
 			"type": "must_preserve"
 		}

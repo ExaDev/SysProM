@@ -30,9 +30,9 @@ Domain structure should not be tangled with process mechanics or evolution histo
 
 #### Lifecycle
 
-- [x] accepted
+- [ ] accepted (2025-06-15)
 - [x] implemented
-- [x] proposed
+- [ ] proposed (2025-06-01)
 - [ ] superseded
 
 ### D2 — Make Decisions First-Class Entities
@@ -56,9 +56,9 @@ Graph nodes with typed relationships make decisions queryable, traceable, and en
 
 #### Lifecycle
 
-- [x] accepted
+- [ ] accepted (2025-06-20)
 - [x] implemented
-- [x] proposed
+- [ ] proposed (2025-06-05)
 - [ ] superseded
 
 ### D3 — Distinguish Invariants From Principles From Policies
@@ -479,4 +479,22 @@ Rationale: A phase is just a task with children. Using change nodes with recursi
 #### Lifecycle
 
 - [ ] options
+
+### D19 — Extend Lifecycle with Temporal Timestamps
+
+Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: SysProM had no temporal support. The lifecycle field tracked state completion but not when states were reached.
+
+Options:
+- D19-OPT-A: Add separate timestamp fields (created_at, updated_at) to nodes
+- D19-OPT-B: Extend lifecycle values from boolean to boolean | string (ISO date)
+
+Chosen: D19-OPT-B
+
+Rationale: One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.
 
