@@ -492,3 +492,96 @@ describe("stateAt", () => {
     assert.ok(state.activeStates.includes("accepted"));
   });
 });
+
+// ---------------------------------------------------------------------------
+// Full ISO timestamp tests (with time component)
+// ---------------------------------------------------------------------------
+
+describe("full ISO timestamps", () => {
+  it("timeline sorts full ISO timestamps correctly", () => {
+    const nodes: Node[] = [
+      {
+        id: "D1",
+        type: "decision",
+        name: "First",
+        lifecycle: {
+          proposed: "2025-06-10T09:15:00Z",
+          accepted: "2025-06-10T14:30:00Z",
+        },
+      },
+    ];
+    const doc = makeDoc(nodes);
+    const events = timeline(doc);
+
+    assert.equal(events.length, 2);
+    assert.equal(events[0].state, "proposed");
+    assert.equal(events[0].timestamp, "2025-06-10T09:15:00Z");
+    assert.equal(events[1].state, "accepted");
+    assert.equal(events[1].timestamp, "2025-06-10T14:30:00Z");
+  });
+
+  it("timeline interleaves date-only and full timestamps", () => {
+    const nodes: Node[] = [
+      {
+        id: "D1",
+        type: "decision",
+        name: "First",
+        lifecycle: { proposed: "2025-06-10" },
+      },
+      {
+        id: "D2",
+        type: "decision",
+        name: "Second",
+        lifecycle: { proposed: "2025-06-10T08:00:00Z" },
+      },
+    ];
+    const doc = makeDoc(nodes);
+    const events = timeline(doc);
+
+    assert.equal(events.length, 2);
+    // Date-only "2025-06-10" sorts before "2025-06-10T08:00:00Z" lexicographically
+    assert.equal(events[0].nodeId, "D1");
+    assert.equal(events[1].nodeId, "D2");
+  });
+
+  it("stateAt works with full ISO timestamps", () => {
+    const nodes: Node[] = [
+      {
+        id: "D1",
+        type: "decision",
+        name: "First",
+        lifecycle: {
+          proposed: "2025-06-10T09:00:00Z",
+          accepted: "2025-06-10T15:00:00Z",
+        },
+      },
+    ];
+    const doc = makeDoc(nodes);
+
+    // Query at noon — proposed should be active, accepted should not
+    const states = stateAt(doc, "2025-06-10T12:00:00Z");
+    assert.equal(states.length, 1);
+    assert.ok(states[0].activeStates.includes("proposed"));
+    assert.ok(!states[0].activeStates.includes("accepted"));
+  });
+
+  it("nodeHistory preserves full ISO timestamps", () => {
+    const nodes: Node[] = [
+      {
+        id: "D1",
+        type: "decision",
+        name: "First",
+        lifecycle: {
+          proposed: "2025-06-10T09:15:30Z",
+          accepted: "2025-06-22T14:30:00+01:00",
+        },
+      },
+    ];
+    const doc = makeDoc(nodes);
+    const events = nodeHistory(doc, "D1");
+
+    assert.equal(events.length, 2);
+    assert.equal(events[0].timestamp, "2025-06-10T09:15:30Z");
+    assert.equal(events[1].timestamp, "2025-06-22T14:30:00+01:00");
+  });
+});
