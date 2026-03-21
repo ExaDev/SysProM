@@ -114,22 +114,22 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 
 ## How SysProM Compares
 
-| System | Readable | Parseable | State | Rationale | History | Constraints | Nesting | Diagrams | Inference | Impact | Temporal | Scaffolding | Planning |
-|--------|----------|-----------|-------|-----------|---------|-------------|---------|----------|-----------|--------|----------|-------------|----------|
-| [MBSE (SysML)](https://www.omg.org/spec/SysML/) | 🔶 | ✅ | ✅ | 🔶 | 🔶 | ✅ | ✅ | ✅ | | ✅ | | | |
-| [Knowledge Graphs](https://www.w3.org/TR/rdf12-concepts/) | | ✅ | ✅ | | | 🔶 | ✅ | 🔶 | ✅ | | | | |
-| [EA (ArchiMate)](https://pubs.opengroup.org/architecture/archimate-spec/) | ✅ | 🔶 | ✅ | | | 🔶 | 🔶 | ✅ | | ✅ | | | |
-| [Git](https://git-scm.com/) | 🔶 | ✅ | ✅ | | ✅ | | | | | | ✅ | | |
-| [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) | | ✅ | 🔶 | | ✅ | 🔶 | | | | | ✅ | | |
-| [DDD](https://www.domainlanguage.com/ddd/) | ✅ | | ✅ | | | 🔶 | 🔶 | | | | | | |
-| [C4](https://c4model.com/) | ✅ | | ✅ | | | | 🔶 | ✅ | | | | | |
-| [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | 🔶 | | | | 🔶 | | | |
-| [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | 🔶 | | 🔶 | | | | | ✅ | ✅ |
-| [ADR](https://adr.github.io/) | ✅ | | | ✅ | 🔶 | | | | | | | | |
-| [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 |
-| [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ |
-| [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | |
-| **SysProM** | **✅** | **✅** | **✅** | **✅** | **✅** | **✅** | **✅** | 🔶 | | 🔶 | | 🔶 | 🔶 |
+| System | Readable | Parseable | State | Rationale | History | Constraints | Nesting | Diagrams | Inference | Impact | Temporal | Scaffolding | Planning | Tracking |
+|--------|----------|-----------|-------|-----------|---------|-------------|---------|----------|-----------|--------|----------|-------------|----------|----------|
+| [MBSE (SysML)](https://www.omg.org/spec/SysML/) | 🔶 | ✅ | ✅ | 🔶 | 🔶 | ✅ | ✅ | ✅ | | ✅ | | | | |
+| [Knowledge Graphs](https://www.w3.org/TR/rdf12-concepts/) | | ✅ | ✅ | | | 🔶 | ✅ | 🔶 | ✅ | | | | | |
+| [EA (ArchiMate)](https://pubs.opengroup.org/architecture/archimate-spec/) | ✅ | 🔶 | ✅ | | | 🔶 | 🔶 | ✅ | | ✅ | | | | |
+| [Git](https://git-scm.com/) | 🔶 | ✅ | ✅ | | ✅ | | | | | | ✅ | | | 🔶 |
+| [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) | | ✅ | 🔶 | | ✅ | 🔶 | | | | | ✅ | | | |
+| [DDD](https://www.domainlanguage.com/ddd/) | ✅ | | ✅ | | | 🔶 | 🔶 | | | | | | | |
+| [C4](https://c4model.com/) | ✅ | | ✅ | | | | 🔶 | ✅ | | | | | | |
+| [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | 🔶 | | | | 🔶 | | | | 🔶 |
+| [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | 🔶 | | 🔶 | | | | | ✅ | ✅ | ✅ |
+| [ADR](https://adr.github.io/) | ✅ | | | ✅ | 🔶 | | | | | | | | | |
+| [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
+| [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
+| [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | | |
+| **SysProM** | **✅** | **✅** | **✅** | **✅** | **✅** | **✅** | **✅** | 🔶 | | 🔶 | | 🔶 | 🔶 | **✅** |
 
 ✅ = first-class support. 🔶 = partial or implicit.
 
