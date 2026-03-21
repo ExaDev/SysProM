@@ -8,6 +8,8 @@ import { run as add } from "./add.js";
 import { run as remove } from "./remove.js";
 import { run as update } from "./update.js";
 import { run as stats } from "./stats.js";
+import { run as speckit } from "./speckit.js";
+import { run as task } from "./task.js";
 
 const VERSION = "1.0.0";
 
@@ -22,11 +24,13 @@ Commands:
   query <input> <type> [filters]        Query nodes and relationships
   add <input> <node-type> [fields]      Add a node
   remove <input> <node-id>              Remove a node
-  update <input> <node-id> [fields]     Update a node, relationship, or metadata
-  stats <input>                         Print document summary
+update <input> <node-id> [fields]     Update a node, relationship, or metadata
+stats <input>                         Print document summary
+speckit <sub> [options]               Spec-Kit import/export/sync/diff
+task <sub> [options]                  Task list/add/done/undone on change plans
 
 Options:
-  --help, -h       Show this help message
+--help, -h       Show this help message
   --version, -v    Show version
 
 Examples:
@@ -82,6 +86,12 @@ switch (command) {
     break;
   case "stats":
     stats(subArgs);
+    break;
+  case "speckit":
+    speckit(subArgs);
+    break;
+  case "task":
+    task(subArgs);
     break;
   default:
     console.error(`Unknown command: ${command}`);
