@@ -33,7 +33,7 @@ export function loadDocument(input: string): LoadedDocument {
   let doc: SysProMDocument;
   switch (format) {
     case "json": {
-      const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
+      const raw: unknown = JSON.parse(readFileSync(path, "utf8"));
       const result = sysproMDocument.safeParse(raw);
       if (!result.success) {
         throw new Error(

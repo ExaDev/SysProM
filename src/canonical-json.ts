@@ -30,6 +30,10 @@ export function canonicalise(
   return serialise(value, indent, 0);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function serialise(value: unknown, indent: string, depth: number): string {
   if (value === null) return "null";
   if (value === true) return "true";
@@ -50,8 +54,8 @@ function serialise(value: unknown, indent: string, depth: number): string {
     return serialiseArray(value, indent, depth);
   }
 
-  if (typeof value === "object") {
-    return serialiseObject(value as Record<string, unknown>, indent, depth);
+  if (isRecord(value)) {
+    return serialiseObject(value, indent, depth);
   }
 
   throw new Error(`Unserialisable type: ${typeof value}`);

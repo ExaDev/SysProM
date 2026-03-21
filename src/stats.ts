@@ -73,7 +73,7 @@ export function stats(doc: SysProMDocument): DocumentStats {
   const externalReferenceCount = (doc.external_references ?? []).length;
 
   return {
-    title: (doc.metadata?.title as string) ?? "(untitled)",
+    title: doc.metadata?.title ?? "(untitled)",
     nodesByType,
     relationshipsByType,
     totalNodes: doc.nodes.length,

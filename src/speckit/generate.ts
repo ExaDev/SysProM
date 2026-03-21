@@ -435,8 +435,7 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 
   // Find top-level change nodes within the subsystem (phases are now change nodes).
   const topLevelChangeIds = (subsystem.nodes ?? [])
-    .filter((n) => n.type === "change" && !n.parent)
-    .map((n) => n as Node | null);
+    .filter((n) => n.type === "change" && !n.parent);
 
   // Sort top-level changes by must_follow order using topological sort.
   const sortedChanges: (Node | null)[] = [];

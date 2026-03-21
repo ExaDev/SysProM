@@ -1,3 +1,4 @@
+import * as z from "zod";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import type { SysProMDocument, Node, Relationship, ExternalReference, Text, NodeType, RelationshipType, NodeStatus, ExternalReferenceRole } from "./schema.js";
@@ -15,6 +16,9 @@ import {
 const LABEL_TO_TYPE: Record<string, string> = Object.fromEntries(
   Object.entries(NODE_LABEL_TO_TYPE).map(([k, v]) => [k.toLowerCase(), v]),
 );
+
+const operationType = z.enum(["add", "update", "remove", "link"]);
+type OperationType = z.infer<typeof operationType>;
 
 function parseNodeType(s: string): NodeType {
   const result = nodeType.safeParse(s);
@@ -279,7 +283,12 @@ function parseNodeFromSection(section: Section, allSections: Section[]): { node:
   if (opLines.length > 0) {
     node.operations = opLines.map((line) => {
       const parts = line.split(" ");
-      const type = parts[0] as "add" | "update" | "remove" | "link";
+      const rawType = parts[0];
+      const parsed = operationType.safeParse(rawType);
+      if (!parsed.success) {
+        throw new Error(`Unknown operation type: ${rawType}`);
+      }
+      const type = parsed.data;
       const rest = parts.slice(1);
       const dashIdx = rest.indexOf("—");
       if (dashIdx >= 0) {

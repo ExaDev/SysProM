@@ -9,6 +9,7 @@ import {
   NODE_FILE_MAP,
   NODE_TYPE_LABELS,
   nodeType,
+  relationshipType,
   RELATIONSHIP_TYPE_LABELS,
 } from "./schema.js";
 
@@ -85,7 +86,7 @@ function renderNodeRelationships(
 
   const lines: string[] = [];
   for (const [type, targets] of grouped) {
-    const label = (RELATIONSHIP_TYPE_LABELS as Record<string, string>)[type] ?? type;
+    const label = relationshipType.is(type) ? RELATIONSHIP_TYPE_LABELS[type] : type;
     if (targets.length === 1) {
       lines.push(`- ${label}: ${targets[0]}`);
     } else {
