@@ -370,3 +370,34 @@ Operations:
 - [x] introduced
 - [x] complete
 
+### CH14 — Implement Spec-Kit File Support
+
+Scope:
+- EL3
+
+Operations:
+- add src/speckit/parse.ts — Parse Spec-Kit markdown files into SysProM nodes
+- add src/speckit/generate.ts — Generate Spec-Kit markdown files from SysProM nodes
+- add src/speckit/project.ts — Spec-Kit project structure detection
+- add src/speckit/index.ts — Barrel export
+- add src/cli/speckit.ts — CLI import/export/sync/diff commands
+- update src/cli/index.ts — Register speckit CLI command
+- update src/index.ts — Export speckit module
+- add tests/speckit-parse.unit.test.ts — Parser tests (38 tests)
+- add tests/speckit-generate.unit.test.ts — Generator tests (28 tests)
+
+#### Plan
+
+- [x] Create speckit project structure detection module
+- [x] Implement Spec-Kit file parsers (constitution, spec, plan, tasks, checklist)
+- [x] Implement Spec-Kit file generators (reverse of parsers)
+- [x] Create CLI commands (import, export, sync, diff)
+- [x] Integrate into main index and CLI
+- [x] Write and pass all tests
+
+#### Lifecycle
+
+- [x] defined
+- [x] introduced
+- [x] complete
+

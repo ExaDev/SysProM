@@ -391,3 +391,25 @@ Rationale: Internalising makes the JSON self-contained. Artefact nodes with subs
 - [x] implemented
 - [ ] superseded
 
+### D16 — Add Bidirectional Spec-Kit File Interoperability
+
+SysProM can model Spec-Kit workflows as nodes and relationships but cannot read or write actual Spec-Kit files (spec.md, plan.md, tasks.md, constitution.md, checklist.md). Users working with both systems need bidirectional conversion.
+
+Options:
+- D16-O1: Import-only — parse Spec-Kit files into SysProM nodes
+- D16-O2: Export-only — generate Spec-Kit files from SysProM nodes
+- D16-O3: Full bidirectional with import, export, sync, and diff
+
+Chosen: D16-O3
+
+Rationale: Full bidirectional support enables true interoperability. Users can start with Spec-Kit workflows, import into SysProM for provenance tracking, make changes in either system, and keep them synchronized. This preserves SysProM's role as the provenance substrate while respecting Spec-Kit as a workflow tool.
+
+- Affects: EL3
+- Must preserve: INV4, INV5, INV6, INV21, INV22
+
+#### Lifecycle
+
+- [x] proposed
+- [x] accepted
+- [x] implemented
+
