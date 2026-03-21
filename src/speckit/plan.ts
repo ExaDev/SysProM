@@ -38,6 +38,11 @@ export interface GateResult {
   issues: GateIssue[];
 }
 
+export interface TaskCount {
+  total: number;
+  done: number;
+}
+
 // ============================================================================
 // Helper functions
 // ============================================================================
@@ -121,52 +126,52 @@ function hasAcceptanceCriteria(description: string | string[] | undefined): bool
 }
 
 /**
- * Sort phase nodes topologically using must_follow relationships.
+ * Sort change nodes topologically using must_follow relationships.
  */
-function sortPhasesByOrder(
+function sortChangesByOrder(
   subsystem: SysProMDocument | undefined,
-  phaseNodes: Node[],
+  changeNodes: Node[],
 ): Node[] {
   const subsystemToUse = subsystem || { nodes: [], relationships: [] };
   const sorted: Node[] = [];
   const processedIds = new Set<string>();
 
-  function addPhaseInOrder(phaseId: string | null | undefined) {
-    if (!phaseId || processedIds.has(phaseId)) return;
-    processedIds.add(phaseId);
+  function addChangeInOrder(changeId: string | null | undefined) {
+    if (!changeId || processedIds.has(changeId)) return;
+    processedIds.add(changeId);
 
-    const phase = findNodeInSubsystem(subsystemToUse, phaseId);
-    if (phase) {
-      sorted.push(phase);
+    const change = findNodeInSubsystem(subsystemToUse, changeId);
+    if (change) {
+      sorted.push(change);
     }
 
-    // Find phases that must_follow this phase (i.e., come after it)
+    // Find changes that must_follow this change (i.e., come after it)
     const followersRels = findRelationshipsTo(
       subsystemToUse,
-      phaseId,
+      changeId,
       "must_follow",
     );
     for (const rel of followersRels) {
-      addPhaseInOrder(rel.from);
+      addChangeInOrder(rel.from);
     }
   }
 
-  // Start with phases that don't must_follow any other phase (first phases)
-  for (const phase of phaseNodes) {
+  // Start with changes that don't must_follow any other change (first changes)
+  for (const change of changeNodes) {
     const precedingRels = findRelationshipsFrom(
       subsystemToUse,
-      phase.id,
+      change.id,
       "must_follow",
     );
     if (precedingRels.length === 0) {
-      addPhaseInOrder(phase.id);
+      addChangeInOrder(change.id);
     }
   }
 
-  // Add any remaining phases not yet processed
-  for (const phase of phaseNodes) {
-    if (!processedIds.has(phase.id)) {
-      addPhaseInOrder(phase.id);
+  // Add any remaining changes not yet processed
+  for (const change of changeNodes) {
+    if (!processedIds.has(change.id)) {
+      addChangeInOrder(change.id);
     }
   }
 
@@ -191,7 +196,7 @@ function sortPhasesByOrder(
  *   - {prefix}-SPEC  governed_by  {prefix}-CONST
  *   - {prefix}-CHK  governed_by  {prefix}-PROT-IMPL
  *
- * Phases are not pre-scaffolded; use addPhase to add them.
+ * Tasks are not pre-scaffolded; use addTask to add them.
  */
 export function initDocument(prefix: string, name: string): SysProMDocument {
   const nodes: Node[] = [
@@ -248,79 +253,227 @@ export function initDocument(prefix: string, name: string): SysProMDocument {
 }
 
 // ============================================================================
-// addPhase
+// addTask
 // ============================================================================
 
 /**
- * Immutably add a new phase (stage + change node) to PROT-IMPL.subsystem.
- * Auto-numbers the phase (PH-1, PH-2, ...). Wires must_follow to the previous phase.
- * Default name: "Phase N".
+ * Immutably add a new task (change node) to PROT-IMPL.subsystem or to a parent
+ * change node's subsystem.
+ *
+ * - If parentId is not provided: adds CHG-{N} to PROT-IMPL.subsystem
+ *   (where N = count of existing change nodes + 1)
+ * - If parentId is provided: recursively finds parent change node, adds {parentId}-{M}
+ *   to parent's subsystem (creating subsystem if needed, where M = count of existing
+ *   change children + 1)
+ *
+ * Wires must_follow to previous sibling change node at the same level.
+ * Default name: "Task N".
  */
-export function addPhase(
+export function addTask(
   doc: SysProMDocument,
   prefix: string,
   name?: string,
+  parentId?: string,
 ): SysProMDocument {
   const protImpl = findNode(doc, `${prefix}-PROT-IMPL`);
   if (!protImpl) {
     throw new Error(`Node ${prefix}-PROT-IMPL not found`);
   }
 
-  const subsystem = protImpl.subsystem || { nodes: [], relationships: [] };
-  const existingPhases = (subsystem.nodes ?? []).filter(
-    (n) => n.type === "stage",
-  );
-  const phaseNum = existingPhases.length + 1;
-  const phaseName = name || `Phase ${phaseNum}`;
+  if (!parentId) {
+    // Add to PROT-IMPL.subsystem as a top-level task
+    const subsystem = protImpl.subsystem || { nodes: [], relationships: [] };
+    const existingChanges = (subsystem.nodes ?? []).filter(
+      (n) => n.type === "change",
+    );
+    const taskNum = existingChanges.length + 1;
+    const taskName = name || `Task ${taskNum}`;
+    const changeId = `CHG-${taskNum}`;
 
-  // Create new stage and change nodes
-  const stageId = `PH-${phaseNum}`;
-  const changeId = `CHG-PH${phaseNum}`;
+    const newChange: Node = {
+      id: changeId,
+      type: "change",
+      name: taskName,
+      plan: [],
+    };
 
-  const newStage: Node = {
-    id: stageId,
-    type: "stage",
-    name: phaseName,
-  };
+    // Build new relationships
+    const newRels: Relationship[] = [];
 
-  const newChange: Node = {
-    id: changeId,
-    type: "change",
-    name: `${phaseName} Tasks`,
-    plan: [],
-  };
+    // If not the first task, add must_follow from previous task
+    if (taskNum > 1) {
+      const prevTaskId = `CHG-${taskNum - 1}`;
+      newRels.push({
+        from: changeId,
+        to: prevTaskId,
+        type: "must_follow",
+      });
+    }
 
-  // Build new relationships
-  const newRels: Relationship[] = [
-    {
-      from: changeId,
-      to: stageId,
-      type: "part_of",
-    },
-  ];
+    // Merge into subsystem
+    const updatedSubsystem: SysProMDocument = {
+      ...(subsystem.metadata ? { metadata: subsystem.metadata } : {}),
+      nodes: [...(subsystem.nodes ?? []), newChange],
+      relationships: [
+        ...(subsystem.relationships ?? []),
+        ...newRels,
+      ],
+      ...(subsystem.external_references
+        ? { external_references: subsystem.external_references }
+        : {}),
+    };
 
-  // If not the first phase, add must_follow from previous phase
-  if (phaseNum > 1) {
-    const prevPhaseId = `PH-${phaseNum - 1}`;
-    newRels.push({
-      from: stageId,
-      to: prevPhaseId,
-      type: "must_follow",
+    // Update the protocol node
+    const updatedProtImpl: Node = {
+      ...protImpl,
+      subsystem: updatedSubsystem,
+    };
+
+    // Update the document
+    const updatedNodes = (doc.nodes ?? []).map((n) =>
+      n.id === protImpl.id ? updatedProtImpl : n,
+    );
+
+    return {
+      ...doc,
+      nodes: updatedNodes,
+    };
+  } else {
+    // Add to parent change node's subsystem
+    return addTaskToParent(doc, protImpl, prefix, parentId, name);
+  }
+}
+
+/**
+ * Helper function to recursively add a task to a parent change node's subsystem.
+ */
+function addTaskToParent(
+  doc: SysProMDocument,
+  protImpl: Node,
+  prefix: string,
+  parentId: string,
+  name?: string,
+): SysProMDocument {
+  // Find the parent change node in the subsystem tree
+  function findParentAndAddTask(
+    subsystem: SysProMDocument | undefined,
+  ): { found: boolean; updatedSubsystem: SysProMDocument | undefined } {
+    if (!subsystem) {
+      return { found: false, updatedSubsystem: undefined };
+    }
+
+    // Check if parent exists at this level
+    const parentNode = (subsystem.nodes ?? []).find((n) => n.id === parentId);
+    if (parentNode && parentNode.type === "change") {
+      // Found the parent, add task to its subsystem
+      const parentSubsystem = parentNode.subsystem || {
+        nodes: [],
+        relationships: [],
+      };
+      const existingChildren = (parentSubsystem.nodes ?? []).filter(
+        (n) => n.type === "change",
+      );
+      const childNum = existingChildren.length + 1;
+      const childName = name || `Task ${childNum}`;
+      const changeId = `${parentId}-${childNum}`;
+
+      const newChange: Node = {
+        id: changeId,
+        type: "change",
+        name: childName,
+        plan: [],
+      };
+
+      // Build new relationships for child
+      const newRels: Relationship[] = [];
+
+      // If not the first child, add must_follow from previous child
+      if (childNum > 1) {
+        const prevChildId = `${parentId}-${childNum - 1}`;
+        newRels.push({
+          from: changeId,
+          to: prevChildId,
+          type: "must_follow",
+        });
+      }
+
+      // Update parent's subsystem
+      const updatedParentSubsystem: SysProMDocument = {
+        ...(parentSubsystem.metadata ? { metadata: parentSubsystem.metadata } : {}),
+        nodes: [...(parentSubsystem.nodes ?? []), newChange],
+        relationships: [
+          ...(parentSubsystem.relationships ?? []),
+          ...newRels,
+        ],
+        ...(parentSubsystem.external_references
+          ? { external_references: parentSubsystem.external_references }
+          : {}),
+      };
+
+      // Update parent node
+      const updatedParent: Node = {
+        ...parentNode,
+        subsystem: updatedParentSubsystem,
+      };
+
+      // Update subsystem nodes
+      const updatedNodes = (subsystem.nodes ?? []).map((n) =>
+        n.id === parentId ? updatedParent : n,
+      );
+
+      return {
+        found: true,
+        updatedSubsystem: {
+          ...(subsystem.metadata ? { metadata: subsystem.metadata } : {}),
+          nodes: updatedNodes,
+          relationships: subsystem.relationships,
+          ...(subsystem.external_references
+            ? { external_references: subsystem.external_references }
+            : {}),
+        },
+      };
+    }
+
+    // Recursively search in child subsystems
+    let anyUpdated = false;
+    const updatedNodes = (subsystem.nodes ?? []).map((n) => {
+      if (n.type === "change" && n.subsystem) {
+        const { found, updatedSubsystem: childUpdated } = findParentAndAddTask(
+          n.subsystem,
+        );
+        if (found) {
+          anyUpdated = true;
+          return {
+            ...n,
+            subsystem: childUpdated,
+          };
+        }
+      }
+      return n;
     });
+
+    if (anyUpdated) {
+      return {
+        found: true,
+        updatedSubsystem: {
+          ...(subsystem.metadata ? { metadata: subsystem.metadata } : {}),
+          nodes: updatedNodes,
+          relationships: subsystem.relationships,
+          ...(subsystem.external_references
+            ? { external_references: subsystem.external_references }
+            : {}),
+        },
+      };
+    }
+
+    return { found: false, updatedSubsystem: subsystem };
   }
 
-  // Merge into subsystem
-  const updatedSubsystem: SysProMDocument = {
-    ...(subsystem.metadata ? { metadata: subsystem.metadata } : {}),
-    nodes: [...(subsystem.nodes ?? []), newStage, newChange],
-    relationships: [
-      ...(subsystem.relationships ?? []),
-      ...newRels,
-    ],
-    ...(subsystem.external_references
-      ? { external_references: subsystem.external_references }
-      : {}),
-  };
+  const { found, updatedSubsystem } = findParentAndAddTask(protImpl.subsystem);
+
+  if (!found) {
+    throw new Error(`Parent change node ${parentId} not found`);
+  }
 
   // Update the protocol node
   const updatedProtImpl: Node = {
@@ -337,6 +490,75 @@ export function addPhase(
     ...doc,
     nodes: updatedNodes,
   };
+}
+
+// ============================================================================
+// isTaskDone
+// ============================================================================
+
+/**
+ * Check if a change node's task is complete.
+ *
+ * If no subsystem or no change children in subsystem:
+ *   - All items in node.plan must have done === true AND at least one item must exist
+ * If subsystem has change children:
+ *   - All children must be recursively done AND own plan items (if any) must be done
+ */
+export function isTaskDone(node: Node): boolean {
+  // If the node has a subsystem with change children, check those recursively
+  if (node.subsystem) {
+    const changeChildren = (node.subsystem.nodes ?? []).filter(
+      (n) => n.type === "change",
+    );
+    if (changeChildren.length > 0) {
+      // All change children must be done, and own plan items must be done
+      const allChildrenDone = changeChildren.every((child) => isTaskDone(child));
+      const ownPlanDone = (node.plan ?? []).length === 0 ||
+        (node.plan ?? []).every((item) => item.done === true);
+      return allChildrenDone && ownPlanDone;
+    }
+  }
+
+  // No subsystem or no change children: check own plan
+  const planItems = node.plan ?? [];
+  if (planItems.length === 0) {
+    return false;
+  }
+  return planItems.every((item) => item.done === true);
+}
+
+// ============================================================================
+// countTasks
+// ============================================================================
+
+/**
+ * Count total and completed tasks within a change node.
+ *
+ * Sums plan[] items from this node and recursively from all change nodes in
+ * subsystem (and their subsystems).
+ */
+export function countTasks(node: Node): TaskCount {
+  let total = 0;
+  let done = 0;
+
+  // Count own plan items
+  const ownPlan = node.plan ?? [];
+  total += ownPlan.length;
+  done += ownPlan.filter((item) => item.done === true).length;
+
+  // Recursively count from change children in subsystem
+  if (node.subsystem) {
+    const changeChildren = (node.subsystem.nodes ?? []).filter(
+      (n) => n.type === "change",
+    );
+    for (const child of changeChildren) {
+      const childCount = countTasks(child);
+      total += childCount.total;
+      done += childCount.done;
+    }
+  }
+
+  return { total, done };
 }
 
 // ============================================================================
@@ -363,21 +585,21 @@ export function planStatus(
     .filter((us) => !hasAcceptanceCriteria(us.description))
     .map((us) => us.id);
 
-  // Count phases
+  // Count phases (top-level change nodes)
   const phaseCount = (protImpl?.subsystem?.nodes ?? []).filter(
-    (n) => n.type === "stage",
+    (n) => n.type === "change",
   ).length;
 
-  // Count tasks
+  // Count tasks using the helper
+  let totalTasks = 0;
+  let doneTasks = 0;
   const changeNodes = (protImpl?.subsystem?.nodes ?? []).filter(
     (n) => n.type === "change",
   );
-  let totalTasks = 0;
-  let doneTasks = 0;
   for (const change of changeNodes) {
-    const tasks = change.plan ?? [];
-    totalTasks += tasks.length;
-    doneTasks += tasks.filter((t) => t.done === true).length;
+    const taskCount = countTasks(change);
+    totalTasks += taskCount.total;
+    doneTasks += taskCount.done;
   }
 
   // Checklist stats
@@ -400,9 +622,9 @@ export function planStatus(
   } else if (!protImpl) {
     nextStep = `Define the implementation plan: run \`spm add ${prefix} protocol --id PROT-IMPL ...\``;
   } else if (phaseCount === 0) {
-    nextStep = `Add phases: run \`spm plan add-phase <doc> --prefix ${prefix}\``;
+    nextStep = `Add tasks: run \`spm plan add-task <doc> --prefix ${prefix}\``;
   } else if (totalTasks === 0) {
-    nextStep = `Add tasks to the phase change nodes`;
+    nextStep = `Add tasks to the change nodes`;
   } else if (doneTasks < totalTasks) {
     const remaining = totalTasks - doneTasks;
     nextStep = `Complete remaining tasks (${remaining} of ${totalTasks} remaining)`;
@@ -453,8 +675,8 @@ export function planStatus(
 // ============================================================================
 
 /**
- * Return per-phase task completion data.
- * Phases are discovered from PROT-IMPL.subsystem, sorted topologically.
+ * Return per-task completion data.
+ * Tasks (change nodes) are discovered from PROT-IMPL.subsystem, sorted topologically.
  */
 export function planProgress(
   doc: SysProMDocument,
@@ -466,36 +688,25 @@ export function planProgress(
   }
 
   const subsystem = protImpl.subsystem;
-  const phaseNodes = findNodesByTypeInSubsystem(subsystem, "stage");
-  const sortedPhases = sortPhasesByOrder(subsystem, phaseNodes);
+  const taskNodes = findNodesByTypeInSubsystem(subsystem, "change");
+  const sortedTasks = sortChangesByOrder(subsystem, taskNodes);
 
   const result: PhaseProgress[] = [];
 
-  for (let i = 0; i < sortedPhases.length; i++) {
-    const phase = sortedPhases[i];
-    const phaseNum = i + 1;
+  for (let i = 0; i < sortedTasks.length; i++) {
+    const task = sortedTasks[i];
+    const taskNum = i + 1;
 
-    // Find change nodes that are part_of this phase
-    const changeRels = findRelationshipsTo(subsystem, phase.id, "part_of");
-    let totalTasks = 0;
-    let doneTasks = 0;
+    // Count tasks for this change node
+    const taskCount = countTasks(task);
 
-    for (const rel of changeRels) {
-      const change = findNodeInSubsystem(subsystem, rel.from);
-      if (change?.type === "change") {
-        const tasks = change.plan ?? [];
-        totalTasks += tasks.length;
-        doneTasks += tasks.filter((t) => t.done === true).length;
-      }
-    }
-
-    const percent = totalTasks === 0 ? 0 : Math.round((doneTasks / totalTasks) * 100);
+    const percent = taskCount.total === 0 ? 0 : Math.round((taskCount.done / taskCount.total) * 100);
 
     result.push({
-      phase: phaseNum,
-      name: phase.name,
-      done: doneTasks,
-      total: totalTasks,
+      phase: taskNum,
+      name: task.name,
+      done: taskCount.done,
+      total: taskCount.total,
       percent,
     });
   }
@@ -534,26 +745,18 @@ export function checkGate(
 
   // For phase N > 1, check that all tasks in phase N-1 are done
   if (phase > 1) {
-    const phaseNodes = findNodesByTypeInSubsystem(subsystem, "stage");
-    const sortedPhases = sortPhasesByOrder(subsystem, phaseNodes);
-    if (phase - 1 <= sortedPhases.length) {
-      const prevPhase = sortedPhases[phase - 2]; // 0-indexed
-      const changeRels = findRelationshipsTo(subsystem, prevPhase.id, "part_of");
-      let undoneCount = 0;
+    const taskNodes = findNodesByTypeInSubsystem(subsystem, "change");
+    const sortedTasks = sortChangesByOrder(subsystem, taskNodes);
+    if (phase - 1 <= sortedTasks.length) {
+      const prevTask = sortedTasks[phase - 2]; // 0-indexed
+      const taskCount = countTasks(prevTask);
+      const remaining = taskCount.total - taskCount.done;
 
-      for (const rel of changeRels) {
-        const change = findNodeInSubsystem(subsystem, rel.from);
-        if (change?.type === "change") {
-          const tasks = change.plan ?? [];
-          undoneCount += tasks.filter((t) => t.done !== true).length;
-        }
-      }
-
-      if (undoneCount > 0) {
+      if (remaining > 0) {
         issues.push({
           kind: "previous_tasks_incomplete",
           phase: phase - 1,
-          remaining: undoneCount,
+          remaining,
         });
       }
     }

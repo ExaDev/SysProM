@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { loadDocument, saveDocument } from "../io.js";
 import {
   initDocument,
-  addPhase,
+  addTask,
   planStatus,
   planProgress,
   checkGate,
@@ -84,26 +84,28 @@ function runInit(args: string[]): void {
 }
 
 // ============================================================================
-// plan add-phase
+// plan add-task
 // ============================================================================
 
-function runAddPhase(args: string[]): void {
+function runAddTask(args: string[]): void {
   const flags = parseFlags(args);
 
   if (flags.positional.length < 1 || !flags.prefix) {
-    console.error("Usage: sysprom plan add-phase <input> --prefix PREFIX [--name NAME]");
+    console.error("Usage: sysprom plan add-task <input> --prefix PREFIX [--name NAME] [--parent PARENT-ID]");
     process.exit(1);
   }
 
   const inputPath = flags.positional[0];
   const prefix = flags.prefix;
   const name = flags.name ?? undefined;
+  const parentId = parseFlag(args, "--parent") ?? undefined;
 
   try {
     const { doc, format, path } = loadDocument(inputPath);
-    const newDoc = addPhase(doc, prefix, name);
+    const newDoc = addTask(doc, prefix, name, parentId);
     saveDocument(newDoc, format, path);
-    console.log(`Added phase to ${prefix}-PROT-IMPL`);
+    const target = parentId ? `to ${parentId}` : `to ${prefix}-PROT-IMPL`;
+    console.log(`Added task ${target}`);
   } catch (err) {
     console.error((err as Error).message);
     process.exit(1);
@@ -277,7 +279,7 @@ function runGate(args: string[]): void {
 export function run(args: string[]): void {
   if (args.length < 1) {
     console.error(
-      "Usage: sysprom plan <init|add-phase|status|progress|gate> [options]",
+      "Usage: sysprom plan <init|add-task|status|progress|gate> [options]",
     );
     process.exit(1);
   }
@@ -289,8 +291,8 @@ export function run(args: string[]): void {
     case "init":
       runInit(subcommandArgs);
       break;
-    case "add-phase":
-      runAddPhase(subcommandArgs);
+    case "add-task":
+      runAddTask(subcommandArgs);
       break;
     case "status":
       runStatus(subcommandArgs);
@@ -303,7 +305,7 @@ export function run(args: string[]): void {
       break;
     default:
       console.error(
-        `Unknown subcommand: ${subcommand}. Expected: init, add-phase, status, progress, or gate`,
+        `Unknown subcommand: ${subcommand}. Expected: init, add-task, status, progress, or gate`,
       );
       process.exit(1);
   }

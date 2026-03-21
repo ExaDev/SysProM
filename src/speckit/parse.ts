@@ -653,29 +653,6 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
   const subsystemNodes: Node[] = [];
   const subsystemRelationships: Relationship[] = [];
 
-  // Create stage nodes for each phase (with LOCAL IDs) and link via must_follow
-  const stageLocalIds: string[] = [];
-  for (let i = 0; i < phases.length; i++) {
-    const phase = phases[i];
-    const stageLocalId = `PH-${phase.phaseNum}`;
-    stageLocalIds.push(stageLocalId);
-
-    subsystemNodes.push({
-      id: stageLocalId,
-      type: "stage",
-      name: phase.title,
-    });
-
-    // Link to previous stage via must_follow (using LOCAL IDs)
-    if (i > 0) {
-      subsystemRelationships.push({
-        from: stageLocalId,
-        to: stageLocalIds[i - 1],
-        type: "must_follow",
-      });
-    }
-  }
-
   // Group tasks by user story or phase
   const changesByStory: Record<string, CheckboxItem[]> = {};
   const changesByPhase: Record<number, CheckboxItem[]> = {};
@@ -696,6 +673,35 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
       } else {
         changesByPhase[phase.phaseNum].push(task);
       }
+    }
+  }
+
+  // Create change nodes for each phase (with LOCAL IDs in subsystem)
+  // Use numeric indices (CHG-1, CHG-2, etc.) for phase changes
+  for (let i = 0; i < phases.length; i++) {
+    const phase = phases[i];
+    const tasks = changesByPhase[phase.phaseNum] || [];
+    const plan = tasks.map((t) => ({
+      description: t.text,
+      done: t.done,
+    }));
+
+    const changeLocalId = `CHG-${phase.phaseNum}`;
+    subsystemNodes.push({
+      id: changeLocalId,
+      type: "change",
+      name: phase.title,
+      plan,
+    });
+
+    // Wire must_follow between consecutive phase changes
+    if (i > 0) {
+      const prevPhaseNum = phases[i - 1].phaseNum;
+      subsystemRelationships.push({
+        from: changeLocalId,
+        to: `CHG-${prevPhaseNum}`,
+        type: "must_follow",
+      });
     }
   }
 
@@ -720,33 +726,6 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
       from: changeGlobalId,
       to: `${idPrefix}-${storyKey}`,
       type: "implements",
-    });
-  }
-
-  // Create change nodes for phase-level tasks (with LOCAL IDs in subsystem)
-  for (const [phaseNum, tasks] of Object.entries(changesByPhase)) {
-    if (tasks.length > 0) {
-      const changeLocalId = `CHG-PH${phaseNum}`;
-      const plan = tasks.map((t) => ({
-        description: t.text,
-        done: t.done,
-      }));
-
-      subsystemNodes.push({
-        id: changeLocalId,
-        type: "change",
-        name: `Phase ${phaseNum} Tasks`,
-        plan,
-      });
-    }
-  }
-
-  // Add stages to subsystem (with LOCAL IDs and part_of relationships)
-  for (const stageLocalId of stageLocalIds) {
-    subsystemRelationships.push({
-      from: stageLocalId,
-      to: "PROT-IMPL",
-      type: "part_of",
     });
   }
 

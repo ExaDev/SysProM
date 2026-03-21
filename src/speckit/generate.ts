@@ -400,7 +400,6 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
   let output = `# Task List: ${title}\n\n`;
 
   // Extract subsystem from the protocol node.
-  // The subsystem contains local-ID nodes (e.g. PH-1, CHG-PH1).
   const subsystem = protocol.subsystem;
   if (!subsystem || !subsystem.nodes || subsystem.nodes.length === 0) {
     output += "*(No phases defined)*\n\n";
@@ -434,111 +433,64 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
     });
   }
 
-  // Find stage nodes within the subsystem (all stages belong to this protocol).
-  const stageIds = (subsystem.nodes ?? [])
-    .filter((n) => n.type === "stage")
+  // Find top-level change nodes within the subsystem (phases are now change nodes).
+  const topLevelChangeIds = (subsystem.nodes ?? [])
+    .filter((n) => n.type === "change" && !n.parent)
     .map((n) => n as Node | null);
 
-  // Sort stages by must_follow order using topological sort.
-  const sortedStages: (Node | null)[] = [];
+  // Sort top-level changes by must_follow order using topological sort.
+  const sortedChanges: (Node | null)[] = [];
   const processedIds = new Set<string>();
 
-  function addStageInOrder(stageId: string | null | undefined) {
-    if (!stageId || processedIds.has(stageId)) return;
-    processedIds.add(stageId);
+  function addChangeInOrder(changeId: string | null | undefined) {
+    if (!changeId || processedIds.has(changeId)) return;
+    processedIds.add(changeId);
 
-    const stage = findNodeInSubsystem(stageId);
-    if (stage) {
-      sortedStages.push(stage);
+    const change = findNodeInSubsystem(changeId);
+    if (change) {
+      sortedChanges.push(change);
     }
 
-    // Find stages that must_follow this stage (i.e., come after it).
-    // must_follow relationship: { from: nextStage, to: thisStage } means nextStage follows thisStage
-    const followersRels = findRelationshipsToInSubsystem(stageId, "must_follow");
+    // Find changes that must_follow this change (i.e., come after it).
+    // must_follow relationship: { from: nextChange, to: thisChange } means nextChange follows thisChange
+    const followersRels = findRelationshipsToInSubsystem(changeId, "must_follow");
     for (const rel of followersRels) {
-      addStageInOrder(rel.from);
+      addChangeInOrder(rel.from);
     }
   }
 
-  // Start with stages that don't must_follow any other stage (first stages).
-  // A stage is first if it has no outgoing must_follow relationship.
-  for (const stage of stageIds) {
-    if (!stage) continue;
-    const precedingRels = findRelationshipsFromInSubsystem(stage.id, "must_follow");
+  // Start with changes that don't must_follow any other change (first changes).
+  // A change is first if it has no outgoing must_follow relationship.
+  for (const change of topLevelChangeIds) {
+    if (!change) continue;
+    const precedingRels = findRelationshipsFromInSubsystem(change.id, "must_follow");
     if (precedingRels.length === 0) {
-      addStageInOrder(stage.id);
+      addChangeInOrder(change.id);
     }
   }
 
-  // Add any remaining stages not yet processed
-  for (const stage of stageIds) {
-    if (stage && !processedIds.has(stage.id)) {
-      addStageInOrder(stage.id);
+  // Add any remaining changes not yet processed
+  for (const change of topLevelChangeIds) {
+    if (change && !processedIds.has(change.id)) {
+      addChangeInOrder(change.id);
     }
   }
 
-  if (sortedStages.length === 0) {
+  if (sortedChanges.length === 0) {
     output += "*(No phases defined)*\n\n";
     return output.trim();
   }
 
-  // Collect all change nodes in the subsystem.
-  const allChanges = (subsystem.nodes ?? []).filter(
-    (n) => n.type === "change",
-  );
-
-  let taskCounter = 1;
-
-  for (let phaseIdx = 0; phaseIdx < sortedStages.length; phaseIdx++) {
-    const stage = sortedStages[phaseIdx];
-    if (!stage) continue;
-
-    output += `## Phase ${phaseIdx + 1}: ${stage.name}\n\n`;
-
-    // Find change nodes related to this stage within the subsystem.
-    const phaseNum = phaseIdx + 1;
-    const phaseChangeId = `CHG-PH${phaseNum}`;
-    const phaseChange = findNodeInSubsystem(phaseChangeId);
-
-    // Find change nodes linked FROM or TO stage via any relationship in the subsystem.
-    const changeRelsFrom = findRelationshipsFromInSubsystem(stage.id);
-    const changeRelsTo = findRelationshipsToInSubsystem(stage.id);
-
-    const linkedChangeIds = new Set<string>();
-    for (const r of changeRelsFrom) {
-      const n = findNodeInSubsystem(r.to);
-      if (n?.type === "change") linkedChangeIds.add(n.id);
-    }
-    for (const r of changeRelsTo) {
-      const n = findNodeInSubsystem(r.from);
-      if (n?.type === "change") linkedChangeIds.add(n.id);
-    }
-
-    // Collect changes for this phase.
-    const phaseChanges: Node[] = [];
-    if (phaseChange) phaseChanges.push(phaseChange);
-    for (const id of linkedChangeIds) {
-      const n = findNodeInSubsystem(id);
-      if (n && !phaseChanges.some((c) => c.id === n.id)) phaseChanges.push(n);
-    }
-
-    // If no changes found by relationship or prefix, try matching by phase suffix.
-    if (phaseChanges.length === 0) {
-      for (const change of allChanges) {
-        if (
-          change.id.includes(`PH${phaseNum}`) ||
-          change.id.includes(`PH-${phaseNum}`)
-        ) {
-          phaseChanges.push(change);
-        }
-      }
-    }
-
-    for (const change of phaseChanges) {
-      const tasks = parseTasks(change);
-
+  // Recursive helper to render a change node and its tasks, including nested child changes.
+  // Render tasks from a change node's plan array.
+  function renderPlanItems(
+    change: Node,
+    taskCounter: { value: number },
+  ): string {
+    let result = "";
+    const tasks = parseTasks(change);
+    for (const task of tasks) {
       // Find capability that this change implements.
-      // Check subsystem relationships first, then top-level document relationships.
       let usStory: string | null = null;
       const implRelsSubsystem = findRelationshipsFromInSubsystem(change.id, "implements");
       if (implRelsSubsystem.length > 0) {
@@ -550,22 +502,57 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
         }
       }
 
-      for (const task of tasks) {
-        const checkbox = task.done ? "[x]" : "[ ]";
-        const taskNum = String(taskCounter).padStart(3, "0");
-        let taskLine = `- ${checkbox} T${taskNum}`;
+      const checkbox = task.done ? "[x]" : "[ ]";
+      const taskNum = String(taskCounter.value).padStart(3, "0");
+      let taskLine = `- ${checkbox} T${taskNum}`;
 
-        if (usStory && usStory !== "000") {
-          taskLine += ` [US${usStory}]`;
-        }
+      if (usStory && usStory !== "000") {
+        taskLine += ` [US${usStory}]`;
+      }
 
-        taskLine += ` ${textToString(task.description)}`;
-        output += taskLine + "\n";
-        taskCounter++;
+      taskLine += ` ${textToString(task.description)}`;
+      result += taskLine + "\n";
+      taskCounter.value++;
+    }
+    return result;
+  }
+
+  // Recursively render a change node and its children.
+  // Top-level changes get "Phase N:" prefix; nested children get just their name.
+  function renderChangeNode(
+    change: Node,
+    headingLevel: number,
+    taskCounter: { value: number },
+    phaseLabel?: string,
+  ): string {
+    let result = "";
+    const heading = "#".repeat(headingLevel);
+    result += phaseLabel
+      ? `${heading} ${phaseLabel}: ${change.name}\n\n`
+      : `${heading} ${change.name}\n\n`;
+
+    result += renderPlanItems(change, taskCounter);
+    if (result.endsWith("\n")) result += "\n";
+    else result += "\n\n";
+
+    // Recurse into child change nodes.
+    if (change.subsystem?.nodes?.length) {
+      const childChanges = change.subsystem.nodes.filter((n) => n.type === "change");
+      for (const childChange of childChanges) {
+        result += renderChangeNode(childChange, headingLevel + 1, taskCounter);
       }
     }
 
-    output += "\n";
+    return result;
+  }
+
+  // Render each top-level change as a phase.
+  const taskCounter = { value: 1 };
+  for (let i = 0; i < sortedChanges.length; i++) {
+    const change = sortedChanges[i];
+    if (change) {
+      output += renderChangeNode(change, 2, taskCounter, `Phase ${i + 1}`);
+    }
   }
 
   return output.trim();

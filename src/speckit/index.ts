@@ -27,10 +27,12 @@ export {
 
 export {
   initDocument,
-  addPhase,
+  addTask,
   planStatus,
   planProgress,
   checkGate,
+  isTaskDone,
+  countTasks,
   type PlanStatus,
   type PhaseProgress,
   type GateIssue,
