@@ -452,19 +452,26 @@ describe("parseTasks", () => {
 
   it("creates 3 stage nodes for phases", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const stages = result.nodes.filter((n) => n.type === "stage");
-    assert.equal(stages.length, 3, "should have 3 stage nodes for phases");
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const stages = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "stage",
+    );
+    assert.equal(stages?.length, 3, "should have 3 stage nodes for phases");
   });
 
   it("stages have part_of relationships to protocol", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const stages = result.nodes.filter((n) => n.type === "stage");
-    const protocolId = result.nodes.find((n) => n.type === "protocol")?.id;
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const stages = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "stage",
+    );
+    const subsystemRels = protocolNode.subsystem?.relationships ?? [];
 
-    for (const stage of stages) {
-      const rel = result.relationships.find(
-        (r) =>
-          r.from === stage.id && r.to === protocolId && r.type === "part_of",
+    for (const stage of stages ?? []) {
+      const rel = subsystemRels.find(
+        (r) => r.from === stage.id && r.to === "PROT-IMPL" && r.type === "part_of",
       );
       assert(
         rel,
@@ -475,8 +482,14 @@ describe("parseTasks", () => {
 
   it("stages have must_follow relationships in order", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const stages = result.nodes.filter((n) => n.type === "stage");
-    const sortedStages = stages.sort((a, b) => {
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const stages = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "stage",
+    );
+    const subsystemRels = protocolNode.subsystem?.relationships ?? [];
+
+    const sortedStages = (stages ?? []).sort((a, b) => {
       const aNum = parseInt(a.id.split("-").pop() || "0");
       const bNum = parseInt(b.id.split("-").pop() || "0");
       return aNum - bNum;
@@ -486,7 +499,7 @@ describe("parseTasks", () => {
     for (let i = 1; i < sortedStages.length; i++) {
       const stage = sortedStages[i];
       const prevStage = sortedStages[i - 1];
-      const mustFollowRel = result.relationships.find(
+      const mustFollowRel = subsystemRels.find(
         (r) =>
           r.from === stage.id &&
           r.to === prevStage.id &&
@@ -501,10 +514,17 @@ describe("parseTasks", () => {
 
   it("creates change nodes with task plans", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const changeNodes = result.nodes.filter((n) => n.type === "change");
-    assert(changeNodes.length > 0, "should have change nodes for tasks");
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const changeNodes = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "change",
+    );
+    assert(
+      (changeNodes?.length ?? 0) > 0,
+      "should have change nodes for tasks",
+    );
 
-    for (const change of changeNodes) {
+    for (const change of changeNodes ?? []) {
       assert(change.plan, `change ${change.id} should have plan array`);
       assert(Array.isArray(change.plan), "plan should be an array");
       for (const task of change.plan) {
@@ -519,10 +539,14 @@ describe("parseTasks", () => {
 
   it("T003 and T006 are marked done in their plan arrays", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const changeNodes = result.nodes.filter((n) => n.type === "change");
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const changeNodes = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "change",
+    );
 
     let foundCompleted = false;
-    for (const change of changeNodes) {
+    for (const change of changeNodes ?? []) {
       for (const task of change.plan || []) {
         const desc = task.description;
         if (
@@ -542,10 +566,14 @@ describe("parseTasks", () => {
 
   it("total task count matches", () => {
     const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const changeNodes = result.nodes.filter((n) => n.type === "change");
+    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+    const changeNodes = protocolNode.subsystem?.nodes?.filter(
+      (n) => n.type === "change",
+    );
 
     let totalTasks = 0;
-    for (const change of changeNodes) {
+    for (const change of changeNodes ?? []) {
       totalTasks += (change.plan || []).length;
     }
 
