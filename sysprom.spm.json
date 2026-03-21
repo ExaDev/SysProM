@@ -1,0 +1,3520 @@
+{
+	"$schema": "https://sysprom.org/schema.json",
+	"metadata": {
+		"title": "SysProM — System Provenance Model",
+		"doc_type": "sysprom",
+		"scope": "system",
+		"status": "active",
+		"version": 1
+	},
+	"nodes": [
+		{
+			"id": "I1",
+			"type": "intent",
+			"name": "System Provenance",
+			"description": "Enable any system — regardless of domain — to record where every part came from, what decisions shaped it, and how it reached its current form."
+		},
+		{
+			"id": "CN1",
+			"type": "concept",
+			"name": "Layered Abstraction",
+			"description": [
+				"A system is understood through distinct layers of abstraction: intent, concept, capability, structure, and realisation.",
+				"Each layer is valid independently of the layers below it."
+			]
+		},
+		{
+			"id": "CN2",
+			"type": "concept",
+			"name": "Decision-Driven Evolution",
+			"description": [
+				"Systems evolve through explicit decisions.",
+				"Decisions select between alternatives, affect nodes, and must preserve invariants.",
+				"Decisions are never deleted — they are superseded."
+			]
+		},
+		{
+			"id": "CN3",
+			"type": "concept",
+			"name": "Append-Only History",
+			"description": [
+				"The history of a system is additive. Nodes are deprecated or retired, not erased.",
+				"Changes record what happened; they do not overwrite prior state."
+			]
+		},
+		{
+			"id": "CN4",
+			"type": "concept",
+			"name": "Recursive Composition",
+			"description": [
+				"Any node may be treated as a subsystem with its own internal structure.",
+				"The same model applies at every level of nesting."
+			]
+		},
+		{
+			"id": "CN5",
+			"type": "concept",
+			"name": "Process as Structure",
+			"description": [
+				"Workflows, roles, stages, gates, and artefacts are modelled with the same rigour as domain concepts.",
+				"Process is not a second-class concern."
+			]
+		},
+		{
+			"id": "CN6",
+			"type": "concept",
+			"name": "Format Agnosticism",
+			"description": [
+				"The model defines semantics, not storage.",
+				"It may be represented in Markdown, JSON, a database, or any other structured format."
+			]
+		},
+		{
+			"id": "CN7",
+			"type": "concept",
+			"name": "External Resource Handling",
+			"description": [
+				"Nodes may relate to resources outside the graph.",
+				"Content may be internalised for portability or referenced for traceability, or both."
+			]
+		},
+		{
+			"id": "CN8",
+			"type": "concept",
+			"name": "Conformance",
+			"description": "A system conforms to SysProM if it meets a defined set of minimum requirements, ensuring interoperability and consistency."
+		},
+		{
+			"id": "CP1",
+			"type": "capability",
+			"name": "Cross-Layer Traceability",
+			"description": "Trace any node from intent through concept, capability, and structure to realisation."
+		},
+		{
+			"id": "CP2",
+			"type": "capability",
+			"name": "Decision Recording",
+			"description": "Record choices with alternatives considered, rationale, affected nodes, and preserved invariants."
+		},
+		{
+			"id": "CP3",
+			"type": "capability",
+			"name": "Invariant Enforcement",
+			"description": [
+				"Define rules that must hold across all valid system states.",
+				"Decisions and changes must explicitly identify which invariants they preserve."
+			]
+		},
+		{
+			"id": "CP4",
+			"type": "capability",
+			"name": "Change Tracking",
+			"description": "Record every addition, modification, removal, and transition with scope, decision, and lifecycle state."
+		},
+		{
+			"id": "CP5",
+			"type": "capability",
+			"name": "Recursive Modelling",
+			"description": "Represent any node as a subsystem with its own nodes, relationships, decisions, and changes, using the same conventions at every depth."
+		},
+		{
+			"id": "CP6",
+			"type": "capability",
+			"name": "Process Modelling",
+			"description": "Define protocols, stages, roles, gates, modes, artefacts, and artefact flows as first-class graph nodes."
+		},
+		{
+			"id": "CP7",
+			"type": "capability",
+			"name": "Flexible Representation",
+			"description": "Encode the model in a single file, a multi-document folder, nested folders, or a non-file format, with the same underlying semantics."
+		},
+		{
+			"id": "CP8",
+			"type": "capability",
+			"name": "External Resource Referencing",
+			"description": "Reference or internalise resources outside the graph with typed roles (input, output, context, evidence, source, standard, prior_art)."
+		},
+		{
+			"id": "PR1",
+			"type": "principle",
+			"name": "Separate What From Why From How",
+			"description": "Intent, decisions, and realisations are distinct concerns and should be recorded separately."
+		},
+		{
+			"id": "PR2",
+			"type": "principle",
+			"name": "Decisions Are More Important Than Documents",
+			"description": "Documents describe state. Decisions explain why state changed."
+		},
+		{
+			"id": "PR3",
+			"type": "principle",
+			"name": "Everything Has Identity",
+			"description": "Every node gets an ID. No anonymous ideas."
+		},
+		{
+			"id": "PR4",
+			"type": "principle",
+			"name": "Think Graph, Not Timeline",
+			"description": "Timelines are one projection of the graph. The graph is the source of truth."
+		},
+		{
+			"id": "PR5",
+			"type": "principle",
+			"name": "Separate State From History",
+			"description": "What exists now and how it got there are recorded separately."
+		},
+		{
+			"id": "INV1",
+			"type": "invariant",
+			"name": "Concept Independence",
+			"description": "Concept nodes MUST NOT depend on realisation nodes. The conceptual layer must be valid even if no realisation exists."
+		},
+		{
+			"id": "INV2",
+			"type": "invariant",
+			"name": "Decision-Change Linkage",
+			"description": "Every change MUST reference at least one decision. No change occurs without an explicit choice."
+		},
+		{
+			"id": "INV3",
+			"type": "invariant",
+			"name": "Invariant Preservation",
+			"description": [
+				"A decision that affects domain nodes (intent, concept, capability, element, invariant) MUST identify the invariants it preserves via must_preserve relationships.",
+				"A decision that affects only non-domain nodes (realisation, policy, protocol, stage, role, gate, mode, artefact) SHOULD identify preserved invariants but is not required to.",
+				"Domain nodes define what the system IS. Non-domain nodes define how it works or how it is implemented."
+			]
+		},
+		{
+			"id": "INV4",
+			"type": "invariant",
+			"name": "Recursive Consistency",
+			"description": [
+				"The same model MUST apply at all levels of recursion.",
+				"A subsystem uses the same node types, relationship types, and conventions as the root system."
+			]
+		},
+		{
+			"id": "INV5",
+			"type": "invariant",
+			"name": "Append-Only History",
+			"description": "Superseded decisions and deprecated nodes MUST remain part of the system. History is never deleted."
+		},
+		{
+			"id": "INV6",
+			"type": "invariant",
+			"name": "Node Identity",
+			"description": "Every node MUST have a unique identifier and a defined type. No anonymous entities."
+		},
+		{
+			"id": "INV7",
+			"type": "invariant",
+			"name": "Relationship Validity",
+			"description": "Every relationship MUST be directional, typed, and reference valid nodes."
+		},
+		{
+			"id": "INV8",
+			"type": "invariant",
+			"name": "Gate Justification",
+			"description": "Every gate MUST reference the invariant or policy it enforces."
+		},
+		{
+			"id": "INV9",
+			"type": "invariant",
+			"name": "Layer Direction",
+			"description": "Refinement flows downward through abstraction layers. Nodes MUST NOT refine nodes in a lower layer."
+		},
+		{
+			"id": "INV10",
+			"type": "invariant",
+			"name": "Realisation Implements Element",
+			"description": "Realisation nodes MUST implement element nodes. A realisation without a parent element is invalid."
+		},
+		{
+			"id": "INV11",
+			"type": "invariant",
+			"name": "Stage Ordering",
+			"description": "Stages within a protocol MUST have defined ordering via precedes or must_follow relationships."
+		},
+		{
+			"id": "INV12",
+			"type": "invariant",
+			"name": "Decision Affects Reference",
+			"description": "Every decision MUST reference the nodes it affects via an affects relationship."
+		},
+		{
+			"id": "INV13",
+			"type": "invariant",
+			"name": "Decision Selection",
+			"description": "Every decision MUST define the selected option and list alternatives considered."
+		},
+		{
+			"id": "INV14",
+			"type": "invariant",
+			"name": "Change Scope",
+			"description": "Every change MUST define its scope (the nodes it affects)."
+		},
+		{
+			"id": "INV15",
+			"type": "invariant",
+			"name": "Change Operations",
+			"description": "Every change MUST define its operations (add, update, remove, link)."
+		},
+		{
+			"id": "INV16",
+			"type": "invariant",
+			"name": "Change Lifecycle State",
+			"description": "Every change MUST define its lifecycle state."
+		},
+		{
+			"id": "INV17",
+			"type": "invariant",
+			"name": "Node Addressability",
+			"description": "Every node MUST be addressable — reachable by its identifier from any point in the graph."
+		},
+		{
+			"id": "INV18",
+			"type": "invariant",
+			"name": "Extension Constraint Preservation",
+			"description": "Extensions (additional node types, relationship types, lifecycle states) MUST NOT violate core constraints."
+		},
+		{
+			"id": "INV19",
+			"type": "invariant",
+			"name": "External Reference Role Required",
+			"description": "Every external reference MUST include a role describing the relationship to the node."
+		},
+		{
+			"id": "INV20",
+			"type": "invariant",
+			"name": "External Reference Directionality",
+			"description": [
+				"External references are always from a node in the graph to a resource outside it.",
+				"External resources do not point back into the graph."
+			]
+		},
+		{
+			"id": "POL1",
+			"type": "policy",
+			"name": "Prefer Deprecation Over Deletion",
+			"description": "When removing a node from active use, mark it as deprecated rather than deleting it."
+		},
+		{
+			"id": "POL2",
+			"type": "policy",
+			"name": "Decisions Must Record Alternatives",
+			"description": "A decision SHOULD list the alternatives considered, not only the selected option."
+		},
+		{
+			"id": "POL3",
+			"type": "policy",
+			"name": "Changes Must Define Scope",
+			"description": "A change SHOULD explicitly state which nodes it affects and which it does not."
+		},
+		{
+			"id": "POL4",
+			"type": "policy",
+			"name": "Capabilities Should Refine Concepts",
+			"description": "Capability nodes SHOULD refine concept nodes."
+		},
+		{
+			"id": "POL5",
+			"type": "policy",
+			"name": "Elements Should Realise Capabilities",
+			"description": "Element nodes SHOULD realise capability nodes."
+		},
+		{
+			"id": "POL6",
+			"type": "policy",
+			"name": "Prefer Internalisation for Portability",
+			"description": "When portability matters, the relevant content from an external resource SHOULD be captured directly within a node so the document set is self-contained."
+		},
+		{
+			"id": "POL7",
+			"type": "policy",
+			"name": "Security — Node Identity Integrity",
+			"description": "Implementations SHOULD ensure integrity of node identities."
+		},
+		{
+			"id": "POL8",
+			"type": "policy",
+			"name": "Security — Relationship Consistency",
+			"description": "Implementations SHOULD ensure consistency of relationships."
+		},
+		{
+			"id": "POL9",
+			"type": "policy",
+			"name": "Security — Controlled Modification",
+			"description": "Implementations SHOULD ensure controlled modification of decisions and changes."
+		},
+		{
+			"id": "CONF1",
+			"type": "invariant",
+			"name": "Conformance — Typed Nodes",
+			"description": "A conformant system MUST define nodes with types."
+		},
+		{
+			"id": "CONF2",
+			"type": "invariant",
+			"name": "Conformance — Relationships",
+			"description": "A conformant system MUST define relationships between nodes."
+		},
+		{
+			"id": "CONF3",
+			"type": "invariant",
+			"name": "Conformance — Lifecycle States",
+			"description": "A conformant system MUST define lifecycle states for decisions and changes."
+		},
+		{
+			"id": "CONF4",
+			"type": "invariant",
+			"name": "Conformance — At Least One Invariant",
+			"description": "A conformant system MUST define at least one invariant."
+		},
+		{
+			"id": "CONF5",
+			"type": "invariant",
+			"name": "Conformance — Traceability",
+			"description": "A conformant system MUST support traceability across abstraction layers."
+		},
+		{
+			"id": "EL1",
+			"type": "element",
+			"name": "Domain Node Family",
+			"description": "The set of node types that model what the system is.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "NT-INTENT",
+						"type": "concept",
+						"name": "intent",
+						"description": "System purpose or goal. Stable, independent of implementation."
+					},
+					{
+						"id": "NT-CONCEPT",
+						"type": "concept",
+						"name": "concept",
+						"description": "Abstract model or idea. Defines what the system is, independent of structure and realisation."
+					},
+					{
+						"id": "NT-CAPABILITY",
+						"type": "concept",
+						"name": "capability",
+						"description": "Enabled behaviour. Derived from concepts, independent of implementation."
+					},
+					{
+						"id": "NT-ELEMENT",
+						"type": "concept",
+						"name": "element",
+						"description": "Structural unit (logical part of system). Defines organisation, may depend on other elements."
+					},
+					{
+						"id": "NT-REALISATION",
+						"type": "concept",
+						"name": "realisation",
+						"description": "Concrete implementation of an element. Multiple realisations may coexist (alternative, concurrent, or experimental)."
+					},
+					{
+						"id": "NT-INVARIANT",
+						"type": "concept",
+						"name": "invariant",
+						"description": "Constraint that must always hold. Independent of decisions and changes. Constrains allowable system states."
+					}
+				]
+			}
+		},
+		{
+			"id": "EL2",
+			"type": "element",
+			"name": "Process Node Family",
+			"description": "The set of node types that model how work flows through the system.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "NT-PRINCIPLE",
+						"type": "concept",
+						"name": "principle",
+						"description": "Normative design value. May be overridden with justification, unlike invariants."
+					},
+					{
+						"id": "NT-POLICY",
+						"type": "concept",
+						"name": "policy",
+						"description": "Operational routing, gating, or selection rule. Implements principles and invariants."
+					},
+					{
+						"id": "NT-PROTOCOL",
+						"type": "concept",
+						"name": "protocol",
+						"description": "Defined sequence of stages performed by roles. Protocols MAY depend on other protocols."
+					},
+					{
+						"id": "NT-STAGE",
+						"type": "concept",
+						"name": "stage",
+						"description": "A step within a protocol. MUST have defined ordering. MAY produce or consume artefacts."
+					},
+					{
+						"id": "NT-ROLE",
+						"type": "concept",
+						"name": "role",
+						"description": "A participant that performs stages. MAY be human, automated, or agent-based."
+					},
+					{
+						"id": "NT-GATE",
+						"type": "concept",
+						"name": "gate",
+						"description": [
+							"Conditional blocker or redirector. MUST reference the invariant or policy it enforces.",
+							"MAY block a stage or route to an alternative."
+						]
+					},
+					{
+						"id": "NT-MODE",
+						"type": "concept",
+						"name": "mode",
+						"description": [
+							"Named behavioural configuration that modifies a protocol or stage without redefining the system.",
+							"MAY be triggered by gates, selected by policies, or chosen explicitly."
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "EL3",
+			"type": "element",
+			"name": "Artefact Node Family",
+			"description": "The set of node types that model what is produced and consumed.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "NT-ARTEFACT",
+						"type": "concept",
+						"name": "artefact",
+						"description": "A document, record, or output produced or consumed during system evolution."
+					},
+					{
+						"id": "NT-ARTEFACT_FLOW",
+						"type": "concept",
+						"name": "artefact_flow",
+						"description": [
+							"A transformation of one artefact into another within a stage.",
+							"Provides traceability of how documents and records evolve through a process."
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "EL4",
+			"type": "element",
+			"name": "Evolution Node Family",
+			"description": "The set of node types that model how the system changes over time.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "NT-DECISION",
+						"type": "concept",
+						"name": "decision",
+						"description": [
+							"Selection between alternatives that influences system structure or behaviour.",
+							"MUST define selected option, list alternatives, identify affected nodes, and identify preserved invariants.",
+							"MAY supersede prior decisions. Superseded decisions remain in history."
+						]
+					},
+					{
+						"id": "NT-CHANGE",
+						"type": "concept",
+						"name": "change",
+						"description": [
+							"System modification over time.",
+							"MUST define scope, reference decisions, define operations (add/update/remove/link), and define lifecycle state.",
+							"MAY include execution plan. MAY overlap, depend on other changes, and be partially completed."
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "EL5",
+			"type": "element",
+			"name": "Projection Node Family",
+			"description": "Optional node types for views and snapshots.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "NT-VIEW",
+						"type": "concept",
+						"name": "view",
+						"description": "A named projection of a subset of the graph."
+					},
+					{
+						"id": "NT-MILESTONE",
+						"type": "concept",
+						"name": "milestone",
+						"description": "A named point in evolution."
+					},
+					{
+						"id": "NT-VERSION",
+						"type": "concept",
+						"name": "version",
+						"description": "A frozen snapshot of the system."
+					}
+				]
+			}
+		},
+		{
+			"id": "EL6",
+			"type": "element",
+			"name": "Relationship Type Registry",
+			"description": "The set of typed, directed connections available between nodes.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "RT-REFINES",
+						"type": "concept",
+						"name": "refines",
+						"description": "Abstraction refinement (e.g. capability refines concept)."
+					},
+					{
+						"id": "RT-REALISES",
+						"type": "concept",
+						"name": "realises",
+						"description": "Fulfils a capability."
+					},
+					{
+						"id": "RT-IMPLEMENTS",
+						"type": "concept",
+						"name": "implements",
+						"description": "Fulfils an element."
+					},
+					{
+						"id": "RT-DEPENDS_ON",
+						"type": "concept",
+						"name": "depends_on",
+						"description": "Dependency between nodes."
+					},
+					{
+						"id": "RT-CONSTRAINED_BY",
+						"type": "concept",
+						"name": "constrained_by",
+						"description": "Governed by an invariant."
+					},
+					{
+						"id": "RT-AFFECTS",
+						"type": "concept",
+						"name": "affects",
+						"description": "Impact of a decision or change on a node."
+					},
+					{
+						"id": "RT-SUPERSEDES",
+						"type": "concept",
+						"name": "supersedes",
+						"description": "Replacement of one node by another."
+					},
+					{
+						"id": "RT-MUST_PRESERVE",
+						"type": "concept",
+						"name": "must_preserve",
+						"description": "Preservation of an invariant by a decision or change."
+					},
+					{
+						"id": "RT-PERFORMS",
+						"type": "concept",
+						"name": "performs",
+						"description": "A role performs a stage."
+					},
+					{
+						"id": "RT-PART_OF",
+						"type": "concept",
+						"name": "part_of",
+						"description": "A stage belongs to a protocol."
+					},
+					{
+						"id": "RT-PRECEDES",
+						"type": "concept",
+						"name": "precedes",
+						"description": "Ordering between stages."
+					},
+					{
+						"id": "RT-MUST_FOLLOW",
+						"type": "concept",
+						"name": "must_follow",
+						"description": "Strict ordering constraint between stages."
+					},
+					{
+						"id": "RT-BLOCKS",
+						"type": "concept",
+						"name": "blocks",
+						"description": "A gate blocks a stage."
+					},
+					{
+						"id": "RT-ROUTES_TO",
+						"type": "concept",
+						"name": "routes_to",
+						"description": "A gate redirects to a stage."
+					},
+					{
+						"id": "RT-GOVERNED_BY",
+						"type": "concept",
+						"name": "governed_by",
+						"description": "A gate or policy is governed by a principle or invariant."
+					},
+					{
+						"id": "RT-MODIFIES",
+						"type": "concept",
+						"name": "modifies",
+						"description": "A mode modifies a protocol or stage."
+					},
+					{
+						"id": "RT-TRIGGERED_BY",
+						"type": "concept",
+						"name": "triggered_by",
+						"description": "A mode is triggered by a gate."
+					},
+					{
+						"id": "RT-APPLIES_TO",
+						"type": "concept",
+						"name": "applies_to",
+						"description": "A mode applies to a protocol."
+					},
+					{
+						"id": "RT-PRODUCES",
+						"type": "concept",
+						"name": "produces",
+						"description": "A stage produces an artefact."
+					},
+					{
+						"id": "RT-CONSUMES",
+						"type": "concept",
+						"name": "consumes",
+						"description": "A stage consumes an artefact."
+					},
+					{
+						"id": "RT-TRANSFORMS_INTO",
+						"type": "concept",
+						"name": "transforms_into",
+						"description": "An artefact flow transforms input to output."
+					},
+					{
+						"id": "RT-SELECTS",
+						"type": "concept",
+						"name": "selects",
+						"description": "A decision selects a realisation."
+					},
+					{
+						"id": "RT-REQUIRES",
+						"type": "concept",
+						"name": "requires",
+						"description": "A gate or mode requires a condition."
+					},
+					{
+						"id": "RT-DISABLES",
+						"type": "concept",
+						"name": "disables",
+						"description": "A mode disables a capability."
+					}
+				]
+			}
+		},
+		{
+			"id": "EL7",
+			"type": "element",
+			"name": "External Reference Model",
+			"description": "The mechanism for relating nodes to resources outside the graph.",
+			"status": "active",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "ER-INTERNALISE",
+						"type": "concept",
+						"name": "Internalisation",
+						"description": [
+							"Content from an external resource captured directly within a node.",
+							"The node becomes self-contained and does not depend on the external source."
+						]
+					},
+					{
+						"id": "ER-REFERENCE",
+						"type": "concept",
+						"name": "External Reference",
+						"description": "A declared relationship to a resource outside the graph, identified by a serialisation-specific identifier with a typed role."
+					},
+					{
+						"id": "ER-ROLE-INPUT",
+						"type": "concept",
+						"name": "input",
+						"description": "Resource that informed the creation of this node."
+					},
+					{
+						"id": "ER-ROLE-OUTPUT",
+						"type": "concept",
+						"name": "output",
+						"description": "Resource produced as a result of this node."
+					},
+					{
+						"id": "ER-ROLE-CONTEXT",
+						"type": "concept",
+						"name": "context",
+						"description": "Background material relevant to understanding this node."
+					},
+					{
+						"id": "ER-ROLE-EVIDENCE",
+						"type": "concept",
+						"name": "evidence",
+						"description": "Material that supports or justifies this node."
+					},
+					{
+						"id": "ER-ROLE-SOURCE",
+						"type": "concept",
+						"name": "source",
+						"description": "Original material from which this node was derived."
+					},
+					{
+						"id": "ER-ROLE-STANDARD",
+						"type": "concept",
+						"name": "standard",
+						"description": "External standard or specification that this node conforms to or enforces."
+					},
+					{
+						"id": "ER-ROLE-PRIOR_ART",
+						"type": "concept",
+						"name": "prior_art",
+						"description": "Existing work that this node relates to or was influenced by."
+					}
+				]
+			}
+		},
+		{
+			"id": "PROT1",
+			"type": "protocol",
+			"name": "Decision Lifecycle",
+			"description": "The lifecycle state machine for decision nodes."
+		},
+		{
+			"id": "ST-DEC-PROPOSED",
+			"type": "stage",
+			"name": "proposed",
+			"description": "Decision has been proposed but not yet evaluated."
+		},
+		{
+			"id": "ST-DEC-ACCEPTED",
+			"type": "stage",
+			"name": "accepted",
+			"description": "Decision has been accepted as the chosen path."
+		},
+		{
+			"id": "ST-DEC-IMPLEMENTED",
+			"type": "stage",
+			"name": "implemented",
+			"description": "Decision has been implemented in the system."
+		},
+		{
+			"id": "ST-DEC-ADOPTED",
+			"type": "stage",
+			"name": "adopted",
+			"description": "Decision has been fully adopted across the system."
+		},
+		{
+			"id": "ST-DEC-SUPERSEDED",
+			"type": "stage",
+			"name": "superseded",
+			"description": "Decision has been replaced by a newer decision."
+		},
+		{
+			"id": "ST-DEC-ABANDONED",
+			"type": "stage",
+			"name": "abandoned",
+			"description": "Decision was accepted but later abandoned without implementation."
+		},
+		{
+			"id": "ST-DEC-DEFERRED",
+			"type": "stage",
+			"name": "deferred",
+			"description": "Decision was accepted but deferred for later implementation."
+		},
+		{
+			"id": "PROT2",
+			"type": "protocol",
+			"name": "Change Lifecycle",
+			"description": "The lifecycle state machine for change nodes."
+		},
+		{
+			"id": "ST-CHG-DEFINED",
+			"type": "stage",
+			"name": "defined",
+			"description": "Change has been defined with scope and operations."
+		},
+		{
+			"id": "ST-CHG-INTRODUCED",
+			"type": "stage",
+			"name": "introduced",
+			"description": "Change has been introduced into the system."
+		},
+		{
+			"id": "ST-CHG-IN_PROGRESS",
+			"type": "stage",
+			"name": "in_progress",
+			"description": "Change is being actively worked on."
+		},
+		{
+			"id": "ST-CHG-COMPLETE",
+			"type": "stage",
+			"name": "complete",
+			"description": "Change has been fully applied."
+		},
+		{
+			"id": "ST-CHG-CONSOLIDATED",
+			"type": "stage",
+			"name": "consolidated",
+			"description": "Change has been consolidated and cleaned up."
+		},
+		{
+			"id": "PROT3",
+			"type": "protocol",
+			"name": "Node Lifecycle",
+			"description": "The general lifecycle state machine for nodes."
+		},
+		{
+			"id": "ST-NODE-PROPOSED",
+			"type": "stage",
+			"name": "proposed",
+			"description": "Node has been proposed but is not yet active."
+		},
+		{
+			"id": "ST-NODE-ACTIVE",
+			"type": "stage",
+			"name": "active",
+			"description": "Node is currently active in the system."
+		},
+		{
+			"id": "ST-NODE-DEPRECATED",
+			"type": "stage",
+			"name": "deprecated",
+			"description": "Node is deprecated but still present in the system."
+		},
+		{
+			"id": "ST-NODE-RETIRED",
+			"type": "stage",
+			"name": "retired",
+			"description": "Node has been retired from active use."
+		},
+		{
+			"id": "EL8",
+			"type": "element",
+			"name": "File Representation",
+			"description": "Conventions for encoding SysProM in file-based formats.",
+			"status": "active"
+		},
+		{
+			"id": "POL10",
+			"type": "policy",
+			"name": "Root Entry Point Identification",
+			"description": [
+				"The root entry point MUST be identifiable as a SysProM document.",
+				"Valid filenames include SysProM.md, SYSPROM.md, SPM.md, and README.spm.md.",
+				"Alternatively, front matter containing doc_type: sysprom is sufficient."
+			]
+		},
+		{
+			"id": "POL11",
+			"type": "policy",
+			"name": "Root Entry Point Location",
+			"description": [
+				"A SysProM document set MAY live at any location.",
+				"Valid locations include: repository root (./SysProM.md), dedicated folder (./SysProM/README.md), docs directory (./docs/SysProM.md), or any other reasonable path."
+			]
+		},
+		{
+			"id": "POL12",
+			"type": "policy",
+			"name": "Multi-Document Hub",
+			"description": [
+				"When a system is described across multiple files, a hub document (typically README.md) SHOULD serve as the root node.",
+				"Separate files per concern: INTENT.md, INVARIANTS.md, STATE.md, DECISIONS.md, CHANGES.md.",
+				"No document is mandatory."
+			]
+		},
+		{
+			"id": "POL13",
+			"type": "policy",
+			"name": "Single-File Node Extension",
+			"description": [
+				"A node represented as a single file SHOULD use the .spm.md extension.",
+				"Filename SHOULD include node ID and MAY include name: F1-sync.spm.md (preferred), F1.spm.md, or sync.spm.md."
+			]
+		},
+		{
+			"id": "POL14",
+			"type": "policy",
+			"name": "Folder Node Naming",
+			"description": [
+				"A node represented as a folder SHOULD be named using the node ID and name: F1-sync/ (preferred), F1/, or sync/.",
+				"The folder MUST contain at least a README. md."
+			]
+		},
+		{
+			"id": "POL15",
+			"type": "policy",
+			"name": "Grouping Folders",
+			"description": [
+				"Node folders MAY be grouped under intermediate directories by type (e. g. features/, components/).",
+				"Grouping folders are organisational and do not represent nodes."
+			]
+		},
+		{
+			"id": "POL16",
+			"type": "policy",
+			"name": "Parent Linking Implicit",
+			"description": [
+				"Parent-child relationships between nodes are implicit from the folder hierarchy.",
+				"Explicit parent references in frontmatter are not required."
+			]
+		},
+		{
+			"id": "POL17",
+			"type": "policy",
+			"name": "Relationship Notation Flexibility",
+			"description": [
+				"Relationships MAY be expressed as labelled lists, arrow chains, tables, nested lists, or mermaid diagrams.",
+				"Formats may be mixed. The choice is a presentation concern."
+			]
+		},
+		{
+			"id": "POL18",
+			"type": "policy",
+			"name": "Frontmatter Is Metadata Only",
+			"description": [
+				"Front matter defines document-level metadata only (title, doc_type, scope, status, version).",
+				"Node-level data belongs in the document body."
+			]
+		},
+		{
+			"id": "EL9",
+			"type": "element",
+			"name": "Non-Linear Evolution",
+			"description": "The model supports branching, merging, and revival of nodes.",
+			"status": "active"
+		},
+		{
+			"id": "CP9",
+			"type": "capability",
+			"name": "Branching",
+			"description": "The model MUST support multiple concurrent evolution paths (e.g. experimental branches)."
+		},
+		{
+			"id": "CP10",
+			"type": "capability",
+			"name": "Merging",
+			"description": "Branches MAY be merged."
+		},
+		{
+			"id": "CP11",
+			"type": "capability",
+			"name": "Revival",
+			"description": "Previously deprecated or retired nodes MAY be reintroduced."
+		},
+		{
+			"id": "EL10",
+			"type": "element",
+			"name": "Extensibility",
+			"description": "The mechanism for extending SysProM beyond its core types.",
+			"status": "active"
+		},
+		{
+			"id": "R1",
+			"type": "realisation",
+			"name": "Markdown Representation",
+			"description": "Primary representation using headings as nodes, lists as relationships, checkboxes as lifecycle, front matter as document metadata.",
+			"status": "active"
+		},
+		{
+			"id": "R2",
+			"type": "realisation",
+			"name": "Single-File Form",
+			"description": "All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).",
+			"status": "active"
+		},
+		{
+			"id": "R3",
+			"type": "realisation",
+			"name": "Multi-Document Form",
+			"description": "Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGES).",
+			"status": "active"
+		},
+		{
+			"id": "R4",
+			"type": "realisation",
+			"name": "Recursive Folder Form",
+			"description": "Node folders with their own document sets. Nodes may also be single files using .spm.md extension.",
+			"status": "active"
+		},
+		{
+			"id": "R5",
+			"type": "realisation",
+			"name": "JSON Serialisation",
+			"description": "JSON representation validated against schema.json. Supports recursive composition via the subsystem property.",
+			"status": "active"
+		},
+		{
+			"id": "D1",
+			"type": "decision",
+			"name": "Separate Domain From Process From Evolution",
+			"context": [
+				"The model needs to represent systems, workflows, and history.",
+				"Mixing these concerns makes the graph hard to query and reason about."
+			],
+			"options": [
+				{
+					"id": "D1-O1",
+					"description": "Single flat node type for everything"
+				},
+				{
+					"id": "D1-O2",
+					"description": "Typed nodes without family grouping"
+				},
+				{
+					"id": "D1-O3",
+					"description": "Nodes grouped into domain, process, artefact, and evolution families"
+				}
+			],
+			"selected": "D1-O3",
+			"rationale": [
+				"Grouping into families enforces separation of concerns.",
+				"Domain structure should not be tangled with process mechanics or evolution history."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D2",
+			"type": "decision",
+			"name": "Make Decisions First-Class Entities",
+			"context": "Systems evolve through choices, but most models bury decisions in prose or lose them entirely.",
+			"options": [
+				{
+					"id": "D2-O1",
+					"description": "Embed decisions in prose within documents"
+				},
+				{
+					"id": "D2-O2",
+					"description": "Record decisions as standalone log entries"
+				},
+				{
+					"id": "D2-O3",
+					"description": "Model decisions as typed graph nodes with relationships to affected nodes and preserved invariants"
+				}
+			],
+			"selected": "D2-O3",
+			"rationale": [
+				"Decisions are the causal mechanism of system evolution.",
+				"Graph nodes with typed relationships make decisions queryable, traceable, and enforceable."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D3",
+			"type": "decision",
+			"name": "Distinguish Invariants From Principles From Policies",
+			"context": "Systems have rules at different levels of rigidity. Collapsing all rules into one type loses critical information.",
+			"options": [
+				{
+					"id": "D3-O1",
+					"description": "Single constraint type for all rules"
+				},
+				{
+					"id": "D3-O2",
+					"description": "Two types: hard invariant and soft guideline"
+				},
+				{
+					"id": "D3-O3",
+					"description": "Three types: invariant (must always hold), principle (normative value, may be overridden), policy (operational rule)"
+				}
+			],
+			"selected": "D3-O3",
+			"rationale": "The three-way split matches how real systems distinguish structural guarantees from design values from operational rules.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D4",
+			"type": "decision",
+			"name": "Add Process Modelling",
+			"context": "Workflow-heavy systems (planning tools, spec-driven workflows, runtime orchestration) cannot be adequately modelled with decisions and changes alone.",
+			"options": [
+				{
+					"id": "D4-O1",
+					"description": "Model process implicitly through decisions and changes only"
+				},
+				{
+					"id": "D4-O2",
+					"description": "Add roles and stages but not gates, modes, or artefacts"
+				},
+				{
+					"id": "D4-O3",
+					"description": "Add full process modelling: roles, protocols, stages, gates, policies, modes, artefacts, artefact flows"
+				}
+			],
+			"selected": "D4-O3",
+			"rationale": [
+				"Without process nodes, roles become invisible, gates become buried in decision prose, and artefact lineage is lost.",
+				"Full process modelling makes the model capable of encoding systems like Spec Kit, Ralplan, and get-shit-done."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D5",
+			"type": "decision",
+			"name": "Format-Agnostic With Markdown as Primary Representation",
+			"context": "The model needs a practical encoding but should not be locked to one format.",
+			"options": [
+				{
+					"id": "D5-O1",
+					"description": "Define a single mandatory format (e.g. JSON schema)"
+				},
+				{
+					"id": "D5-O2",
+					"description": "Define semantics only, with no reference representation"
+				},
+				{
+					"id": "D5-O3",
+					"description": "Define semantics as normative, with Markdown as the primary practical representation"
+				}
+			],
+			"selected": "D5-O3",
+			"rationale": [
+				"Markdown is human-readable, Git-friendly, renders on GitHub/GitLab, and supports front matter, headings, links, and checkboxes which map directly to model concepts.",
+				"Other formats remain valid."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D6",
+			"type": "decision",
+			"name": "Recursive Composition Using Same Conventions",
+			"context": "Systems contain subsystems. If subsystems use different conventions, the model fractures.",
+			"options": [
+				{
+					"id": "D6-O1",
+					"description": "Flat structure only (no nesting)"
+				},
+				{
+					"id": "D6-O2",
+					"description": "Nesting with different conventions at each level"
+				},
+				{
+					"id": "D6-O3",
+					"description": "Same document set, naming, and relationship conventions at every level of nesting"
+				}
+			],
+			"selected": "D6-O3",
+			"rationale": "Recursive consistency means any node can be understood in isolation using the same patterns, and tools can process any level without special cases.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D7",
+			"type": "decision",
+			"name": "Append-Only History",
+			"context": "Deleting history destroys traceability. If a decision is removed, it becomes impossible to answer why a node exists.",
+			"options": [
+				{
+					"id": "D7-O1",
+					"description": "Allow deletion of nodes and decisions"
+				},
+				{
+					"id": "D7-O2",
+					"description": "Allow overwriting of decisions with new versions"
+				},
+				{
+					"id": "D7-O3",
+					"description": "Append-only: superseded decisions and deprecated nodes remain; nothing is deleted"
+				}
+			],
+			"selected": "D7-O3",
+			"rationale": "Append-only preserves the full provenance chain.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D8",
+			"type": "decision",
+			"name": "Support External Resources via Reference and Internalisation",
+			"context": [
+				"Nodes often relate to resources outside the graph.",
+				"The model must handle this without coupling to a specific serialisation format."
+			],
+			"options": [
+				{
+					"id": "D8-O1",
+					"description": "No external reference support — all content must be internalised"
+				},
+				{
+					"id": "D8-O2",
+					"description": "External references only — all content is by pointer"
+				},
+				{
+					"id": "D8-O3",
+					"description": "Both approaches supported independently or together, with serialisation-specific identifiers and typed roles"
+				}
+			],
+			"selected": "D8-O3",
+			"rationale": [
+				"Internalisation enables portability. References enable traceability.",
+				"Supporting both gives implementors flexibility without losing either property."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH1",
+			"type": "change",
+			"name": "Initial Model",
+			"description": "Establishes the core domain model with layered abstraction, decisions, changes, and invariants.",
+			"scope": [
+				"I1",
+				"CN1",
+				"CN2",
+				"CN3",
+				"CN4",
+				"CP1",
+				"CP2",
+				"CP3",
+				"CP4",
+				"CP5",
+				"EL1",
+				"EL4",
+				"INV1",
+				"INV2",
+				"INV3",
+				"INV4",
+				"INV5",
+				"INV6",
+				"INV7",
+				"PR1",
+				"PR2",
+				"PR3",
+				"PR4",
+				"PR5"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "I1"
+				},
+				{
+					"type": "add",
+					"target": "EL1"
+				},
+				{
+					"type": "add",
+					"target": "EL4"
+				},
+				{
+					"type": "add",
+					"target": "EL6"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH2",
+			"type": "change",
+			"name": "Add Process Modelling",
+			"description": "Extends the model with process, artefact, and projection node families.",
+			"scope": [
+				"CN5",
+				"CP6",
+				"EL2",
+				"EL3",
+				"EL5",
+				"INV8",
+				"INV9",
+				"INV10",
+				"INV11"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "EL2"
+				},
+				{
+					"type": "add",
+					"target": "EL3"
+				},
+				{
+					"type": "add",
+					"target": "EL5"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH3",
+			"type": "change",
+			"name": "Add File Representation Conventions",
+			"description": "Defines how SysProM may be encoded in files, including single-document, multi-document, and recursive folder forms.",
+			"scope": [
+				"CN6",
+				"CP7",
+				"R1",
+				"R2",
+				"R3",
+				"R4",
+				"R5",
+				"EL8",
+				"POL1",
+				"POL2",
+				"POL3",
+				"POL10",
+				"POL11",
+				"POL12",
+				"POL13",
+				"POL14",
+				"POL15",
+				"POL16",
+				"POL17",
+				"POL18"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "EL8"
+				},
+				{
+					"type": "add",
+					"target": "R1"
+				},
+				{
+					"type": "add",
+					"target": "R2"
+				},
+				{
+					"type": "add",
+					"target": "R3"
+				},
+				{
+					"type": "add",
+					"target": "R4"
+				},
+				{
+					"type": "add",
+					"target": "R5"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH4",
+			"type": "change",
+			"name": "Add External Resources Model",
+			"description": "Adds the external reference and internalisation mechanism with typed roles.",
+			"scope": [
+				"CN7",
+				"CP8",
+				"EL7",
+				"INV19",
+				"INV20",
+				"POL6"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "CN7"
+				},
+				{
+					"type": "add",
+					"target": "CP8"
+				},
+				{
+					"type": "add",
+					"target": "EL7"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH5",
+			"type": "change",
+			"name": "Add Lifecycle Protocols",
+			"description": "Adds the decision, change, and node lifecycle state machines as protocols with stages and ordering.",
+			"scope": [
+				"PROT1",
+				"PROT2",
+				"PROT3"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "PROT1"
+				},
+				{
+					"type": "add",
+					"target": "PROT2"
+				},
+				{
+					"type": "add",
+					"target": "PROT3"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH6",
+			"type": "change",
+			"name": "Encode Full Normative Specification",
+			"description": "Adds conformance requirements, missing invariants, security and extensibility policies, non-linear evolution capabilities, and complete node/relationship type vocabularies to make the JSON self-contained.",
+			"scope": [
+				"CONF1",
+				"CONF2",
+				"CONF3",
+				"CONF4",
+				"CONF5",
+				"INV12",
+				"INV13",
+				"INV14",
+				"INV15",
+				"INV16",
+				"INV17",
+				"INV18",
+				"POL4",
+				"POL5",
+				"POL6",
+				"POL7",
+				"POL8",
+				"POL9",
+				"EL9",
+				"EL10",
+				"CP9",
+				"CP10",
+				"CP11",
+				"CN8"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "CN8"
+				},
+				{
+					"type": "add",
+					"target": "EL9"
+				},
+				{
+					"type": "add",
+					"target": "EL10"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "INV21",
+			"type": "invariant",
+			"name": "Text Field Duality",
+			"description": [
+				"Fields that carry human-readable content (description, context, rationale, internalised) MAY be either a string or an array of strings.",
+				"Both forms are semantically equivalent.",
+				"Implementations MUST accept either form wherever a text field appears."
+			]
+		},
+		{
+			"id": "D9",
+			"type": "decision",
+			"name": "Allow Array-of-Lines for Text Fields",
+			"context": [
+				"JSON does not support multiline strings.",
+				"Long descriptions serialised as single strings with embedded \\n are hard to read and produce poor diffs.",
+				"An array of lines preserves readability in serialised form."
+			],
+			"options": [
+				{
+					"id": "D9-O1",
+					"description": "Single string only — use \\n for newlines"
+				},
+				{
+					"id": "D9-O2",
+					"description": "Array of strings only — always use arrays"
+				},
+				{
+					"id": "D9-O3",
+					"description": "Either form accepted — string for short content, array for multiline"
+				}
+			],
+			"selected": "D9-O3",
+			"rationale": [
+				"Short descriptions gain nothing from being wrapped in an array.",
+				"Long descriptions gain readability and diff quality from line-per-element arrays.",
+				"Accepting both avoids forcing a style while enabling better ergonomics where it matters."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH7",
+			"type": "change",
+			"name": "Add Text Field Duality",
+			"description": [
+				"Adds support for text fields (description, context, rationale, internalised) to accept either a string or an array of strings.",
+				"Updates the JSON schema, Zod definitions, and specification."
+			],
+			"scope": [
+				"INV21",
+				"D8"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "INV21"
+				},
+				{
+					"type": "add",
+					"target": "D8"
+				},
+				{
+					"type": "update",
+					"target": "R5",
+					"description": "JSON schema updated to accept string | string[] for text fields"
+				},
+				{
+					"type": "update",
+					"target": "R1",
+					"description": "Specification updated with §6.2 Text Fields"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "INV22",
+			"type": "invariant",
+			"name": "Strict Type Enums",
+			"description": [
+				"Node types, node statuses, relationship types, and external reference roles MUST be members of their defined enums.",
+				"Unknown values MUST be rejected at validation time.",
+				"Extensions MUST add new values to the enum rather than bypassing it."
+			]
+		},
+		{
+			"id": "D10",
+			"type": "decision",
+			"name": "Use Strict Enums for Core Types",
+			"context": [
+				"SysProM's purpose is provenance and traceability.",
+				"If relationship types, node types, and statuses are arbitrary strings, layer constraints cannot be enforced, labels cannot be derived for rendering, and semantic validation is impossible.",
+				"The extensibility section says extensions MUST NOT violate core constraints, but an open string type makes that unenforceable."
+			],
+			"options": [
+				{
+					"id": "D10-O1",
+					"description": "Open strings with examples — any value accepted, core types documented only"
+				},
+				{
+					"id": "D10-O2",
+					"description": "Strict enums — only declared values accepted, extensions must add to the enum"
+				}
+			],
+			"selected": "D10-O2",
+			"rationale": [
+				"Strict enums enable schema-level validation, type-safe label derivation, and enforceable layer constraints.",
+				"The DRY labelledEnum pattern ensures each type is defined once with its label, eliminating duplication."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH8",
+			"type": "change",
+			"name": "Switch to Strict Enums with Labelled Definitions",
+			"description": [
+				"Replaces open z.string() types with z.enum() for node types, statuses, relationship types, and external reference roles.",
+				"Introduces labelledEnum() helper that defines values and labels in one place.",
+				"Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label maps."
+			],
+			"scope": [
+				"INV22",
+				"D8",
+				"R5"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "INV22"
+				},
+				{
+					"type": "add",
+					"target": "D8"
+				},
+				{
+					"type": "update",
+					"target": "R5",
+					"description": "JSON schema now uses enum instead of string with examples"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "POL19",
+			"type": "policy",
+			"name": "README Links Only to Present Files",
+			"description": "Generated README navigation and document roles MUST only link to files that contain nodes. Dead links to absent files MUST NOT be generated."
+		},
+		{
+			"id": "D11",
+			"type": "decision",
+			"name": "Only Link to Present Files in README",
+			"context": [
+				"The README generator was producing navigation links and document role entries for all possible files (INTENT, INVARIANTS, STATE, DECISIONS, CHANGES) regardless of whether the subsystem had nodes of those types.",
+				"This created dead links in subsystem READMEs."
+			],
+			"options": [
+				{
+					"id": "D11-O1",
+					"description": "Always link to all files — accept dead links as informational"
+				},
+				{
+					"id": "D11-O2",
+					"description": "Only link to files that will be created based on present node types"
+				}
+			],
+			"selected": "D11-O2",
+			"rationale": "Dead links mislead readers and break tooling. Links should reflect reality.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "D12",
+			"type": "decision",
+			"name": "Remove Navigation and Document Roles from README",
+			"context": [
+				"The README contained a Navigation section and a Document Roles table that restated what the filenames already communicate.",
+				"Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain."
+			],
+			"options": [
+				{
+					"id": "D12-O1",
+					"description": "Keep both Navigation and Document Roles"
+				},
+				{
+					"id": "D12-O2",
+					"description": "Keep Document Roles table only"
+				},
+				{
+					"id": "D12-O3",
+					"description": "Remove both — the filenames are self-documenting"
+				}
+			],
+			"selected": "D12-O3",
+			"rationale": "Removing redundant sections reduces noise and maintenance burden. The file naming convention is the documentation.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": false,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH9",
+			"type": "change",
+			"name": "Fix Dead Links in Subsystem READMEs",
+			"description": "README generator now only links to files that contain nodes for the given subsystem.",
+			"scope": [
+				"POL19",
+				"D8",
+				"R1"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "POL19"
+				},
+				{
+					"type": "add",
+					"target": "D8"
+				},
+				{
+					"type": "update",
+					"target": "R1",
+					"description": "json-to-md updated to check present node types before generating links"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "CH10",
+			"type": "change",
+			"name": "Remove Navigation and Document Roles from README",
+			"description": "Removes the Navigation section and Document Roles table from generated READMEs. The file naming convention is self-documenting.",
+			"scope": [
+				"D8",
+				"R1"
+			],
+			"operations": [
+				{
+					"type": "update",
+					"target": "R1",
+					"description": "README generation simplified to omit navigation and document roles"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": false,
+				"complete": false
+			}
+		},
+		{
+			"id": "D13",
+			"type": "decision",
+			"name": "Layer-Dependent Invariant Preservation",
+			"context": [
+				"INV3 required every decision to identify preserved invariants.",
+				"Operational decisions (naming, tooling, presentation) genuinely have no invariants at risk.",
+				"Forcing must_preserve on these creates friction that discourages recording decisions, which defeats SysProM's provenance purpose.",
+				"SysProM already distinguishes domain nodes (intent, concept, capability, element, invariant) from non-domain nodes (realisation, policy, protocol, etc.)."
+			],
+			"options": [
+				{
+					"id": "D13-O1",
+					"description": "Keep INV3 as MUST for all decisions"
+				},
+				{
+					"id": "D13-O2",
+					"description": "Soften INV3 to SHOULD for all decisions"
+				},
+				{
+					"id": "D13-O3",
+					"description": "Add decision type/level classification"
+				},
+				{
+					"id": "D13-O4",
+					"description": "MUST when affecting domain nodes, SHOULD when affecting only non-domain nodes — determined automatically from affects relationships"
+				}
+			],
+			"selected": "D13-O4",
+			"rationale": [
+				"Automatic classification from affects relationships means no user burden.",
+				"Domain nodes define what the system IS — decisions affecting them must consider invariants.",
+				"Non-domain nodes define how the system works — decisions affecting only these are operational.",
+				"Leverages the existing layer model rather than adding new concepts."
+			],
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH11",
+			"type": "change",
+			"name": "Make Invariant Preservation Layer-Dependent",
+			"description": [
+				"Updates INV3 to require must_preserve only when a decision affects domain nodes.",
+				"Decisions affecting only non-domain nodes (realisations, policies, process nodes) should but are not required to identify preserved invariants."
+			],
+			"scope": [
+				"INV3",
+				"D8"
+			],
+			"operations": [
+				{
+					"type": "update",
+					"target": "INV3",
+					"description": "Reworded to distinguish domain and non-domain affects"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "ART1",
+			"type": "artefact",
+			"name": "System Comparisons",
+			"description": "Comparison of SysProM against existing systems and tools, demonstrating what each covers and where SysProM fills gaps.",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "CMP-ADR",
+						"type": "concept",
+						"name": "ADR Comparison",
+						"description": [
+							"Architecture Decision Records cover decision history only.",
+							"SysProM subsumes ADR and adds structure, evolution, invariants, and graph-native traceability."
+						]
+					},
+					{
+						"id": "CMP-C4",
+						"type": "concept",
+						"name": "C4 Comparison",
+						"description": [
+							"C4 covers multi-level structure (Context, Container, Component, Code).",
+							"It is static — no decisions, changes, or time. SysProM adds all three."
+						]
+					},
+					{
+						"id": "CMP-DDD",
+						"type": "concept",
+						"name": "DDD Comparison",
+						"description": [
+							"Domain-Driven Design covers intent and concept layers via ubiquitous language and bounded contexts.",
+							"Weak on decisions and evolution. SysProM adds both."
+						]
+					},
+					{
+						"id": "CMP-ES",
+						"type": "concept",
+						"name": "Event Sourcing Comparison",
+						"description": [
+							"Event sourcing tracks changes as first-class events.",
+							"No abstraction layers, no decisions (why), no semantic structure. SysProM adds all three."
+						]
+					},
+					{
+						"id": "CMP-KG",
+						"type": "concept",
+						"name": "Knowledge Graph Comparison",
+						"description": [
+							"Knowledge graphs provide the underlying data model (nodes + typed edges).",
+							"Lack lifecycle, decision semantics, and temporal workflow. SysProM adds these."
+						]
+					},
+					{
+						"id": "CMP-TRACE",
+						"type": "concept",
+						"name": "Traceability Matrix Comparison",
+						"description": [
+							"Traceability matrices link requirements to design to implementation.",
+							"Very linear, no decisions, no non-linearity. SysProM is graph-native."
+						]
+					},
+					{
+						"id": "CMP-EA",
+						"type": "concept",
+						"name": "Enterprise Architecture Comparison",
+						"description": [
+							"ArchiMate/TOGAF cover capability and structure layers with standardised elements.",
+							"Heavyweight, static, weak on iteration. SysProM is lightweight and decision-driven."
+						]
+					},
+					{
+						"id": "CMP-RFC",
+						"type": "concept",
+						"name": "RFC Process Comparison",
+						"description": [
+							"RFC processes cover decision lifecycle (proposal, discussion, acceptance).",
+							"Not connected to a system model. SysProM integrates decisions with the system graph."
+						]
+					},
+					{
+						"id": "CMP-GIT",
+						"type": "concept",
+						"name": "Git Comparison",
+						"description": [
+							"Git provides temporal mechanics (append-only history, branching, merging).",
+							"No semantic structure — just file diffs. SysProM adds typed nodes and relationships."
+						]
+					},
+					{
+						"id": "CMP-MBSE",
+						"type": "concept",
+						"name": "MBSE/SysML Comparison",
+						"description": [
+							"MBSE is the closest formal equivalent — requirements, structure, behaviour, constraints.",
+							"SysProM can be understood as a lightweight, human-readable, decision-centric MBSE."
+						]
+					},
+					{
+						"id": "CMP-SPECKIT",
+						"type": "concept",
+						"name": "Spec Kit Comparison",
+						"description": [
+							"Spec Kit is a spec-driven development toolkit where specifications become executable.",
+							"Can be fully modelled within SysProM as a protocol with stages, artefacts, and artefact flows.",
+							"SysProM adds invariants, decision supersession, and graph-native traceability."
+						]
+					},
+					{
+						"id": "CMP-RALPLAN",
+						"type": "concept",
+						"name": "Ralplan Comparison",
+						"description": [
+							"Ralplan runs Planner, Architect, and Critic roles sequentially until consensus.",
+							"Its process can be modelled as a SysProM protocol with roles, stages, gates, and modes.",
+							"SysProM can store Ralplan's outputs but cannot replace the planning intelligence itself."
+						]
+					},
+					{
+						"id": "CMP-GSD",
+						"type": "concept",
+						"name": "GSD Comparison",
+						"description": [
+							"get-shit-done presents a simple command surface while hiding orchestration complexity.",
+							"Can be modelled as a system with multiple runtime realisations governed by a user-surface stability principle.",
+							"SysProM captures the architectural truth: one stable capability surface, multiple interchangeable realisations."
+						]
+					},
+					{
+						"id": "CMP-SUMMARY",
+						"type": "concept",
+						"name": "Summary",
+						"description": [
+							"ADR=decisions, C4=structure, DDD=concepts, Event sourcing=changes, Knowledge graph=relationships, Traceability=linking, EA=layers, RFC=lifecycle, Git=history, MBSE=formal modelling.",
+							"Each optimises one axis. SysProM combines all into a single recursive graph.",
+							"Spec Kit, Ralplan, and GSD compose with SysProM: Ralplan generates plans, Spec Kit stores specs, GSD executes, SysProM tracks provenance."
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "ART2",
+			"type": "artefact",
+			"name": "Document Workspace Example",
+			"description": "A worked example demonstrating SysProM applied to a document conversion webapp with placement-agnostic contracts and conditional sync constraints.",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "I1",
+						"type": "intent",
+						"name": "Document Workspace",
+						"description": "Enable users to ingest, transform, store, and access documents consistently across contexts."
+					},
+					{
+						"id": "CN1",
+						"type": "concept",
+						"name": "Document Transformation",
+						"description": "Documents can be converted between representations."
+					},
+					{
+						"id": "CN2",
+						"type": "concept",
+						"name": "Document Persistence",
+						"description": "Documents can be stored and later retrieved."
+					},
+					{
+						"id": "CN3",
+						"type": "concept",
+						"name": "Document Synchronisation",
+						"description": "Documents can be kept consistent across multiple contexts."
+					},
+					{
+						"id": "INV1",
+						"type": "invariant",
+						"name": "Stable Document Identity",
+						"description": "A document retains identity regardless of storage location."
+					},
+					{
+						"id": "INV2",
+						"type": "invariant",
+						"name": "Placement-Agnostic Conversion",
+						"description": "The conversion contract is identical regardless of execution location."
+					},
+					{
+						"id": "INV3",
+						"type": "invariant",
+						"name": "Placement-Agnostic Storage",
+						"description": "The storage contract is identical regardless of persistence location."
+					},
+					{
+						"id": "INV4",
+						"type": "invariant",
+						"name": "Sync Requires Shared Persistence",
+						"description": "If synchronisation is enabled, persistence must support shared remote state."
+					},
+					{
+						"id": "EL1",
+						"type": "element",
+						"name": "Transformation Engine"
+					},
+					{
+						"id": "EL2",
+						"type": "element",
+						"name": "Document Store"
+					},
+					{
+						"id": "R1",
+						"type": "realisation",
+						"name": "Local Conversion",
+						"status": "active"
+					},
+					{
+						"id": "R2",
+						"type": "realisation",
+						"name": "Remote Conversion",
+						"status": "active"
+					},
+					{
+						"id": "R3",
+						"type": "realisation",
+						"name": "Local Storage",
+						"status": "active"
+					},
+					{
+						"id": "R4",
+						"type": "realisation",
+						"name": "Remote Storage",
+						"status": "active"
+					},
+					{
+						"id": "D1",
+						"type": "decision",
+						"name": "Abstract Conversion Placement",
+						"selected": "O2",
+						"options": [
+							{
+								"id": "O1",
+								"description": "UI distinguishes local and remote"
+							},
+							{
+								"id": "O2",
+								"description": "Single contract independent of placement"
+							}
+						],
+						"rationale": "Execution location is a realisation concern.",
+						"lifecycle": {
+							"proposed": true,
+							"accepted": true,
+							"implemented": true
+						}
+					}
+				],
+				"relationships": [
+					{
+						"from": "CN1",
+						"to": "I1",
+						"type": "refines"
+					},
+					{
+						"from": "CN2",
+						"to": "I1",
+						"type": "refines"
+					},
+					{
+						"from": "CN3",
+						"to": "I1",
+						"type": "refines"
+					},
+					{
+						"from": "EL1",
+						"to": "CN1",
+						"type": "realises"
+					},
+					{
+						"from": "EL2",
+						"to": "CN2",
+						"type": "realises"
+					},
+					{
+						"from": "R1",
+						"to": "EL1",
+						"type": "implements"
+					},
+					{
+						"from": "R2",
+						"to": "EL1",
+						"type": "implements"
+					},
+					{
+						"from": "R3",
+						"to": "EL2",
+						"type": "implements"
+					},
+					{
+						"from": "R4",
+						"to": "EL2",
+						"type": "implements"
+					},
+					{
+						"from": "D1",
+						"to": "EL1",
+						"type": "affects"
+					},
+					{
+						"from": "D1",
+						"to": "INV2",
+						"type": "must_preserve"
+					}
+				]
+			}
+		},
+		{
+			"id": "ART3",
+			"type": "artefact",
+			"name": "Planning Workflow Example",
+			"description": "A worked example demonstrating SysProM process modelling with roles, protocols, stages, gates, modes, and artefact flows.",
+			"subsystem": {
+				"nodes": [
+					{
+						"id": "I1",
+						"type": "intent",
+						"name": "Reliable Change Delivery",
+						"description": "Enable work to move from idea to execution in a controlled, reviewable, and traceable way."
+					},
+					{
+						"id": "INV1",
+						"type": "invariant",
+						"name": "Traceable Scope",
+						"description": "No change may be executed unless its scope can be identified."
+					},
+					{
+						"id": "INV2",
+						"type": "invariant",
+						"name": "Review Before Approval",
+						"description": "Approval cannot occur until review has completed."
+					},
+					{
+						"id": "ROLE1",
+						"type": "role",
+						"name": "Planner",
+						"description": "Produces an initial scoped plan."
+					},
+					{
+						"id": "ROLE2",
+						"type": "role",
+						"name": "Architect",
+						"description": "Reviews structural and design soundness."
+					},
+					{
+						"id": "ROLE3",
+						"type": "role",
+						"name": "Critic",
+						"description": "Evaluates quality, completeness, and testability."
+					},
+					{
+						"id": "PROT1",
+						"type": "protocol",
+						"name": "Consensus Planning"
+					},
+					{
+						"id": "ST1",
+						"type": "stage",
+						"name": "Draft Plan"
+					},
+					{
+						"id": "ST2",
+						"type": "stage",
+						"name": "Architectural Review"
+					},
+					{
+						"id": "ST3",
+						"type": "stage",
+						"name": "Critical Evaluation"
+					},
+					{
+						"id": "G1",
+						"type": "gate",
+						"name": "Scope Gate",
+						"description": "Blocks execution when work is vague or underspecified."
+					},
+					{
+						"id": "M1",
+						"type": "mode",
+						"name": "Standard Mode"
+					},
+					{
+						"id": "M2",
+						"type": "mode",
+						"name": "Interactive Mode",
+						"description": "Adds explicit user checkpoints."
+					},
+					{
+						"id": "M3",
+						"type": "mode",
+						"name": "Deliberate Mode",
+						"description": "Adds stronger risk analysis and broader verification."
+					}
+				],
+				"relationships": [
+					{
+						"from": "ROLE1",
+						"to": "ST1",
+						"type": "performs"
+					},
+					{
+						"from": "ROLE2",
+						"to": "ST2",
+						"type": "performs"
+					},
+					{
+						"from": "ROLE3",
+						"to": "ST3",
+						"type": "performs"
+					},
+					{
+						"from": "ST1",
+						"to": "PROT1",
+						"type": "part_of"
+					},
+					{
+						"from": "ST2",
+						"to": "PROT1",
+						"type": "part_of"
+					},
+					{
+						"from": "ST3",
+						"to": "PROT1",
+						"type": "part_of"
+					},
+					{
+						"from": "ST2",
+						"to": "ST1",
+						"type": "must_follow"
+					},
+					{
+						"from": "ST3",
+						"to": "ST2",
+						"type": "must_follow"
+					},
+					{
+						"from": "G1",
+						"to": "INV1",
+						"type": "governed_by"
+					},
+					{
+						"from": "M2",
+						"to": "PROT1",
+						"type": "modifies"
+					},
+					{
+						"from": "M3",
+						"to": "PROT1",
+						"type": "modifies"
+					}
+				]
+			}
+		},
+		{
+			"id": "D14",
+			"type": "decision",
+			"name": "Internalise Design Archive into SysProM JSON",
+			"context": [
+				"The distilled/ folder contained four reference documents (Specification, Comparisons, Examples, Naming) produced during SysProM's design.",
+				"These were external to the JSON but contained valuable content.",
+				"The specification is already captured as the JSON itself.",
+				"The comparisons, examples, and naming rationale could be modelled as artefact nodes with subsystems."
+			],
+			"options": [
+				{
+					"id": "D14-O1",
+					"description": "Keep distilled/ as separate files, reference from JSON"
+				},
+				{
+					"id": "D14-O2",
+					"description": "Internalise key content as artefact nodes with subsystems in the JSON"
+				}
+			],
+			"selected": "D14-O2",
+			"rationale": "Internalising makes the JSON self-contained. Artefact nodes with subsystems naturally model documents that contain structured content.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH12",
+			"type": "change",
+			"name": "Internalise Design Archive",
+			"description": [
+				"Internalises content from distilled/ into the SysProM JSON.",
+				"Comparisons become an artefact node (ART1) with comparison summaries as subsystem concepts.",
+				"Worked examples become artefact nodes (ART2, ART3) with example SysProM graphs as subsystems.",
+				"Naming rationale is already captured in D8.",
+				"Specification is already captured as the JSON itself — distilled/Specification.md is redundant."
+			],
+			"scope": [
+				"ART1",
+				"ART2",
+				"ART3"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "ART1"
+				},
+				{
+					"type": "add",
+					"target": "ART2"
+				},
+				{
+					"type": "add",
+					"target": "ART3"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "POL20",
+			"type": "policy",
+			"name": "Subsystem Representation Heuristic",
+			"description": [
+				"A subsystem is rendered as a single .spm.md file when it would produce only one document file type AND the result is 100 lines or fewer.",
+				"A subsystem is rendered as a multi-document folder when it would produce multiple file types OR the single file would exceed 100 lines.",
+				"Subsystems of the same node type are automatically grouped into a type-named directory when 2 or more exist."
+			]
+		},
+		{
+			"id": "D15",
+			"type": "decision",
+			"name": "Size-Based Subsystem Splitting",
+			"context": [
+				"Small subsystems (e.g. 6 node type definitions) are cleaner as single .spm.md files.",
+				"Large subsystems (e.g. 24 relationship type definitions at 107 lines) become unwieldy in a single file.",
+				"The file type count heuristic alone doesn't catch single-type subsystems that are too long."
+			],
+			"options": [
+				{
+					"id": "D15-O1",
+					"description": "Split only by file type count — single type always stays as one file"
+				},
+				{
+					"id": "D15-O2",
+					"description": "Split by file type count AND line count — single type files over 100 lines become folders"
+				}
+			],
+			"selected": "D15-O2",
+			"rationale": "Combining both heuristics keeps small subsystems compact while splitting large ones for readability.",
+			"lifecycle": {
+				"proposed": true,
+				"accepted": true,
+				"implemented": true,
+				"superseded": false
+			}
+		},
+		{
+			"id": "CH13",
+			"type": "change",
+			"name": "Add Size-Based Subsystem Splitting and Auto-Grouping",
+			"description": [
+				"Subsystems that would produce a single file over 100 lines are now split into multi-document folders.",
+				"Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).",
+				"Both heuristics are automatic — no user configuration needed."
+			],
+			"scope": [
+				"POL20",
+				"D8",
+				"R1"
+			],
+			"operations": [
+				{
+					"type": "add",
+					"target": "POL20"
+				},
+				{
+					"type": "add",
+					"target": "D8"
+				},
+				{
+					"type": "update",
+					"target": "R1",
+					"description": "json-to-md updated with line count threshold and auto-grouping"
+				}
+			],
+			"lifecycle": {
+				"defined": true,
+				"introduced": true,
+				"complete": true
+			}
+		},
+		{
+			"id": "V1",
+			"type": "view",
+			"name": "Domain View",
+			"includes": [
+				"I1",
+				"CN1",
+				"CN2",
+				"CN3",
+				"CN4",
+				"CN5",
+				"CN6",
+				"CN7",
+				"CN8",
+				"CP1",
+				"CP2",
+				"CP3",
+				"CP4",
+				"CP5",
+				"CP6",
+				"CP7",
+				"CP8",
+				"CP9",
+				"CP10",
+				"CP11",
+				"PR1",
+				"PR2",
+				"PR3",
+				"PR4",
+				"PR5",
+				"INV1",
+				"INV2",
+				"INV3",
+				"INV4",
+				"INV5",
+				"INV6",
+				"INV7",
+				"INV8",
+				"INV9",
+				"INV10",
+				"INV11",
+				"INV12",
+				"INV13",
+				"INV14",
+				"INV15",
+				"INV16",
+				"INV17",
+				"INV18",
+				"INV19",
+				"INV20",
+				"INV21",
+				"INV22",
+				"CONF1",
+				"CONF2",
+				"CONF3",
+				"CONF4",
+				"CONF5",
+				"POL1",
+				"POL2",
+				"POL3",
+				"POL4",
+				"POL5",
+				"POL6",
+				"POL7",
+				"POL8",
+				"POL9",
+				"POL10",
+				"POL11",
+				"POL12",
+				"POL13",
+				"POL14",
+				"POL15",
+				"POL16",
+				"POL17",
+				"POL18",
+				"POL19",
+				"POL20",
+				"EL1",
+				"EL2",
+				"EL3",
+				"EL4",
+				"EL5",
+				"EL6",
+				"EL7",
+				"EL8",
+				"EL9",
+				"EL10",
+				"R1",
+				"R2",
+				"R3",
+				"R4",
+				"R5",
+				"ART1",
+				"ART2",
+				"ART3"
+			]
+		},
+		{
+			"id": "V2",
+			"type": "view",
+			"name": "Process View",
+			"includes": [
+				"PROT1",
+				"PROT2",
+				"PROT3",
+				"ST-DEC-PROPOSED",
+				"ST-DEC-ACCEPTED",
+				"ST-DEC-IMPLEMENTED",
+				"ST-DEC-ADOPTED",
+				"ST-DEC-SUPERSEDED",
+				"ST-DEC-ABANDONED",
+				"ST-DEC-DEFERRED",
+				"ST-CHG-DEFINED",
+				"ST-CHG-INTRODUCED",
+				"ST-CHG-IN_PROGRESS",
+				"ST-CHG-COMPLETE",
+				"ST-CHG-CONSOLIDATED",
+				"ST-NODE-PROPOSED",
+				"ST-NODE-ACTIVE",
+				"ST-NODE-DEPRECATED",
+				"ST-NODE-RETIRED"
+			]
+		},
+		{
+			"id": "V3",
+			"type": "view",
+			"name": "Evolution View",
+			"includes": [
+				"D1",
+				"D2",
+				"D3",
+				"D4",
+				"D5",
+				"D6",
+				"D7",
+				"D8",
+				"D9",
+				"D10",
+				"D11",
+				"D12",
+				"D13",
+				"D14",
+				"D15",
+				"CH1",
+				"CH2",
+				"CH3",
+				"CH4",
+				"CH5",
+				"CH6",
+				"CH7",
+				"CH8",
+				"CH9",
+				"CH10",
+				"CH11",
+				"CH12",
+				"CH13"
+			]
+		}
+	],
+	"relationships": [
+		{
+			"from": "CN1",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN2",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN3",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN4",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN5",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN6",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN7",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CN8",
+			"to": "I1",
+			"type": "refines"
+		},
+		{
+			"from": "CP1",
+			"to": "CN1",
+			"type": "refines"
+		},
+		{
+			"from": "CP2",
+			"to": "CN2",
+			"type": "refines"
+		},
+		{
+			"from": "CP3",
+			"to": "CN2",
+			"type": "refines"
+		},
+		{
+			"from": "CP4",
+			"to": "CN3",
+			"type": "refines"
+		},
+		{
+			"from": "CP5",
+			"to": "CN4",
+			"type": "refines"
+		},
+		{
+			"from": "CP6",
+			"to": "CN5",
+			"type": "refines"
+		},
+		{
+			"from": "CP7",
+			"to": "CN6",
+			"type": "refines"
+		},
+		{
+			"from": "CP8",
+			"to": "CN7",
+			"type": "refines"
+		},
+		{
+			"from": "CP9",
+			"to": "CN4",
+			"type": "refines"
+		},
+		{
+			"from": "CP10",
+			"to": "CN4",
+			"type": "refines"
+		},
+		{
+			"from": "CP11",
+			"to": "CN3",
+			"type": "refines"
+		},
+		{
+			"from": "EL1",
+			"to": "CP1",
+			"type": "realises"
+		},
+		{
+			"from": "EL2",
+			"to": "CP6",
+			"type": "realises"
+		},
+		{
+			"from": "EL3",
+			"to": "CP6",
+			"type": "realises"
+		},
+		{
+			"from": "EL4",
+			"to": "CP2",
+			"type": "realises"
+		},
+		{
+			"from": "EL4",
+			"to": "CP4",
+			"type": "realises"
+		},
+		{
+			"from": "EL6",
+			"to": "CP1",
+			"type": "realises"
+		},
+		{
+			"from": "EL7",
+			"to": "CP8",
+			"type": "realises"
+		},
+		{
+			"from": "EL8",
+			"to": "CP7",
+			"type": "realises"
+		},
+		{
+			"from": "EL9",
+			"to": "CP9",
+			"type": "realises"
+		},
+		{
+			"from": "EL9",
+			"to": "CP10",
+			"type": "realises"
+		},
+		{
+			"from": "EL9",
+			"to": "CP11",
+			"type": "realises"
+		},
+		{
+			"from": "EL10",
+			"to": "CP7",
+			"type": "realises"
+		},
+		{
+			"from": "R1",
+			"to": "EL1",
+			"type": "implements"
+		},
+		{
+			"from": "R1",
+			"to": "EL2",
+			"type": "implements"
+		},
+		{
+			"from": "R1",
+			"to": "EL3",
+			"type": "implements"
+		},
+		{
+			"from": "R1",
+			"to": "EL4",
+			"type": "implements"
+		},
+		{
+			"from": "R2",
+			"to": "EL8",
+			"type": "implements"
+		},
+		{
+			"from": "R3",
+			"to": "EL8",
+			"type": "implements"
+		},
+		{
+			"from": "R4",
+			"to": "EL8",
+			"type": "implements"
+		},
+		{
+			"from": "R5",
+			"to": "EL1",
+			"type": "implements"
+		},
+		{
+			"from": "R5",
+			"to": "EL2",
+			"type": "implements"
+		},
+		{
+			"from": "R5",
+			"to": "EL3",
+			"type": "implements"
+		},
+		{
+			"from": "R5",
+			"to": "EL4",
+			"type": "implements"
+		},
+		{
+			"from": "CONF1",
+			"to": "CN8",
+			"type": "constrained_by"
+		},
+		{
+			"from": "CONF2",
+			"to": "CN8",
+			"type": "constrained_by"
+		},
+		{
+			"from": "CONF3",
+			"to": "CN8",
+			"type": "constrained_by"
+		},
+		{
+			"from": "CONF4",
+			"to": "CN8",
+			"type": "constrained_by"
+		},
+		{
+			"from": "CONF5",
+			"to": "CN8",
+			"type": "constrained_by"
+		},
+		{
+			"from": "POL1",
+			"to": "INV5",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL2",
+			"to": "PR2",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL3",
+			"to": "INV3",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL4",
+			"to": "INV9",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL5",
+			"to": "INV9",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL6",
+			"to": "CN7",
+			"type": "governed_by"
+		},
+		{
+			"from": "POL10",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL11",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL12",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL13",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL14",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL15",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL16",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL17",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "POL18",
+			"to": "EL8",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-PROPOSED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-ACCEPTED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-IMPLEMENTED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-ADOPTED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-SUPERSEDED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-ABANDONED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-DEFERRED",
+			"to": "PROT1",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-DEC-ACCEPTED",
+			"to": "ST-DEC-PROPOSED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-DEC-IMPLEMENTED",
+			"to": "ST-DEC-ACCEPTED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-DEC-ADOPTED",
+			"to": "ST-DEC-IMPLEMENTED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-DEC-SUPERSEDED",
+			"to": "ST-DEC-ADOPTED",
+			"type": "precedes"
+		},
+		{
+			"from": "ST-DEC-ABANDONED",
+			"to": "ST-DEC-ACCEPTED",
+			"type": "precedes"
+		},
+		{
+			"from": "ST-DEC-DEFERRED",
+			"to": "ST-DEC-ACCEPTED",
+			"type": "precedes"
+		},
+		{
+			"from": "ST-CHG-DEFINED",
+			"to": "PROT2",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-CHG-INTRODUCED",
+			"to": "PROT2",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-CHG-IN_PROGRESS",
+			"to": "PROT2",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-CHG-COMPLETE",
+			"to": "PROT2",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-CHG-CONSOLIDATED",
+			"to": "PROT2",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-CHG-INTRODUCED",
+			"to": "ST-CHG-DEFINED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-CHG-IN_PROGRESS",
+			"to": "ST-CHG-INTRODUCED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-CHG-COMPLETE",
+			"to": "ST-CHG-IN_PROGRESS",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-CHG-CONSOLIDATED",
+			"to": "ST-CHG-COMPLETE",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-NODE-PROPOSED",
+			"to": "PROT3",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-NODE-ACTIVE",
+			"to": "PROT3",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-NODE-DEPRECATED",
+			"to": "PROT3",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-NODE-RETIRED",
+			"to": "PROT3",
+			"type": "part_of"
+		},
+		{
+			"from": "ST-NODE-ACTIVE",
+			"to": "ST-NODE-PROPOSED",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-NODE-DEPRECATED",
+			"to": "ST-NODE-ACTIVE",
+			"type": "must_follow"
+		},
+		{
+			"from": "ST-NODE-RETIRED",
+			"to": "ST-NODE-DEPRECATED",
+			"type": "must_follow"
+		},
+		{
+			"from": "EL10",
+			"to": "INV18",
+			"type": "constrained_by"
+		},
+		{
+			"from": "D1",
+			"to": "EL1",
+			"type": "affects"
+		},
+		{
+			"from": "D1",
+			"to": "EL2",
+			"type": "affects"
+		},
+		{
+			"from": "D1",
+			"to": "EL4",
+			"type": "affects"
+		},
+		{
+			"from": "D1",
+			"to": "INV1",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D2",
+			"to": "EL4",
+			"type": "affects"
+		},
+		{
+			"from": "D2",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D2",
+			"to": "INV3",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D3",
+			"to": "INV1",
+			"type": "affects"
+		},
+		{
+			"from": "D3",
+			"to": "PR1",
+			"type": "affects"
+		},
+		{
+			"from": "D3",
+			"to": "POL1",
+			"type": "affects"
+		},
+		{
+			"from": "D3",
+			"to": "INV3",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D4",
+			"to": "EL2",
+			"type": "affects"
+		},
+		{
+			"from": "D4",
+			"to": "EL3",
+			"type": "affects"
+		},
+		{
+			"from": "D4",
+			"to": "INV4",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D5",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D5",
+			"to": "INV4",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D6",
+			"to": "R4",
+			"type": "affects"
+		},
+		{
+			"from": "D6",
+			"to": "INV4",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D7",
+			"to": "INV5",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "EL7",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "INV19",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "INV20",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "R5",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "INV21",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH4",
+			"to": "D8",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "INV22",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "INV18",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "POL19",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D8",
+			"to": "INV3",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "INV3",
+			"type": "must_preserve"
+		},
+		{
+			"from": "ART1",
+			"to": "D4",
+			"type": "affects",
+			"description": "Comparisons informed the decision to add process modelling"
+		},
+		{
+			"from": "D8",
+			"to": "ART1",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "ART2",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "ART3",
+			"type": "affects"
+		},
+		{
+			"from": "D8",
+			"to": "POL20",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH1",
+			"to": "D1",
+			"type": "affects"
+		},
+		{
+			"from": "CH1",
+			"to": "D2",
+			"type": "affects"
+		},
+		{
+			"from": "CH1",
+			"to": "D7",
+			"type": "affects"
+		},
+		{
+			"from": "CH2",
+			"to": "D3",
+			"type": "affects"
+		},
+		{
+			"from": "CH2",
+			"to": "D4",
+			"type": "affects"
+		},
+		{
+			"from": "CH3",
+			"to": "D5",
+			"type": "affects"
+		},
+		{
+			"from": "CH3",
+			"to": "D6",
+			"type": "affects"
+		},
+		{
+			"from": "CH4",
+			"to": "D4",
+			"type": "affects"
+		},
+		{
+			"from": "CH4",
+			"to": "D2",
+			"type": "affects"
+		},
+		{
+			"from": "CH5",
+			"to": "D4",
+			"type": "affects"
+		},
+		{
+			"from": "CH6",
+			"to": "D2",
+			"type": "affects"
+		},
+		{
+			"from": "CH7",
+			"to": "D9",
+			"type": "affects"
+		},
+		{
+			"from": "CH8",
+			"to": "D10",
+			"type": "affects"
+		},
+		{
+			"from": "CH9",
+			"to": "D11",
+			"type": "affects"
+		},
+		{
+			"from": "CH10",
+			"to": "D12",
+			"type": "affects"
+		},
+		{
+			"from": "CH11",
+			"to": "D13",
+			"type": "affects"
+		},
+		{
+			"from": "CH12",
+			"to": "D14",
+			"type": "affects"
+		},
+		{
+			"from": "CH13",
+			"to": "D15",
+			"type": "affects"
+		},
+		{
+			"from": "D9",
+			"to": "R5",
+			"type": "affects"
+		},
+		{
+			"from": "D9",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D9",
+			"to": "INV21",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D10",
+			"to": "R5",
+			"type": "affects"
+		},
+		{
+			"from": "D10",
+			"to": "INV22",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D10",
+			"to": "INV18",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D11",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D11",
+			"to": "POL19",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D12",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D13",
+			"to": "INV3",
+			"type": "affects"
+		},
+		{
+			"from": "D13",
+			"to": "INV3",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D14",
+			"to": "ART1",
+			"type": "affects"
+		},
+		{
+			"from": "D14",
+			"to": "ART2",
+			"type": "affects"
+		},
+		{
+			"from": "D14",
+			"to": "ART3",
+			"type": "affects"
+		},
+		{
+			"from": "D15",
+			"to": "R1",
+			"type": "affects"
+		},
+		{
+			"from": "D15",
+			"to": "POL20",
+			"type": "must_preserve"
+		}
+	],
+	"external_references": [
+		{
+			"role": "source",
+			"identifier": "https://chatgpt.com/c/69bd2439-ad5c-838d-9af1-2e1294a0d331",
+			"node_id": "I1",
+			"description": "Original design conversation that produced the SysProM model."
+		},
+		{
+			"role": "prior_art",
+			"identifier": "https://github.com/github/spec-kit",
+			"node_id": "D4",
+			"description": "Spec Kit's workflow limitations motivated the addition of process modelling."
+		},
+		{
+			"role": "prior_art",
+			"identifier": "https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md",
+			"node_id": "D4",
+			"description": "Ralplan's consensus planning protocol demonstrated the need for roles, stages, and gates as first-class nodes."
+		},
+		{
+			"role": "prior_art",
+			"identifier": "https://github.com/gsd-build/get-shit-done",
+			"node_id": "D4",
+			"description": "GSD's multi-runtime orchestration demonstrated the need for modes and runtime-adaptive realisations."
+		},
+		{
+			"role": "standard",
+			"identifier": "https://datatracker.ietf.org/doc/html/rfc2119",
+			"node_id": "CN8",
+			"description": "RFC 2119 defines the interpretation of MUST, SHOULD, and MAY used throughout the specification."
+		}
+	]
+}
