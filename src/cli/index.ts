@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env tsx
 
 import { run as json2md } from "./json2md.js";
 import { run as md2json } from "./md2json.js";
