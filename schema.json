@@ -1,0 +1,503 @@
+{
+	"$id": "https://sysprom.org/schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"additionalProperties": false,
+	"description": "JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
+	"id": "SysProM",
+	"properties": {
+		"$schema": {
+			"description": "Schema URI for self-identification.",
+			"type": "string"
+		},
+		"external_references": {
+			"description": "References to resources outside the graph, declared at system level.",
+			"items": {
+				"additionalProperties": false,
+				"description": "A reference to a resource outside the SysProM graph.",
+				"properties": {
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"identifier": {
+						"description": "Serialisation-specific identifier (URI, file path, DOI, etc.).",
+						"type": "string"
+					},
+					"internalised": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						],
+						"description": "Inline content captured from the external resource. When present, the node is self-contained and does not depend on the external identifier being resolvable."
+					},
+					"node_id": {
+						"description": "ID of the node this reference belongs to. Used when the reference is declared at graph level rather than inline on the node.",
+						"type": "string"
+					},
+					"role": {
+						"enum": [
+							"input",
+							"output",
+							"context",
+							"evidence",
+							"source",
+							"standard",
+							"prior_art"
+						],
+						"type": "string"
+					}
+				},
+				"required": [
+					"role",
+					"identifier"
+				],
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"metadata": {
+			"additionalProperties": {},
+			"description": "Document-level metadata. Analogous to front matter in Markdown.",
+			"properties": {
+				"doc_type": {
+					"description": "Document type. Use 'sysprom' for the root entry point. Subsystems and features may use other values.",
+					"type": "string"
+				},
+				"scope": {
+					"description": "The scope of this document (e.g. system, feature, component).",
+					"type": "string"
+				},
+				"status": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"version": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maximum": 9007199254740991,
+							"minimum": -9007199254740991,
+							"type": "integer"
+						}
+					]
+				}
+			},
+			"type": "object"
+		},
+		"nodes": {
+			"description": "All nodes in the graph.",
+			"items": {
+				"additionalProperties": {},
+				"description": "A uniquely identifiable entity within the system.",
+				"properties": {
+					"context": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						],
+						"description": "Background context explaining why this node exists or why a decision was needed."
+					},
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"external_references": {
+						"description": "External resources related to this node.",
+						"items": {
+							"additionalProperties": false,
+							"description": "A reference to a resource outside the SysProM graph.",
+							"properties": {
+								"description": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									]
+								},
+								"identifier": {
+									"description": "Serialisation-specific identifier (URI, file path, DOI, etc.).",
+									"type": "string"
+								},
+								"internalised": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									],
+									"description": "Inline content captured from the external resource. When present, the node is self-contained and does not depend on the external identifier being resolvable."
+								},
+								"node_id": {
+									"description": "ID of the node this reference belongs to. Used when the reference is declared at graph level rather than inline on the node.",
+									"type": "string"
+								},
+								"role": {
+									"enum": [
+										"input",
+										"output",
+										"context",
+										"evidence",
+										"source",
+										"standard",
+										"prior_art"
+									],
+									"type": "string"
+								}
+							},
+							"required": [
+								"role",
+								"identifier"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"id": {
+						"description": "Unique identifier for this node.",
+						"type": "string"
+					},
+					"includes": {
+						"description": "IDs of nodes included in this projection. Applicable to view nodes.",
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"input": {
+						"description": "ID of the input artefact. Applicable to artefact_flow nodes.",
+						"type": "string"
+					},
+					"lifecycle": {
+						"additionalProperties": {
+							"type": "boolean"
+						},
+						"description": "Map of lifecycle state names to completion status.",
+						"propertyNames": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"name": {
+						"description": "Human-readable name.",
+						"type": "string"
+					},
+					"operations": {
+						"description": "Operations performed. Applicable to change nodes.",
+						"items": {
+							"additionalProperties": {},
+							"description": "An atomic operation within a change.",
+							"properties": {
+								"description": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									]
+								},
+								"target": {
+									"description": "ID of the affected node.",
+									"type": "string"
+								},
+								"type": {
+									"enum": [
+										"add",
+										"update",
+										"remove",
+										"link"
+									],
+									"type": "string"
+								}
+							},
+							"required": [
+								"type"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"options": {
+						"description": "Alternatives considered. Applicable to decision nodes.",
+						"items": {
+							"additionalProperties": {},
+							"description": "An alternative considered as part of a decision.",
+							"properties": {
+								"description": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									]
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"id",
+								"description"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"output": {
+						"description": "ID of the output artefact. Applicable to artefact_flow nodes.",
+						"type": "string"
+					},
+					"plan": {
+						"description": "Execution plan as a sequence of tasks. Applicable to change nodes.",
+						"items": {
+							"additionalProperties": {},
+							"description": "A single task within a change's execution plan.",
+							"properties": {
+								"description": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									]
+								},
+								"done": {
+									"default": false,
+									"type": "boolean"
+								}
+							},
+							"required": [
+								"description"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"propagation": {
+						"additionalProperties": {
+							"type": "boolean"
+						},
+						"description": "Layer propagation status. Applicable to change nodes.",
+						"propertyNames": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"rationale": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						],
+						"description": "Reasoning for the choice. Applicable to decision nodes."
+					},
+					"scope": {
+						"description": "IDs of nodes affected by this change. Applicable to change nodes.",
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"selected": {
+						"description": "ID of the chosen option. Applicable to decision nodes.",
+						"type": "string"
+					},
+					"status": {
+						"enum": [
+							"proposed",
+							"accepted",
+							"active",
+							"implemented",
+							"adopted",
+							"defined",
+							"introduced",
+							"in_progress",
+							"complete",
+							"consolidated",
+							"experimental",
+							"deprecated",
+							"retired",
+							"superseded",
+							"abandoned",
+							"deferred"
+						],
+						"type": "string"
+					},
+					"subsystem": {
+						"$ref": "#"
+					},
+					"type": {
+						"enum": [
+							"intent",
+							"concept",
+							"capability",
+							"element",
+							"realisation",
+							"invariant",
+							"principle",
+							"policy",
+							"protocol",
+							"stage",
+							"role",
+							"gate",
+							"mode",
+							"artefact",
+							"artefact_flow",
+							"decision",
+							"change",
+							"view",
+							"milestone",
+							"version"
+						],
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"name"
+				],
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"relationships": {
+			"description": "Typed, directed connections between nodes.",
+			"items": {
+				"additionalProperties": {},
+				"description": "A typed, directed connection between two nodes.",
+				"properties": {
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"from": {
+						"description": "Source node ID.",
+						"type": "string"
+					},
+					"to": {
+						"description": "Target node ID.",
+						"type": "string"
+					},
+					"type": {
+						"enum": [
+							"refines",
+							"realises",
+							"implements",
+							"depends_on",
+							"constrained_by",
+							"affects",
+							"supersedes",
+							"must_preserve",
+							"performs",
+							"part_of",
+							"precedes",
+							"must_follow",
+							"blocks",
+							"routes_to",
+							"governed_by",
+							"modifies",
+							"triggered_by",
+							"applies_to",
+							"produces",
+							"consumes",
+							"transforms_into",
+							"selects",
+							"requires",
+							"disables"
+						],
+						"type": "string"
+					}
+				},
+				"required": [
+					"from",
+					"to",
+					"type"
+				],
+				"type": "object"
+			},
+			"type": "array"
+		}
+	},
+	"required": [
+		"nodes"
+	],
+	"title": "SysProM: System Provenance Model",
+	"type": "object"
+}
