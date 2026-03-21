@@ -16,7 +16,7 @@ export function run(args: string[]): void {
   const outputPath = resolve(args[1]);
   const forceSingle = args.includes("--single-file");
 
-  const raw = JSON.parse(readFileSync(inputPath, "utf8")) as unknown;
+  const raw: unknown = JSON.parse(readFileSync(inputPath, "utf8"));
 
   if (!sysproMDocument.is(raw)) {
     const result = sysproMDocument.safeParse(raw);

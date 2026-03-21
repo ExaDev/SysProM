@@ -29,8 +29,8 @@ export function run(args: string[]): void {
 
     saveDocument(result.doc, format, path);
     console.log(`Removed ${removedNode?.type} ${targetId} — ${removedNode?.name}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }

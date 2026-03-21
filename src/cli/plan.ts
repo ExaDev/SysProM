@@ -77,8 +77,8 @@ function runInit(args: string[]): void {
     const doc = initDocument(prefix, name);
     saveDocument(doc, "json", outputPath);
     console.log(`Created ${outputPath} with prefix ${prefix}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
@@ -106,8 +106,8 @@ function runAddTask(args: string[]): void {
     saveDocument(newDoc, format, path);
     const target = parentId ? `to ${parentId}` : `to ${prefix}-PROT-IMPL`;
     console.log(`Added task ${target}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
@@ -158,8 +158,8 @@ function runStatus(args: string[]): void {
     );
     console.log();
     console.log(`Next: ${status.nextStep}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
@@ -201,8 +201,8 @@ function runProgress(args: string[]): void {
 
       console.log(`${name} [${bar}] ${percent}% ${ratio}`);
     }
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
@@ -266,8 +266,8 @@ function runGate(args: string[]): void {
         }
       }
     }
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }

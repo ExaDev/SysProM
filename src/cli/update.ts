@@ -45,22 +45,24 @@ export function run(args: string[]): void {
   const addRelIdx = args.indexOf("--add-rel");
   if (addRelIdx >= 0) {
     const from = args[addRelIdx + 1];
-    const type = args[addRelIdx + 2];
+    const typeStr = args[addRelIdx + 2];
     const to = args[addRelIdx + 3];
-    if (!from || !type || !to) {
+    if (!from || !typeStr || !to) {
       console.error("Usage: --add-rel <from> <type> <to>");
       process.exit(1);
     }
-    if (!relationshipType.is(type)) {
-      console.error(`Unknown relationship type: ${type}`);
+    if (!relationshipType.is(typeStr)) {
+      console.error(`Unknown relationship type: ${typeStr}`);
       process.exit(1);
     }
+    // typeStr is now validated but TypeScript doesn't narrow it, so parse it
+    const type = relationshipType.parse(typeStr);
     try {
-      const newDoc = addRelationship(doc, { from, to, type: type as RelationshipType });
+      const newDoc = addRelationship(doc, { from, to, type });
       saveDocument(newDoc, format, path);
-      console.log(`Added relationship: ${from} ${type} ${to}`);
-    } catch (err) {
-      console.error((err as Error).message);
+      console.log(`Added relationship: ${from} ${typeStr} ${to}`);
+    } catch (err: unknown) {
+      console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
     }
     return;
@@ -69,18 +71,24 @@ export function run(args: string[]): void {
   const removeRelIdx = args.indexOf("--remove-rel");
   if (removeRelIdx >= 0) {
     const from = args[removeRelIdx + 1];
-    const type = args[removeRelIdx + 2];
+    const typeStr = args[removeRelIdx + 2];
     const to = args[removeRelIdx + 3];
-    if (!from || !type || !to) {
+    if (!from || !typeStr || !to) {
       console.error("Usage: --remove-rel <from> <type> <to>");
       process.exit(1);
     }
+    if (!relationshipType.is(typeStr)) {
+      console.error(`Unknown relationship type: ${typeStr}`);
+      process.exit(1);
+    }
+    // typeStr is now validated but TypeScript doesn't narrow it, so parse it
+    const type = relationshipType.parse(typeStr);
     try {
-      const newDoc = removeRelationship(doc, from, type as RelationshipType, to);
+      const newDoc = removeRelationship(doc, from, type, to);
       saveDocument(newDoc, format, path);
-      console.log(`Removed relationship: ${from} ${type} ${to}`);
-    } catch (err) {
-      console.error((err as Error).message);
+      console.log(`Removed relationship: ${from} ${typeStr} ${to}`);
+    } catch (err: unknown) {
+      console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
     }
     return;

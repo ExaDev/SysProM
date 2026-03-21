@@ -108,10 +108,10 @@ query
   .addOption(new Option("--type <type>", "filter by node type").choices([...NODE_TYPES]))
   .addOption(new Option("--status <status>", "filter by node status").choices([...NODE_STATUSES]))
   .option("--json", "output as JSON")
-  .action((input: string, opts: Record<string, string | boolean>) => {
+  .action((input: string, opts: { type?: string; status?: string; json?: boolean }) => {
     const args = [input, "nodes"];
-    if (opts.type) args.push("--type", opts.type as string);
-    if (opts.status) args.push("--status", opts.status as string);
+    if (opts.type) args.push("--type", opts.type);
+    if (opts.status) args.push("--status", opts.status);
     if (opts.json) args.push("--json");
     runQuery(args);
   });
@@ -136,11 +136,11 @@ query
   .option("--from <id>", "filter by source node ID")
   .option("--to <id>", "filter by target node ID")
   .option("--json", "output as JSON")
-  .action((input: string, opts: Record<string, string | boolean>) => {
+  .action((input: string, opts: { type?: string; from?: string; to?: string; json?: boolean }) => {
     const args = [input, "rels"];
-    if (opts.type) args.push("--type", opts.type as string);
-    if (opts.from) args.push("--from", opts.from as string);
-    if (opts.to) args.push("--to", opts.to as string);
+    if (opts.type) args.push("--type", opts.type);
+    if (opts.from) args.push("--from", opts.from);
+    if (opts.to) args.push("--to", opts.to);
     if (opts.json) args.push("--json");
     runQuery(args);
   });
@@ -202,15 +202,22 @@ program
     (
       input: string,
       nodeType: string,
-      opts: Record<string, string | string[]>,
+      opts: {
+        id: string;
+        name: string;
+        description?: string;
+        status?: string;
+        context?: string;
+        rationale?: string;
+        scope: string[];
+      },
     ) => {
-      const args = [input, nodeType, "--id", opts.id as string, "--name", opts.name as string];
-      if (opts.description) args.push("--description", opts.description as string);
-      if (opts.status) args.push("--status", opts.status as string);
-      if (opts.context) args.push("--context", opts.context as string);
-      if (opts.rationale) args.push("--rationale", opts.rationale as string);
-      const scopes = opts.scope as string[];
-      for (const s of scopes) args.push("--scope", s);
+      const args = [input, nodeType, "--id", opts.id, "--name", opts.name];
+      if (opts.description) args.push("--description", opts.description);
+      if (opts.status) args.push("--status", opts.status);
+      if (opts.context) args.push("--context", opts.context);
+      if (opts.rationale) args.push("--rationale", opts.rationale);
+      for (const s of opts.scope) args.push("--scope", s);
       runAdd(args);
     },
   );
@@ -242,16 +249,27 @@ update
   .option("--context <text>", "update context")
   .option("--rationale <text>", "update rationale")
   .option("--lifecycle <key=val>", "set lifecycle state, repeatable (e.g. implemented=true)", collect, [])
-  .action((input: string, nodeId: string, opts: Record<string, string | string[]>) => {
-    const args = [input, nodeId];
-    if (opts.description) args.push("--description", opts.description as string);
-    if (opts.status) args.push("--status", opts.status as string);
-    if (opts.context) args.push("--context", opts.context as string);
-    if (opts.rationale) args.push("--rationale", opts.rationale as string);
-    const lifecycle = opts.lifecycle as string[];
-    for (const v of lifecycle) args.push("--lifecycle", v);
-    runUpdate(args);
-  });
+  .action(
+    (
+      input: string,
+      nodeId: string,
+      opts: {
+        description?: string;
+        status?: string;
+        context?: string;
+        rationale?: string;
+        lifecycle: string[];
+      },
+    ) => {
+      const args = [input, nodeId];
+      if (opts.description) args.push("--description", opts.description);
+      if (opts.status) args.push("--status", opts.status);
+      if (opts.context) args.push("--context", opts.context);
+      if (opts.rationale) args.push("--rationale", opts.rationale);
+      for (const v of opts.lifecycle) args.push("--lifecycle", v);
+      runUpdate(args);
+    },
+  );
 
 update
   .command("add-rel")

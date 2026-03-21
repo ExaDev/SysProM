@@ -102,8 +102,8 @@ function runAdd(args: string[]): void {
     const node = newDoc.nodes.find((n) => n.id === changeId)!;
     const newIndex = (node.plan?.length ?? 1) - 1;
     console.log(`Added task ${newIndex} to ${changeId}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
@@ -134,8 +134,8 @@ function runSetDone(args: string[], done: boolean): void {
     const newDoc = updatePlanTask(doc, changeId, taskIndex, done);
     saveDocument(newDoc, format, path);
     console.log(`Marked task ${taskIndex} ${verb} on ${changeId}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }

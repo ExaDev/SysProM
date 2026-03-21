@@ -76,8 +76,8 @@ export function run(args: string[]): void {
     const newDoc = addNode(doc, node);
     saveDocument(newDoc, format, path);
     console.log(`Added ${type} ${id} — ${name}`);
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: unknown) {
+    console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }
