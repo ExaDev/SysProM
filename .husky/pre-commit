@@ -1,7 +1,14 @@
 staged=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' | tr '\n' ' ')
 if [ -n "$staged" ]; then
-  npx eslint --fix --no-error-on-unmatched-pattern $staged || true
+  npx eslint --fix --no-error-on-unmatched-pattern $staged
   echo "$staged" | xargs git add
-fi
 
-pnpm _typecheck
+  tsc_output=$(pnpm _typecheck 2>&1) || {
+    staged_pattern=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' | paste -sd'|' -)
+    relevant=$(echo "$tsc_output" | grep -E "^($staged_pattern)")
+    if [ -n "$relevant" ]; then
+      echo "$relevant"
+      exit 1
+    fi
+  }
+fi
