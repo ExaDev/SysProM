@@ -2,27 +2,40 @@
   "name": "sysprom",
   "version": "1.0.0",
   "description": "SysProM — System Provenance Model CLI and library",
+  "author": "ExaDev",
+  "homepage": "https://github.com/ExaDev/SysProM#readme",
+  "bugs": "https://github.com/ExaDev/SysProM/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/ExaDev/SysProM.git"
   },
+  "keywords": [
+    "sysprom",
+    "provenance",
+    "decision",
+    "architecture",
+    "traceability",
+    "system-model",
+    "cli"
+  ],
   "packageManager": "pnpm@10.32.1",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "import": "./src/index.ts"
+      "import": "./dist/src/index.js"
     }
   },
   "files": [
-    "src/**/*.ts",
+    "dist/src/**/*.js",
+    "dist/src/**/*.d.ts",
     "schema.json"
   ],
   "bin": {
-    "sysprom": "./src/cli/index.ts",
-    "spm": "./src/cli/index.ts"
+    "sysprom": "./dist/src/cli/index.js",
+    "spm": "./dist/src/cli/index.js"
   },
   "scripts": {
     "build": "turbo run _build",
@@ -42,7 +55,6 @@
   },
   "dependencies": {
     "commander": "14.0.3",
-    "tsx": "4.19.4",
     "zod": "4.3.6"
   },
   "devDependencies": {
@@ -55,6 +67,7 @@
     "conventional-changelog-conventionalcommits": "9.3.0",
     "husky": "9.1.7",
     "semantic-release": "25.0.3",
+    "tsx": "4.21.0",
     "turbo": "2.8.20",
     "typedoc": "0.28.17",
     "typedoc-plugin-markdown": "4.11.0",
