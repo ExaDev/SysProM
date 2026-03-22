@@ -166,4 +166,24 @@ pnpm test:coverage    # Run tests with coverage report
 
 ## Self-Description
 
-`sysprom.spm.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document.
+`sysprom.spm.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document. The `./SysProM/` folder contains the same content as human-readable Markdown.
+
+All significant activity — decisions, changes, new capabilities, and invariants — should be recorded in the self-describing document. Updates can be made either by editing the Markdown files in `./SysProM/` directly or by using the CLI:
+
+```sh
+# Add a decision via the CLI
+spm add sysprom.spm.json decision --id D23 --name "My Decision" --context "Why this was needed"
+
+# Or edit ./SysProM/DECISIONS.md directly, then sync
+spm md2json ./SysProM sysprom.spm.json
+```
+
+Keep both representations in sync after any change:
+
+```sh
+# JSON → Markdown
+spm json2md sysprom.spm.json ./SysProM
+
+# Markdown → JSON
+spm md2json ./SysProM sysprom.spm.json
+```
