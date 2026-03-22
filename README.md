@@ -124,33 +124,54 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 
 ## How SysProM Compares
 
-| System | Readable | Parseable | State | Nesting | Diagrams | Rationale | Constraints | History | Temporal | Inference | Impact | Scaffolding | Planning | Tracking |
-|--------|----------|-----------|-------|---------|----------|-----------|-------------|---------|----------|-----------|--------|-------------|----------|----------|
-| [MBSE (SysML)](https://www.omg.org/spec/SysML/) | 🔶 | ✅ | ✅ | ✅ | ✅ | 🔶 | ✅ | 🔶 | | | ✅ | | | |
-| [Knowledge Graphs](https://www.w3.org/TR/rdf12-concepts/) | | ✅ | ✅ | ✅ | 🔶 | | 🔶 | | | ✅ | | | | |
-| [EA (ArchiMate)](https://pubs.opengroup.org/architecture/archimate-spec/) | ✅ | 🔶 | ✅ | 🔶 | ✅ | | 🔶 | | | | ✅ | | | |
-| [Git](https://git-scm.com/) | 🔶 | ✅ | ✅ | | | | | ✅ | ✅ | | | | | 🔶 |
-| [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) | | ✅ | 🔶 | | | | 🔶 | ✅ | ✅ | | | | | |
-| [DDD](https://www.domainlanguage.com/ddd/) | ✅ | | ✅ | 🔶 | | | 🔶 | | | | | | | |
-| [C4](https://c4model.com/) | ✅ | | ✅ | 🔶 | ✅ | | | | | | | | | |
-| [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | | 🔶 | | | | 🔶 | | | 🔶 |
-| [PRD](https://en.wikipedia.org/wiki/Product_requirements_document) | ✅ | | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | 🔶 | | | 🔶 | | ✅ | 🔶 |
-| [ADR](https://adr.github.io/) | ✅ | | | | | ✅ | | 🔶 | | | | | | |
-| [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | | | ✅ | | 🔶 | | | | | 🔶 | 🔶 |
-| [BDD (Gherkin)](https://cucumber.io/docs/gherkin/) | ✅ | ✅ | 🔶 | 🔶 | | | ✅ | | | | | 🔶 | 🔶 | ✅ |
-| [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | | 🔶 | | 🔶 | | | | ✅ | ✅ | ✅ |
-| [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | | | ✅ | 🔶 | | | | | | ✅ | 🔶 |
-| [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | | | 🔶 | 🔶 | | | | | | | |
-| [GSD-2](https://github.com/gsd-build/gsd-2) | ✅ | 🔶 | ✅ | ✅ | | 🔶 | 🔶 | ✅ | | | 🔶 | ✅ | ✅ | ✅ |
-| [Taskmaster](https://github.com/eyaltoledano/claude-task-master) | ✅ | ✅ | ✅ | ✅ | | 🔶 | | 🔶 | | 🔶 | 🔶 | 🔶 | ✅ | ✅ |
-| [OpenSpec](https://github.com/Fission-AI/OpenSpec) | ✅ | 🔶 | ✅ | 🔶 | | ✅ | | ✅ | | | | ✅ | ✅ | ✅ |
-| [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
-| [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
-| [Ouroboros](https://github.com/Q00/ouroboros) | ✅ | 🔶 | ✅ | | | ✅ | ✅ | 🔶 | | ✅ | 🔶 | 🔶 | ✅ | 🔶 |
-| [Spec Kitty](https://github.com/Priivacy-ai/spec-kitty) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
-| [Shotgun](https://github.com/shotgun-sh/shotgun) | ✅ | 🔶 | 🔶 | | | 🔶 | | 🔶 | | | 🔶 | 🔶 | ✅ | 🔶 |
-| [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | ✅ | ✅ | ✅ |
-| **SysProM** | ✅ | ✅ | ✅ | ✅ | 🔶 | ✅ | ✅ | ✅ | ✅ | | 🔶 | ✅ | ✅ | ✅ |
+<table>
+<thead>
+<tr>
+  <th rowspan="2">System</th>
+  <th colspan="2">Format</th>
+  <th colspan="3">Structure</th>
+  <th colspan="2">Decisions</th>
+  <th colspan="2">Time</th>
+  <th colspan="2">Analysis</th>
+  <th colspan="3">Workflow</th>
+</tr>
+<tr>
+  <th>Readable</th><th>Parseable</th>
+  <th>State</th><th>Nesting</th><th>Diagrams</th>
+  <th>Rationale</th><th>Constraints</th>
+  <th>History</th><th>Temporal</th>
+  <th>Inference</th><th>Impact</th>
+  <th>Scaffolding</th><th>Planning</th><th>Tracking</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><a href="https://www.omg.org/spec/SysML/">MBSE (SysML)</a></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td></td><td>✅</td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://www.w3.org/TR/rdf12-concepts/">Knowledge Graphs</a></td><td></td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td></td><td></td><td>✅</td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://pubs.opengroup.org/architecture/archimate-spec/">EA (ArchiMate)</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td>✅</td><td></td><td>🔶</td><td></td><td></td><td></td><td>✅</td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://git-scm.com/">Git</a></td><td>🔶</td><td>✅</td><td>✅</td><td></td><td></td><td></td><td></td><td>✅</td><td>✅</td><td></td><td></td><td></td><td></td><td>🔶</td></tr>
+<tr><td><a href="https://martinfowler.com/eaaDev/EventSourcing.html">Event Sourcing</a></td><td></td><td>✅</td><td>🔶</td><td></td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://www.domainlanguage.com/ddd/">DDD</a></td><td>✅</td><td></td><td>✅</td><td>🔶</td><td></td><td></td><td>🔶</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://c4model.com/">C4</a></td><td>✅</td><td></td><td>✅</td><td>🔶</td><td>✅</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://en.wikipedia.org/wiki/Traceability_matrix">Traceability Matrices</a></td><td>✅</td><td></td><td>✅</td><td></td><td></td><td></td><td>🔶</td><td></td><td></td><td></td><td>🔶</td><td></td><td></td><td>🔶</td></tr>
+<tr><td><a href="https://en.wikipedia.org/wiki/Product_requirements_document">PRD</a></td><td>✅</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td>✅</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td></td><td>✅</td><td>🔶</td></tr>
+<tr><td><a href="https://adr.github.io/">ADR</a></td><td>✅</td><td></td><td></td><td></td><td></td><td>✅</td><td></td><td>🔶</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://www.rfc-editor.org/rfc/rfc2026">RFC Processes</a></td><td>✅</td><td></td><td></td><td></td><td></td><td>✅</td><td></td><td>🔶</td><td></td><td></td><td></td><td></td><td>🔶</td><td>🔶</td></tr>
+<tr><td><a href="https://cucumber.io/docs/gherkin/">BDD (Gherkin)</a></td><td>✅</td><td>✅</td><td>🔶</td><td>🔶</td><td></td><td></td><td>✅</td><td></td><td></td><td></td><td></td><td>🔶</td><td>🔶</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/github/spec-kit">Spec Kit</a></td><td>✅</td><td></td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td></td><td>🔶</td><td></td><td></td><td></td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md">Ralplan</a></td><td>✅</td><td></td><td>🔶</td><td></td><td></td><td>✅</td><td>🔶</td><td></td><td></td><td></td><td></td><td></td><td>✅</td><td>🔶</td></tr>
+<tr><td><a href="https://github.com/gsd-build/get-shit-done">GSD</a></td><td>✅</td><td></td><td></td><td></td><td></td><td>🔶</td><td>🔶</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><a href="https://github.com/gsd-build/gsd-2">GSD-2</a></td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td></td><td>🔶</td><td>🔶</td><td>✅</td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/eyaltoledano/claude-task-master">Taskmaster</a></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td></td><td>🔶</td><td></td><td>🔶</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>✅</td><td></td><td>✅</td><td></td><td></td><td></td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/kirodotdev/Kiro">Kiro</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/gotalab/cc-sdd">cc-sdd</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/Q00/ouroboros">Ouroboros</a></td><td>✅</td><td>🔶</td><td>✅</td><td></td><td></td><td>✅</td><td>✅</td><td>🔶</td><td></td><td>✅</td><td>🔶</td><td>🔶</td><td>✅</td><td>🔶</td></tr>
+<tr><td><a href="https://github.com/Priivacy-ai/spec-kitty">Spec Kitty</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><a href="https://github.com/shotgun-sh/shotgun">Shotgun</a></td><td>✅</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td></td><td>🔶</td><td></td><td></td><td>🔶</td><td>🔶</td><td>✅</td><td>🔶</td></tr>
+<tr><td><a href="https://github.com/obra/superpowers">Superpowers</a></td><td>✅</td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><strong>SysProM</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+</tbody>
+</table>
 
 ✅ = first-class support. 🔶 = partial or implicit.
 
