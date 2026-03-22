@@ -55,10 +55,16 @@ export function resolveInput(input?: string, cwd?: string): string {
 	const entries = readdirSync(dir);
 
 	for (const name of exactNames) {
-		const found = entries.find((e) => e.toLowerCase() === name);
-		if (found) {
-			const candidate = join(dir, found);
-			if (name.endsWith(".spm") || name.endsWith(".sysprom")) {
+		const isDirSuffix = name.endsWith(".spm") || name.endsWith(".sysprom");
+		const found = entries.filter((e) => e.toLowerCase() === name);
+		if (found.length > 1) {
+			throw new Error(
+				`Multiple SysProM documents found: ${found.join(", ")}. Specify one explicitly.`,
+			);
+		}
+		if (found.length === 1) {
+			const candidate = join(dir, found[0]);
+			if (isDirSuffix) {
 				try {
 					if (statSync(candidate).isDirectory()) return candidate;
 				} catch {

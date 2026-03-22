@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { resolveInput } from "../src/cli/shared.js";
 
@@ -168,5 +168,38 @@ describe("resolveInput", () => {
 	it("finds .SYSPROM/ directory (case-insensitive)", () => {
 		mkdirSync(join(TMP, ".SYSPROM"));
 		assert.equal(resolveInput(undefined, TMP), join(TMP, ".SYSPROM"));
+	});
+
+	// Ambiguous case variants (only testable on case-sensitive filesystems)
+	const caseSensitiveFs = (() => {
+		const probeDir = join(import.meta.dirname, ".tmp-case-probe");
+		mkdirSync(probeDir, { recursive: true });
+		const probe = join(probeDir, "__CaSe__");
+		writeFileSync(probe, "");
+		const result = !existsSync(join(probeDir, "__case__"));
+		rmSync(probeDir, { recursive: true, force: true });
+		return result;
+	})();
+
+	it("errors on case-variant exact matches (.spm.json vs .SPM.json)", {
+		skip: !caseSensitiveFs && "case-insensitive filesystem",
+	}, () => {
+		writeFileSync(join(TMP, ".spm.json"), "{}");
+		writeFileSync(join(TMP, ".SPM.json"), "{}");
+		assert.throws(
+			() => resolveInput(undefined, TMP),
+			/Multiple SysProM documents found/,
+		);
+	});
+
+	it("errors on case-variant glob matches (a.spm.json vs A.SPM.JSON)", {
+		skip: !caseSensitiveFs && "case-insensitive filesystem",
+	}, () => {
+		writeFileSync(join(TMP, "a.spm.json"), "{}");
+		writeFileSync(join(TMP, "A.SPM.JSON"), "{}");
+		assert.throws(
+			() => resolveInput(undefined, TMP),
+			/Multiple SysProM documents found/,
+		);
 	});
 });
