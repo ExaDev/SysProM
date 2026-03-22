@@ -1,6 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "_lint": {
+      "inputs": ["src/**/*.ts", "tests/**/*.ts", "eslint.config.ts"],
+      "outputs": []
+    },
     "_typecheck": {
       "inputs": ["src/**/*.ts", "tests/**/*.ts", "tsconfig.json"],
       "outputs": []
