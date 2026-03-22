@@ -34,8 +34,8 @@
     "schema.json"
   ],
   "bin": {
-    "sysprom": "./dist/src/cli/index.js",
-    "spm": "./dist/src/cli/index.js"
+    "sysprom": "dist/src/cli/index.js",
+    "spm": "dist/src/cli/index.js"
   },
   "scripts": {
     "build": "turbo run _build",
