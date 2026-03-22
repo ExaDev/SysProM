@@ -20,6 +20,12 @@
       "inputs": ["src/**/*.ts", "tests/**/*.ts"],
       "outputs": []
     },
+    "_test:coverage": {
+      "dependsOn": ["_typecheck"],
+      "inputs": ["src/**/*.ts", "tests/**/*.ts"],
+      "outputs": ["coverage/**"],
+      "cache": false
+    },
     "_docs:cli": {
       "inputs": ["src/cli/**/*.ts", "src/schema.ts", "scripts/generate-cli-docs.ts"],
       "outputs": ["docs/cli/**"]
