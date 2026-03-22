@@ -342,8 +342,8 @@ export function initDocument(prefix: string, name: string): SysProMDocument {
  * @param doc - The SysProM document.
  * @param prefix - Plan prefix.
  * @param name - Name for the new item.
- * @param parentId - Parent task ID.
- * @returns The result.
+ * @param parentId - Optional parent change node ID for nesting.
+ * @returns The updated document with the new task added.
  * @example
  * ```ts
  * const updated = addTask(doc, "PLAN", "Implement auth");
@@ -424,9 +424,9 @@ export function addTask(
  * @param doc - The SysProM document.
  * @param protImpl - Implementation protocol node.
  * @param prefix - Plan prefix.
- * @param parentId - Parent task ID.
- * @param name - Name for the new item.
- * @returns The result.
+ * @param parentId - ID of the parent change node to nest under.
+ * @param name - Human-readable task name.
+ * @returns The updated document with the nested task added.
  * @example
  * ```ts
  * const updated = addTaskToParent(doc, protImpl, "PLAN", "CH1");
@@ -590,11 +590,11 @@ function addTaskToParent(
  * Check if a change node's task is complete.
  *
  * If no subsystem or no change children in subsystem:
- *   - All items in node.plan must have done === true AND at least one item must exist
+ *   - All items in node.plan must have done === true AND at least one item must exist.
  * If subsystem has change children:
- *   - All children must be recursively done AND own plan items (if any) must be done
- * @param node - The node to check.
- * @returns The result.
+ *   - All children must be recursively done AND own plan items (if any) must be done.
+ * @param node - The change node to evaluate.
+ * @returns Whether all tasks in the node's plan are complete.
  * @example
  * ```ts
  * isTaskDone(changeNode); // => true if all plan items done
@@ -674,8 +674,8 @@ export function countTasks(node: Node): TaskCount {
  * Inspect a document and return workflow completeness for a given prefix.
  * Never throws — missing nodes are reported as "not defined".
  * @param doc - The SysProM document.
- * @param prefix - Plan prefix.
- * @returns The result.
+ * @param prefix - ID prefix identifying the plan (e.g. "PLAN").
+ * @returns Comprehensive status of all plan components.
  * @example
  * ```ts
  * const status = planStatus(doc, "PLAN");
@@ -790,8 +790,8 @@ export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
  * Return per-task completion data.
  * Tasks (change nodes) are discovered from PROT-IMPL.subsystem, sorted topologically.
  * @param doc - The SysProM document.
- * @param prefix - Plan prefix.
- * @returns The result.
+ * @param prefix - ID prefix identifying the plan (e.g. "PLAN").
+ * @returns Per-phase progress with task counts and percentages.
  * @example
  * ```ts
  * const phases = planProgress(doc, "PLAN");
@@ -844,12 +844,12 @@ export function planProgress(
  * Validate readiness to enter the given phase (1-indexed).
  *
  * Always checks:
- *   - Each capability ({prefix}-US-*) has a change node that implements it
- *   - Each capability has non-placeholder acceptance criteria
- *   - Each invariant ({prefix}-FR-*) has a change node that implements it
+ *   - Each capability ({prefix}-US-*) has a change node that implements it.
+ *   - Each capability has non-placeholder acceptance criteria.
+ *   - Each invariant ({prefix}-FR-*) has a change node that implements it.
  *
  * Additionally for phase N > 1:
- *   - All tasks in phase N-1 must be done
+ *   - All tasks in phase N-1 must be done.
  * @param doc - The SysProM document.
  * @param prefix - Plan prefix.
  * @param phase - Phase number (1-indexed).
