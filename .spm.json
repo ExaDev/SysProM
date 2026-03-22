@@ -3493,7 +3493,7 @@
 			"scope": [
 				"D31"
 			],
-			"status": "proposed",
+			"status": "in_progress",
 			"type": "change"
 		},
 		{
@@ -3665,7 +3665,7 @@
 					"done": false
 				}
 			],
-			"status": "in_progress",
+			"status": "complete",
 			"type": "change"
 		},
 		{

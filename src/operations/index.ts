@@ -49,6 +49,13 @@ export { renameOp } from "./rename.js";
 export { jsonToMarkdownOp } from "./json-to-markdown.js";
 export { markdownToJsonOp } from "./markdown-to-json.js";
 
+// Synchronisation operations
+export {
+	syncDocumentsOp,
+	type BidirectionalSyncResult,
+	type ConflictStrategy,
+} from "./sync.js";
+
 // Spec-Kit interoperability operations
 export { speckitImportOp } from "./speckit-import.js";
 export { speckitExportOp } from "./speckit-export.js";
