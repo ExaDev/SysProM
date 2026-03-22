@@ -3217,6 +3217,40 @@
 			"name": "Add Auto-ID Generation to CLI",
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "The CLI covers core CRUD operations but lacks quality-of-life features that reduce friction for frequent use.",
+			"description": "Add auto-generated option IDs, init command, auto-sync, coloured output, JSON output on mutations, full-text search, graph export, rename, stricter validation, shell completions, and dry-run mode.",
+			"id": "D27",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "CLI UX Improvements",
+			"options": [
+				{
+					"description": "Implement all suggested UX improvements as a single cohesive change.",
+					"id": "D27-OPT-A"
+				},
+				{
+					"description": "Implement incrementally, prioritising the most impactful features.",
+					"id": "D27-OPT-B"
+				}
+			],
+			"rationale": "Each improvement targets a specific friction point: auto-IDs reduce manual bookkeeping, colour improves scanability, search/graph/rename add power-user workflows, and dry-run/completions improve developer experience.",
+			"selected": "D27-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.",
+			"id": "CH25",
+			"lifecycle": {
+				"proposed": "2026-03-22"
+			},
+			"name": "CLI UX Improvements",
+			"status": "in_progress",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4163,6 +4197,16 @@
 		},
 		{
 			"from": "D26",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH25",
+			"to": "D27",
+			"type": "implements"
+		},
+		{
+			"from": "D27",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
