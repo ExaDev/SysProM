@@ -15,7 +15,9 @@ const path = join(root, ".claude-plugin", "marketplace.json");
 const manifest = JSON.parse(readFileSync(path, "utf8")) as {
 	plugins: { version: string }[];
 };
-manifest.plugins[0].version = version;
+for (const plugin of manifest.plugins) {
+	plugin.version = version;
+}
 
 writeFileSync(path, JSON.stringify(manifest, null, 2) + "\n");
-console.log(`Bumped marketplace.json plugin version to ${version}`);
+console.log(`Bumped ${String(manifest.plugins.length)} plugin(s) to ${version}`);
