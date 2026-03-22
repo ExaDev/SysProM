@@ -84,7 +84,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: "https://registry.npmjs.org"
+          # Do NOT set registry-url — it creates an .npmrc that overrides OIDC
       - uses: pnpm/action-setup@v4
       - run: pnpm install --frozen-lockfile
       - uses: actions/cache@v4
@@ -95,24 +95,6 @@ jobs:
             turbo-release-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-release-${{ runner.os }}-
       - run: npx turbo run _compile _schema
-      - name: Record pre-release version
-        id: pre
-        run: echo "version=$(npm pkg get version | tr -d '\"')" >> "$GITHUB_OUTPUT"
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"
-      - name: Check if released
-        id: released
-        run: |
-          CURRENT=$(npm pkg get version | tr -d '"')
-          if [ "$CURRENT" != "${{ steps.pre.outputs.version }}" ]; then
-            echo "new_version=$CURRENT" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Publish to GitHub Packages
-        if: steps.released.outputs.new_version
-        run: |
-          npm pkg set name='@exadev/sysprom'
-          npm publish --registry https://npm.pkg.github.com
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
