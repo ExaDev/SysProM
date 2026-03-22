@@ -201,3 +201,5 @@ spm json2md sysprom.spm.json ./SysProM
 # Markdown → JSON
 spm md2json ./SysProM sysprom.spm.json
 ```
+
+> **Important:** Always keep `sysprom.spm.json` and `./SysProM/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `spm validate sysprom.spm.json` before committing.
