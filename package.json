@@ -1,6 +1,6 @@
 {
   "name": "sysprom",
-  "version": "1.2.6",
+  "version": "1.3.0",
   "description": "SysProM — System Provenance Model CLI and library",
   "author": "ExaDev",
   "homepage": "https://exadev.github.io/SysProM",

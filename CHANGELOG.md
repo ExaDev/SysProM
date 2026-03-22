@@ -1,3 +1,19 @@
+## [1.3.0](https://github.com/ExaDev/SysProM/compare/v1.2.6...v1.3.0) (2026-03-22)
+
+### Features
+
+* **ch32:** implement safe graph removal with cleanup ([885a0c2](https://github.com/ExaDev/SysProM/commit/885a0c2ed120311fc2a39debcb2a5b93bdc92745))
+* **ch33:** implement graph mutation safety guards ([266b8f3](https://github.com/ExaDev/SysProM/commit/266b8f3d27113561aa386f5646361c2a0479c3eb))
+* **ch33:** refine endpoint type validation and update sysprom ([f760a72](https://github.com/ExaDev/SysProM/commit/f760a7233c9b4aadfc31756af8ef7f049e23b62e))
+
+### Tests
+
+* **ch32:** add comprehensive safe removal test suite ([1629308](https://github.com/ExaDev/SysProM/commit/162930870f096f0273d01fdaea86309aa3c8f152))
+
+### Miscellaneous Chores
+
+* update sysprom for ch32 progress ([718f70d](https://github.com/ExaDev/SysProM/commit/718f70d3c6773062a58936f12c099bdca0db2d91))
+
 ## [1.2.6](https://github.com/ExaDev/SysProM/compare/v1.2.5...v1.2.6) (2026-03-22)
 
 ### Documentation
