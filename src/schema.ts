@@ -268,120 +268,118 @@ export const relationship = defineSchema(
 export type Relationship = z.infer<typeof relationship>;
 
 // ---------------------------------------------------------------------------
-// Root document (declared first so node's getter can reference it)
+// Recursive schemas — defined raw, then wrapped with defineSchema after both
+// exist so TypeScript can resolve the circular type inference.
 // ---------------------------------------------------------------------------
 
-export const sysproMDocument = defineSchema(
-  z
-    .object({
-      $schema: z
-        .string()
-        .describe("Schema URI for self-identification.")
-        .optional(),
-      metadata: metadata.optional(),
-      get nodes(): z.ZodArray<typeof node> {
-        return z.array(node).describe("All nodes in the graph.");
-      },
-      relationships: z
-        .array(relationship)
-        .describe("Typed, directed connections between nodes.")
-        .optional(),
-      external_references: z
-        .array(externalReference)
-        .describe(
-          "References to resources outside the graph, declared at system level.",
-        )
-        .optional(),
-    })
-    .meta({
-      id: "SysProM",
-      title: "SysProM: System Provenance Model",
-      description:
-        "JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
-    }),
-);
+const sysproMDocumentSchema = z
+  .object({
+    $schema: z
+      .string()
+      .describe("Schema URI for self-identification.")
+      .optional(),
+    metadata: metadata.optional(),
+    get nodes(): z.ZodArray<typeof nodeSchema> {
+      return z.array(nodeSchema).describe("All nodes in the graph.");
+    },
+    relationships: z
+      .array(relationship)
+      .describe("Typed, directed connections between nodes.")
+      .optional(),
+    external_references: z
+      .array(externalReference)
+      .describe(
+        "References to resources outside the graph, declared at system level.",
+      )
+      .optional(),
+  })
+  .meta({
+    id: "SysProM",
+    title: "SysProM: System Provenance Model",
+    description:
+      "JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
+  });
+
+const nodeSchema = z
+  .looseObject({
+    id: z.string().describe("Unique identifier for this node."),
+    type: nodeType,
+    name: z.string().describe("Human-readable name."),
+    description: text.optional(),
+    status: nodeStatus.optional(),
+    lifecycle: z
+      .record(z.string(), z.union([z.boolean(), z.string()]))
+      .describe("Map of lifecycle state names to completion status. Values may be boolean or an ISO date string indicating when the state was reached.")
+      .optional(),
+    context: text
+      .describe(
+        "Background context explaining why this node exists or why a decision was needed.",
+      )
+      .optional(),
+    options: z
+      .array(option)
+      .describe("Alternatives considered. Applicable to decision nodes.")
+      .optional(),
+    selected: z
+      .string()
+      .describe("ID of the chosen option. Applicable to decision nodes.")
+      .optional(),
+    rationale: text
+      .describe("Reasoning for the choice. Applicable to decision nodes.")
+      .optional(),
+    scope: z
+      .array(z.string())
+      .describe(
+        "IDs of nodes affected by this change. Applicable to change nodes.",
+      )
+      .optional(),
+    operations: z
+      .array(operation)
+      .describe("Operations performed. Applicable to change nodes.")
+      .optional(),
+    plan: z
+      .array(task)
+      .describe(
+        "Execution plan as a sequence of tasks. Applicable to change nodes.",
+      )
+      .optional(),
+    propagation: z
+      .record(z.string(), z.boolean())
+      .describe("Layer propagation status. Applicable to change nodes.")
+      .optional(),
+    includes: z
+      .array(z.string())
+      .describe(
+        "IDs of nodes included in this projection. Applicable to view nodes.",
+      )
+      .optional(),
+    input: z
+      .string()
+      .describe(
+        "ID of the input artefact. Applicable to artefact_flow nodes.",
+      )
+      .optional(),
+    output: z
+      .string()
+      .describe(
+        "ID of the output artefact. Applicable to artefact_flow nodes.",
+      )
+      .optional(),
+    external_references: z
+      .array(externalReference)
+      .describe("External resources related to this node.")
+      .optional(),
+    get subsystem(): z.ZodOptional<typeof sysproMDocumentSchema> {
+      return sysproMDocumentSchema.optional();
+    },
+  })
+  .describe("A uniquely identifiable entity within the system.");
+
+// Attach .is() type guards after both schemas are declared
+export const sysproMDocument = defineSchema(sysproMDocumentSchema);
 export type SysProMDocument = z.infer<typeof sysproMDocument>;
 
-// ---------------------------------------------------------------------------
-// Node (with recursive subsystem via getter)
-// ---------------------------------------------------------------------------
-
-export const node = defineSchema(
-  z
-    .looseObject({
-      id: z.string().describe("Unique identifier for this node."),
-      type: nodeType,
-      name: z.string().describe("Human-readable name."),
-      description: text.optional(),
-      status: nodeStatus.optional(),
-      lifecycle: z
-        .record(z.string(), z.union([z.boolean(), z.string()]))
-        .describe("Map of lifecycle state names to completion status. Values may be boolean or an ISO date string indicating when the state was reached.")
-        .optional(),
-      context: text
-        .describe(
-          "Background context explaining why this node exists or why a decision was needed.",
-        )
-        .optional(),
-      options: z
-        .array(option)
-        .describe("Alternatives considered. Applicable to decision nodes.")
-        .optional(),
-      selected: z
-        .string()
-        .describe("ID of the chosen option. Applicable to decision nodes.")
-        .optional(),
-      rationale: text
-        .describe("Reasoning for the choice. Applicable to decision nodes.")
-        .optional(),
-      scope: z
-        .array(z.string())
-        .describe(
-          "IDs of nodes affected by this change. Applicable to change nodes.",
-        )
-        .optional(),
-      operations: z
-        .array(operation)
-        .describe("Operations performed. Applicable to change nodes.")
-        .optional(),
-      plan: z
-        .array(task)
-        .describe(
-          "Execution plan as a sequence of tasks. Applicable to change nodes.",
-        )
-        .optional(),
-      propagation: z
-        .record(z.string(), z.boolean())
-        .describe("Layer propagation status. Applicable to change nodes.")
-        .optional(),
-      includes: z
-        .array(z.string())
-        .describe(
-          "IDs of nodes included in this projection. Applicable to view nodes.",
-        )
-        .optional(),
-      input: z
-        .string()
-        .describe(
-          "ID of the input artefact. Applicable to artefact_flow nodes.",
-        )
-        .optional(),
-      output: z
-        .string()
-        .describe(
-          "ID of the output artefact. Applicable to artefact_flow nodes.",
-        )
-        .optional(),
-      external_references: z
-        .array(externalReference)
-        .describe("External resources related to this node.")
-        .optional(),
-      get subsystem(): z.ZodOptional<typeof sysproMDocument> {
-        return sysproMDocument.optional();
-      },
-    })
-    .describe("A uniquely identifiable entity within the system."),
-);
+export const node = defineSchema(nodeSchema);
 export type Node = z.infer<typeof node>;
 
 // ---------------------------------------------------------------------------
