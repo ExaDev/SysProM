@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
-	queryNodes,
-	queryNode,
-	queryRelationships,
-	traceFromNode,
+	queryNodesOp,
+	queryNodeOp,
+	queryRelationshipsOp,
+	traceFromNodeOp,
 	type TraceNode,
 } from "../src/index.js";
 import type { SysProMDocument } from "../src/schema.js";
@@ -33,27 +33,27 @@ function makeDoc(): SysProMDocument {
 describe("queryNodes", () => {
 	it("returns all nodes", () => {
 		const doc = makeDoc();
-		const nodes = queryNodes(doc);
+		const nodes = queryNodesOp({ doc });
 		assert.equal(nodes.length, 4);
 	});
 
 	it("filters by type", () => {
 		const doc = makeDoc();
-		const nodes = queryNodes(doc, { type: "concept" });
+		const nodes = queryNodesOp({ doc, type: "concept" });
 		assert.equal(nodes.length, 2);
 		assert.ok(nodes.every((n) => n.type === "concept"));
 	});
 
 	it("filters by status", () => {
 		const doc = makeDoc();
-		const nodes = queryNodes(doc, { status: "accepted" });
+		const nodes = queryNodesOp({ doc, status: "accepted" });
 		assert.equal(nodes.length, 2);
 		assert.ok(nodes.every((n) => n.status === "accepted"));
 	});
 
 	it("filters by type and status", () => {
 		const doc = makeDoc();
-		const nodes = queryNodes(doc, { type: "concept", status: "accepted" });
+		const nodes = queryNodesOp({ doc, type: "concept", status: "accepted" });
 		assert.equal(nodes.length, 1);
 		assert.equal(nodes[0].id, "C2");
 	});
@@ -62,7 +62,7 @@ describe("queryNodes", () => {
 describe("queryNode", () => {
 	it("returns node with relationships", () => {
 		const doc = makeDoc();
-		const result = queryNode(doc, "C1");
+		const result = queryNodeOp({ doc, id: "C1" });
 		assert.ok(result);
 		assert.equal(result.node.id, "C1");
 		// C1 has 3 relationships: 1 outgoing (to I1), 2 incoming (from C2 and E1)
@@ -70,37 +70,37 @@ describe("queryNode", () => {
 		assert.equal(result.incoming.length, 2);
 	});
 
-	it("returns undefined for missing ID", () => {
+	it("returns null for missing ID", () => {
 		const doc = makeDoc();
-		const result = queryNode(doc, "NONEXISTENT");
-		assert.equal(result, undefined);
+		const result = queryNodeOp({ doc, id: "NONEXISTENT" });
+		assert.equal(result, null);
 	});
 });
 
 describe("queryRelationships", () => {
 	it("returns all relationships", () => {
 		const doc = makeDoc();
-		const rels = queryRelationships(doc);
+		const rels = queryRelationshipsOp({ doc });
 		assert.equal(rels.length, 3);
 	});
 
 	it("filters by from", () => {
 		const doc = makeDoc();
-		const rels = queryRelationships(doc, { from: "C1" });
+		const rels = queryRelationshipsOp({ doc, from: "C1" });
 		assert.equal(rels.length, 1);
 		assert.equal(rels[0].to, "I1");
 	});
 
 	it("filters by to", () => {
 		const doc = makeDoc();
-		const rels = queryRelationships(doc, { to: "C1" });
+		const rels = queryRelationshipsOp({ doc, to: "C1" });
 		assert.equal(rels.length, 2);
 		assert.ok(rels.every((r) => r.to === "C1"));
 	});
 
 	it("filters by type", () => {
 		const doc = makeDoc();
-		const rels = queryRelationships(doc, { type: "refines" });
+		const rels = queryRelationshipsOp({ doc, type: "refines" });
 		assert.equal(rels.length, 2);
 		assert.ok(rels.every((r) => r.type === "refines"));
 	});
@@ -111,7 +111,7 @@ describe("traceFromNode", () => {
 		const doc = makeDoc();
 		// I1 <- C1 <- C2 (refines chain)
 		// I1 <- C1 <- E1 (implements)
-		const trace = traceFromNode(doc, "I1");
+		const trace = traceFromNodeOp({ doc, startId: "I1" });
 
 		assert.equal(trace.id, "I1");
 		assert.equal(trace.node?.name, "Root Intent");
@@ -128,14 +128,14 @@ describe("traceFromNode", () => {
 
 	it("returns empty children for leaf node", () => {
 		const doc = makeDoc();
-		const trace = traceFromNode(doc, "E1");
+		const trace = traceFromNodeOp({ doc, startId: "E1" });
 		assert.equal(trace.id, "E1");
 		assert.equal(trace.children.length, 0);
 	});
 
 	it("handles missing node gracefully", () => {
 		const doc = makeDoc();
-		const trace = traceFromNode(doc, "NONEXISTENT");
+		const trace = traceFromNodeOp({ doc, startId: "NONEXISTENT" });
 		assert.equal(trace.id, "NONEXISTENT");
 		assert.equal(trace.node, undefined);
 	});

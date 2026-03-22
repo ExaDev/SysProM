@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { stats } from "../src/index.js";
+import { statsOp } from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeDoc(
@@ -17,7 +17,7 @@ describe("stats", () => {
 			{ id: "I2", type: "intent", name: "B" },
 			{ id: "C1", type: "concept", name: "C" },
 		]);
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.nodesByType.intent, 2);
 		assert.equal(result.nodesByType.concept, 1);
 	});
@@ -33,7 +33,7 @@ describe("stats", () => {
 				{ from: "I2", to: "I1", type: "depends_on" },
 			],
 		};
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.relationshipsByType.refines, 1);
 		assert.equal(result.relationshipsByType.depends_on, 1);
 	});
@@ -60,7 +60,7 @@ describe("stats", () => {
 				},
 			],
 		};
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.subsystemCount, 2);
 		assert.equal(result.maxSubsystemDepth, 2);
 	});
@@ -76,7 +76,7 @@ describe("stats", () => {
 			{ id: "D2", type: "decision", name: "D2", lifecycle: { proposed: true } },
 			{ id: "C1", type: "change", name: "C", lifecycle: { implemented: true } },
 		]);
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.decisionLifecycle.proposed, 2);
 		assert.equal(result.decisionLifecycle.reviewed, 1);
 		assert.equal(result.changeLifecycle.implemented, 1);
@@ -92,20 +92,20 @@ describe("stats", () => {
 				{ role: "source", identifier: "https://example.com" },
 			],
 		};
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.viewCount, 1);
 		assert.equal(result.externalReferenceCount, 1);
 	});
 
 	it("uses title from metadata", () => {
 		const doc = makeDoc([], { title: "My Doc" });
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.title, "My Doc");
 	});
 
 	it("returns (untitled) when no title", () => {
 		const doc = makeDoc([]);
-		const result = stats(doc);
+		const result = statsOp({ doc });
 		assert.equal(result.title, "(untitled)");
 	});
 });

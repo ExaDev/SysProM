@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { timeline, nodeHistory, stateAt } from "../src/index.js";
+import { timelineOp, nodeHistoryOp, stateAtOp } from "../src/index.js";
 import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
 
 function makeDoc(
@@ -21,7 +21,7 @@ function makeDoc(
 describe("timeline", () => {
 	it("returns empty array for empty document", () => {
 		const doc = makeDoc();
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 		assert.equal(events.length, 0);
 	});
 
@@ -39,7 +39,7 @@ describe("timeline", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 		assert.equal(events.length, 0);
 	});
 
@@ -58,7 +58,7 @@ describe("timeline", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 2);
 		assert.equal(events[0].state, "proposed");
@@ -89,7 +89,7 @@ describe("timeline", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 4);
 		// Sorted chronologically: D2 proposed, D1 proposed, D2 accepted, D1 accepted
@@ -124,7 +124,7 @@ describe("timeline", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 1);
 		assert.equal(events[0].nodeId, "D1");
@@ -144,7 +144,7 @@ describe("timeline", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events[0].nodeId, "D1");
 		assert.equal(events[0].nodeName, "My Decision");
@@ -170,7 +170,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistory(doc, "NONEXISTENT");
+		const history = nodeHistoryOp({ doc, nodeId: "NONEXISTENT" });
 		assert.equal(history.length, 0);
 	});
 
@@ -188,7 +188,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistory(doc, "D1");
+		const history = nodeHistoryOp({ doc, nodeId: "D1" });
 
 		assert.equal(history.length, 3);
 		assert.equal(history[0].state, "accepted");
@@ -214,7 +214,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistory(doc, "D1");
+		const history = nodeHistoryOp({ doc, nodeId: "D1" });
 
 		assert.equal(history.length, 2);
 		assert.ok(history.every((e) => typeof e.timestamp === "string"));
@@ -245,7 +245,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistory(doc, "D1");
+		const history = nodeHistoryOp({ doc, nodeId: "D1" });
 
 		assert.equal(history.length, 2);
 		assert.equal(history[0].nodeId, "D1");
@@ -260,7 +260,7 @@ describe("nodeHistory", () => {
 describe("stateAt", () => {
 	it("returns empty array for empty document", () => {
 		const doc = makeDoc();
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 		assert.equal(states.length, 0);
 	});
 
@@ -278,7 +278,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-15");
+		const states = stateAtOp({ doc, timestamp: "2025-07-15" });
 
 		assert.equal(states.length, 1);
 		assert.equal(states[0].nodeId, "D1");
@@ -301,7 +301,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-15");
+		const states = stateAtOp({ doc, timestamp: "2025-07-15" });
 
 		const state = states[0];
 		assert.ok(!state.activeStates.includes("reviewed"));
@@ -321,7 +321,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
 		const state = states[0];
@@ -344,7 +344,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
 		const state = states[0];
@@ -375,7 +375,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
 		assert.equal(states[0].nodeId, "D2");
@@ -390,7 +390,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 0);
 	});
@@ -409,7 +409,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states[0].activeStates.length, 3);
 		assert.deepEqual(states[0].activeStates, [
@@ -441,7 +441,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 3);
 		assert.equal(states[0].nodeId, "A1");
@@ -470,7 +470,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
 		assert.equal(states[0].nodeId, "D1");
@@ -490,7 +490,7 @@ describe("stateAt", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const states = stateAt(doc, "2025-07-01");
+		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		const state = states[0];
 		assert.ok(state.activeStates.includes("accepted"));
@@ -515,7 +515,7 @@ describe("full ISO timestamps", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 2);
 		assert.equal(events[0].state, "proposed");
@@ -540,7 +540,7 @@ describe("full ISO timestamps", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = timeline(doc);
+		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 2);
 		// Date-only "2025-06-10" sorts before "2025-06-10T08:00:00Z" lexicographically
@@ -563,7 +563,7 @@ describe("full ISO timestamps", () => {
 		const doc = makeDoc(nodes);
 
 		// Query at noon — proposed should be active, accepted should not
-		const states = stateAt(doc, "2025-06-10T12:00:00Z");
+		const states = stateAtOp({ doc, timestamp: "2025-06-10T12:00:00Z" });
 		assert.equal(states.length, 1);
 		assert.ok(states[0].activeStates.includes("proposed"));
 		assert.ok(!states[0].activeStates.includes("accepted"));
@@ -582,7 +582,7 @@ describe("full ISO timestamps", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = nodeHistory(doc, "D1");
+		const events = nodeHistoryOp({ doc, nodeId: "D1" });
 
 		assert.equal(events.length, 2);
 		assert.equal(events[0].timestamp, "2025-06-10T09:15:30Z");

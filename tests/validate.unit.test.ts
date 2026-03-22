@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { validate } from "../src/index.js";
+import { validateOp } from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeDoc(
@@ -13,7 +13,7 @@ function makeDoc(
 describe("validate", () => {
 	it("valid document returns { valid: true, issues: [] }", () => {
 		const doc = makeDoc([{ id: "I1", type: "intent", name: "Test" }]);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
@@ -23,7 +23,7 @@ describe("validate", () => {
 			{ id: "I1", type: "intent", name: "First" },
 			{ id: "I1", type: "intent", name: "Duplicate" },
 		]);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("Duplicate node ID")));
 	});
@@ -33,7 +33,7 @@ describe("validate", () => {
 			[{ id: "I1", type: "intent", name: "A" }],
 			[{ from: "I1", to: "I2", type: "refines" }],
 		);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("unknown target")));
 	});
@@ -52,7 +52,7 @@ describe("validate", () => {
 			],
 			[{ from: "D1", to: "I1", type: "affects" }],
 		);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("must_preserve")));
 	});
@@ -62,7 +62,7 @@ describe("validate", () => {
 			{ id: "C1", type: "change", name: "Change", scope: ["I1"] },
 			{ id: "I1", type: "intent", name: "Intent" },
 		]);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(
 			result.issues.some((i) => i.includes("does not reference any decision")),
@@ -73,7 +73,7 @@ describe("validate", () => {
 		const doc = makeDoc([
 			{ id: "D1", type: "decision", name: "Dec", selected: "a" },
 		]);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("has no options")));
 	});
@@ -87,7 +87,7 @@ describe("validate", () => {
 				options: [{ id: "a", description: "A" }],
 			},
 		]);
-		const result = validate(doc);
+		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("has no selected")));
 	});

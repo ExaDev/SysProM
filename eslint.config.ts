@@ -1,7 +1,88 @@
 import eslint from "@eslint/js";
+import type { Linter, Rule } from "eslint";
 import { defineConfig } from "eslint/config";
 import prettier from "eslint-plugin-prettier/recommended";
 import tseslint from "typescript-eslint";
+
+// ---------------------------------------------------------------------------
+// Custom rules: barrel export discipline
+// ---------------------------------------------------------------------------
+
+const noReExports: Rule.RuleModule = {
+	meta: {
+		type: "problem",
+		messages: {
+			noReExport:
+				"Re-exports (export ... from) are only allowed in index files.",
+		},
+	},
+	create(context) {
+		const filename = context.filename ?? context.getFilename();
+		const isIndex = /\/index\.[cm]?[jt]sx?$/.test(filename);
+		if (isIndex) return {};
+
+		return {
+			ExportNamedDeclaration(node) {
+				if (node.source) {
+					context.report({ node, messageId: "noReExport" });
+				}
+			},
+			ExportAllDeclaration(node) {
+				context.report({ node, messageId: "noReExport" });
+			},
+		};
+	},
+};
+
+const indexReExportsOnly: Rule.RuleModule = {
+	meta: {
+		type: "problem",
+		messages: {
+			noLogic:
+				"Index files must only contain re-exports (export ... from). No declarations, functions, or logic.",
+		},
+	},
+	create(context) {
+		const filename = context.filename ?? context.getFilename();
+		const isIndex = /\/index\.[cm]?[jt]sx?$/.test(filename);
+		if (!isIndex) return {};
+
+		return {
+			ExportNamedDeclaration(node) {
+				// Re-exports have a source — those are fine
+				if (node.source) return;
+				// Anything else (export function, export const, export {}) is logic
+				context.report({ node, messageId: "noLogic" });
+			},
+			ExportDefaultDeclaration(node) {
+				context.report({ node, messageId: "noLogic" });
+			},
+			VariableDeclaration(node) {
+				context.report({ node, messageId: "noLogic" });
+			},
+			FunctionDeclaration(node) {
+				context.report({ node, messageId: "noLogic" });
+			},
+			ClassDeclaration(node) {
+				context.report({ node, messageId: "noLogic" });
+			},
+			ImportDeclaration() {
+				// Imports are fine — needed for re-exports
+			},
+		};
+	},
+};
+
+const barrelPlugin: Linter.Plugin = {
+	rules: {
+		"no-re-exports": noReExports,
+		"index-re-exports-only": indexReExportsOnly,
+	},
+};
+
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
 
 export default defineConfig(
 	eslint.configs.recommended,
@@ -9,6 +90,9 @@ export default defineConfig(
 	tseslint.configs.stylisticTypeChecked,
 	prettier,
 	{
+		plugins: {
+			barrel: barrelPlugin,
+		},
 		rules: {
 			"prettier/prettier": [
 				"error",
@@ -17,6 +101,8 @@ export default defineConfig(
 					singleQuote: false,
 				},
 			],
+			"barrel/no-re-exports": "error",
+			"barrel/index-re-exports-only": "error",
 		},
 	},
 	{
