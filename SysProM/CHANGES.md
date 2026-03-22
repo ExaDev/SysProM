@@ -576,3 +576,19 @@ Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm
 - [ ] implemented (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### CH26 — Implement defineCommand Pattern
+
+Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.
+
+- Implements: D28
+
+- Status: complete
+
+Scope:
+- EL3
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
+

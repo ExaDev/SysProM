@@ -684,3 +684,26 @@ Rationale: Each improvement targets a specific friction point: auto-IDs reduce m
 - [ ] accepted (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### D28 — Unify CLI with Zod-Driven Command Definitions
+
+Replace separate Commander definitions, run() functions, and doc generator metadata with a single defineCommand pattern using Zod schemas.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The CLI had three layers describing the same information independently: Zod schemas, Commander definitions, and run() functions with manual parseFlag helpers.
+
+Options:
+- D28-OPT-A: defineCommand pattern with Zod schemas as single source of truth
+- D28-OPT-B: Keep separate layers
+
+Chosen: D28-OPT-A
+
+Rationale: A single defineCommand pattern eliminates duplication. Commander program, documentation, and validation are all derived from the Zod schema.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
+

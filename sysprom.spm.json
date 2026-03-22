@@ -3252,6 +3252,44 @@
 			"name": "CLI UX Improvements",
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "The CLI had three layers describing the same information independently: Zod schemas, Commander definitions, and run() functions with manual parseFlag helpers.",
+			"description": "Replace separate Commander definitions, run() functions, and doc generator metadata with a single defineCommand pattern using Zod schemas.",
+			"id": "D28",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Unify CLI with Zod-Driven Command Definitions",
+			"options": [
+				{
+					"description": "defineCommand pattern with Zod schemas as single source of truth",
+					"id": "D28-OPT-A"
+				},
+				{
+					"description": "Keep separate layers",
+					"id": "D28-OPT-B"
+				}
+			],
+			"rationale": "A single defineCommand pattern eliminates duplication. Commander program, documentation, and validation are all derived from the Zod schema.",
+			"selected": "D28-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.",
+			"id": "CH26",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Implement defineCommand Pattern",
+			"scope": [
+				"EL3"
+			],
+			"status": "complete",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4208,6 +4246,16 @@
 		},
 		{
 			"from": "D27",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH26",
+			"to": "D28",
+			"type": "implements"
+		},
+		{
+			"from": "D28",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
