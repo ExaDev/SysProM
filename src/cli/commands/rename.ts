@@ -8,33 +8,32 @@ const argsSchema = z.object({
 	newId: z.string().describe("New node ID"),
 });
 
-const optsSchema = mutationOpts;
+export const renameCommand: CommandDef<typeof argsSchema, typeof mutationOpts> =
+	{
+		name: "rename",
+		description: renameOp.def.description,
+		apiLink: renameOp.def.name,
+		args: argsSchema,
+		opts: mutationOpts,
+		action(args, opts) {
+			try {
+				const loaded = loadDoc(opts.path);
+				const { doc } = loaded;
+				const updated = renameOp({ doc, oldId: args.oldId, newId: args.newId });
+				persistDoc(updated, loaded, opts);
 
-export const renameCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
-	name: "rename",
-	description: renameOp.def.description,
-	apiLink: renameOp.def.name,
-	args: argsSchema,
-	opts: optsSchema,
-	action(args, opts) {
-		try {
-			const loaded = loadDoc(opts.path);
-			const { doc } = loaded;
-			const updated = renameOp({ doc, oldId: args.oldId, newId: args.newId });
-			persistDoc(updated, loaded, opts);
-
-			if (opts.json) {
-				console.log(
-					JSON.stringify({ oldId: args.oldId, newId: args.newId }, null, 2),
-				);
-			} else {
-				console.log(
-					`${opts.dryRun ? "[dry-run] Would rename" : "Renamed"} ${args.oldId} → ${args.newId}`,
-				);
+				if (opts.json) {
+					console.log(
+						JSON.stringify({ oldId: args.oldId, newId: args.newId }, null, 2),
+					);
+				} else {
+					console.log(
+						`${opts.dryRun ? "[dry-run] Would rename" : "Renamed"} ${args.oldId} → ${args.newId}`,
+					);
+				}
+			} catch (err: unknown) {
+				console.error(err instanceof Error ? err.message : String(err));
+				process.exit(1);
 			}
-		} catch (err: unknown) {
-			console.error(err instanceof Error ? err.message : String(err));
-			process.exit(1);
-		}
-	},
-};
+		},
+	};

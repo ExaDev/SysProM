@@ -75,10 +75,42 @@ const indexReExportsOnly: Rule.RuleModule = {
 	},
 };
 
+const noPointlessReassignments: Rule.RuleModule = {
+	meta: {
+		type: "problem",
+		messages: {
+			pointlessReassignment:
+				"Pointless reassignment. {{ name }} is just an alias for {{ value }}. Use the original directly instead.",
+		},
+	},
+	create(context) {
+		return {
+			VariableDeclarator(node) {
+				if (node.id.type !== "Identifier" || node.init?.type !== "Identifier") {
+					return;
+				}
+				// Skip intentional patterns (underscore prefix = exhaustiveness checks, etc.)
+				if (node.id.name.startsWith("_")) {
+					return;
+				}
+				context.report({
+					node,
+					messageId: "pointlessReassignment",
+					data: {
+						name: node.id.name,
+						value: node.init.name,
+					},
+				});
+			},
+		};
+	},
+};
+
 const barrelPlugin = {
 	rules: {
 		"no-re-exports": noReExports,
 		"index-re-exports-only": indexReExportsOnly,
+		"no-pointless-reassignments": noPointlessReassignments,
 	},
 };
 
@@ -135,6 +167,7 @@ export default defineConfig(
 			],
 			"barrel/no-re-exports": "error",
 			"barrel/index-re-exports-only": "error",
+			"barrel/no-pointless-reassignments": "error",
 			"eslint-comments/no-use": "error",
 		},
 	},

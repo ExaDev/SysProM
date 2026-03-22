@@ -561,12 +561,12 @@ export function jsonToMarkdownMultiDoc(
 			.replace(/-$/, "")}`;
 
 		// Auto-group when 2+ subsystems share the same type
-		let parentDir = outDir;
-		if ((typeCounts.get(n.type) ?? 0) >= 2 && NodeType.is(n.type)) {
-			const groupLabel = NODE_TYPE_LABELS[n.type]
-				.toLowerCase()
-				.replace(/ /g, "-");
-			parentDir = join(outDir, groupLabel);
+		const shouldGroup =
+			(typeCounts.get(n.type) ?? 0) >= 2 && NodeType.is(n.type);
+		const parentDir = shouldGroup
+			? join(outDir, NODE_TYPE_LABELS[n.type].toLowerCase().replace(/ /g, "-"))
+			: outDir;
+		if (shouldGroup) {
 			mkdirSync(parentDir, { recursive: true });
 		}
 

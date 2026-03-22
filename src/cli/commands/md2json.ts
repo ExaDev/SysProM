@@ -28,9 +28,8 @@ export const md2jsonCommand: CommandDef = {
 	opts: z.object({}).strict(),
 	action(args: unknown) {
 		if (!isArgs(args)) throw new Error("Invalid args");
-		const typedArgs = args;
-		const inputPath = resolve(typedArgs.input);
-		const outputPath = resolve(typedArgs.output);
+		const inputPath = resolve(args.input);
+		const outputPath = resolve(args.output);
 
 		const doc = markdownToJson(inputPath);
 		writeFileSync(outputPath, canonicalise(doc, { indent: "\t" }) + "\n");

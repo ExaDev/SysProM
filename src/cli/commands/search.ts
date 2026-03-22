@@ -8,14 +8,12 @@ const argsSchema = z.object({
 	term: z.string().describe("Search term"),
 });
 
-const optsSchema = readOpts;
-
-export const searchCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
+export const searchCommand: CommandDef<typeof argsSchema, typeof readOpts> = {
 	name: "search",
 	description: searchOp.def.description,
 	apiLink: searchOp.def.name,
 	args: argsSchema,
-	opts: optsSchema,
+	opts: readOpts,
 	action(args, opts) {
 		const { doc } = loadDoc(opts.path);
 		const matches = searchOp({ doc, term: args.term });

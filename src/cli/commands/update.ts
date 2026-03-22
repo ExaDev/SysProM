@@ -54,14 +54,12 @@ const addRelArgs = z.object({
 	type: RelationshipType.describe("relationship type"),
 	to: z.string().describe("target node ID"),
 });
-const addRelOpts = mutationOpts;
 
 const removeRelArgs = z.object({
 	from: z.string().describe("source node ID"),
 	type: RelationshipType.describe("relationship type"),
 	to: z.string().describe("target node ID"),
 });
-const removeRelOpts = mutationOpts;
 
 const metaOpts = mutationOpts.extend({
 	fields: z
@@ -141,10 +139,10 @@ const addRelSubcommand: CommandDef = {
 	description: addRelationshipOp.def.description,
 	apiLink: addRelationshipOp.def.name,
 	args: addRelArgs,
-	opts: addRelOpts,
+	opts: mutationOpts,
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = addRelArgs.parse(rawArgs);
-		const opts = addRelOpts.parse(rawOpts);
+		const opts = mutationOpts.parse(rawOpts);
 		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 
@@ -173,10 +171,10 @@ const removeRelSubcommand: CommandDef = {
 	description: removeRelationshipOp.def.description,
 	apiLink: removeRelationshipOp.def.name,
 	args: removeRelArgs,
-	opts: removeRelOpts,
+	opts: mutationOpts,
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = removeRelArgs.parse(rawArgs);
-		const opts = removeRelOpts.parse(rawOpts);
+		const opts = mutationOpts.parse(rawOpts);
 		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 

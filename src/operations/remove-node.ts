@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
-import { SysProMDocument } from "../schema.js";
+import { SysProMDocument, type Node } from "../schema.js";
 
 /** Zod schema for the result of removing a node — the updated document plus any warnings. */
 export const RemoveResult = z.object({
@@ -113,25 +113,20 @@ export const removeNodeOp = defineOperation({
 
 		// Clean up all references to the removed node (both soft and hard)
 		const cleanedNodes = newNodes.map((n) => {
-			let updated = n;
+			const updates: Partial<Pick<Node, "includes" | "scope" | "operations">> =
+				{};
 
 			// Remove from view includes
 			if (n.includes?.includes(id)) {
 				const newIncludes = n.includes.filter((i) => i !== id);
-				updated = {
-					...updated,
-					includes: newIncludes.length > 0 ? newIncludes : undefined,
-				};
+				updates.includes = newIncludes.length > 0 ? newIncludes : undefined;
 			}
 
 			// Remove from scope
 			if (n.scope?.includes(id)) {
 				const newScope = n.scope.filter((s) => s !== id);
 				warnings.push(`${n.id} scope still references ${id}`);
-				updated = {
-					...updated,
-					scope: newScope.length > 0 ? newScope : undefined,
-				};
+				updates.scope = newScope.length > 0 ? newScope : undefined;
 			}
 
 			// Remove from operations
@@ -139,13 +134,10 @@ export const removeNodeOp = defineOperation({
 			if (opsWithTarget) {
 				const newOps = n.operations?.filter((op) => op.target !== id);
 				warnings.push(`${n.id} operations still reference ${id}`);
-				updated = {
-					...updated,
-					operations: newOps && newOps.length > 0 ? newOps : undefined,
-				};
+				updates.operations = (newOps?.length ?? 0) > 0 ? newOps : undefined;
 			}
 
-			return updated;
+			return Object.keys(updates).length > 0 ? { ...n, ...updates } : n;
 		});
 
 		// Remove from external references

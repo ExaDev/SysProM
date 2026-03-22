@@ -43,10 +43,8 @@ export const json2mdCommand: CommandDef = {
 	action(args: unknown, opts: unknown) {
 		if (!isArgs(args)) throw new Error("Invalid args");
 		if (!isOpts(opts)) throw new Error("Invalid opts");
-		const typedArgs = args;
-		const typedOpts = opts;
-		const inputPath = resolve(typedArgs.input);
-		const outputPath = resolve(typedArgs.output);
+		const inputPath = resolve(args.input);
+		const outputPath = resolve(args.output);
 
 		const raw: unknown = JSON.parse(readFileSync(inputPath, "utf8"));
 
@@ -62,7 +60,7 @@ export const json2mdCommand: CommandDef = {
 		}
 
 		const form =
-			typedOpts.singleFile || outputPath.endsWith(".md")
+			opts.singleFile || outputPath.endsWith(".md")
 				? "single-file"
 				: "multi-doc";
 

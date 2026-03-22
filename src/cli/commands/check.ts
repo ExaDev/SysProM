@@ -2,13 +2,11 @@ import type { CommandDef } from "../define-command.js";
 import { checkOp } from "../../operations/index.js";
 import { noArgs, readOpts, loadDoc } from "../shared.js";
 
-const optsSchema = readOpts;
-
-export const checkCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
+export const checkCommand: CommandDef<typeof noArgs, typeof readOpts> = {
 	name: "check",
 	description: checkOp.def.description,
 	apiLink: checkOp.def.name,
-	opts: optsSchema,
+	opts: readOpts,
 	action(_args, opts) {
 		const { doc } = loadDoc(opts.path);
 		const result = checkOp({ doc });

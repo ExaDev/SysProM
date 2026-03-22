@@ -3,13 +3,11 @@ import type { CommandDef } from "../define-command.js";
 import { statsOp } from "../../operations/index.js";
 import { noArgs, readOpts, loadDoc } from "../shared.js";
 
-const optsSchema = readOpts;
-
-export const statsCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
+export const statsCommand: CommandDef<typeof noArgs, typeof readOpts> = {
 	name: "stats",
 	description: statsOp.def.description,
 	apiLink: statsOp.def.name,
-	opts: optsSchema,
+	opts: readOpts,
 	action(_args, opts) {
 		const { doc } = loadDoc(opts.path);
 		const s = statsOp({ doc });

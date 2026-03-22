@@ -12,9 +12,6 @@ const TraceNodeSchema = z.object({
 	},
 });
 
-/** Zod schema for a node in the refinement trace tree. */
-export const TraceNode = TraceNodeSchema;
-
 /** A node in the refinement trace tree, with optional children that refine/realise/implement it. */
 export type TraceNode = z.infer<typeof TraceNodeSchema>;
 
@@ -27,7 +24,7 @@ export const traceFromNodeOp = defineOperation({
 		doc: SysProMDocument,
 		startId: z.string(),
 	}),
-	output: TraceNode,
+	output: TraceNodeSchema,
 	fn: (input): TraceNode => {
 		const visited = new Set<string>();
 

@@ -96,7 +96,6 @@ const nodesOpts = readOpts.extend({
 const nodeArgs = z.object({
 	id: z.string().describe("node ID to retrieve"),
 });
-const nodeOpts = readOpts;
 
 const relsOpts = readOpts.extend({
 	from: z.string().optional().describe("filter relationships by source node"),
@@ -107,7 +106,6 @@ const relsOpts = readOpts.extend({
 const traceArgs = z.object({
 	id: z.string().describe("node ID to start trace from"),
 });
-const traceOpts = readOpts;
 
 const timelineOpts = readOpts.extend({
 	node: z.string().optional().describe("filter events to a specific node"),
@@ -116,7 +114,6 @@ const timelineOpts = readOpts.extend({
 const stateAtArgs = z.object({
 	time: z.string().describe("ISO timestamp to query"),
 });
-const stateAtOpts = readOpts;
 
 // ---------------------------------------------------------------------------
 // Subcommands
@@ -145,10 +142,10 @@ const nodeSubcommand: CommandDef = {
 	description: queryNodeOp.def.description,
 	apiLink: queryNodeOp.def.name,
 	args: nodeArgs,
-	opts: nodeOpts,
+	opts: readOpts,
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = nodeArgs.parse(rawArgs);
-		const opts = nodeOpts.parse(rawOpts);
+		const opts = readOpts.parse(rawOpts);
 		const { doc } = loadDoc(opts.path);
 		const result = queryNodeOp({ doc, id: args.id });
 		if (!result) {
@@ -205,10 +202,10 @@ const traceSubcommand: CommandDef = {
 	description: traceFromNodeOp.def.description,
 	apiLink: traceFromNodeOp.def.name,
 	args: traceArgs,
-	opts: traceOpts,
+	opts: readOpts,
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = traceArgs.parse(rawArgs);
-		const opts = traceOpts.parse(rawOpts);
+		const opts = readOpts.parse(rawOpts);
 		const { doc } = loadDoc(opts.path);
 		const trace = traceFromNodeOp({ doc, startId: args.id });
 		if (opts.json) {
@@ -251,10 +248,10 @@ const stateAtSubcommand: CommandDef = {
 	description: stateAtOp.def.description,
 	apiLink: stateAtOp.def.name,
 	args: stateAtArgs,
-	opts: stateAtOpts,
+	opts: readOpts,
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = stateAtArgs.parse(rawArgs);
-		const opts = stateAtOpts.parse(rawOpts);
+		const opts = readOpts.parse(rawOpts);
 		const { doc } = loadDoc(opts.path);
 		const result = stateAtOp({ doc, timestamp: args.time });
 		if (opts.json) {
