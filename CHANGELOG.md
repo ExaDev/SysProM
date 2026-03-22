@@ -1,3 +1,13 @@
+## [1.5.0](https://github.com/ExaDev/SysProM/compare/v1.4.0...v1.5.0) (2026-03-22)
+
+### Features
+
+* **CH29:** implement bidirectional sync detection and operation ([5f9cbd9](https://github.com/ExaDev/SysProM/commit/5f9cbd99549530a06bcd19917a75760b4d822912))
+
+### Documentation
+
+* **CH29:** mark conflict detection and sync operation as complete ([1ecc889](https://github.com/ExaDev/SysProM/commit/1ecc8897be2a5b203928043ed115a199e34a4940))
+
 ## [1.4.0](https://github.com/ExaDev/SysProM/compare/v1.3.0...v1.4.0) (2026-03-22)
 
 ### Features
