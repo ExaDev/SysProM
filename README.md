@@ -24,24 +24,32 @@ Both `sysprom` and `spm` are available as commands.
 spm json2md sysprom.spm.json ./SysProM
 spm md2json ./SysProM output.spm.json
 
-# Validate a document
+# Validate and summarise
 spm validate sysprom.spm.json
-
-# Print summary
 spm stats sysprom.spm.json
 
 # Query nodes and relationships
-spm query sysprom.spm.json nodes --type decision
-spm query sysprom.spm.json node D1
-spm query sysprom.spm.json rels --from D1
-spm query sysprom.spm.json trace I1
+spm query nodes sysprom.spm.json --type decision
+spm query node sysprom.spm.json D1
+spm query rels sysprom.spm.json --from D1
+spm query trace sysprom.spm.json I1
+spm query timeline sysprom.spm.json
+spm query state-at sysprom.spm.json --time 2026-03-22
 
-# Add, remove, update nodes
-spm add sysprom.spm.json invariant --id INV23 --name "New Rule" --description "Must hold"
+# Add nodes (ID auto-generated from type prefix if --id omitted)
+spm add sysprom.spm.json invariant --name "New Rule" --description "Must hold"
+spm add sysprom.spm.json decision --name "Choose X" \
+  --option "OPT-A:Use framework X" --option "OPT-B:Use framework Y" \
+  --selected OPT-A --rationale "Lower migration effort"
+
+# Remove nodes
 spm remove sysprom.spm.json INV23
-spm update sysprom.spm.json D1 --status deprecated
-spm update sysprom.spm.json --add-rel D1 affects EL5
-spm update sysprom.spm.json --meta version=2
+
+# Update nodes, relationships, and metadata
+spm update node sysprom.spm.json D1 --status deprecated
+spm update add-rel sysprom.spm.json D1 affects EL5
+spm update remove-rel sysprom.spm.json D1 affects EL5
+spm update meta sysprom.spm.json --meta version=2
 ```
 
 All commands auto-detect format — they work on `.spm.json` files, `.spm.md` files, and multi-document folders.
@@ -160,10 +168,14 @@ Round-trip conversion between JSON and Markdown is supported with zero informati
 
 ```sh
 pnpm build            # Typecheck + compile + schema + docs (cached via Turbo)
-pnpm test             # Typecheck + run all tests (cached via Turbo)
+pnpm typecheck        # Type-check only
+pnpm compile          # Compile to dist/
+pnpm test             # Typecheck + run all tests
+pnpm test:coverage    # Tests with coverage report
 pnpm docs             # Generate API + CLI markdown docs
 pnpm docs:html        # Generate HTML site for GitHub Pages
 pnpm docs:serve       # Live-reload HTML docs during development
+pnpm spm <command>    # Run the CLI from source (e.g. pnpm spm validate ...)
 ```
 
 ## Self-Description
