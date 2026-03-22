@@ -432,7 +432,6 @@ export interface ConvertOptions {
 
 /**
  * Convert a SysProM document to a single Markdown string.
- *
  * @param doc - The SysProM document to convert.
  * @returns The Markdown representation.
  */
@@ -496,7 +495,6 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 
 /**
  * Convert a SysProM document to a multi-document Markdown folder.
- *
  * @param doc - The SysProM document to convert.
  * @param outDir - Output directory path.
  */
@@ -577,7 +575,6 @@ export function jsonToMarkdownMultiDoc(
 
 /**
  * Convert a SysProM document to Markdown, writing to the specified output path.
- *
  * @param doc - The SysProM document to convert.
  * @param output - Output file or directory path.
  * @param options - Conversion options specifying single-file or multi-doc form.
