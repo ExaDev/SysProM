@@ -738,7 +738,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - Implements: D35
 - Depends on: CH32
 
-- Status: proposed
+- Status: complete
 
 #### Plan
 
