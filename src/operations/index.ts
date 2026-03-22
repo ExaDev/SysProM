@@ -1,4 +1,8 @@
-export { defineOperation, type OperationDef, type DefinedOperation } from "./define-operation.js";
+export {
+	defineOperation,
+	type OperationDef,
+	type DefinedOperation,
+} from "./define-operation.js";
 
 // Mutation operations
 export { addNodeOp } from "./add-node.js";
@@ -8,8 +12,15 @@ export { addRelationshipOp } from "./add-relationship.js";
 export { removeRelationshipOp } from "./remove-relationship.js";
 export { updateMetadataOp } from "./update-metadata.js";
 export { nextIdOp } from "./next-id.js";
+export { initDocumentOp } from "./init-document.js";
 export { addPlanTaskOp } from "./add-plan-task.js";
 export { updatePlanTaskOp } from "./update-plan-task.js";
+export { taskListOp } from "./task-list.js";
+export { planInitOp } from "./plan-init.js";
+export { planAddTaskOp } from "./plan-add-task.js";
+export { planStatusOp, type PlanStatusResult } from "./plan-status.js";
+export { planProgressOp, type PhaseProgressResult } from "./plan-progress.js";
+export { planGateOp, type GateResultOutput } from "./plan-gate.js";
 
 // Query operations
 export { queryNodesOp } from "./query-nodes.js";
