@@ -1,22 +1,16 @@
-import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { checkOp } from "../../operations/index.js";
-import { inputArg, readOpts, loadDoc } from "../shared.js";
-
-const argsSchema = z.object({
-	input: inputArg,
-});
+import { noArgs, readOpts, loadDoc } from "../shared.js";
 
 const optsSchema = readOpts;
 
-export const checkCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
+export const checkCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
 	name: "check",
 	description: checkOp.def.description,
 	apiLink: checkOp.def.name,
-	args: argsSchema,
 	opts: optsSchema,
-	action(args, opts) {
-		const { doc } = loadDoc(args.input);
+	action(_args, opts) {
+		const { doc } = loadDoc(opts.path);
 		const result = checkOp({ doc });
 
 		if (opts.json) {

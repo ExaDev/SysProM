@@ -2,7 +2,7 @@ import pc from "picocolors";
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { textToString } from "../../text.js";
-import { inputArg, readOpts, loadDoc } from "../shared.js";
+import { readOpts, loadDoc } from "../shared.js";
 import {
 	queryNodesOp,
 	queryNodeOp,
@@ -88,23 +88,16 @@ function printTraceTree(tn: TraceTreeNode, depth: number): void {
 // Arg/opt schemas
 // ---------------------------------------------------------------------------
 
-const nodesArgs = z.object({
-	input: inputArg,
-});
 const nodesOpts = readOpts.extend({
 	type: NodeType.optional().describe("filter by node type"),
 	status: NodeStatus.optional().describe("filter by node status"),
 });
 
 const nodeArgs = z.object({
-	input: inputArg,
 	id: z.string().describe("node ID to retrieve"),
 });
 const nodeOpts = readOpts;
 
-const relsArgs = z.object({
-	input: inputArg,
-});
 const relsOpts = readOpts.extend({
 	from: z.string().optional().describe("filter relationships by source node"),
 	to: z.string().optional().describe("filter relationships by target node"),
@@ -112,20 +105,15 @@ const relsOpts = readOpts.extend({
 });
 
 const traceArgs = z.object({
-	input: inputArg,
 	id: z.string().describe("node ID to start trace from"),
 });
 const traceOpts = readOpts;
 
-const timelineArgs = z.object({
-	input: inputArg,
-});
 const timelineOpts = readOpts.extend({
 	node: z.string().optional().describe("filter events to a specific node"),
 });
 
 const stateAtArgs = z.object({
-	input: inputArg,
 	time: z.string().describe("ISO timestamp to query"),
 });
 const stateAtOpts = readOpts;
@@ -138,12 +126,10 @@ const nodesSubcommand: CommandDef = {
 	name: "nodes",
 	description: queryNodesOp.def.description,
 	apiLink: queryNodesOp.def.name,
-	args: nodesArgs,
 	opts: nodesOpts,
-	action(rawArgs: unknown, rawOpts: unknown) {
-		const args = nodesArgs.parse(rawArgs);
+	action(_rawArgs: unknown, rawOpts: unknown) {
 		const opts = nodesOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const nodes = queryNodesOp({ doc, type: opts.type, status: opts.status });
 		if (opts.json) {
 			console.log(JSON.stringify(nodes, null, 2));
@@ -163,7 +149,7 @@ const nodeSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = nodeArgs.parse(rawArgs);
 		const opts = nodeOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const result = queryNodeOp({ doc, id: args.id });
 		if (!result) {
 			console.error(`Node not found: ${args.id}`);
@@ -191,12 +177,10 @@ const relsSubcommand: CommandDef = {
 	name: "rels",
 	description: queryRelationshipsOp.def.description,
 	apiLink: queryRelationshipsOp.def.name,
-	args: relsArgs,
 	opts: relsOpts,
-	action(rawArgs: unknown, rawOpts: unknown) {
-		const args = relsArgs.parse(rawArgs);
+	action(_rawArgs: unknown, rawOpts: unknown) {
 		const opts = relsOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const rels = queryRelationshipsOp({
 			doc,
 			from: opts.from,
@@ -225,7 +209,7 @@ const traceSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = traceArgs.parse(rawArgs);
 		const opts = traceOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const trace = traceFromNodeOp({ doc, startId: args.id });
 		if (opts.json) {
 			console.log(JSON.stringify(trace, null, 2));
@@ -239,12 +223,10 @@ const timelineSubcommand: CommandDef = {
 	name: "timeline",
 	description: timelineOp.def.description,
 	apiLink: timelineOp.def.name,
-	args: timelineArgs,
 	opts: timelineOpts,
-	action(rawArgs: unknown, rawOpts: unknown) {
-		const args = timelineArgs.parse(rawArgs);
+	action(_rawArgs: unknown, rawOpts: unknown) {
 		const opts = timelineOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const events = opts.node
 			? nodeHistoryOp({ doc, nodeId: opts.node })
 			: timelineOp({ doc });
@@ -273,7 +255,7 @@ const stateAtSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = stateAtArgs.parse(rawArgs);
 		const opts = stateAtOpts.parse(rawOpts);
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const result = stateAtOp({ doc, timestamp: args.time });
 		if (opts.json) {
 			console.log(JSON.stringify(result, null, 2));

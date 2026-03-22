@@ -2,10 +2,9 @@ import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { NodeType, NodeStatus, type Node } from "../../schema.js";
 import { addNodeOp, nextIdOp } from "../../operations/index.js";
-import { inputArg, mutationOpts, loadDoc, persistDoc } from "../shared.js";
+import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 
 const argsSchema = z.object({
-	input: inputArg,
 	nodeType: z.string().describe("Node type to add"),
 });
 
@@ -39,7 +38,7 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 			process.exit(1);
 		}
 
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 		const type = args.nodeType;
 

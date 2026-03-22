@@ -1,26 +1,21 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { graphOp } from "../../operations/index.js";
-import { inputArg, readOpts, loadDoc } from "../shared.js";
-
-const argsSchema = z.object({
-	input: inputArg,
-});
+import { noArgs, readOpts, loadDoc } from "../shared.js";
 
 const optsSchema = readOpts.extend({
 	format: z.enum(["mermaid", "dot"]).optional().describe("Output format"),
 	type: z.string().optional().describe("Filter by relationship type"),
 });
 
-export const graphCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
+export const graphCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
 	name: "graph",
 	description: graphOp.def.description,
 	apiLink: graphOp.def.name,
-	args: argsSchema,
 	opts: optsSchema,
-	action(args, opts) {
+	action(_args, opts) {
 		try {
-			const { doc } = loadDoc(args.input);
+			const { doc } = loadDoc(opts.path);
 			const output = graphOp({
 				doc,
 				format: opts.format ?? "mermaid",

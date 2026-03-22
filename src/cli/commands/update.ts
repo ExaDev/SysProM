@@ -7,7 +7,7 @@ import {
 	removeRelationshipOp,
 	updateMetadataOp,
 } from "../../operations/index.js";
-import { inputArg, mutationOpts, loadDoc, persistDoc } from "../shared.js";
+import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 
 // ---------------------------------------------------------------------------
 // CLI helper functions
@@ -36,7 +36,6 @@ function parseMetaValue(val: string): unknown {
 // ---------------------------------------------------------------------------
 
 const updateNodeArgs = z.object({
-	input: inputArg,
 	id: z.string().describe("node ID to update"),
 });
 const updateNodeOpts = mutationOpts.extend({
@@ -51,7 +50,6 @@ const updateNodeOpts = mutationOpts.extend({
 });
 
 const addRelArgs = z.object({
-	input: inputArg,
 	from: z.string().describe("source node ID"),
 	type: RelationshipType.describe("relationship type"),
 	to: z.string().describe("target node ID"),
@@ -59,16 +57,12 @@ const addRelArgs = z.object({
 const addRelOpts = mutationOpts;
 
 const removeRelArgs = z.object({
-	input: inputArg,
 	from: z.string().describe("source node ID"),
 	type: RelationshipType.describe("relationship type"),
 	to: z.string().describe("target node ID"),
 });
 const removeRelOpts = mutationOpts;
 
-const metaArgs = z.object({
-	input: inputArg,
-});
 const metaOpts = mutationOpts.extend({
 	fields: z
 		.array(z.string())
@@ -88,7 +82,7 @@ const nodeSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = updateNodeArgs.parse(rawArgs);
 		const opts = updateNodeOpts.parse(rawOpts);
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 		const node = doc.nodes.find((n) => n.id === args.id);
 		if (!node) {
@@ -151,7 +145,7 @@ const addRelSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = addRelArgs.parse(rawArgs);
 		const opts = addRelOpts.parse(rawOpts);
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 
 		const newDoc = addRelationshipOp({
@@ -183,7 +177,7 @@ const removeRelSubcommand: CommandDef = {
 	action(rawArgs: unknown, rawOpts: unknown) {
 		const args = removeRelArgs.parse(rawArgs);
 		const opts = removeRelOpts.parse(rawOpts);
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 
 		const newDoc = removeRelationshipOp({
@@ -215,17 +209,15 @@ const metaSubcommand: CommandDef = {
 	name: "meta",
 	description: updateMetadataOp.def.description,
 	apiLink: updateMetadataOp.def.name,
-	args: metaArgs,
 	opts: metaOpts,
-	action(rawArgs: unknown, rawOpts: unknown) {
-		const args = metaArgs.parse(rawArgs);
+	action(_rawArgs: unknown, rawOpts: unknown) {
 		const opts = metaOpts.parse(rawOpts);
 		if (opts.fields.length === 0) {
 			console.error("No metadata fields specified. Use --fields key=value");
 			process.exit(1);
 		}
 
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 		const fields: Record<string, unknown> = {};
 

@@ -1,10 +1,9 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { renameOp } from "../../operations/index.js";
-import { inputArg, mutationOpts, loadDoc, persistDoc } from "../shared.js";
+import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 
 const argsSchema = z.object({
-	input: inputArg,
 	oldId: z.string().describe("Current node ID"),
 	newId: z.string().describe("New node ID"),
 });
@@ -19,7 +18,7 @@ export const renameCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	opts: optsSchema,
 	action(args, opts) {
 		try {
-			const loaded = loadDoc(args.input);
+			const loaded = loadDoc(opts.path);
 			const { doc } = loaded;
 			const updated = renameOp({ doc, oldId: args.oldId, newId: args.newId });
 			persistDoc(updated, loaded, opts);

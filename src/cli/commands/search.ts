@@ -1,11 +1,10 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { searchOp } from "../../operations/index.js";
-import { inputArg, readOpts, loadDoc } from "../shared.js";
+import { readOpts, loadDoc } from "../shared.js";
 import { textToString } from "../../text.js";
 
 const argsSchema = z.object({
-	input: inputArg,
 	term: z.string().describe("Search term"),
 });
 
@@ -18,7 +17,7 @@ export const searchCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	args: argsSchema,
 	opts: optsSchema,
 	action(args, opts) {
-		const { doc } = loadDoc(args.input);
+		const { doc } = loadDoc(opts.path);
 		const matches = searchOp({ doc, term: args.term });
 
 		if (opts.json) {

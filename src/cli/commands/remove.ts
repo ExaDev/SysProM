@@ -1,10 +1,9 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { removeNodeOp } from "../../operations/index.js";
-import { inputArg, mutationOpts, loadDoc, persistDoc } from "../shared.js";
+import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 
 const argsSchema = z.object({
-	input: inputArg,
 	nodeId: z.string().describe("ID of the node to remove"),
 });
 
@@ -17,7 +16,7 @@ export const removeCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	args: argsSchema,
 	opts: optsSchema,
 	action(args, opts) {
-		const loaded = loadDoc(args.input);
+		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 		const targetId = args.nodeId;
 		const removedNode = doc.nodes.find((n) => n.id === targetId);
