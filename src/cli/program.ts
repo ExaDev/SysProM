@@ -191,7 +191,7 @@ program
   .description("Add a node to a SysProM document")
   .argument("<input>", "SysProM document to modify (saved in place)")
   .addArgument(new Argument("<node-type>", "node type to add").choices([...NODE_TYPES]))
-  .requiredOption("--id <id>", "node ID (must be unique)")
+  .option("--id <id>", "node ID (auto-generated from type prefix if omitted)")
   .requiredOption("--name <name>", "human-readable node name")
   .option("--description <text>", "node description")
   .addOption(new Option("--status <status>", "lifecycle status").choices([...NODE_STATUSES]))
@@ -205,7 +205,7 @@ program
       input: string,
       nodeType: string,
       opts: {
-        id: string;
+        id?: string;
         name: string;
         description?: string;
         status?: string;
@@ -216,7 +216,9 @@ program
         selected?: string;
       },
     ) => {
-      const args = [input, nodeType, "--id", opts.id, "--name", opts.name];
+      const args = [input, nodeType];
+      if (opts.id) args.push("--id", opts.id);
+      args.push("--name", opts.name);
       if (opts.description) args.push("--description", opts.description);
       if (opts.status) args.push("--status", opts.status);
       if (opts.context) args.push("--context", opts.context);

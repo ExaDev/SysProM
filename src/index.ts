@@ -46,6 +46,7 @@ export {
   EXTERNAL_REFERENCE_LABEL_TO_ROLE,
   NODE_STATUSES,
   NODE_FILE_MAP,
+  NODE_ID_PREFIX,
   // Schema generator
   toJSONSchema,
 } from "./schema.js";
@@ -85,6 +86,7 @@ export {
 
 // Mutation
 export {
+  nextId,
   addNode,
   removeNode,
   updateNode,

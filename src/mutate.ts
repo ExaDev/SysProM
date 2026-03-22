@@ -1,10 +1,36 @@
 import type {
   SysProMDocument,
   Node,
+  NodeType,
   Relationship,
   RelationshipType,
   Task,
 } from "./schema.js";
+import { NODE_ID_PREFIX } from "./schema.js";
+
+/**
+ * Generate the next available ID for a given node type.
+ * Scans existing node IDs matching the type's prefix and returns prefix + (max + 1).
+ * @param doc - The SysProM document to scan.
+ * @param type - The node type to generate an ID for.
+ * @returns The next available ID (e.g. "D26" if D25 is the highest existing decision).
+ */
+export function nextId(doc: SysProMDocument, type: NodeType): string {
+  const prefix = NODE_ID_PREFIX[type];
+  if (!prefix) {
+    throw new Error(`No ID prefix defined for node type: ${type}`);
+  }
+  const pattern = new RegExp(`^${prefix}(\\d+)$`);
+  let max = 0;
+  for (const node of doc.nodes) {
+    const match = pattern.exec(node.id);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > max) max = num;
+    }
+  }
+  return `${prefix}${max + 1}`;
+}
 
 export interface RemoveResult {
   doc: SysProMDocument;

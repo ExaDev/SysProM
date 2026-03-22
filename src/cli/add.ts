@@ -1,5 +1,5 @@
 import { nodeType, nodeStatus, type Node } from "../schema.js";
-import { addNode } from "../mutate.js";
+import { addNode, nextId } from "../mutate.js";
 import { loadDocument, saveDocument } from "../io.js";
 
 function parseFlag(args: string[], flag: string): string | undefined {
@@ -41,11 +41,11 @@ export function run(args: string[]): void {
     process.exit(1);
   }
 
-  const id = parseFlag(args, "--id");
+  const id = parseFlag(args, "--id") ?? nextId(doc, type);
   const name = parseFlag(args, "--name");
 
-  if (!id || !name) {
-    console.error("Both --id and --name are required.");
+  if (!name) {
+    console.error("--name is required.");
     process.exit(1);
   }
 

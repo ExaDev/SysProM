@@ -408,6 +408,30 @@ export const NODE_FILE_MAP: Record<string, string[]> = {
 };
 
 
+/** Conventional ID prefix for each node type. */
+export const NODE_ID_PREFIX: Record<string, string> = {
+  intent: "I",
+  concept: "CN",
+  capability: "CP",
+  element: "EL",
+  realisation: "R",
+  invariant: "INV",
+  principle: "PR",
+  policy: "POL",
+  protocol: "PROT",
+  stage: "STG",
+  role: "ROLE",
+  gate: "GATE",
+  mode: "MODE",
+  artefact: "ART",
+  artefact_flow: "AF",
+  decision: "D",
+  change: "CH",
+  view: "V",
+  milestone: "MS",
+  version: "VER",
+};
+
 // ---------------------------------------------------------------------------
 // Generate JSON Schema
 // ---------------------------------------------------------------------------
