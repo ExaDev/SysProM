@@ -95,6 +95,7 @@ export default defineConfig(
 		...jsdoc.configs["flat/recommended-typescript"],
 		rules: {
 			...jsdoc.configs["flat/recommended-typescript"].rules,
+			...jsdoc.configs["flat/requirements-typescript"].rules,
 			"jsdoc/require-jsdoc": [
 				"warn",
 				{
