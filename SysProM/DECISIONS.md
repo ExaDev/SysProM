@@ -661,3 +661,26 @@ Rationale: The existing ID convention (D for decisions, CH for changes, INV for 
 - [ ] accepted (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### D27 — CLI UX Improvements
+
+Add auto-generated option IDs, init command, auto-sync, coloured output, JSON output on mutations, full-text search, graph export, rename, stricter validation, shell completions, and dry-run mode.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The CLI covers core CRUD operations but lacks quality-of-life features that reduce friction for frequent use.
+
+Options:
+- D27-OPT-A: Implement all suggested UX improvements as a single cohesive change.
+- D27-OPT-B: Implement incrementally, prioritising the most impactful features.
+
+Chosen: D27-OPT-A
+
+Rationale: Each improvement targets a specific friction point: auto-IDs reduce manual bookkeeping, colour improves scanability, search/graph/rename add power-user workflows, and dry-run/completions improve developer experience.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
+

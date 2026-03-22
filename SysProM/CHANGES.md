@@ -563,3 +563,16 @@ Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add comm
 - [ ] implemented (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### CH25 — CLI UX Improvements
+
+Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.
+
+- Implements: D27
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
+

@@ -3246,10 +3246,11 @@
 			"description": "Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.",
 			"id": "CH25",
 			"lifecycle": {
+				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
 			},
 			"name": "CLI UX Improvements",
-			"status": "in_progress",
+			"status": "complete",
 			"type": "change"
 		}
 	],
