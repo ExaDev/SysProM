@@ -1,3 +1,13 @@
+## [1.4.0](https://github.com/ExaDev/SysProM/compare/v1.3.0...v1.4.0) (2026-03-22)
+
+### Features
+
+* **CH32:** implement soft/hard delete and chain repair ([e5a36e8](https://github.com/ExaDev/SysProM/commit/e5a36e8153a43297f3acbb4e3a617f0afb8b6400))
+
+### Documentation
+
+* **CH32:** mark safe graph removal as complete ([bf4769d](https://github.com/ExaDev/SysProM/commit/bf4769de94d234fe6508a21f9f66b61b0765cf09))
+
 ## [1.3.0](https://github.com/ExaDev/SysProM/compare/v1.2.6...v1.3.0) (2026-03-22)
 
 ### Features
