@@ -68,6 +68,7 @@
   "devDependencies": {
     "@commitlint/cli": "20.5.0",
     "@commitlint/config-conventional": "20.5.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
     "@eslint/js": "10.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
@@ -76,7 +77,6 @@
     "conventional-changelog-conventionalcommits": "9.3.0",
     "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-jsdoc": "62.8.0",
     "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",

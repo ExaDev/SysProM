@@ -1,6 +1,7 @@
 import eslint from "@eslint/js";
 import type { Linter, Rule } from "eslint";
 import { defineConfig } from "eslint/config";
+import eslintComments from "@eslint-community/eslint-plugin-eslint-comments";
 import jsdoc from "eslint-plugin-jsdoc";
 import prettier from "eslint-plugin-prettier/recommended";
 import tseslint from "typescript-eslint";
@@ -122,6 +123,7 @@ export default defineConfig(
 	{
 		plugins: {
 			barrel: barrelPlugin,
+			"eslint-comments": eslintComments,
 		},
 		rules: {
 			"prettier/prettier": [
@@ -133,6 +135,7 @@ export default defineConfig(
 			],
 			"barrel/no-re-exports": "error",
 			"barrel/index-re-exports-only": "error",
+			"eslint-comments/no-unlimited-disable": "error",
 		},
 	},
 	{
