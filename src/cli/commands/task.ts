@@ -3,7 +3,8 @@ import type { CommandDef } from "../define-command.js";
 import { loadDocument, saveDocument } from "../../io.js";
 import {
 	addPlanTaskOp,
-	updatePlanTaskOp,
+	markTaskDoneOp,
+	markTaskUndoneOp,
 	taskListOp,
 } from "../../operations/index.js";
 
@@ -107,8 +108,8 @@ const doneOpts = z.object({});
 
 const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 	name: "done",
-	// TODO: derive description from updatePlanTaskOp (conditional on done: true)
-	description: "Mark a task as done",
+	description: markTaskDoneOp.def.description,
+	apiLink: markTaskDoneOp.def.name,
 	args: doneArgs,
 	opts: doneOpts,
 	action(args) {
@@ -121,11 +122,10 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 		}
 
 		try {
-			const newDoc = updatePlanTaskOp({
+			const newDoc = markTaskDoneOp({
 				doc,
 				changeId: args.changeId,
 				taskIndex,
-				done: true,
 			});
 			saveDocument(newDoc, format, path);
 			console.log(`Marked task ${String(taskIndex)} done on ${args.changeId}`);
@@ -146,8 +146,8 @@ const undoneOpts = z.object({});
 
 const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 	name: "undone",
-	// TODO: derive description from updatePlanTaskOp (conditional on done: false)
-	description: "Mark a task as undone",
+	description: markTaskUndoneOp.def.description,
+	apiLink: markTaskUndoneOp.def.name,
 	args: undoneArgs,
 	opts: undoneOpts,
 	action(args) {
@@ -160,11 +160,10 @@ const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 		}
 
 		try {
-			const newDoc = updatePlanTaskOp({
+			const newDoc = markTaskUndoneOp({
 				doc,
 				changeId: args.changeId,
 				taskIndex,
-				done: false,
 			});
 			saveDocument(newDoc, format, path);
 			console.log(

@@ -15,6 +15,8 @@ export { nextIdOp } from "./next-id.js";
 export { initDocumentOp } from "./init-document.js";
 export { addPlanTaskOp } from "./add-plan-task.js";
 export { updatePlanTaskOp } from "./update-plan-task.js";
+export { markTaskDoneOp } from "./mark-task-done.js";
+export { markTaskUndoneOp } from "./mark-task-undone.js";
 export { taskListOp } from "./task-list.js";
 export { planInitOp } from "./plan-init.js";
 export { planAddTaskOp } from "./plan-add-task.js";
