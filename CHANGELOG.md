@@ -1,3 +1,10 @@
+## [1.8.0](https://github.com/ExaDev/SysProM/compare/v1.7.1...v1.8.0) (2026-03-22)
+
+### Features
+
+* **CH32:** expose safe graph removal flags in remove CLI command ([24910e5](https://github.com/ExaDev/SysProM/commit/24910e564fb1952959d093b2c8eeac582437d79b))
+* **eslint:** add no-pointless-reassignments rule ([8f027d7](https://github.com/ExaDev/SysProM/commit/8f027d7b7fbdc75b4a9e6db555810a8727d3b40e))
+
 ## [1.7.1](https://github.com/ExaDev/SysProM/compare/v1.7.0...v1.7.1) (2026-03-22)
 
 ### Bug Fixes
