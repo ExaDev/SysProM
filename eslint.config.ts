@@ -96,6 +96,10 @@ export default defineConfig(
 		rules: {
 			...jsdoc.configs["flat/recommended-typescript"].rules,
 			...jsdoc.configs["flat/requirements-typescript"].rules,
+			...jsdoc.configs["flat/contents-typescript"].rules,
+			...jsdoc.configs["flat/logical-typescript"].rules,
+			...jsdoc.configs["flat/stylistic-typescript"].rules,
+			"jsdoc/require-hyphen-before-param-description": ["warn", "always"],
 			"jsdoc/require-jsdoc": [
 				"warn",
 				{
