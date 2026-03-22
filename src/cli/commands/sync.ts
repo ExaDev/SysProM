@@ -1,0 +1,154 @@
+import * as z from "zod";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import type { CommandDef } from "../define-command.js";
+import {
+	syncDocumentsOp,
+	type BidirectionalSyncResult,
+	type ConflictStrategy,
+} from "../../operations/index.js";
+import { detectChanges } from "../../sync.js";
+import { markdownToJson } from "../../md-to-json.js";
+import { jsonToMarkdownSingle } from "../../json-to-md.js";
+import { canonicalise } from "../../canonical-json.js";
+import { SysProMDocument } from "../../schema.js";
+
+interface SyncCommandInput {
+	jsonPath: string;
+	mdPath: string;
+	strategy?: ConflictStrategy;
+	dryRun?: boolean;
+}
+
+/**
+ * Synchronise JSON and Markdown representations of a SysProM document.
+ * @param input - Configuration for sync operation
+ * @returns Result of the synchronisation
+ * @example
+ * const result = syncCommand({ jsonPath: "doc.spm.json", mdPath: "doc.spm.md" });
+ */
+export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
+	const { jsonPath, mdPath, strategy = "json", dryRun = false } = input;
+
+	// Read JSON document
+	const jsonContent = readFileSync(jsonPath, "utf8");
+	const jsonDoc: unknown = JSON.parse(jsonContent);
+
+	if (!SysProMDocument.is(jsonDoc)) {
+		throw new Error("JSON file is not a valid SysProM document");
+	}
+
+	// Parse Markdown to document
+	const mdDoc = markdownToJson(mdPath);
+
+	// Detect which side changed
+	const changes = detectChanges(jsonPath, mdPath);
+
+	// Perform sync operation
+	const result = syncDocumentsOp({
+		jsonDoc,
+		mdDoc,
+		jsonChanged: changes.jsonChanged,
+		mdChanged: changes.mdChanged,
+		strategy,
+	});
+
+	// Write results if not dry-run
+	if (!dryRun) {
+		// Write synced document back to both formats
+		if (result.jsonChanged || result.mdChanged || result.conflict) {
+			// Update JSON
+			writeFileSync(
+				jsonPath,
+				canonicalise(result.synced, { indent: "\t" }) + "\n",
+			);
+
+			// Update Markdown
+			const mdContent = jsonToMarkdownSingle(result.synced);
+			writeFileSync(mdPath, mdContent);
+		}
+	}
+
+	return result;
+}
+
+interface Args {
+	input: string;
+	output: string;
+}
+
+interface Opts {
+	preferJson?: boolean;
+	preferMd?: boolean;
+	dryRun?: boolean;
+	report?: boolean;
+}
+
+function isArgs(arg: unknown): arg is Args {
+	return (
+		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
+	);
+}
+
+function isOpts(opt: unknown): opt is Opts {
+	return typeof opt === "object" && opt !== null;
+}
+
+export const syncCommandDef: CommandDef = {
+	name: "sync",
+	description:
+		"Synchronise JSON and Markdown representations with conflict resolution",
+	apiLink: "syncDocuments",
+	args: z.object({
+		input: z.string().describe("Path to JSON file"),
+		output: z.string().describe("Path to Markdown file"),
+	}),
+	opts: z
+		.object({
+			preferJson: z
+				.boolean()
+				.optional()
+				.describe("Prefer JSON as source of truth in conflicts"),
+			preferMd: z
+				.boolean()
+				.optional()
+				.describe("Prefer Markdown as source of truth in conflicts"),
+			dryRun: z
+				.boolean()
+				.optional()
+				.describe("Preview changes without writing files"),
+			report: z
+				.boolean()
+				.optional()
+				.describe("Report conflicts without resolving"),
+		})
+		.strict(),
+	action(args: unknown, opts: unknown) {
+		if (!isArgs(args)) throw new Error("Invalid args");
+		if (!isOpts(opts)) throw new Error("Invalid opts");
+
+		const jsonPath = resolve(args.input);
+		const mdPath = resolve(args.output);
+
+		// Determine conflict strategy
+		let strategy: ConflictStrategy = "json";
+		if (opts.preferMd) strategy = "md";
+		if (opts.report) strategy = "report";
+
+		const result = syncCommand({
+			jsonPath,
+			mdPath,
+			strategy,
+			dryRun: opts.dryRun ?? false,
+		});
+
+		// Output results
+		console.log(`Sync complete:`);
+		console.log(`  JSON changed: ${String(result.jsonChanged)}`);
+		console.log(`  Markdown changed: ${String(result.mdChanged)}`);
+		console.log(`  Conflict: ${String(result.conflict)}`);
+		if (result.changedNodes.length > 0) {
+			console.log(`  Changed nodes: ${result.changedNodes.join(", ")}`);
+		}
+	},
+};
