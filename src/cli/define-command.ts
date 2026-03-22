@@ -5,6 +5,7 @@ import { Argument, Command, Option } from "commander";
 // Command definition types
 // ---------------------------------------------------------------------------
 
+/** Definition of a CLI command — name, description, Zod schemas for args/opts, optional subcommands, and action handler. */
 export interface CommandDef<
 	TArgs extends z.ZodObject<z.ZodRawShape> = z.ZodObject<z.ZodRawShape>,
 	TOpts extends z.ZodObject<z.ZodRawShape> = z.ZodObject<z.ZodRawShape>,
@@ -127,6 +128,7 @@ function collect(value: string, previous: string[]): string[] {
 	return [...previous, value];
 }
 
+/** Build a Commander.js command tree from a declarative CommandDef, wiring up Zod-validated args, options, and actions. */
 export function buildCommander(def: CommandDef, parent: Command): Command {
 	const cmd = parent.command(def.name);
 	cmd.description(def.description);
@@ -248,6 +250,7 @@ export function buildCommander(def: CommandDef, parent: Command): Command {
 // Documentation extraction
 // ---------------------------------------------------------------------------
 
+/** Extracted documentation for a CLI positional argument. */
 export interface ArgDoc {
 	name: string;
 	description: string;
@@ -255,6 +258,7 @@ export interface ArgDoc {
 	choices?: string[];
 }
 
+/** Extracted documentation for a CLI option/flag. */
 export interface OptDoc {
 	flag: string;
 	description: string;
@@ -263,6 +267,7 @@ export interface OptDoc {
 	choices?: string[];
 }
 
+/** Extracted documentation for a CLI command, including its arguments, options, and subcommands. */
 export interface CommandDoc {
 	name: string;
 	description: string;
@@ -272,6 +277,7 @@ export interface CommandDoc {
 	apiLink?: string;
 }
 
+/** Extract structured documentation from a CommandDef by introspecting its Zod schemas for args and options. */
 export function extractDocs(def: CommandDef): CommandDoc {
 	const args: ArgDoc[] = [];
 	{

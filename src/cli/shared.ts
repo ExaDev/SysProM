@@ -139,13 +139,16 @@ export const mutationOpts = z.object({
 		.describe("sync to markdown directory after saving"),
 });
 
+/** Inferred type for read-only CLI options (input path, JSON output flag). */
 export type ReadOpts = z.infer<typeof readOpts>;
+/** Inferred type for mutation CLI options (extends ReadOpts with sync-to-markdown). */
 export type MutationOpts = z.infer<typeof mutationOpts>;
 
 // ---------------------------------------------------------------------------
 // Shared helpers for CLI commands
 // ---------------------------------------------------------------------------
 
+/** A document loaded from a CLI input path with its format and resolved path. */
 export interface LoadedDoc {
 	doc: SysProMDocument;
 	format: Format;
