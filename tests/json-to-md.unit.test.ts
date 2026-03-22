@@ -168,6 +168,33 @@ describe("json-to-md single file", () => {
     assert.ok(md.includes("- [ ] implemented"));
   });
 
+  it("renders date lifecycle values as checked", () => {
+    const doc = full();
+    const node = doc.nodes.find((n) => n.id === "CH1")!;
+    // Replace boolean lifecycle with date strings
+    node.lifecycle = { defined: "2026-03-21", introduced: "2026-03-21", complete: false };
+    const md = jsonToMarkdownSingle(doc);
+    assert.ok(md.includes("- [x] defined (2026-03-21)"), "date lifecycle should render as checked");
+    assert.ok(md.includes("- [x] introduced (2026-03-21)"), "date lifecycle should render as checked");
+    assert.ok(md.includes("- [ ] complete"), "false lifecycle should render as unchecked");
+  });
+
+  it("renders lifecycle states in protocol order, not alphabetical", () => {
+    const doc = full();
+    const decision = doc.nodes.find((n) => n.id === "D1")!;
+    // Keys in alphabetical order (as JSON.stringify would produce)
+    decision.lifecycle = { accepted: true, implemented: false, proposed: true, superseded: false };
+    const md = jsonToMarkdownSingle(doc);
+    const lifecycleSection = md.slice(md.indexOf("- [x] proposed"));
+    const proposedIdx = lifecycleSection.indexOf("- [x] proposed");
+    const acceptedIdx = lifecycleSection.indexOf("- [x] accepted");
+    const implementedIdx = lifecycleSection.indexOf("- [ ] implemented");
+    const supersededIdx = lifecycleSection.indexOf("- [ ] superseded");
+    assert.ok(proposedIdx < acceptedIdx, "proposed should come before accepted");
+    assert.ok(acceptedIdx < implementedIdx, "accepted should come before implemented");
+    assert.ok(implementedIdx < supersededIdx, "implemented should come before superseded");
+  });
+
   it("renders change fields", () => {
     const md = jsonToMarkdownSingle(full());
     assert.ok(md.includes("Scope:"));

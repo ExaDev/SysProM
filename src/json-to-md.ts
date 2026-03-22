@@ -59,9 +59,28 @@ function indexRelationshipsFrom(rels: Relationship[]): RelIndex {
 // Node rendering
 // ---------------------------------------------------------------------------
 
+// Canonical lifecycle stage orderings from PROT1 (decision), PROT2 (change), PROT3 (node).
+// Keys not in any ordering are appended at the end in their original order.
+const LIFECYCLE_ORDER: readonly string[] = [
+  "proposed", "accepted", "active", "adopted",
+  "implemented", "defined", "introduced", "in_progress",
+  "complete", "consolidated", "experimental",
+  "deprecated", "retired", "superseded", "abandoned", "deferred",
+];
+
 function renderLifecycle(lifecycle: Record<string, boolean | string>): string[] {
-  return Object.entries(lifecycle).map(([state, done]) => {
-    const checkbox = typeof done === "boolean" ? (done ? "x" : " ") : " ";
+  const entries = Object.entries(lifecycle);
+  entries.sort(([a], [b]) => {
+    const ai = LIFECYCLE_ORDER.indexOf(a);
+    const bi = LIFECYCLE_ORDER.indexOf(b);
+    // Unknown keys sort after known ones, preserving relative order
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+  return entries.map(([state, done]) => {
+    const checkbox = done ? "x" : " ";
     const label = state.replace(/_/g, " ");
     if (typeof done === "string") {
       return `- [${checkbox}] ${label} (${done})`;
