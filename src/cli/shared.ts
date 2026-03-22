@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { loadDocument, saveDocument, type Format } from "../io.js";
 import { jsonToMarkdownMultiDoc } from "../json-to-md.js";
@@ -30,30 +30,66 @@ const pathOpt = z
 /**
  * Resolve a SysProM document path. If no explicit path is given, search the
  * working directory by priority:
- *   1. .spm.json  2. .spm.md  3. .spm/
- *   4. *.spm.json 5. *.spm.md 6. *.spm/ (glob — must be unique)
+ *   1. .spm.json     2. .spm.md     3. .spm/
+ *   4. .sysprom.json  5. .sysprom.md  6. .sysprom/
+ *   7. *.spm.json    8. *.spm.md    9. *.spm/
+ *  10. *.sysprom.json 11. *.sysprom.md 12. *.sysprom/
+ *
+ * All matching is case-insensitive. Glob tiers must have exactly one match.
  */
 export function resolveInput(input?: string, cwd?: string): string {
 	if (input) return input;
 
 	const dir = resolve(cwd ?? ".");
 
-	// Priority 1–3: exact names
-	const exact = [".spm.json", ".spm.md", ".spm"] as const;
-	for (const name of exact) {
-		const candidate = join(dir, name);
-		if (existsSync(candidate)) return candidate;
+	// Exact names to check, in priority order (case-insensitive)
+	const exactNames = [
+		".spm.json",
+		".spm.md",
+		".spm",
+		".sysprom.json",
+		".sysprom.md",
+		".sysprom",
+	] as const;
+
+	const entries = readdirSync(dir);
+
+	for (const name of exactNames) {
+		const found = entries.find((e) => e.toLowerCase() === name);
+		if (found) {
+			const candidate = join(dir, found);
+			if (name.endsWith(".spm") || name.endsWith(".sysprom")) {
+				try {
+					if (statSync(candidate).isDirectory()) return candidate;
+				} catch {
+					/* skip */
+				}
+			} else {
+				return candidate;
+			}
+		}
 	}
 
-	// Priority 4–6: glob by suffix
-	const entries = readdirSync(dir);
-	const suffixes = [".spm.json", ".spm.md", ".spm"] as const;
-	for (const suffix of suffixes) {
+	// Glob suffixes in priority order (case-insensitive)
+	const globSuffixes = [
+		".spm.json",
+		".spm.md",
+		".spm",
+		".sysprom.json",
+		".sysprom.md",
+		".sysprom",
+	] as const;
+
+	for (const suffix of globSuffixes) {
+		const isDirSuffix = suffix === ".spm" || suffix === ".sysprom";
 		const matches = entries
-			.filter((e) => e.endsWith(suffix) && e !== suffix)
+			.filter((e) => {
+				const lower = e.toLowerCase();
+				return lower.endsWith(suffix) && lower !== suffix;
+			})
 			.map((e) => join(dir, e))
 			.filter((p) => {
-				if (suffix === ".spm") {
+				if (isDirSuffix) {
 					try {
 						return statSync(p).isDirectory();
 					} catch {

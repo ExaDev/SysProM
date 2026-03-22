@@ -112,4 +112,61 @@ describe("resolveInput", () => {
 			/No SysProM document found/,
 		);
 	});
+
+	// .sysprom.* support
+	it("finds .sysprom.json in directory", () => {
+		writeFileSync(join(TMP, ".sysprom.json"), "{}");
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".sysprom.json"));
+	});
+
+	it("finds .sysprom.md in directory", () => {
+		writeFileSync(join(TMP, ".sysprom.md"), "");
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".sysprom.md"));
+	});
+
+	it("finds .sysprom/ directory", () => {
+		mkdirSync(join(TMP, ".sysprom"));
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".sysprom"));
+	});
+
+	it("prefers .spm.json over .sysprom.json", () => {
+		writeFileSync(join(TMP, ".spm.json"), "{}");
+		writeFileSync(join(TMP, ".sysprom.json"), "{}");
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".spm.json"));
+	});
+
+	it("finds glob match *.sysprom.json", () => {
+		writeFileSync(join(TMP, "project.sysprom.json"), "{}");
+		assert.equal(
+			resolveInput(undefined, TMP),
+			join(TMP, "project.sysprom.json"),
+		);
+	});
+
+	// Case-insensitive matching
+	it("finds .SPM.json (case-insensitive)", () => {
+		writeFileSync(join(TMP, ".SPM.json"), "{}");
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".SPM.json"));
+	});
+
+	it("finds .SysProM.json (case-insensitive)", () => {
+		writeFileSync(join(TMP, ".SysProM.json"), "{}");
+		assert.equal(
+			resolveInput(undefined, TMP),
+			join(TMP, ".SysProM.json"),
+		);
+	});
+
+	it("finds Project.SPM.JSON (case-insensitive glob)", () => {
+		writeFileSync(join(TMP, "Project.SPM.JSON"), "{}");
+		assert.equal(
+			resolveInput(undefined, TMP),
+			join(TMP, "Project.SPM.JSON"),
+		);
+	});
+
+	it("finds .SYSPROM/ directory (case-insensitive)", () => {
+		mkdirSync(join(TMP, ".SYSPROM"));
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".SYSPROM"));
+	});
 });
