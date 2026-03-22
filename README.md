@@ -139,7 +139,11 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 | [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
 | [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
 | [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | | |
+| [GSD-2](https://github.com/gsd-build/gsd-2) | ✅ | 🔶 | ✅ | 🔶 | ✅ | 🔶 | ✅ | | | 🔶 | | ✅ | ✅ | ✅ |
 | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | ✅ | 🔶 | ✅ | ✅ | ✅ | | 🔶 | | | | | ✅ | ✅ | ✅ |
+| [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
+| [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
+| [Ouroboros](https://github.com/Q00/ouroboros) | ✅ | 🔶 | ✅ | ✅ | 🔶 | ✅ | | | ✅ | 🔶 | | 🔶 | ✅ | 🔶 |
 | [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | | ✅ | ✅ | ✅ |
 | **SysProM** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🔶 | | 🔶 | ✅ | ✅ | ✅ | ✅ |
 
