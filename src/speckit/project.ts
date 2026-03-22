@@ -33,6 +33,8 @@ export interface SpecKitFeature {
 /**
  * Detect Spec-Kit project structure from a directory.
  * Looks for .specify/ and specs/ subdirectories.
+ * @param dir - Directory to scan.
+ * @returns Detected project structure.
  */
 export function detectSpecKitProject(dir: string): SpecKitProject {
 	const specifyDir = checkDir(join(dir, ".specify"));
@@ -63,6 +65,8 @@ export function detectSpecKitProject(dir: string): SpecKitProject {
 
 /**
  * List all features in the specs/ directory, sorted by number.
+ * @param project - The detected project.
+ * @returns Sorted list of features.
  */
 export function listFeatures(project: SpecKitProject): SpecKitFeature[] {
 	if (!project.specsDir) {
@@ -103,6 +107,9 @@ export function listFeatures(project: SpecKitProject): SpecKitFeature[] {
 /**
  * Get a specific feature by number or name.
  * Matches "001", "001-feature-name", or "feature-name".
+ * @param project - The detected project.
+ * @param idOrName - Feature ID, number, or name.
+ * @returns The matching feature, or null.
  */
 export function getFeature(
 	project: SpecKitProject,
@@ -128,6 +135,8 @@ export function getFeature(
 
 /**
  * Resolve the constitution.md file, checking .specify/memory/ first, then root.
+ * @param project - The detected project.
+ * @returns Path to constitution.md, or null.
  */
 export function resolveConstitution(project: SpecKitProject): string | null {
 	return project.constitutionPath;
@@ -135,6 +144,8 @@ export function resolveConstitution(project: SpecKitProject): string | null {
 
 /**
  * Check if a directory exists, return path or null.
+ * @param path - Path to check.
+ * @returns The path if it exists as a directory, or null.
  */
 function checkDir(path: string): string | null {
 	try {
@@ -147,6 +158,9 @@ function checkDir(path: string): string | null {
 
 /**
  * Parse a feature directory and extract metadata and file paths.
+ * @param dir - Directory to search.
+ * @param dirName - Subdirectory name pattern.
+ * @returns Array of matching directory paths.
  */
 function parseFeatureDirectory(
 	dir: string,
@@ -180,6 +194,9 @@ function parseFeatureDirectory(
 
 /**
  * Check if a file exists in a directory, return path or null.
+ * @param dir - Directory to search.
+ * @param filename - File name to find.
+ * @returns Array of matching file paths.
  */
 function checkFile(dir: string, filename: string): string | null {
 	const path = join(dir, filename);

@@ -38,6 +38,8 @@ interface CheckboxItem {
 
 /**
  * Parse markdown content into a hierarchical section tree by heading level.
+ * @param body - Markdown body text.
+ * @returns The result.
  */
 function parseSections(body: string): Section[] {
 	const lines = body.split("\n");
@@ -87,6 +89,8 @@ function parseSections(body: string): Section[] {
 
 /**
  * Extract bold key-value pairs from markdown like "**Key**: value" or "**Key**: value text".
+ * @param content - Markdown file content.
+ * @returns The result.
  */
 function parseFrontMatterish(content: string): Record<string, string> {
 	const result: Record<string, string> = {};
@@ -105,6 +109,8 @@ function parseFrontMatterish(content: string): Record<string, string> {
 
 /**
  * Parse checkbox lines like "- [x] ID text" or "- [ ] ID text".
+ * @param body - Markdown body text.
+ * @returns The result.
  */
 function parseCheckboxes(body: string): CheckboxItem[] {
 	const items: CheckboxItem[] = [];
@@ -129,6 +135,8 @@ function parseCheckboxes(body: string): CheckboxItem[] {
 
 /**
  * Flatten all sections in the tree into a single array for easier searching.
+ * @param sections - Parsed section tree.
+ * @returns The result.
  */
 function flattenSections(sections: Section[]): Section[] {
 	const result: Section[] = [];
@@ -142,6 +150,9 @@ function flattenSections(sections: Section[]): Section[] {
 
 /**
  * Find the first section whose heading matches a predicate (searches entire tree).
+ * @param sections - Parsed section tree.
+ * @param predicate - Filter function.
+ * @returns The result.
  */
 function findSection(
 	sections: Section[],
@@ -152,6 +163,8 @@ function findSection(
 
 /**
  * Convert status-like strings to NodeStatus. Recognizes common spec-kit patterns.
+ * @param value - Raw status string.
+ * @returns The result.
  */
 function mapStatusValue(value: string): NodeStatus {
 	const lower = value.toLowerCase().trim();
@@ -179,6 +192,9 @@ function mapStatusValue(value: string): NodeStatus {
 
 /**
  * Extract a single line value from body text (e.g., "**Created**: 2025-01-01").
+ * @param body - Markdown body text.
+ * @param key - Front-matter key to extract.
+ * @returns The result.
  */
 function extractValue(body: string, key: string): string | undefined {
 	const pattern = new RegExp(`^\\*\\*${key}\\*\\*:\\s*(.+)$`, "m");
@@ -190,7 +206,12 @@ function extractValue(body: string, key: string): string | undefined {
 // constitution.md parser
 // ---------------------------------------------------------------------------
 
-/** Parse a Spec-Kit constitution file into SysProM nodes (principles and invariants) and relationships. */
+/**
+ * Parse a Spec-Kit constitution file into SysProM nodes (principles and invariants) and relationships.
+ * @param content - Markdown file content.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @returns The result.
+ */
 export function parseConstitution(
 	content: string,
 	idPrefix: string,
@@ -300,7 +321,12 @@ export function parseConstitution(
 // spec.md parser
 // ---------------------------------------------------------------------------
 
-/** Parse a Spec-Kit specification file into SysProM nodes (user stories, functional requirements, acceptance criteria). */
+/**
+ * Parse a Spec-Kit specification file into SysProM nodes (user stories, functional requirements, acceptance criteria).
+ * @param content - Markdown file content.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @returns The result.
+ */
 export function parseSpec(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -513,7 +539,12 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
 // plan.md parser
 // ---------------------------------------------------------------------------
 
-/** Parse a Spec-Kit plan file into SysProM nodes (phases, milestones) and relationships. */
+/**
+ * Parse a Spec-Kit plan file into SysProM nodes (phases, milestones) and relationships.
+ * @param content - Markdown file content.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @returns The result.
+ */
 export function parsePlan(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -619,7 +650,12 @@ export function parsePlan(content: string, idPrefix: string): ParseResult {
 // tasks.md parser
 // ---------------------------------------------------------------------------
 
-/** Parse a Spec-Kit tasks file into SysProM change nodes with task plans. */
+/**
+ * Parse a Spec-Kit tasks file into SysProM change nodes with task plans.
+ * @param content - Markdown file content.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @returns The result.
+ */
 export function parseTasks(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -746,7 +782,12 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
 // checklist.md parser
 // ---------------------------------------------------------------------------
 
-/** Parse a Spec-Kit checklist file into SysProM gate nodes with task plans. */
+/**
+ * Parse a Spec-Kit checklist file into SysProM gate nodes with task plans.
+ * @param content - Markdown file content.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @returns The result.
+ */
 export function parseChecklist(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -807,7 +848,13 @@ export function parseChecklist(content: string, idPrefix: string): ParseResult {
 // Full feature directory parser
 // ---------------------------------------------------------------------------
 
-/** Parse an entire Spec-Kit feature directory into a SysProM document, combining constitution, spec, plan, tasks, and checklist. */
+/**
+ * Parse an entire Spec-Kit feature directory into a SysProM document, combining constitution, spec, plan, tasks, and checklist.
+ * @param featureDir - Path to Spec-Kit feature directory.
+ * @param idPrefix - ID prefix for generated nodes.
+ * @param constitutionPath - Path to constitution.md, or undefined.
+ * @returns The parsed SysProM document.
+ */
 export function parseSpecKitFeature(
 	featureDir: string,
 	idPrefix: string,

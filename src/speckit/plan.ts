@@ -54,6 +54,9 @@ export interface TaskCount {
 
 /**
  * Find a single node by ID, or null if not found.
+ * @param doc - The SysProM document.
+ * @param id - Node ID to find.
+ * @returns The result.
  */
 function findNode(doc: SysProMDocument, id: string): Node | null {
 	return doc.nodes.find((n) => n.id === id) ?? null;
@@ -61,6 +64,9 @@ function findNode(doc: SysProMDocument, id: string): Node | null {
 
 /**
  * Find a single node by ID in a subsystem, or null if not found.
+ * @param subsystem - The subsystem document.
+ * @param id - Node ID to find.
+ * @returns The result.
  */
 function findNodeInSubsystem(
 	subsystem: SysProMDocument | undefined,
@@ -72,6 +78,9 @@ function findNodeInSubsystem(
 
 /**
  * Find all nodes of a specific type.
+ * @param doc - The SysProM document.
+ * @param type - Node type to filter by.
+ * @returns The result.
  */
 function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 	return doc.nodes.filter((n) => n.type === type);
@@ -79,6 +88,9 @@ function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 
 /**
  * Find all nodes of a specific type in a subsystem.
+ * @param subsystem - The subsystem document.
+ * @param type - Node type to filter by.
+ * @returns The result.
  */
 function findNodesByTypeInSubsystem(
 	subsystem: SysProMDocument | undefined,
@@ -90,6 +102,10 @@ function findNodesByTypeInSubsystem(
 
 /**
  * Find relationships from a source node to nodes of a target type (within a subsystem).
+ * @param subsystem - The subsystem document.
+ * @param fromId - Source node ID.
+ * @param relationType - Relationship type filter.
+ * @returns The result.
  */
 function findRelationshipsFrom(
 	subsystem: SysProMDocument | undefined,
@@ -106,6 +122,10 @@ function findRelationshipsFrom(
 
 /**
  * Find relationships to a target node (within a subsystem).
+ * @param subsystem - The subsystem document.
+ * @param toId - Target node ID.
+ * @param relationType - Relationship type filter.
+ * @returns The result.
  */
 function findRelationshipsTo(
 	subsystem: SysProMDocument | undefined,
@@ -123,6 +143,8 @@ function findRelationshipsTo(
 /**
  * Detect if a text contains non-placeholder acceptance criteria.
  * Looks for GIVEN/WHEN/THEN patterns (case-insensitive).
+ * @param description - Task description text.
+ * @returns The result.
  */
 function hasAcceptanceCriteria(
 	description: string | string[] | undefined,
@@ -134,6 +156,9 @@ function hasAcceptanceCriteria(
 
 /**
  * Sort change nodes topologically using must_follow relationships.
+ * @param subsystem - The subsystem document.
+ * @param changeNodes - Array of change nodes.
+ * @returns The result.
  */
 function sortChangesByOrder(
 	subsystem: SysProMDocument | undefined,
@@ -204,6 +229,9 @@ function sortChangesByOrder(
  *   - {prefix}-CHK  governed_by  {prefix}-PROT-IMPL
  *
  * Tasks are not pre-scaffolded; use addTask to add them.
+ * @param prefix - Plan prefix.
+ * @param name - Name for the new item.
+ * @returns The result.
  */
 export function initDocument(prefix: string, name: string): SysProMDocument {
 	const nodes: Node[] = [
@@ -275,6 +303,11 @@ export function initDocument(prefix: string, name: string): SysProMDocument {
  *
  * Wires must_follow to previous sibling change node at the same level.
  * Default name: "Task N".
+ * @param doc - The SysProM document.
+ * @param prefix - Plan prefix.
+ * @param name - Name for the new item.
+ * @param parentId - Parent task ID.
+ * @returns The result.
  */
 export function addTask(
 	doc: SysProMDocument,
@@ -348,6 +381,12 @@ export function addTask(
 
 /**
  * Helper function to recursively add a task to a parent change node's subsystem.
+ * @param doc - The SysProM document.
+ * @param protImpl - Implementation protocol node.
+ * @param prefix - Plan prefix.
+ * @param parentId - Parent task ID.
+ * @param name - Name for the new item.
+ * @returns The result.
  */
 function addTaskToParent(
 	doc: SysProMDocument,
@@ -510,6 +549,8 @@ function addTaskToParent(
  *   - All items in node.plan must have done === true AND at least one item must exist
  * If subsystem has change children:
  *   - All children must be recursively done AND own plan items (if any) must be done
+ * @param node - The node to check.
+ * @returns The result.
  */
 export function isTaskDone(node: Node): boolean {
 	// If the node has a subsystem with change children, check those recursively
@@ -546,6 +587,8 @@ export function isTaskDone(node: Node): boolean {
  *
  * Sums plan[] items from this node and recursively from all change nodes in
  * subsystem (and their subsystems).
+ * @param node - The node to check.
+ * @returns The result.
  */
 export function countTasks(node: Node): TaskCount {
 	let total = 0;
@@ -578,6 +621,9 @@ export function countTasks(node: Node): TaskCount {
 /**
  * Inspect a document and return workflow completeness for a given prefix.
  * Never throws — missing nodes are reported as "not defined".
+ * @param doc - The SysProM document.
+ * @param prefix - Plan prefix.
+ * @returns The result.
  */
 export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
 	const constitution = findNode(doc, `${prefix}-CONST`);
@@ -687,6 +733,9 @@ export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
 /**
  * Return per-task completion data.
  * Tasks (change nodes) are discovered from PROT-IMPL.subsystem, sorted topologically.
+ * @param doc - The SysProM document.
+ * @param prefix - Plan prefix.
+ * @returns The result.
  */
 export function planProgress(
 	doc: SysProMDocument,
@@ -741,6 +790,10 @@ export function planProgress(
  *
  * Additionally for phase N > 1:
  *   - All tasks in phase N-1 must be done
+ * @param doc - The SysProM document.
+ * @param prefix - Plan prefix.
+ * @param phase - Phase number (1-indexed).
+ * @returns Gate check result with readiness flag and issues.
  */
 export function checkGate(
 	doc: SysProMDocument,

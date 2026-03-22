@@ -9,6 +9,9 @@ import { textToString } from "../text.js";
 
 /**
  * Find a single node by ID, or null if not found.
+ * @param doc - The document to search.
+ * @param id - The node ID to find.
+ * @returns The matching node, or null.
  */
 function findNode(doc: SysProMDocument, id: string): Node | null {
 	return doc.nodes.find((n) => n.id === id) ?? null;
@@ -16,6 +19,9 @@ function findNode(doc: SysProMDocument, id: string): Node | null {
 
 /**
  * Find all nodes of a specific type.
+ * @param doc - The document to search.
+ * @param type - The node type to filter by.
+ * @returns Matching nodes.
  */
 function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 	return doc.nodes.filter((n) => n.type === type);
@@ -23,6 +29,10 @@ function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 
 /**
  * Find relationships from a source node to nodes of a target type.
+ * @param doc - The document to search.
+ * @param fromId - Source node ID.
+ * @param relationType - Optional relationship type filter.
+ * @returns Matching relationships.
  */
 function findRelationshipsFrom(
 	doc: SysProMDocument,
@@ -38,6 +48,10 @@ function findRelationshipsFrom(
 
 /**
  * Find relationships to a target node.
+ * @param doc - The document to search.
+ * @param toId - Target node ID.
+ * @param relationType - Optional relationship type filter.
+ * @returns Matching relationships.
  */
 function findRelationshipsTo(
 	doc: SysProMDocument,
@@ -54,6 +68,8 @@ function findRelationshipsTo(
 /**
  * Extract priority from a node's name, description, or lifecycle fields.
  * Looks for patterns like "P1", "P2", "Priority: P1", etc.
+ * @param node - The node to extract priority from.
+ * @returns Priority string (e.g. "P1").
  */
 function extractPriority(node: Node): string {
 	const text = [
@@ -70,6 +86,8 @@ function extractPriority(node: Node): string {
 
 /**
  * Extract numeric suffix from an ID (e.g., "PREFIX-SPEC-001" -> "001").
+ * @param id - The node ID.
+ * @returns The numeric suffix.
  */
 function getIdSuffix(id: string): string {
 	const parts = id.split("-");
@@ -78,6 +96,8 @@ function getIdSuffix(id: string): string {
 
 /**
  * Parse tasks from a change node's plan array.
+ * @param node - The change node.
+ * @returns Array of task descriptions and done flags.
  */
 function parseTasks(node: Node): { description: string; done: boolean }[] {
 	return (node.plan ?? []).map((task) => ({
@@ -88,6 +108,8 @@ function parseTasks(node: Node): { description: string; done: boolean }[] {
 
 /**
  * Format the status for spec output: "proposed" -> "Draft", etc.
+ * @param status - The node status string.
+ * @returns Formatted status label.
  */
 function formatStatus(status?: string): string {
 	if (!status) return "Draft";
@@ -103,7 +125,12 @@ function formatStatus(status?: string): string {
 // generate Constitution
 // ============================================================================
 
-/** Generate a Spec-Kit constitution file from a SysProM document's principles and invariants. */
+/**
+ * Generate a Spec-Kit constitution file from a SysProM document's principles and invariants.
+ * @param doc - The SysProM document.
+ * @param prefix - ID prefix identifying nodes to include.
+ * @returns The generated markdown.
+ */
 export function generateConstitution(
 	doc: SysProMDocument,
 	prefix: string,
@@ -192,7 +219,12 @@ export function generateConstitution(
 // generateSpec
 // ============================================================================
 
-/** Generate a Spec-Kit specification file from a SysProM document's user stories, FRs, and acceptance criteria. */
+/**
+ * Generate a Spec-Kit specification file from a SysProM document's user stories, FRs, and acceptance criteria.
+ * @param doc - The SysProM document.
+ * @param prefix - ID prefix identifying nodes to include.
+ * @returns The generated markdown.
+ */
 export function generateSpec(doc: SysProMDocument, prefix: string): string {
 	const specId = `${prefix}-SPEC`;
 	const spec = findNode(doc, specId);
@@ -332,7 +364,12 @@ export function generateSpec(doc: SysProMDocument, prefix: string): string {
 // generatePlan
 // ============================================================================
 
-/** Generate a Spec-Kit plan file from a SysProM document's phases and milestones. */
+/**
+ * Generate a Spec-Kit plan file from a SysProM document's phases and milestones.
+ * @param doc - The SysProM document.
+ * @param prefix - ID prefix identifying nodes to include.
+ * @returns The generated markdown.
+ */
 export function generatePlan(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
 	const protocol = findNode(doc, implProtocolId);
@@ -390,7 +427,12 @@ export function generatePlan(doc: SysProMDocument, prefix: string): string {
 // generateTasks
 // ============================================================================
 
-/** Generate a Spec-Kit tasks file from a SysProM document's change nodes. */
+/**
+ * Generate a Spec-Kit tasks file from a SysProM document's change nodes.
+ * @param doc - The SysProM document.
+ * @param prefix - ID prefix identifying nodes to include.
+ * @returns The generated markdown.
+ */
 export function generateTasks(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
 	const protocol = findNode(doc, implProtocolId);
@@ -580,7 +622,12 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 // generateChecklist
 // ============================================================================
 
-/** Generate a Spec-Kit checklist file from a SysProM document's gate nodes. */
+/**
+ * Generate a Spec-Kit checklist file from a SysProM document's gate nodes.
+ * @param doc - The SysProM document.
+ * @param prefix - ID prefix identifying nodes to include.
+ * @returns The generated markdown.
+ */
 export function generateChecklist(
 	doc: SysProMDocument,
 	prefix: string,
@@ -648,7 +695,12 @@ export function generateChecklist(
 // generateSpecKitProject
 // ============================================================================
 
-/** Generate a complete Spec-Kit project directory from a SysProM document — constitution, spec, plan, tasks, and checklist files. */
+/**
+ * Generate a complete Spec-Kit project directory from a SysProM document — constitution, spec, plan, tasks, and checklist files.
+ * @param doc - The SysProM document.
+ * @param outputDir - Output directory path.
+ * @param prefix - ID prefix identifying nodes to include.
+ */
 export function generateSpecKitProject(
 	doc: SysProMDocument,
 	outputDir: string,
