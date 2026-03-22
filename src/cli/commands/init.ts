@@ -1,56 +1,92 @@
 import * as z from "zod";
-import { writeFileSync, existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, statSync } from "node:fs";
+import { resolve, join } from "node:path";
 import type { CommandDef } from "../define-command.js";
-import { canonicalise } from "../../canonical-json.js";
 import { initDocumentOp } from "../../operations/index.js";
+import { saveDocument, type Format } from "../../io.js";
 
-interface Args {
-	output: string;
-}
-interface Opts {
-	title?: string;
-	scope?: string;
+const formatChoices = ["json", "md", "dir"] as const;
+type InitFormat = (typeof formatChoices)[number];
+
+function formatToIoFormat(fmt: InitFormat): Format {
+	switch (fmt) {
+		case "json":
+			return "json";
+		case "md":
+			return "single-md";
+		case "dir":
+			return "multi-md";
+	}
 }
 
-function isArgs(arg: unknown): arg is Args {
-	return typeof arg === "object" && arg !== null && "output" in arg;
+const suffixMap = {
+	json: ".spm.json",
+	md: ".spm.md",
+	dir: ".spm",
+} as const;
+
+function resolveInitTarget(
+	pathArg: string,
+	format?: InitFormat,
+): { outputPath: string; ioFormat: Format } {
+	const resolved = resolve(pathArg);
+	const isExistingDir =
+		existsSync(resolved) && statSync(resolved).isDirectory();
+
+	if (isExistingDir) {
+		const fmt = format ?? "json";
+		return {
+			outputPath: join(resolved, suffixMap[fmt]),
+			ioFormat: formatToIoFormat(fmt),
+		};
+	}
+
+	const fmt = format ?? "dir";
+	return {
+		outputPath: `${resolved}${suffixMap[fmt]}`,
+		ioFormat: formatToIoFormat(fmt),
+	};
 }
 
-function isOpts(opt: unknown): opt is Opts {
-	return typeof opt === "object" && opt !== null;
-}
+const argsSchema = z.object({
+	path: z
+		.string()
+		.optional()
+		.default(".")
+		.describe("Target path (default: current directory)"),
+});
 
-export const initCommand: CommandDef = {
+const optsSchema = z
+	.object({
+		title: z.string().optional().describe("Document title"),
+		scope: z.string().optional().describe("Document scope"),
+		format: z
+			.enum(formatChoices)
+			.optional()
+			.describe("Output format: json, md, or dir"),
+	})
+	.strict();
+
+export const initCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	name: "init",
 	description: initDocumentOp.def.description,
 	apiLink: initDocumentOp.def.name,
-	args: z.object({
-		output: z.string().describe("Output file path"),
-	}),
-	opts: z
-		.object({
-			title: z.string().optional().describe("Document title"),
-			scope: z.string().optional().describe("Document scope"),
-		})
-		.strict(),
-	action(args: unknown, opts: unknown) {
-		if (!isArgs(args)) throw new Error("Invalid args");
-		if (!isOpts(opts)) throw new Error("Invalid opts");
-		const typedArgs = args;
-		const typedOpts = opts;
-		const outputPath = resolve(typedArgs.output);
+	args: argsSchema,
+	opts: optsSchema,
+	action(args, opts) {
+		const { outputPath, ioFormat } = resolveInitTarget(args.path, opts.format);
+
 		if (existsSync(outputPath)) {
-			console.error(`File already exists: ${outputPath}`);
+			console.error(`Already exists: ${outputPath}`);
 			process.exit(1);
 		}
 
 		const doc = initDocumentOp({
-			title: typedOpts.title ?? "Untitled",
-			scope: typedOpts.scope ?? "system",
+			title: opts.title ?? "Untitled",
+			scope: opts.scope ?? "system",
 		});
 
-		writeFileSync(outputPath, canonicalise(doc, { indent: "\t" }) + "\n");
+		saveDocument(doc, ioFormat, outputPath);
 		console.log(`Created ${outputPath}`);
 	},
 };
