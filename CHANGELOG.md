@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/ExaDev/SysProM/compare/v1.0.1...v1.0.2) (2026-03-22)
+
+### Bug Fixes
+
+* **ci:** remove registry-url to fix OIDC npm publishing ([8821cc9](https://github.com/ExaDev/SysProM/commit/8821cc96919042bc90a67b49ae8a5b6142d3deff))
+
 ## [1.0.1](https://github.com/ExaDev/SysProM/compare/v1.0.0...v1.0.1) (2026-03-22)
 
 ### Code Refactoring
