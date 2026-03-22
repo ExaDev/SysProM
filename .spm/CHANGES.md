@@ -675,6 +675,8 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: D32
 
+- Status: introduced
+
 #### Plan
 
 - [ ] Add @modelcontextprotocol/sdk as dependency
