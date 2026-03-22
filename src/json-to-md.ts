@@ -434,6 +434,11 @@ export interface ConvertOptions {
  * Convert a SysProM document to a single Markdown string.
  * @param doc - The SysProM document to convert.
  * @returns The Markdown representation.
+ * @example
+ * ```ts
+ * const md = jsonToMarkdownSingle(doc);
+ * writeFileSync("output.spm.md", md);
+ * ```
  */
 export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 	const fromIdx = indexRelationshipsFrom(doc.relationships ?? []);
@@ -497,6 +502,10 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
  * Convert a SysProM document to a multi-document Markdown folder.
  * @param doc - The SysProM document to convert.
  * @param outDir - Output directory path.
+ * @example
+ * ```ts
+ * jsonToMarkdownMultiDoc(doc, "./SysProM");
+ * ```
  */
 export function jsonToMarkdownMultiDoc(
 	doc: SysProMDocument,
@@ -578,6 +587,10 @@ export function jsonToMarkdownMultiDoc(
  * @param doc - The SysProM document to convert.
  * @param output - Output file or directory path.
  * @param options - Conversion options specifying single-file or multi-doc form.
+ * @example
+ * ```ts
+ * jsonToMarkdown(doc, "output.spm.md", { form: "single-file" });
+ * ```
  */
 export function jsonToMarkdown(
 	doc: SysProMDocument,

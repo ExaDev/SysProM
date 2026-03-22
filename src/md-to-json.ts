@@ -508,6 +508,10 @@ function parseRelationshipTable(body: string): Relationship[] {
  * Parse a single Markdown file into a SysProM document.
  * @param content - The Markdown content to parse.
  * @returns The parsed SysProM document.
+ * @example
+ * ```ts
+ * const doc = markdownSingleToJson(readFileSync("doc.spm.md", "utf8"));
+ * ```
  */
 export function markdownSingleToJson(content: string): SysProMDocument {
 	const { front, body } = parseFrontMatter(content);
@@ -545,6 +549,10 @@ export function markdownSingleToJson(content: string): SysProMDocument {
  * Parse a multi-document Markdown folder into a SysProM document.
  * @param dir - Path to the directory containing Markdown files.
  * @returns The parsed SysProM document.
+ * @example
+ * ```ts
+ * const doc = markdownMultiDocToJson("./SysProM");
+ * ```
  */
 export function markdownMultiDocToJson(dir: string): SysProMDocument {
 	const readmeContent = readFileSync(join(dir, "README.md"), "utf8");
@@ -631,6 +639,10 @@ export function markdownMultiDocToJson(dir: string): SysProMDocument {
  * Parse Markdown into a SysProM document, auto-detecting single-file or multi-doc format.
  * @param input - File path or directory path to parse.
  * @returns The parsed SysProM document.
+ * @example
+ * ```ts
+ * const doc = markdownToJson("./SysProM");
+ * ```
  */
 export function markdownToJson(input: string): SysProMDocument {
 	if (statSync(input).isDirectory()) {
