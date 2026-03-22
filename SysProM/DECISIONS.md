@@ -638,3 +638,26 @@ Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, redu
 - [ ] accepted (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### D26 — Auto-Generate Node IDs
+
+Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: Adding nodes via the CLI required manually specifying IDs like D26 or CH24. This is tedious and error-prone, especially when the user must check existing IDs to avoid collisions.
+
+Options:
+- D26-OPT-A: Auto-generate IDs from NODE_ID_PREFIX map + highest existing number. Make --id optional.
+- D26-OPT-B: Keep --id required. Users must manually track IDs.
+
+Chosen: D26-OPT-A
+
+Rationale: The existing ID convention (D for decisions, CH for changes, INV for invariants, etc.) is consistent enough to derive automatically. The nextId function scans existing nodes for the highest number with that prefix and increments.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
+

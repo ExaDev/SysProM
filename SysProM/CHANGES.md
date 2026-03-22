@@ -550,3 +550,16 @@ Update package.json entry points to reference compiled JavaScript in dist/. Move
 - [ ] implemented (2026-03-22)
 - [ ] proposed (2026-03-22)
 
+### CH24 — Add Auto-ID Generation to CLI
+
+Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add command — auto-generates from type prefix + next available number.
+
+- Implements: D26
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
+

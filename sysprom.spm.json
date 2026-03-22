@@ -3182,6 +3182,41 @@
 			"name": "Switch to Compiled Distribution",
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "Adding nodes via the CLI required manually specifying IDs like D26 or CH24. This is tedious and error-prone, especially when the user must check existing IDs to avoid collisions.",
+			"description": "Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.",
+			"id": "D26",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Auto-Generate Node IDs",
+			"options": [
+				{
+					"description": "Auto-generate IDs from NODE_ID_PREFIX map + highest existing number. Make --id optional.",
+					"id": "D26-OPT-A"
+				},
+				{
+					"description": "Keep --id required. Users must manually track IDs.",
+					"id": "D26-OPT-B"
+				}
+			],
+			"rationale": "The existing ID convention (D for decisions, CH for changes, INV for invariants, etc.) is consistent enough to derive automatically. The nextId function scans existing nodes for the highest number with that prefix and increments.",
+			"selected": "D26-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add command — auto-generates from type prefix + next available number.",
+			"id": "CH24",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Add Auto-ID Generation to CLI",
+			"status": "complete",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4118,6 +4153,16 @@
 		},
 		{
 			"from": "D25",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH24",
+			"to": "D26",
+			"type": "implements"
+		},
+		{
+			"from": "D26",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
