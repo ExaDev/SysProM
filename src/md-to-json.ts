@@ -1,16 +1,20 @@
 import * as z from "zod";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
-import type { SysProMDocument, Node, Relationship, ExternalReference, Text, NodeType, RelationshipType, NodeStatus, ExternalReferenceRole } from "./schema.js";
 import {
+  type SysProMDocument,
+  type Node,
+  type Relationship,
+  type ExternalReference,
+  type Text,
   NODE_FILE_MAP,
   NODE_LABEL_TO_TYPE,
   RELATIONSHIP_TYPE_LABELS,
   RELATIONSHIP_LABEL_TO_TYPE,
-  nodeType,
-  relationshipType,
-  nodeStatus,
-  externalReferenceRole,
+  NodeType,
+  RelationshipType,
+  NodeStatus,
+  ExternalReferenceRole,
 } from "./schema.js";
 
 const LABEL_TO_TYPE: Record<string, string> = Object.fromEntries(
@@ -21,25 +25,25 @@ const operationType = z.enum(["add", "update", "remove", "link"]);
 type OperationType = z.infer<typeof operationType>;
 
 function parseNodeType(s: string): NodeType {
-  const result = nodeType.safeParse(s);
+  const result = NodeType.safeParse(s);
   if (!result.success) throw new Error(`Unknown node type: ${s}`);
   return result.data;
 }
 
 function parseRelType(s: string): RelationshipType {
-  const result = relationshipType.safeParse(s);
+  const result = RelationshipType.safeParse(s);
   if (!result.success) throw new Error(`Unknown relationship type: ${s}`);
   return result.data;
 }
 
 function parseNodeStatus(s: string): NodeStatus {
-  const result = nodeStatus.safeParse(s);
+  const result = NodeStatus.safeParse(s);
   if (!result.success) throw new Error(`Unknown node status: ${s}`);
   return result.data;
 }
 
 function parseExtRefRole(s: string): ExternalReferenceRole {
-  const result = externalReferenceRole.safeParse(s);
+  const result = ExternalReferenceRole.safeParse(s);
   if (!result.success) throw new Error(`Unknown external reference role: ${s}`);
   return result.data;
 }

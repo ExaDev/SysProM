@@ -8,8 +8,8 @@ import {
   type Text,
   NODE_FILE_MAP,
   NODE_TYPE_LABELS,
-  nodeType,
-  relationshipType,
+  NodeType,
+  RelationshipType,
   RELATIONSHIP_TYPE_LABELS,
 } from "./schema.js";
 
@@ -86,7 +86,7 @@ function renderNodeRelationships(
 
   const lines: string[] = [];
   for (const [type, targets] of grouped) {
-    const label = relationshipType.is(type) ? RELATIONSHIP_TYPE_LABELS[type] : type;
+    const label = RelationshipType.is(type) ? RELATIONSHIP_TYPE_LABELS[type] : type;
     if (targets.length === 1) {
       lines.push(`- ${label}: ${targets[0]}`);
     } else {
@@ -261,7 +261,7 @@ function renderNodesGrouped(
     const matching = nodes.filter((n) => n.type === type);
     if (matching.length === 0) continue;
 
-    const label = nodeType.is(type) ? NODE_TYPE_LABELS[type] : type;
+    const label = NodeType.is(type) ? NODE_TYPE_LABELS[type] : type;
     lines.push(`${"#".repeat(headingLevel)} ${label}`);
     lines.push("");
 
@@ -504,7 +504,7 @@ export function jsonToMarkdownMultiDoc(
 
     // Auto-group when 2+ subsystems share the same type
     let parentDir = outDir;
-    if ((typeCounts.get(n.type) ?? 0) >= 2 && nodeType.is(n.type)) {
+    if ((typeCounts.get(n.type) ?? 0) >= 2 && NodeType.is(n.type)) {
       const groupLabel = NODE_TYPE_LABELS[n.type].toLowerCase().replace(/ /g, "-");
       parentDir = join(outDir, groupLabel);
       mkdirSync(parentDir, { recursive: true });

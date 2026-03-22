@@ -1,4 +1,4 @@
-import { nodeType, nodeStatus, type Node } from "../schema.js";
+import { NodeType, NodeStatus, type Node } from "../schema.js";
 import { addNode, nextId } from "../mutate.js";
 import { loadDocument, saveDocument } from "../io.js";
 import { jsonToMarkdownMultiDoc } from "../json-to-md.js";
@@ -37,7 +37,7 @@ export function run(args: string[]): void {
   const { doc, format, path } = loadDocument(args[0]);
   const type = args[1];
 
-  if (!nodeType.is(type)) {
+  if (!NodeType.is(type)) {
     console.error(`Unknown node type: ${type}`);
     process.exit(1);
   }
@@ -57,7 +57,7 @@ export function run(args: string[]): void {
 
   const status = parseFlag(args, "--status");
   if (status) {
-    if (!nodeStatus.is(status)) {
+    if (!NodeStatus.is(status)) {
       console.error(`Unknown status: ${status}`);
       process.exit(1);
     }

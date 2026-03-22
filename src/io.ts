@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { sysproMDocument, type SysProMDocument } from "./schema.js";
+import { SysProMDocument } from "./schema.js";
 import { markdownSingleToJson, markdownMultiDocToJson } from "./md-to-json.js";
 import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc } from "./json-to-md.js";
 import { canonicalise } from "./canonical-json.js";
@@ -34,7 +34,7 @@ export function loadDocument(input: string): LoadedDocument {
   switch (format) {
     case "json": {
       const raw: unknown = JSON.parse(readFileSync(path, "utf8"));
-      const result = sysproMDocument.safeParse(raw);
+      const result = SysProMDocument.safeParse(raw);
       if (!result.success) {
         throw new Error(
           `Invalid SysProM document:\n${result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")}`,

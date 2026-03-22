@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { sysproMDocument } from "../schema.js";
+import { SysProMDocument } from "../schema.js";
 import { jsonToMarkdown } from "../json-to-md.js";
 
 export function run(args: string[]): void {
@@ -18,8 +18,8 @@ export function run(args: string[]): void {
 
   const raw: unknown = JSON.parse(readFileSync(inputPath, "utf8"));
 
-  if (!sysproMDocument.is(raw)) {
-    const result = sysproMDocument.safeParse(raw);
+  if (!SysProMDocument.is(raw)) {
+    const result = SysProMDocument.safeParse(raw);
     if (!result.success) {
       console.error("Input is not a valid SysProM document:");
       for (const issue of result.error.issues) {

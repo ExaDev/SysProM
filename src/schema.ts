@@ -16,9 +16,9 @@ function defineSchema<T extends z.ZodType>(schema: T) {
 // Text type — allows a string or an array of lines
 // ---------------------------------------------------------------------------
 
-export const text = defineSchema(z.union([z.string(), z.array(z.string())]));
+export const Text = defineSchema(z.union([z.string(), z.array(z.string())]));
 
-export type Text = z.infer<typeof text>;
+export type Text = z.infer<typeof Text>;
 
 // ---------------------------------------------------------------------------
 // Extensible string types
@@ -83,8 +83,8 @@ const nodeTypeDef = labelledEnum({
   version: "Versions",
 });
 
-export const nodeType = nodeTypeDef.schema;
-export type NodeType = z.infer<typeof nodeType>;
+export const NodeType = nodeTypeDef.schema;
+export type NodeType = z.infer<typeof NodeType>;
 export const NODE_TYPE_LABELS = nodeTypeDef.labels;
 export const NODE_LABEL_TO_TYPE = nodeTypeDef.reverse;
 
@@ -111,8 +111,8 @@ export const NODE_STATUSES = [
   "deferred",
 ] as const;
 
-export const nodeStatus = defineSchema(z.enum(NODE_STATUSES));
-export type NodeStatus = z.infer<typeof nodeStatus>;
+export const NodeStatus = defineSchema(z.enum(NODE_STATUSES));
+export type NodeStatus = z.infer<typeof NodeStatus>;
 
 // ---------------------------------------------------------------------------
 // Relationship types
@@ -145,8 +145,8 @@ const relationshipTypeDef = labelledEnum({
   disables: "Disables",
 });
 
-export const relationshipType = relationshipTypeDef.schema;
-export type RelationshipType = z.infer<typeof relationshipType>;
+export const RelationshipType = relationshipTypeDef.schema;
+export type RelationshipType = z.infer<typeof RelationshipType>;
 export const RELATIONSHIP_TYPE_LABELS = relationshipTypeDef.labels;
 export const RELATIONSHIP_LABEL_TO_TYPE = relationshipTypeDef.reverse;
 
@@ -164,8 +164,8 @@ const externalReferenceRoleDef = labelledEnum({
   prior_art: "Prior art",
 });
 
-export const externalReferenceRole = externalReferenceRoleDef.schema;
-export type ExternalReferenceRole = z.infer<typeof externalReferenceRole>;
+export const ExternalReferenceRole = externalReferenceRoleDef.schema;
+export type ExternalReferenceRole = z.infer<typeof ExternalReferenceRole>;
 export const EXTERNAL_REFERENCE_ROLE_LABELS = externalReferenceRoleDef.labels;
 export const EXTERNAL_REFERENCE_LABEL_TO_ROLE = externalReferenceRoleDef.reverse;
 
@@ -173,54 +173,54 @@ export const EXTERNAL_REFERENCE_LABEL_TO_ROLE = externalReferenceRoleDef.reverse
 // Leaf schemas
 // ---------------------------------------------------------------------------
 
-export const option = defineSchema(
+export const Option = defineSchema(
   z
     .looseObject({
       id: z.string(),
-      description: text,
+      description: Text,
     })
     .describe("An alternative considered as part of a decision."),
 );
-export type Option = z.infer<typeof option>;
+export type Option = z.infer<typeof Option>;
 
-export const operation = defineSchema(
+export const Operation = defineSchema(
   z
     .looseObject({
       type: z.enum(["add", "update", "remove", "link"]),
       target: z.string().describe("ID of the affected node.").optional(),
-      description: text.optional(),
+      description: Text.optional(),
     })
     .describe("An atomic operation within a change."),
 );
-export type Operation = z.infer<typeof operation>;
+export type Operation = z.infer<typeof Operation>;
 
-export const task = defineSchema(
+export const Task = defineSchema(
   z
     .looseObject({
-      description: text,
+      description: Text,
       done: z.boolean().default(false).optional(),
     })
     .describe("A single task within a change's execution plan."),
 );
-export type Task = z.infer<typeof task>;
+export type Task = z.infer<typeof Task>;
 
-export const externalReference = defineSchema(
+export const ExternalReference = defineSchema(
   z
     .object({
-      role: externalReferenceRole,
+      role: ExternalReferenceRole,
       identifier: z
         .string()
         .describe(
           "Serialisation-specific identifier (URI, file path, DOI, etc.).",
         ),
-      description: text.optional(),
+      description: Text.optional(),
       node_id: z
         .string()
         .describe(
           "ID of the node this reference belongs to. Used when the reference is declared at graph level rather than inline on the node.",
         )
         .optional(),
-      internalised: text
+      internalised: Text
         .describe(
           "Inline content captured from the external resource. When present, the node is self-contained and does not depend on the external identifier being resolvable.",
         )
@@ -228,9 +228,9 @@ export const externalReference = defineSchema(
     })
     .describe("A reference to a resource outside the SysProM graph."),
 );
-export type ExternalReference = z.infer<typeof externalReference>;
+export type ExternalReference = z.infer<typeof ExternalReference>;
 
-export const metadata = defineSchema(
+export const Metadata = defineSchema(
   z
     .looseObject({
       title: z.string().optional(),
@@ -253,41 +253,41 @@ export const metadata = defineSchema(
       "Document-level metadata. Analogous to front matter in Markdown.",
     ),
 );
-export type Metadata = z.infer<typeof metadata>;
+export type Metadata = z.infer<typeof Metadata>;
 
-export const relationship = defineSchema(
+export const Relationship = defineSchema(
   z
     .looseObject({
       from: z.string().describe("Source node ID."),
       to: z.string().describe("Target node ID."),
-      type: relationshipType,
-      description: text.optional(),
+      type: RelationshipType,
+      description: Text.optional(),
     })
     .describe("A typed, directed connection between two nodes."),
 );
-export type Relationship = z.infer<typeof relationship>;
+export type Relationship = z.infer<typeof Relationship>;
 
 // ---------------------------------------------------------------------------
 // Recursive schemas — defined raw, then wrapped with defineSchema after both
 // exist so TypeScript can resolve the circular type inference.
 // ---------------------------------------------------------------------------
 
-const sysproMDocumentSchema = z
+const SysProMDocumentSchema = z
   .object({
     $schema: z
       .string()
       .describe("Schema URI for self-identification.")
       .optional(),
-    metadata: metadata.optional(),
-    get nodes(): z.ZodArray<typeof nodeSchema> {
-      return z.array(nodeSchema).describe("All nodes in the graph.");
+    metadata: Metadata.optional(),
+    get nodes(): z.ZodArray<typeof NodeSchema> {
+      return z.array(NodeSchema).describe("All nodes in the graph.");
     },
     relationships: z
-      .array(relationship)
+      .array(Relationship)
       .describe("Typed, directed connections between nodes.")
       .optional(),
     external_references: z
-      .array(externalReference)
+      .array(ExternalReference)
       .describe(
         "References to resources outside the graph, declared at system level.",
       )
@@ -300,31 +300,31 @@ const sysproMDocumentSchema = z
       "JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
   });
 
-const nodeSchema = z
+const NodeSchema = z
   .looseObject({
     id: z.string().describe("Unique identifier for this node."),
-    type: nodeType,
+    type: NodeType,
     name: z.string().describe("Human-readable name."),
-    description: text.optional(),
-    status: nodeStatus.optional(),
+    description: Text.optional(),
+    status: NodeStatus.optional(),
     lifecycle: z
       .record(z.string(), z.union([z.boolean(), z.string()]))
       .describe("Map of lifecycle state names to completion status. Values may be boolean or an ISO date string indicating when the state was reached.")
       .optional(),
-    context: text
+    context: Text
       .describe(
         "Background context explaining why this node exists or why a decision was needed.",
       )
       .optional(),
     options: z
-      .array(option)
+      .array(Option)
       .describe("Alternatives considered. Applicable to decision nodes.")
       .optional(),
     selected: z
       .string()
       .describe("ID of the chosen option. Applicable to decision nodes.")
       .optional(),
-    rationale: text
+    rationale: Text
       .describe("Reasoning for the choice. Applicable to decision nodes.")
       .optional(),
     scope: z
@@ -334,11 +334,11 @@ const nodeSchema = z
       )
       .optional(),
     operations: z
-      .array(operation)
+      .array(Operation)
       .describe("Operations performed. Applicable to change nodes.")
       .optional(),
     plan: z
-      .array(task)
+      .array(Task)
       .describe(
         "Execution plan as a sequence of tasks. Applicable to change nodes.",
       )
@@ -366,21 +366,21 @@ const nodeSchema = z
       )
       .optional(),
     external_references: z
-      .array(externalReference)
+      .array(ExternalReference)
       .describe("External resources related to this node.")
       .optional(),
-    get subsystem(): z.ZodOptional<typeof sysproMDocumentSchema> {
-      return sysproMDocumentSchema.optional();
+    get subsystem(): z.ZodOptional<typeof SysProMDocumentSchema> {
+      return SysProMDocumentSchema.optional();
     },
   })
   .describe("A uniquely identifiable entity within the system.");
 
 // Attach .is() type guards after both schemas are declared
-export const sysproMDocument = defineSchema(sysproMDocumentSchema);
-export type SysProMDocument = z.infer<typeof sysproMDocument>;
+export const SysProMDocument = defineSchema(SysProMDocumentSchema);
+export type SysProMDocument = z.infer<typeof SysProMDocument>;
 
-export const node = defineSchema(nodeSchema);
-export type Node = z.infer<typeof node>;
+export const Node = defineSchema(NodeSchema);
+export type Node = z.infer<typeof Node>;
 
 // ---------------------------------------------------------------------------
 // Domain constants
@@ -440,7 +440,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /** Generate the JSON Schema representation of the SysProM document schema. */
 export function toJSONSchema(): Record<string, unknown> {
-  const generated = z.toJSONSchema(sysproMDocument, {
+  const generated = z.toJSONSchema(SysProMDocument, {
     target: "draft-2020-12",
   });
 

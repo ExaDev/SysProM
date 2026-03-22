@@ -7,36 +7,21 @@
  * @packageDocumentation
  */
 
-// Schema types, validators, enums, labels
+// Schema types and validators (const and type share the same name)
 export {
-  // Types
-  type SysProMDocument,
-  type Node,
-  type Relationship,
-  type RelationshipType,
-  type NodeStatus,
-  type NodeType,
-  type Text,
-  type Option,
-  type Operation,
-  type Task,
-  type ExternalReference,
-  type ExternalReferenceRole,
-  type Metadata,
-  // Schemas with .is() type guards
-  sysproMDocument,
-  node,
-  relationship,
-  nodeType,
-  nodeStatus,
-  relationshipType,
-  text,
-  option,
-  operation,
-  task,
-  externalReference,
-  externalReferenceRole,
-  metadata,
+  SysProMDocument,
+  Node,
+  Relationship,
+  NodeType,
+  NodeStatus,
+  RelationshipType,
+  Text,
+  Option,
+  Operation,
+  Task,
+  ExternalReference,
+  ExternalReferenceRole,
+  Metadata,
   // Labels
   NODE_TYPE_LABELS,
   NODE_LABEL_TO_TYPE,

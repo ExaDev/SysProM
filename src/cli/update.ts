@@ -1,4 +1,4 @@
-import { relationshipType, type RelationshipType } from "../schema.js";
+import { RelationshipType } from "../schema.js";
 import {
   updateNode,
   addRelationship,
@@ -54,12 +54,12 @@ export function run(args: string[]): void {
       console.error("Usage: --add-rel <from> <type> <to>");
       process.exit(1);
     }
-    if (!relationshipType.is(typeStr)) {
+    if (!RelationshipType.is(typeStr)) {
       console.error(`Unknown relationship type: ${typeStr}`);
       process.exit(1);
     }
     // typeStr is now validated but TypeScript doesn't narrow it, so parse it
-    const type = relationshipType.parse(typeStr);
+    const type = RelationshipType.parse(typeStr);
     try {
       const newDoc = addRelationship(doc, { from, to, type });
 
@@ -96,12 +96,12 @@ export function run(args: string[]): void {
       console.error("Usage: --remove-rel <from> <type> <to>");
       process.exit(1);
     }
-    if (!relationshipType.is(typeStr)) {
+    if (!RelationshipType.is(typeStr)) {
       console.error(`Unknown relationship type: ${typeStr}`);
       process.exit(1);
     }
     // typeStr is now validated but TypeScript doesn't narrow it, so parse it
-    const type = relationshipType.parse(typeStr);
+    const type = RelationshipType.parse(typeStr);
     try {
       const newDoc = removeRelationship(doc, from, type, to);
 

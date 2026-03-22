@@ -1,8 +1,8 @@
 import {
-  nodeType,
-  nodeStatus,
-  relationshipType,
-  externalReferenceRole,
+  NodeType,
+  NodeStatus,
+  RelationshipType,
+  ExternalReferenceRole,
   type SysProMDocument,
 } from "./schema.js";
 
@@ -50,17 +50,17 @@ export function validate(doc: SysProMDocument): ValidationResult {
 
   // Valid node types and statuses
   for (const n of doc.nodes) {
-    if (!nodeType.is(n.type)) {
+    if (!NodeType.is(n.type)) {
       issues.push(`${n.id}: unknown node type '${n.type}'`);
     }
-    if (n.status && !nodeStatus.is(n.status)) {
+    if (n.status && !NodeStatus.is(n.status)) {
       issues.push(`${n.id}: unknown status '${n.status}'`);
     }
   }
 
   // Valid relationship types and references
   for (const r of doc.relationships ?? []) {
-    if (!relationshipType.is(r.type)) {
+    if (!RelationshipType.is(r.type)) {
       issues.push(
         `Relationship ${r.from} → ${r.to}: unknown type '${r.type}'`,
       );
@@ -75,7 +75,7 @@ export function validate(doc: SysProMDocument): ValidationResult {
 
   // Valid external reference roles
   for (const ref of doc.external_references ?? []) {
-    if (!externalReferenceRole.is(ref.role)) {
+    if (!ExternalReferenceRole.is(ref.role)) {
       issues.push(`External reference: unknown role '${ref.role}'`);
     }
   }

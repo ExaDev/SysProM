@@ -5,54 +5,53 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc, jsonToMarkdown } from "../src/json-to-md.js";
 import { markdownSingleToJson, markdownMultiDocToJson, markdownToJson } from "../src/md-to-json.js";
-import { sysproMDocument, node, text, relationship, externalReference, metadata, toJSONSchema } from "../src/schema.js";
+import { SysProMDocument, Node, Text, Relationship, ExternalReference, Metadata, toJSONSchema } from "../src/schema.js";
 import { canonicalise } from "../src/canonical-json.js";
 import { textToString, textToLines, textToMarkdown, markdownToText } from "../src/text.js";
-import type { SysProMDocument } from "../src/schema.js";
 
 // ---------------------------------------------------------------------------
 // schema.ts — .is() type guards
 // ---------------------------------------------------------------------------
 
 describe("schema .is() type guards", () => {
-  it("sysproMDocument.is() returns true for valid doc", () => {
-    assert.ok(sysproMDocument.is({ nodes: [{ id: "I1", type: "intent", name: "T" }] }));
+  it("SysProMDocument.is() returns true for valid doc", () => {
+    assert.ok(SysProMDocument.is({ nodes: [{ id: "I1", type: "intent", name: "T" }] }));
   });
 
-  it("sysproMDocument.is() returns false for invalid doc", () => {
-    assert.ok(!sysproMDocument.is({}));
-    assert.ok(!sysproMDocument.is("string"));
-    assert.ok(!sysproMDocument.is(null));
+  it("SysProMDocument.is() returns false for invalid doc", () => {
+    assert.ok(!SysProMDocument.is({}));
+    assert.ok(!SysProMDocument.is("string"));
+    assert.ok(!SysProMDocument.is(null));
   });
 
-  it("node.is() returns true for valid node", () => {
-    assert.ok(node.is({ id: "I1", type: "intent", name: "T" }));
+  it("Node.is() returns true for valid node", () => {
+    assert.ok(Node.is({ id: "I1", type: "intent", name: "T" }));
   });
 
-  it("node.is() returns false for invalid node", () => {
-    assert.ok(!node.is({ id: "I1" }));
-    assert.ok(!node.is(42));
+  it("Node.is() returns false for invalid node", () => {
+    assert.ok(!Node.is({ id: "I1" }));
+    assert.ok(!Node.is(42));
   });
 
-  it("text.is() works for string and array", () => {
-    assert.ok(text.is("hello"));
-    assert.ok(text.is(["a", "b"]));
-    assert.ok(!text.is(42));
+  it("Text.is() works for string and array", () => {
+    assert.ok(Text.is("hello"));
+    assert.ok(Text.is(["a", "b"]));
+    assert.ok(!Text.is(42));
   });
 
-  it("relationship.is() works", () => {
-    assert.ok(relationship.is({ from: "A", to: "B", type: "refines" }));
-    assert.ok(!relationship.is({ from: "A" }));
+  it("Relationship.is() works", () => {
+    assert.ok(Relationship.is({ from: "A", to: "B", type: "refines" }));
+    assert.ok(!Relationship.is({ from: "A" }));
   });
 
-  it("externalReference.is() works", () => {
-    assert.ok(externalReference.is({ role: "input", identifier: "x" }));
-    assert.ok(!externalReference.is({}));
+  it("ExternalReference.is() works", () => {
+    assert.ok(ExternalReference.is({ role: "input", identifier: "x" }));
+    assert.ok(!ExternalReference.is({}));
   });
 
-  it("metadata.is() works", () => {
-    assert.ok(metadata.is({ title: "T" }));
-    assert.ok(metadata.is({}));
+  it("Metadata.is() works", () => {
+    assert.ok(Metadata.is({ title: "T" }));
+    assert.ok(Metadata.is({}));
   });
 });
 
