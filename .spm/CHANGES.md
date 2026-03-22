@@ -659,13 +659,13 @@ Scope:
 #### Plan
 
 - [x] Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed
-- [ ] Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other
-- [ ] Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth
-- [ ] Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth
+- [x] Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other
+- [x] Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth
+- [x] Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth
 - [ ] Add --interactive flag: prompt the user to choose per-conflict when both sides have diverged
-- [ ] Add --dry-run flag: preview sync actions without writing any files
-- [ ] Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified
-- [ ] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)
+- [x] Add --dry-run flag: preview sync actions without writing any files
+- [x] Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified
+- [x] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)
 - [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
 - [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
 
@@ -714,7 +714,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: D34
 
-- Status: complete
+- Status: proposed
 
 #### Plan
 
