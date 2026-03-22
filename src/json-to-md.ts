@@ -306,6 +306,7 @@ function generateReadme(doc: SysProMDocument, fromIdx: RelIndex): string {
 
 	lines.push(
 		renderFrontMatter({
+			...(doc.$schema ? { $schema: doc.$schema } : {}),
 			title,
 			doc_type: doc.metadata?.doc_type ?? "sysprom",
 			scope: doc.metadata?.scope,
@@ -447,6 +448,7 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 
 	lines.push(
 		renderFrontMatter({
+			...(doc.$schema ? { $schema: doc.$schema } : {}),
 			title,
 			doc_type: doc.metadata?.doc_type ?? "sysprom",
 			scope: doc.metadata?.scope,

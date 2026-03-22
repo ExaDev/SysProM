@@ -62,6 +62,17 @@ function parseText(raw: string): Text {
 
 type FrontMatter = Record<string, unknown>;
 
+/** Separate $schema from front matter so it becomes a top-level document key. */
+function extractSchema(front: FrontMatter): {
+	schema: string | undefined;
+	metadata: FrontMatter;
+} {
+	const schema = typeof front.$schema === "string" ? front.$schema : undefined;
+	const metadata = { ...front };
+	delete metadata.$schema;
+	return { schema, metadata };
+}
+
 function parseFrontMatter(content: string): {
 	front: FrontMatter;
 	body: string;
@@ -73,7 +84,7 @@ function parseFrontMatter(content: string): {
 	const yaml = content.slice(4, end);
 	const front: FrontMatter = {};
 	for (const line of yaml.split("\n")) {
-		const match = /^(\w+):\s*(.+)$/.exec(line);
+		const match = /^([\w$]+):\s*(.+)$/.exec(line);
 		if (!match) continue;
 		const [, key, raw] = match;
 		if (raw.startsWith('"') && raw.endsWith('"')) {
@@ -220,9 +231,19 @@ function parseListItems(body: string, prefix: string): string[] {
 }
 
 function parseSingleValue(body: string, prefix: string): string | undefined {
-	for (const line of body.split("\n")) {
-		if (line.startsWith(`${prefix}: `)) {
-			return line.slice(prefix.length + 2);
+	const lines = body.split("\n");
+	for (let i = 0; i < lines.length; i++) {
+		if (lines[i].startsWith(`${prefix}: `)) {
+			const firstLine = lines[i].slice(prefix.length + 2);
+			const continuationLines = [firstLine];
+			for (let j = i + 1; j < lines.length; j++) {
+				const next = lines[j];
+				if (next === "") break;
+				if (next.startsWith("- ") || next.startsWith("#")) break;
+				if (/^[A-Z][a-z]+: /.test(next)) break;
+				continuationLines.push(next);
+			}
+			return continuationLines.join("\n");
 		}
 	}
 	return undefined;
@@ -530,16 +551,19 @@ export function markdownSingleToJson(content: string): SysProMDocument {
 	const tableRels = parseRelationshipTable(body);
 	const extRefs = parseExternalReferences(body);
 
+	const { schema, metadata: metaFront } = extractSchema(front);
+
 	const doc: SysProMDocument = {
-		metadata: Object.keys(front).length > 0 ? front : undefined,
+		...(schema ? { $schema: schema } : {}),
+		metadata: Object.keys(metaFront).length > 0 ? metaFront : undefined,
 		nodes,
 		relationships:
 			[...rels, ...tableRels].length > 0 ? [...rels, ...tableRels] : undefined,
 		external_references: extRefs.length > 0 ? extRefs : undefined,
 	};
 
-	if (front.title && typeof front.title === "string") {
-		doc.metadata = { ...front };
+	if (metaFront.title && typeof metaFront.title === "string") {
+		doc.metadata = { ...metaFront };
 	}
 
 	return doc;
@@ -625,8 +649,11 @@ export function markdownMultiDocToJson(dir: string): SysProMDocument {
 	}
 	scanForSubsystems(dir);
 
+	const { schema, metadata: metaFront } = extractSchema(front);
+
 	const doc: SysProMDocument = {
-		metadata: Object.keys(front).length > 0 ? front : undefined,
+		...(schema ? { $schema: schema } : {}),
+		metadata: Object.keys(metaFront).length > 0 ? metaFront : undefined,
 		nodes,
 		relationships: rels.length > 0 ? rels : undefined,
 		external_references: extRefs.length > 0 ? extRefs : undefined,

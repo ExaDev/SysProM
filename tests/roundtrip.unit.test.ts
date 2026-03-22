@@ -352,6 +352,133 @@ describe("round trip: multi-doc", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Multi-line text round trip (context, rationale as arrays)
+// ---------------------------------------------------------------------------
+
+describe("round trip: multi-line text fields", () => {
+	function multiLineFixture(): SysProMDocument {
+		return {
+			metadata: { title: "Multi-Line Test" },
+			nodes: [
+				{
+					id: "D1",
+					type: "decision",
+					name: "Test Decision",
+					context: [
+						"The model needs to represent systems, workflows, and history.",
+						"Mixing these concerns makes the graph hard to query and reason about.",
+					],
+					options: [
+						{ id: "O1", description: "Option A" },
+						{ id: "O2", description: "Option B" },
+					],
+					selected: "O2",
+					rationale: [
+						"Grouping into families enforces separation of concerns.",
+						"Domain structure should not be tangled with process mechanics or evolution history.",
+					],
+				},
+			],
+		};
+	}
+
+	it("single-file: preserves multi-line context array", () => {
+		const original = multiLineFixture();
+		const md = jsonToMarkdownSingle(original);
+		const result = markdownSingleToJson(md);
+		const d1 = result.nodes.find((n) => n.id === "D1");
+		assert.ok(d1, "D1 missing");
+		assert.deepEqual(d1.context, [
+			"The model needs to represent systems, workflows, and history.",
+			"Mixing these concerns makes the graph hard to query and reason about.",
+		]);
+	});
+
+	it("single-file: preserves multi-line rationale array", () => {
+		const original = multiLineFixture();
+		const md = jsonToMarkdownSingle(original);
+		const result = markdownSingleToJson(md);
+		const d1 = result.nodes.find((n) => n.id === "D1");
+		assert.ok(d1, "D1 missing");
+		assert.deepEqual(d1.rationale, [
+			"Grouping into families enforces separation of concerns.",
+			"Domain structure should not be tangled with process mechanics or evolution history.",
+		]);
+	});
+
+	it("multi-doc: preserves multi-line context array", () => {
+		const original = multiLineFixture();
+		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-ml-"));
+		try {
+			jsonToMarkdownMultiDoc(original, tmpDir);
+			const result = markdownMultiDocToJson(tmpDir);
+			const d1 = result.nodes.find((n) => n.id === "D1");
+			assert.ok(d1, "D1 missing");
+			assert.deepEqual(d1.context, [
+				"The model needs to represent systems, workflows, and history.",
+				"Mixing these concerns makes the graph hard to query and reason about.",
+			]);
+		} finally {
+			rmSync(tmpDir, { recursive: true, force: true });
+		}
+	});
+
+	it("multi-doc: preserves multi-line rationale array", () => {
+		const original = multiLineFixture();
+		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-ml-"));
+		try {
+			jsonToMarkdownMultiDoc(original, tmpDir);
+			const result = markdownMultiDocToJson(tmpDir);
+			const d1 = result.nodes.find((n) => n.id === "D1");
+			assert.ok(d1, "D1 missing");
+			assert.deepEqual(d1.rationale, [
+				"Grouping into families enforces separation of concerns.",
+				"Domain structure should not be tangled with process mechanics or evolution history.",
+			]);
+		} finally {
+			rmSync(tmpDir, { recursive: true, force: true });
+		}
+	});
+});
+
+// ---------------------------------------------------------------------------
+// $schema round trip
+// ---------------------------------------------------------------------------
+
+describe("round trip: $schema preservation", () => {
+	it("single-file: preserves $schema through round-trip", () => {
+		const original: SysProMDocument = {
+			$schema: "./schema.json",
+			metadata: { title: "Schema Test" },
+			nodes: [
+				{ id: "I1", type: "intent", name: "Test", description: "Test." },
+			],
+		};
+		const md = jsonToMarkdownSingle(original);
+		const result = markdownSingleToJson(md);
+		assert.equal(result.$schema, "./schema.json");
+	});
+
+	it("multi-doc: preserves $schema through round-trip", () => {
+		const original: SysProMDocument = {
+			$schema: "./schema.json",
+			metadata: { title: "Schema Test" },
+			nodes: [
+				{ id: "I1", type: "intent", name: "Test", description: "Test." },
+			],
+		};
+		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-schema-"));
+		try {
+			jsonToMarkdownMultiDoc(original, tmpDir);
+			const result = markdownMultiDocToJson(tmpDir);
+			assert.equal(result.$schema, "./schema.json");
+		} finally {
+			rmSync(tmpDir, { recursive: true, force: true });
+		}
+	});
+});
+
+// ---------------------------------------------------------------------------
 // Subsystem round trip
 // ---------------------------------------------------------------------------
 
