@@ -144,6 +144,8 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 | [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
 | [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
 | [Ouroboros](https://github.com/Q00/ouroboros) | ✅ | 🔶 | ✅ | ✅ | 🔶 | ✅ | | | ✅ | 🔶 | | 🔶 | ✅ | 🔶 |
+| [Spec Kitty](https://github.com/Priivacy-ai/spec-kitty) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
+| [Shotgun](https://github.com/shotgun-sh/shotgun) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | | | 🔶 | | 🔶 | ✅ | 🔶 |
 | [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | | ✅ | ✅ | ✅ |
 | **SysProM** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🔶 | | 🔶 | ✅ | ✅ | ✅ | ✅ |
 
