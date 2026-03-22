@@ -11,7 +11,9 @@
  * - undefined values omitted from objects
  */
 
+/** Options for controlling canonical JSON output formatting. */
 export interface FormatOptions {
+	/** Indentation string (e.g. `"\t"` or `"  "`). Empty string produces compact output. */
 	indent?: string;
 }
 

@@ -425,6 +425,7 @@ function generateDocFile(
 // Public API
 // ---------------------------------------------------------------------------
 
+/** Options for controlling JSON-to-Markdown conversion. */
 export interface ConvertOptions {
 	form: "single-file" | "multi-doc";
 }

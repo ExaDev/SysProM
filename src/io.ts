@@ -5,11 +5,16 @@ import { markdownSingleToJson, markdownMultiDocToJson } from "./md-to-json.js";
 import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc } from "./json-to-md.js";
 import { canonicalise } from "./canonical-json.js";
 
+/** Supported serialisation formats for SysProM documents. */
 export type Format = "json" | "single-md" | "multi-md";
 
+/** The result of loading a SysProM document from disc. */
 export interface LoadedDocument {
+	/** The parsed SysProM document. */
 	doc: SysProMDocument;
+	/** The detected serialisation format. */
 	format: Format;
+	/** The resolved absolute path the document was loaded from. */
 	path: string;
 }
 
