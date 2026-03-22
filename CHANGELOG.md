@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/ExaDev/SysProM/compare/v1.9.0...v1.9.1) (2026-03-22)
+
+### Bug Fixes
+
+* **plugin:** use './' for relative source path in marketplace.json ([b7b7001](https://github.com/ExaDev/SysProM/commit/b7b7001f8eb991832646bc9bfa66b6928a12f214))
+
 ## [1.9.0](https://github.com/ExaDev/SysProM/compare/v1.8.0...v1.9.0) (2026-03-22)
 
 ### Features
