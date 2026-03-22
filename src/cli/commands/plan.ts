@@ -1,7 +1,8 @@
 import * as z from "zod";
 import { existsSync } from "node:fs";
 import type { CommandDef } from "../define-command.js";
-import { loadDocument, saveDocument } from "../../io.js";
+import { saveDocument } from "../../io.js";
+import { loadDoc, mutationOpts, persistDoc, noArgs } from "../shared.js";
 import {
 	planInitOp,
 	planAddTaskOp,
@@ -50,32 +51,31 @@ const initSubcommand: CommandDef<typeof initArgs, typeof initOpts> = {
 	},
 };
 
-const addTaskArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
-});
-
-const addTaskOpts = z.object({
+const addTaskOpts = mutationOpts.pick({ path: true }).extend({
 	prefix: z.string().describe("Plan prefix"),
 	name: z.string().optional().describe("Task name"),
 	parent: z.string().optional().describe("Parent task ID"),
 });
 
-const addTaskSubcommand: CommandDef<typeof addTaskArgs, typeof addTaskOpts> = {
+const addTaskSubcommand: CommandDef<typeof noArgs, typeof addTaskOpts> = {
 	name: "add-task",
 	description: planAddTaskOp.def.description,
 	apiLink: planAddTaskOp.def.name,
-	args: addTaskArgs,
 	opts: addTaskOpts,
-	action(args, opts) {
-		const inputPath = args.input;
+	action(_args, opts) {
 		const prefix = opts.prefix;
 		const name = opts.name;
 		const parentId = opts.parent;
 
 		try {
-			const { doc, format, path } = loadDocument(inputPath);
-			const newDoc = planAddTaskOp({ doc, prefix, name, parent: parentId });
-			saveDocument(newDoc, format, path);
+			const loaded = loadDoc(opts.path);
+			const newDoc = planAddTaskOp({
+				doc: loaded.doc,
+				prefix,
+				name,
+				parent: parentId,
+			});
+			persistDoc(newDoc, loaded, { ...opts, json: false, dryRun: false });
 			const target = parentId ? `to ${parentId}` : `to ${prefix}-PROT-IMPL`;
 			console.log(`Added task ${target}`);
 		} catch (err: unknown) {
@@ -85,28 +85,22 @@ const addTaskSubcommand: CommandDef<typeof addTaskArgs, typeof addTaskOpts> = {
 	},
 };
 
-const statusArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
-});
-
-const statusOpts = z.object({
+const statusOpts = mutationOpts.pick({ path: true }).extend({
 	prefix: z.string().describe("Plan prefix"),
 	json: z.boolean().optional().describe("Output as JSON"),
 });
 
-const statusSubcommand: CommandDef<typeof statusArgs, typeof statusOpts> = {
+const statusSubcommand: CommandDef<typeof noArgs, typeof statusOpts> = {
 	name: "status",
 	description: planStatusOp.def.description,
 	apiLink: planStatusOp.def.name,
-	args: statusArgs,
 	opts: statusOpts,
-	action(args, opts) {
-		const inputPath = args.input;
+	action(_args, opts) {
 		const prefix = opts.prefix;
 		const asJson = opts.json === true;
 
 		try {
-			const { doc } = loadDocument(inputPath);
+			const { doc } = loadDoc(opts.path);
 			const status = planStatusOp({ doc, prefix });
 
 			if (asJson) {
@@ -114,7 +108,6 @@ const statusSubcommand: CommandDef<typeof statusArgs, typeof statusOpts> = {
 				return;
 			}
 
-			// Format: Constitution, Spec, Plan, Tasks, Checklist status report
 			const formatBoolean = (defined: boolean): string =>
 				defined ? "✅ defined" : "❌ not defined";
 
@@ -142,73 +135,58 @@ const statusSubcommand: CommandDef<typeof statusArgs, typeof statusOpts> = {
 	},
 };
 
-const progressArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
-});
-
-const progressOpts = z.object({
+const progressOpts = mutationOpts.pick({ path: true }).extend({
 	prefix: z.string().describe("Plan prefix"),
 	json: z.boolean().optional().describe("Output as JSON"),
 });
 
-const progressSubcommand: CommandDef<typeof progressArgs, typeof progressOpts> =
-	{
-		name: "progress",
-		description: planProgressOp.def.description,
-		apiLink: planProgressOp.def.name,
-		args: progressArgs,
-		opts: progressOpts,
-		action(args, opts) {
-			const inputPath = args.input;
-			const prefix = opts.prefix;
-			const asJson = opts.json === true;
+const progressSubcommand: CommandDef<typeof noArgs, typeof progressOpts> = {
+	name: "progress",
+	description: planProgressOp.def.description,
+	apiLink: planProgressOp.def.name,
+	opts: progressOpts,
+	action(_args, opts) {
+		const prefix = opts.prefix;
+		const asJson = opts.json === true;
 
-			try {
-				const { doc } = loadDocument(inputPath);
-				const progress = planProgressOp({ doc, prefix });
+		try {
+			const { doc } = loadDoc(opts.path);
+			const progress = planProgressOp({ doc, prefix });
 
-				if (asJson) {
-					console.log(JSON.stringify(progress, null, 2));
-					return;
-				}
-
-				// Format: ASCII progress bars
-				// Bar width: 10 chars. Filled: █, empty: ░. Name padded to 20 chars. Percent right-aligned to 3 chars.
-				for (const phase of progress) {
-					const filledCount = Math.round((phase.percent / 100) * 10);
-					const emptyCount = 10 - filledCount;
-					const bar = "█".repeat(filledCount) + "░".repeat(emptyCount);
-					const name = phase.name.padEnd(20);
-					const percent = String(phase.percent).padStart(3);
-					const ratio = `(${String(phase.done)}/${String(phase.total)})`;
-
-					console.log(`${name} [${bar}] ${percent}% ${ratio}`);
-				}
-			} catch (err: unknown) {
-				console.error(err instanceof Error ? err.message : String(err));
-				process.exit(1);
+			if (asJson) {
+				console.log(JSON.stringify(progress, null, 2));
+				return;
 			}
-		},
-	};
 
-const gateArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
-});
+			for (const phase of progress) {
+				const filledCount = Math.round((phase.percent / 100) * 10);
+				const emptyCount = 10 - filledCount;
+				const bar = "█".repeat(filledCount) + "░".repeat(emptyCount);
+				const name = phase.name.padEnd(20);
+				const percent = String(phase.percent).padStart(3);
+				const ratio = `(${String(phase.done)}/${String(phase.total)})`;
 
-const gateOpts = z.object({
+				console.log(`${name} [${bar}] ${percent}% ${ratio}`);
+			}
+		} catch (err: unknown) {
+			console.error(err instanceof Error ? err.message : String(err));
+			process.exit(1);
+		}
+	},
+};
+
+const gateOpts = mutationOpts.pick({ path: true }).extend({
 	prefix: z.string().describe("Plan prefix"),
 	phase: z.string().describe("Phase number"),
 	json: z.boolean().optional().describe("Output as JSON"),
 });
 
-const gateSubcommand: CommandDef<typeof gateArgs, typeof gateOpts> = {
+const gateSubcommand: CommandDef<typeof noArgs, typeof gateOpts> = {
 	name: "gate",
 	description: planGateOp.def.description,
 	apiLink: planGateOp.def.name,
-	args: gateArgs,
 	opts: gateOpts,
-	action(args, opts) {
-		const inputPath = args.input;
+	action(_args, opts) {
 		const prefix = opts.prefix;
 		const phaseNum = parseInt(opts.phase, 10);
 		const asJson = opts.json === true;
@@ -219,7 +197,7 @@ const gateSubcommand: CommandDef<typeof gateArgs, typeof gateOpts> = {
 		}
 
 		try {
-			const { doc } = loadDocument(inputPath);
+			const { doc } = loadDoc(opts.path);
 			const result = planGateOp({ doc, prefix, phase: phaseNum });
 
 			if (asJson) {
@@ -227,7 +205,6 @@ const gateSubcommand: CommandDef<typeof gateArgs, typeof gateOpts> = {
 				return;
 			}
 
-			// Format: Gate check result with detailed issues
 			if (result.ready) {
 				console.log(`Gate check for phase ${String(phaseNum)}: ✅ READY`);
 			} else {

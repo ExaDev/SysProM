@@ -1,6 +1,6 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
-import { loadDocument, saveDocument } from "../../io.js";
+import { loadDoc, mutationOpts, persistDoc, noArgs } from "../shared.js";
 import {
 	addPlanTaskOp,
 	markTaskDoneOp,
@@ -12,24 +12,18 @@ import {
 // Subcommands
 // ============================================================================
 
-const listArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
-});
-
-const listOpts = z.object({
+const listOpts = mutationOpts.pick({ path: true, json: true }).extend({
 	change: z.string().optional().describe("Filter by change ID"),
 	pending: z.boolean().optional().describe("Show only pending tasks"),
-	json: z.boolean().optional().describe("Output as JSON"),
 });
 
-const listSubcommand: CommandDef<typeof listArgs, typeof listOpts> = {
+const listSubcommand: CommandDef<typeof noArgs, typeof listOpts> = {
 	name: "list",
 	description: taskListOp.def.description,
 	apiLink: taskListOp.def.name,
-	args: listArgs,
 	opts: listOpts,
-	action(args, opts) {
-		const { doc } = loadDocument(args.input);
+	action(_args, opts) {
+		const { doc } = loadDoc(opts.path);
 
 		try {
 			const rows = taskListOp({
@@ -64,12 +58,11 @@ const listSubcommand: CommandDef<typeof listArgs, typeof listOpts> = {
 };
 
 const addArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
 	changeId: z.string().describe("Change node ID"),
 	description: z.string().describe("Task description"),
 });
 
-const addOpts = z.object({});
+const addOpts = mutationOpts.pick({ path: true });
 
 const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 	name: "add",
@@ -77,8 +70,9 @@ const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 	apiLink: addPlanTaskOp.def.name,
 	args: addArgs,
 	opts: addOpts,
-	action(args) {
-		const { doc, format, path } = loadDocument(args.input);
+	action(args, opts) {
+		const loaded = loadDoc(opts.path);
+		const { doc } = loaded;
 
 		try {
 			const newDoc = addPlanTaskOp({
@@ -86,7 +80,7 @@ const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 				changeId: args.changeId,
 				description: args.description,
 			});
-			saveDocument(newDoc, format, path);
+			persistDoc(newDoc, loaded, { ...opts, json: false, dryRun: false });
 			const node = newDoc.nodes.find((n) => n.id === args.changeId);
 			if (!node) throw new Error(`Node ${args.changeId} not found`);
 			const newIndex = (node.plan?.length ?? 1) - 1;
@@ -99,12 +93,11 @@ const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 };
 
 const doneArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
 	changeId: z.string().describe("Change node ID"),
 	taskIndex: z.string().describe("Task index"),
 });
 
-const doneOpts = z.object({});
+const doneOpts = mutationOpts.pick({ path: true });
 
 const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 	name: "done",
@@ -112,8 +105,9 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 	apiLink: markTaskDoneOp.def.name,
 	args: doneArgs,
 	opts: doneOpts,
-	action(args) {
-		const { doc, format, path } = loadDocument(args.input);
+	action(args, opts) {
+		const loaded = loadDoc(opts.path);
+		const { doc } = loaded;
 		const taskIndex = parseInt(args.taskIndex, 10);
 
 		if (isNaN(taskIndex) || taskIndex < 0) {
@@ -127,7 +121,7 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 				changeId: args.changeId,
 				taskIndex,
 			});
-			saveDocument(newDoc, format, path);
+			persistDoc(newDoc, loaded, { ...opts, json: false, dryRun: false });
 			console.log(`Marked task ${String(taskIndex)} done on ${args.changeId}`);
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
@@ -137,12 +131,11 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 };
 
 const undoneArgs = z.object({
-	input: z.string().describe("Path to SysProM document"),
 	changeId: z.string().describe("Change node ID"),
 	taskIndex: z.string().describe("Task index"),
 });
 
-const undoneOpts = z.object({});
+const undoneOpts = mutationOpts.pick({ path: true });
 
 const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 	name: "undone",
@@ -150,8 +143,9 @@ const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 	apiLink: markTaskUndoneOp.def.name,
 	args: undoneArgs,
 	opts: undoneOpts,
-	action(args) {
-		const { doc, format, path } = loadDocument(args.input);
+	action(args, opts) {
+		const loaded = loadDoc(opts.path);
+		const { doc } = loaded;
 		const taskIndex = parseInt(args.taskIndex, 10);
 
 		if (isNaN(taskIndex) || taskIndex < 0) {
@@ -165,7 +159,7 @@ const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 				changeId: args.changeId,
 				taskIndex,
 			});
-			saveDocument(newDoc, format, path);
+			persistDoc(newDoc, loaded, { ...opts, json: false, dryRun: false });
 			console.log(
 				`Marked task ${String(taskIndex)} undone on ${args.changeId}`,
 			);
