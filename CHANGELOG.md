@@ -1,3 +1,14 @@
+## [1.2.6](https://github.com/ExaDev/SysProM/compare/v1.2.5...v1.2.6) (2026-03-22)
+
+### Documentation
+
+* **typedoc:** configure folder-based sidebar navigation ([f850db7](https://github.com/ExaDev/SysProM/commit/f850db71319deef873254089f7d24b6706176491))
+* **typedoc:** use expand entry point strategy for folder-based organisation ([628d82a](https://github.com/ExaDev/SysProM/commit/628d82aa07433c3c398e61258a0974501b9d63b1))
+
+### Miscellaneous Chores
+
+* **typedoc:** consolidate into single typedoc.json config ([7b26214](https://github.com/ExaDev/SysProM/commit/7b262143627478315d8372cb70798435f81233af))
+
 ## [1.2.5](https://github.com/ExaDev/SysProM/compare/v1.2.4...v1.2.5) (2026-03-22)
 
 ### Documentation
