@@ -95,7 +95,18 @@ jobs:
             turbo-release-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-release-${{ runner.os }}-
       - run: npx turbo run _compile _schema
+      - name: Record pre-release version
+        id: pre
+        run: echo "version=$(npm pkg get version | tr -d '\"')" >> "$GITHUB_OUTPUT"
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ""
+      - name: Publish to npm via OIDC
+        run: |
+          CURRENT=$(npm pkg get version | tr -d '"')
+          if [ "$CURRENT" != "${{ steps.pre.outputs.version }}" ]; then
+            echo "Publishing $CURRENT to npm..."
+            npm publish --provenance --access public
+          else
+            echo "No new version — skipping npm publish"
+          fi

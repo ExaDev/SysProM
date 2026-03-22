@@ -35,7 +35,7 @@ export default {
         ],
       },
     }],
-    ["@semantic-release/npm", { npmPublish: true }],
+    ["@semantic-release/npm", { npmPublish: false }],
     "@semantic-release/changelog",
     ["@semantic-release/git", {
       assets: ["CHANGELOG.md", "package.json"],
