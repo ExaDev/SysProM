@@ -1,3 +1,9 @@
+## [1.2.4](https://github.com/ExaDev/SysProM/compare/v1.2.3...v1.2.4) (2026-03-22)
+
+### Miscellaneous Chores
+
+* **lint:** promote all jsdoc rules from warn to error ([5ac7fa4](https://github.com/ExaDev/SysProM/commit/5ac7fa49628e168bc6bb5d5d412a08524a7e4503))
+
 ## [1.2.3](https://github.com/ExaDev/SysProM/compare/v1.2.2...v1.2.3) (2026-03-22)
 
 ### Documentation
