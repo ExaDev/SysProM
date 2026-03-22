@@ -1,6 +1,7 @@
 import { nodeType, nodeStatus, type Node } from "../schema.js";
 import { addNode, nextId } from "../mutate.js";
 import { loadDocument, saveDocument } from "../io.js";
+import { jsonToMarkdownMultiDoc } from "../json-to-md.js";
 
 function parseFlag(args: string[], flag: string): string | undefined {
   const idx = args.indexOf(flag);
@@ -77,20 +78,39 @@ export function run(args: string[]): void {
 
   const optionArgs = parseFlagAll(args, "--option");
   if (optionArgs.length > 0) {
-    node.options = optionArgs.map((arg) => {
+    node.options = optionArgs.map((arg, i) => {
       const colonIdx = arg.indexOf(":");
-      if (colonIdx < 0) {
-        console.error(`Invalid --option format: ${arg} (expected id:description)`);
-        process.exit(1);
+      if (colonIdx >= 0) {
+        return { id: arg.slice(0, colonIdx), description: arg.slice(colonIdx + 1) };
       }
-      return { id: arg.slice(0, colonIdx), description: arg.slice(colonIdx + 1) };
+      // Auto-generate ID: D26-OPT-A, D26-OPT-B, etc.
+      const letter = String.fromCharCode(65 + i); // A, B, C, ...
+      return { id: `${id}-OPT-${letter}`, description: arg };
     });
   }
 
   try {
+    const dryRun = args.includes("--dry-run");
+    const asJson = args.includes("--json");
+
     const newDoc = addNode(doc, node);
-    saveDocument(newDoc, format, path);
-    console.log(`Added ${type} ${id} — ${name}`);
+
+    if (!dryRun) {
+      saveDocument(newDoc, format, path);
+
+      const syncIdx = args.indexOf("--sync");
+      const syncDir = syncIdx >= 0 && args[syncIdx + 1] ? args[syncIdx + 1] : undefined;
+      if (syncDir) {
+        jsonToMarkdownMultiDoc(newDoc, syncDir);
+        console.log(`Synced to ${syncDir}`);
+      }
+    }
+
+    if (asJson) {
+      console.log(JSON.stringify(node, null, 2));
+    } else {
+      console.log(`${dryRun ? "[dry-run] Would add" : "Added"} ${type} ${id} — ${name}`);
+    }
   } catch (err: unknown) {
     console.error(err instanceof Error ? err.message : String(err));
     process.exit(1);

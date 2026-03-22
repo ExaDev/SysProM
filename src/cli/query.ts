@@ -1,3 +1,4 @@
+import pc from "picocolors";
 import { textToString } from "../text.js";
 import { loadDocument } from "../io.js";
 import {
@@ -12,36 +13,36 @@ import type { TraceNode } from "../query.js";
 
 function printNode(r: Node, verbose: boolean): void {
   if (verbose) {
-    console.log(`${r.id} — ${r.name}`);
-    console.log(`  Type: ${r.type}`);
-    if (r.status) console.log(`  Status: ${r.status}`);
-    if (r.description) console.log(`  Description: ${textToString(r.description)}`);
-    if (r.context) console.log(`  Context: ${textToString(r.context)}`);
-    if (r.rationale) console.log(`  Rationale: ${textToString(r.rationale)}`);
-    if (r.selected) console.log(`  Selected: ${r.selected}`);
+    console.log(`${pc.cyan(r.id)} — ${pc.bold(r.name)}`);
+    console.log(`  ${pc.dim("Type")}: ${r.type}`);
+    if (r.status) console.log(`  ${pc.dim("Status")}: ${pc.yellow(r.status)}`);
+    if (r.description) console.log(`  ${pc.dim("Description")}: ${textToString(r.description)}`);
+    if (r.context) console.log(`  ${pc.dim("Context")}: ${textToString(r.context)}`);
+    if (r.rationale) console.log(`  ${pc.dim("Rationale")}: ${textToString(r.rationale)}`);
+    if (r.selected) console.log(`  ${pc.dim("Selected")}: ${r.selected}`);
     if (r.options) {
-      console.log("  Options:");
+      console.log(`  ${pc.dim("Options")}:`);
       for (const o of r.options) console.log(`    ${o.id}: ${textToString(o.description)}`);
     }
-    if (r.scope) console.log(`  Scope: ${r.scope.join(", ")}`);
+    if (r.scope) console.log(`  ${pc.dim("Scope")}: ${r.scope.join(", ")}`);
     if (r.lifecycle) {
       const states = Object.entries(r.lifecycle)
         .map(([k, v]) => `${k}=${v}`)
         .join(", ");
-      console.log(`  Lifecycle: ${states}`);
+      console.log(`  ${pc.dim("Lifecycle")}: ${states}`);
     }
-    if (r.includes) console.log(`  Includes: ${r.includes.join(", ")}`);
+    if (r.includes) console.log(`  ${pc.dim("Includes")}: ${r.includes.join(", ")}`);
     console.log("");
   } else {
     const desc = r.description ? " — " + textToString(r.description).slice(0, 60) : "";
-    console.log(`${r.id.padEnd(12)} ${r.type.padEnd(16)} ${r.name}${desc}`);
+    console.log(`${pc.cyan(r.id.padEnd(12))} ${pc.dim(r.type.padEnd(16))} ${pc.bold(r.name)}${desc}`);
   }
 }
 
 function printTraceTree(tn: TraceNode, depth: number): void {
   if (!tn.node) return;
   const indent = "  ".repeat(depth);
-  console.log(`${indent}${tn.id} — ${tn.node.name} (${tn.node.type})`);
+  console.log(`${indent}${pc.cyan(tn.id)} — ${pc.bold(tn.node.name)} (${pc.dim(tn.node.type)})`);
   for (const child of tn.children) {
     printTraceTree(child, depth + 1);
   }
@@ -112,12 +113,12 @@ export function run(args: string[]): void {
       } else {
         printNode(result.node, true);
         if (result.outgoing.length > 0) {
-          console.log("Outgoing relationships:");
-          for (const r of result.outgoing) console.log(`  → ${r.type} → ${r.to}`);
+          console.log(`${pc.dim("Outgoing relationships")}:`);
+          for (const r of result.outgoing) console.log(`  → ${pc.dim(r.type)} → ${pc.cyan(r.to)}`);
         }
         if (result.incoming.length > 0) {
-          console.log("Incoming relationships:");
-          for (const r of result.incoming) console.log(`  ← ${r.type} ← ${r.from}`);
+          console.log(`${pc.dim("Incoming relationships")}:`);
+          for (const r of result.incoming) console.log(`  ← ${pc.dim(r.type)} ← ${pc.cyan(r.from)}`);
         }
       }
       break;
@@ -133,7 +134,7 @@ export function run(args: string[]): void {
         console.log(JSON.stringify(rels, null, 2));
       } else {
         for (const r of rels) {
-          console.log(`${r.from.padEnd(12)} ${r.type.padEnd(20)} ${r.to}`);
+          console.log(`${pc.cyan(r.from.padEnd(12))} ${pc.dim(r.type.padEnd(20))} ${pc.cyan(r.to)}`);
         }
         console.log(`\n${rels.length} relationship(s)`);
       }

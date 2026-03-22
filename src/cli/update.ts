@@ -6,6 +6,7 @@ import {
   updateMetadata,
 } from "../mutate.js";
 import { loadDocument, saveDocument } from "../io.js";
+import { jsonToMarkdownMultiDoc } from "../json-to-md.js";
 
 function parseFlag(args: string[], flag: string): string | undefined {
   const idx = args.indexOf(flag);
@@ -40,6 +41,8 @@ export function run(args: string[]): void {
   }
 
   const { doc, format, path } = loadDocument(args[0]);
+  const dryRun = args.includes("--dry-run");
+  const asJson = args.includes("--json");
 
   // Relationship operations
   const addRelIdx = args.indexOf("--add-rel");
@@ -59,8 +62,24 @@ export function run(args: string[]): void {
     const type = relationshipType.parse(typeStr);
     try {
       const newDoc = addRelationship(doc, { from, to, type });
-      saveDocument(newDoc, format, path);
-      console.log(`Added relationship: ${from} ${typeStr} ${to}`);
+
+      if (!dryRun) {
+        saveDocument(newDoc, format, path);
+
+        const syncIdx = args.indexOf("--sync");
+        const syncDir = syncIdx >= 0 && args[syncIdx + 1] ? args[syncIdx + 1] : undefined;
+        if (syncDir) {
+          jsonToMarkdownMultiDoc(newDoc, syncDir);
+          console.log(`Synced to ${syncDir}`);
+        }
+      }
+
+      if (asJson) {
+        const rel = newDoc.relationships?.find((r) => r.from === from && r.type === type && r.to === to);
+        console.log(JSON.stringify(rel, null, 2));
+      } else {
+        console.log(`${dryRun ? "[dry-run] Would add" : "Added"} relationship: ${from} ${typeStr} ${to}`);
+      }
     } catch (err: unknown) {
       console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
@@ -85,8 +104,23 @@ export function run(args: string[]): void {
     const type = relationshipType.parse(typeStr);
     try {
       const newDoc = removeRelationship(doc, from, type, to);
-      saveDocument(newDoc, format, path);
-      console.log(`Removed relationship: ${from} ${typeStr} ${to}`);
+
+      if (!dryRun) {
+        saveDocument(newDoc, format, path);
+
+        const syncIdx = args.indexOf("--sync");
+        const syncDir = syncIdx >= 0 && args[syncIdx + 1] ? args[syncIdx + 1] : undefined;
+        if (syncDir) {
+          jsonToMarkdownMultiDoc(newDoc, syncDir);
+          console.log(`Synced to ${syncDir}`);
+        }
+      }
+
+      if (asJson) {
+        console.log(JSON.stringify({ from, type: typeStr, to }, null, 2));
+      } else {
+        console.log(`${dryRun ? "[dry-run] Would remove" : "Removed"} relationship: ${from} ${typeStr} ${to}`);
+      }
     } catch (err: unknown) {
       console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
@@ -110,8 +144,23 @@ export function run(args: string[]): void {
       fields[key] = Number.isFinite(numVal) && val === String(numVal) ? numVal : val;
     }
     const newDoc = updateMetadata(doc, fields);
-    saveDocument(newDoc, format, path);
-    console.log(`Updated metadata: ${metaValues.join(", ")}`);
+
+    if (!dryRun) {
+      saveDocument(newDoc, format, path);
+
+      const syncIdx = args.indexOf("--sync");
+      const syncDir = syncIdx >= 0 && args[syncIdx + 1] ? args[syncIdx + 1] : undefined;
+      if (syncDir) {
+        jsonToMarkdownMultiDoc(newDoc, syncDir);
+        console.log(`Synced to ${syncDir}`);
+      }
+    }
+
+    if (asJson) {
+      console.log(JSON.stringify(fields, null, 2));
+    } else {
+      console.log(`${dryRun ? "[dry-run] Would update" : "Updated"} metadata: ${metaValues.join(", ")}`);
+    }
     return;
   }
 
@@ -173,6 +222,21 @@ export function run(args: string[]): void {
   }
 
   const newDoc = updateNode(doc, nodeId, fields);
-  saveDocument(newDoc, format, path);
-  console.log(`Updated ${node.type} ${nodeId} — ${node.name}`);
+
+  if (!dryRun) {
+    saveDocument(newDoc, format, path);
+
+    const syncIdx = args.indexOf("--sync");
+    const syncDir = syncIdx >= 0 && args[syncIdx + 1] ? args[syncIdx + 1] : undefined;
+    if (syncDir) {
+      jsonToMarkdownMultiDoc(newDoc, syncDir);
+      console.log(`Synced to ${syncDir}`);
+    }
+  }
+
+  if (asJson) {
+    console.log(JSON.stringify(fields, null, 2));
+  } else {
+    console.log(`${dryRun ? "[dry-run] Would update" : "Updated"} ${node.type} ${nodeId} — ${node.name}`);
+  }
 }

@@ -200,6 +200,9 @@ program
   .option("--scope <id>", "affected node ID, repeatable (for changes)", collect, [])
   .option("--option <id:description>", "decision option, repeatable (e.g. OPT-A:Use framework X)", collect, [])
   .option("--selected <id>", "selected option ID (for decisions)")
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
   .action(
     (
       input: string,
@@ -214,6 +217,9 @@ program
         scope: string[];
         option: string[];
         selected?: string;
+        json?: boolean;
+        dryRun?: boolean;
+        sync?: string;
       },
     ) => {
       const args = [input, nodeType];
@@ -226,6 +232,9 @@ program
       for (const s of opts.scope) args.push("--scope", s);
       for (const o of opts.option) args.push("--option", o);
       if (opts.selected) args.push("--selected", opts.selected);
+      if (opts.json) args.push("--json");
+      if (opts.dryRun) args.push("--dry-run");
+      if (opts.sync) args.push("--sync", opts.sync);
       runAdd(args);
     },
   );
@@ -235,8 +244,15 @@ program
   .description("Remove a node and all its relationships from a SysProM document")
   .argument("<input>", "SysProM document to modify (saved in place)")
   .argument("<node-id>", "ID of the node to remove")
-  .action((input: string, nodeId: string) => {
-    runRemove([input, nodeId]);
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
+  .action((input: string, nodeId: string, opts: { json?: boolean; dryRun?: boolean; sync?: string }) => {
+    const args = [input, nodeId];
+    if (opts.json) args.push("--json");
+    if (opts.dryRun) args.push("--dry-run");
+    if (opts.sync) args.push("--sync", opts.sync);
+    runRemove(args);
   });
 
 // ============================================================================
@@ -257,6 +273,9 @@ update
   .option("--context <text>", "update context")
   .option("--rationale <text>", "update rationale")
   .option("--lifecycle <key=val>", "set lifecycle state, repeatable (e.g. implemented=true)", collect, [])
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
   .action(
     (
       input: string,
@@ -267,6 +286,9 @@ update
         context?: string;
         rationale?: string;
         lifecycle: string[];
+        json?: boolean;
+        dryRun?: boolean;
+        sync?: string;
       },
     ) => {
       const args = [input, nodeId];
@@ -275,6 +297,9 @@ update
       if (opts.context) args.push("--context", opts.context);
       if (opts.rationale) args.push("--rationale", opts.rationale);
       for (const v of opts.lifecycle) args.push("--lifecycle", v);
+      if (opts.json) args.push("--json");
+      if (opts.dryRun) args.push("--dry-run");
+      if (opts.sync) args.push("--sync", opts.sync);
       runUpdate(args);
     },
   );
@@ -286,8 +311,15 @@ update
   .argument("<from>", "source node ID")
   .addArgument(new Argument("<type>", "relationship type").choices([...RELATIONSHIP_TYPES]))
   .argument("<to>", "target node ID")
-  .action((input: string, from: string, type: string, to: string) => {
-    runUpdate([input, "--add-rel", from, type, to]);
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
+  .action((input: string, from: string, type: string, to: string, opts: { json?: boolean; dryRun?: boolean; sync?: string }) => {
+    const args = [input, "--add-rel", from, type, to];
+    if (opts.json) args.push("--json");
+    if (opts.dryRun) args.push("--dry-run");
+    if (opts.sync) args.push("--sync", opts.sync);
+    runUpdate(args);
   });
 
 update
@@ -297,8 +329,15 @@ update
   .argument("<from>", "source node ID")
   .addArgument(new Argument("<type>", "relationship type").choices([...RELATIONSHIP_TYPES]))
   .argument("<to>", "target node ID")
-  .action((input: string, from: string, type: string, to: string) => {
-    runUpdate([input, "--remove-rel", from, type, to]);
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
+  .action((input: string, from: string, type: string, to: string, opts: { json?: boolean; dryRun?: boolean; sync?: string }) => {
+    const args = [input, "--remove-rel", from, type, to];
+    if (opts.json) args.push("--json");
+    if (opts.dryRun) args.push("--dry-run");
+    if (opts.sync) args.push("--sync", opts.sync);
+    runUpdate(args);
   });
 
 update
@@ -306,9 +345,15 @@ update
   .description("Update document-level metadata fields")
   .argument("<input>", "SysProM document to modify (saved in place)")
   .option("--meta <key=value>", "metadata field to set, repeatable (e.g. version=2)", collect, [])
-  .action((input: string, opts: { meta: string[] }) => {
+  .option("--json", "output result as JSON")
+  .option("--dry-run", "show what would change without writing")
+  .option("--sync <dir>", "regenerate markdown in directory after save")
+  .action((input: string, opts: { meta: string[]; json?: boolean; dryRun?: boolean; sync?: string }) => {
     const args = [input];
     for (const v of opts.meta) args.push("--meta", v);
+    if (opts.json) args.push("--json");
+    if (opts.dryRun) args.push("--dry-run");
+    if (opts.sync) args.push("--sync", opts.sync);
     runUpdate(args);
   });
 
