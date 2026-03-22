@@ -7,7 +7,11 @@ const argsSchema = z.object({
 	nodeId: z.string().describe("ID of the node to remove"),
 });
 
-const optsSchema = mutationOpts;
+const optsSchema = mutationOpts.extend({
+	hard: z.boolean().optional().describe("Hard delete (physical removal)"),
+	recursive: z.boolean().optional().describe("Allow subsystem removal"),
+	repair: z.boolean().optional().describe("Repair must_follow chains"),
+});
 
 export const removeCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	name: "remove",
@@ -22,7 +26,13 @@ export const removeCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 		const removedNode = doc.nodes.find((n) => n.id === targetId);
 
 		try {
-			const result = removeNodeOp({ doc, id: targetId });
+			const result = removeNodeOp({
+				doc,
+				id: targetId,
+				hard: opts.hard,
+				recursive: opts.recursive,
+				repair: opts.repair,
+			});
 
 			// Count removed relationships
 			const before = (doc.relationships ?? []).length;
