@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/** Zod schema for document statistics — node/relationship counts, subsystem depth, lifecycle breakdown. */
 export const DocumentStats = z.object({
 	title: z.string(),
 	nodesByType: z.record(z.string(), z.number()),
@@ -16,8 +17,10 @@ export const DocumentStats = z.object({
 	changeLifecycle: z.record(z.string(), z.number()),
 });
 
+/** Computed statistics about a SysProM document. */
 export type DocumentStats = z.infer<typeof DocumentStats>;
 
+/** Compute statistics about a SysProM document — node and relationship counts by type, subsystem depth, lifecycle breakdowns, and more. */
 export const statsOp = defineOperation({
 	name: "stats",
 	description: "Compute statistics about a SysProM document",

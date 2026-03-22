@@ -3,6 +3,7 @@ import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 import { initDocument } from "../speckit/plan.js";
 
+/** Initialise a new SysProM plan document with standard structure (constitution, specification, implementation protocol, checklist). */
 export const planInitOp = defineOperation({
 	name: "planInit",
 	description: "Initialise a new SysProM plan document with standard structure",

@@ -2,6 +2,12 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, NodeType, NODE_ID_PREFIX } from "../schema.js";
 
+/**
+ * Generate the next available ID for a given node type. Scans existing node IDs
+ * matching the type's conventional prefix and returns `prefix + (max + 1)`.
+ *
+ * @throws If no ID prefix is defined for the given node type.
+ */
 export const nextIdOp = defineOperation({
 	name: "nextId",
 	description:

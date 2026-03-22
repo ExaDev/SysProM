@@ -10,6 +10,12 @@ const TaskRow = z.object({
 	done: z.boolean(),
 });
 
+/**
+ * List tasks across change nodes, optionally filtered by change ID and/or
+ * pending status. Returns a flat array of task rows tagged with their parent change node.
+ *
+ * @throws If a specific changeId is provided but not found.
+ */
 export const taskListOp = defineOperation({
 	name: "taskList",
 	description:

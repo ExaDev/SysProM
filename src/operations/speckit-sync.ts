@@ -43,7 +43,9 @@ function compareDocuments(
 	return { added, modified, removed };
 }
 
+/** Result of synchronising a SysProM document with a Spec-Kit directory — the merged document and change counts. */
 export type SyncResult = z.infer<typeof SyncResult>;
+/** Zod schema for the sync result. */
 export const SyncResult = z.object({
 	doc: SysProMDocument,
 	added: z.number(),
@@ -51,6 +53,7 @@ export const SyncResult = z.object({
 	removed: z.number(),
 });
 
+/** Synchronise a SysProM document with a Spec-Kit directory. Spec-Kit content wins for descriptions and status; SysProM structure (relationships, hierarchies) is preserved. Regenerates the Spec-Kit directory from the merged document. */
 export const speckitSyncOp = defineOperation({
 	name: "speckitSync",
 	description: "Synchronise a SysProM document with a Spec-Kit directory",

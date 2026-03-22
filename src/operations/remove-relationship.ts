@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, RelationshipType } from "../schema.js";
 
+/**
+ * Remove a relationship matching from, type, and to. Returns a new document without it.
+ *
+ * @throws If no matching relationship is found.
+ */
 export const removeRelationshipOp = defineOperation({
 	name: "removeRelationship",
 	description:

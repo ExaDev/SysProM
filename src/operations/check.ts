@@ -68,6 +68,11 @@ function performCheck(doc: SysProMDocument): CheckResult {
 	return { warnings, info };
 }
 
+/**
+ * Check a SysProM document for quality issues and warnings beyond schema
+ * validation — missing rationale, context, scope, descriptions, orphan nodes,
+ * and dangling scope references.
+ */
 export const checkOp = defineOperation({
 	name: "check",
 	description:

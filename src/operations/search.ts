@@ -3,6 +3,7 @@ import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Node } from "../schema.js";
 import { textToString } from "../text.js";
 
+/** Search for nodes by text (case-insensitive) across id, name, description, context, and rationale fields. Recursively searches into subsystems. */
 export const searchOp = defineOperation({
 	name: "search",
 	description:

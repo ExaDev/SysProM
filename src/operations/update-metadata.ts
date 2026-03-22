@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/** Update document-level metadata fields, merging the provided fields into the existing metadata. */
 export const updateMetadataOp = defineOperation({
 	name: "updateMetadata",
 	description: "Update metadata fields. Returns a new document.",

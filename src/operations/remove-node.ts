@@ -2,13 +2,21 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/** Zod schema for the result of removing a node — the updated document plus any warnings. */
 export const RemoveResult = z.object({
 	doc: SysProMDocument,
 	warnings: z.array(z.string()),
 });
 
+/** Result of removing a node: the updated document and any warnings about lingering references. */
 export type RemoveResult = z.infer<typeof RemoveResult>;
 
+/**
+ * Remove a node and all relationships involving it. Also removes the node from
+ * view includes and external references. Warns if scope or operation references remain.
+ *
+ * @throws If the node ID is not found.
+ */
 export const removeNodeOp = defineOperation({
 	name: "removeNode",
 	description:

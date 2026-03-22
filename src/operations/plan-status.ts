@@ -29,8 +29,10 @@ export const PlanStatusSchema = z.object({
 	nextStep: z.string(),
 });
 
+/** Comprehensive status of all plan components — constitution, spec, plan, tasks, checklist, and next step. */
 export type PlanStatusResult = z.infer<typeof PlanStatusSchema>;
 
+/** Get the comprehensive status of all plan components in a single operation. */
 export const planStatusOp = defineOperation({
 	name: "planStatus",
 	description: "Get the status of all plan components",

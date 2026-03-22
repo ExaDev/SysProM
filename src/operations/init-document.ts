@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/** Create a new empty SysProM document with metadata, ready for nodes and relationships to be added. */
 export const initDocumentOp = defineOperation({
 	name: "initDocument",
 	description: "Create a new empty SysProM document with metadata.",

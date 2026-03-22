@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/**
+ * Append a new task to a change node's plan array. Returns a new document with the task added.
+ *
+ * @throws If the change node is not found.
+ */
 export const addPlanTaskOp = defineOperation({
 	name: "addPlanTask",
 	description:

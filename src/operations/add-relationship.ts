@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Relationship } from "../schema.js";
 
+/**
+ * Add a relationship to a SysProM document. Returns a new document with the relationship appended.
+ *
+ * @throws If either endpoint node does not exist in the document.
+ */
 export const addRelationshipOp = defineOperation({
 	name: "addRelationship",
 	description:

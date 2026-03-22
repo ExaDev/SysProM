@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Node, SysProMDocument } from "../schema.js";
 
+/** Zod schema for a timestamped lifecycle event extracted from a node. */
 export const TimelineEvent = z.object({
 	nodeId: z.string(),
 	nodeName: z.string(),
@@ -10,8 +11,10 @@ export const TimelineEvent = z.object({
 	timestamp: z.string(),
 });
 
+/** A timestamped lifecycle event — when a node entered a particular state. */
 export type TimelineEvent = z.infer<typeof TimelineEvent>;
 
+/** Extract all timestamped lifecycle events from a document, sorted chronologically. Recursively includes subsystem events. */
 export const timelineOp = defineOperation({
 	name: "timeline",
 	description:

@@ -42,7 +42,9 @@ function compareDocuments(
 	return { added, modified, removed };
 }
 
+/** Concise difference result — added, modified, and removed nodes with their IDs and names. */
 export type DiffResult = z.infer<typeof DiffResult>;
+/** Zod schema for the diff result. */
 export const DiffResult = z.object({
 	added: z.array(
 		z.object({
@@ -65,6 +67,7 @@ export const DiffResult = z.object({
 	),
 });
 
+/** Show differences between a SysProM document and a Spec-Kit directory — added, modified, and removed nodes. */
 export const speckitDiffOp = defineOperation({
 	name: "speckitDiff",
 	description:

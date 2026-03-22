@@ -11,8 +11,10 @@ export const PhaseProgressSchema = z.object({
 	percent: z.number(),
 });
 
+/** Per-phase progress metrics: task counts and completion percentage. */
 export type PhaseProgressResult = z.infer<typeof PhaseProgressSchema>;
 
+/** Compute per-phase progress breakdown for a plan — task completion counts and percentages for each phase. */
 export const planProgressOp = defineOperation({
 	name: "planProgress",
 	description: "Get per-phase progress breakdown",

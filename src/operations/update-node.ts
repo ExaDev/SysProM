@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Node } from "../schema.js";
 
+/**
+ * Update specified fields on a node, merging the provided fields into the existing node.
+ *
+ * @throws If the node ID is not found.
+ */
 export const updateNodeOp = defineOperation({
 	name: "updateNode",
 	description:

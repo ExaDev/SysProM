@@ -5,6 +5,7 @@ import { SysProMDocument } from "../schema.js";
 import { parseSpecKitFeature } from "../speckit/parse.js";
 import { detectSpecKitProject } from "../speckit/project.js";
 
+/** Import a Spec-Kit feature directory into a SysProM document. Automatically detects the project's constitution file by searching parent directories. */
 export const speckitImportOp = defineOperation({
 	name: "speckitImport",
 	description: "Import a Spec-Kit feature directory into a SysProM document",

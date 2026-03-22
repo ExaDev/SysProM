@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/**
+ * Mark a task as undone (incomplete) within a change node's plan.
+ *
+ * @throws If the change node is not found or the task index is out of range.
+ */
 export const markTaskUndoneOp = defineOperation({
 	name: "markTaskUndone",
 	description: "Mark a task as undone",

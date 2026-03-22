@@ -23,16 +23,20 @@ export const GateIssueSchema = z.union([
 	}),
 ]);
 
+/** A specific issue preventing gate entry — incomplete tasks, missing acceptance criteria, or unlinked requirements. */
 export type GateIssueResult = z.infer<typeof GateIssueSchema>;
 
+/** Zod schema for the gate check result — phase number, readiness flag, and issues. */
 export const GateResultSchema = z.object({
 	phase: z.number(),
 	ready: z.boolean(),
 	issues: z.array(GateIssueSchema),
 });
 
+/** Result of a gate check: phase number, readiness flag, and any blocking issues. */
 export type GateResultOutput = z.infer<typeof GateResultSchema>;
 
+/** Check gate criteria for phase entry — validates that previous tasks are complete and requirements are linked. */
 export const planGateOp = defineOperation({
 	name: "planGate",
 	description: "Check gate criteria for phase entry",

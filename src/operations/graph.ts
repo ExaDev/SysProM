@@ -79,6 +79,7 @@ function generateGraph(
 	return generateMermaid(doc, rels);
 }
 
+/** Generate a graph of a SysProM document in Mermaid or DOT format, with optional filtering by relationship type. */
 export const graphOp = defineOperation({
 	name: "graph",
 	description:

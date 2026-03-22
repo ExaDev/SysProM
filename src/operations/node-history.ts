@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Node, SysProMDocument } from "../schema.js";
 
+/** Zod schema for a timestamped lifecycle event of a specific node. */
 export const TimelineEvent = z.object({
 	nodeId: z.string(),
 	nodeName: z.string(),
@@ -10,8 +11,10 @@ export const TimelineEvent = z.object({
 	timestamp: z.string(),
 });
 
+/** A timestamped lifecycle event of a specific node. */
 export type TimelineEvent = z.infer<typeof TimelineEvent>;
 
+/** Extract the lifecycle history of a specific node, sorted chronologically. Searches recursively into subsystems. Returns an empty array if the node is not found. */
 export const nodeHistoryOp = defineOperation({
 	name: "node-history",
 	description:

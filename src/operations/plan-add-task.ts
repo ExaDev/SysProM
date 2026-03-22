@@ -3,6 +3,7 @@ import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 import { addTask } from "../speckit/plan.js";
 
+/** Add a task (change node) to a plan's implementation protocol. Optionally specify a parent task for nesting. */
 export const planAddTaskOp = defineOperation({
 	name: "planAddTask",
 	description: "Add a task (change node) to a plan's implementation protocol",

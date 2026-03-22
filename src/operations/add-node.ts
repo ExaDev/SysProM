@@ -2,6 +2,11 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Node } from "../schema.js";
 
+/**
+ * Add a node to a SysProM document. Returns a new document with the node appended.
+ *
+ * @throws If a node with the same ID already exists.
+ */
 export const addNodeOp = defineOperation({
 	name: "addNode",
 	description: "Add a node to the document. Throws if the ID already exists.",

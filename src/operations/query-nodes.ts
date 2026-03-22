@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Node, SysProMDocument } from "../schema.js";
 
+/** Query nodes from a SysProM document with optional filters for type and status. */
 export const queryNodesOp = defineOperation({
 	name: "query-nodes",
 	description: "Query nodes with optional filters for type and status",

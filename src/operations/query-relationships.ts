@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Relationship, SysProMDocument } from "../schema.js";
 
+/** Query relationships from a SysProM document with optional filters for from, to, and type. */
 export const queryRelationshipsOp = defineOperation({
 	name: "query-relationships",
 	description:

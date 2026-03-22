@@ -2,6 +2,7 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 
+/** Zod schema for the result of validating a SysProM document. */
 export const ValidationResult = z.object({
 	valid: z.boolean(),
 	issues: z.array(z.string()),
@@ -9,6 +10,7 @@ export const ValidationResult = z.object({
 	relationshipCount: z.number(),
 });
 
+/** Result of document validation: validity flag, issues list, and counts. */
 export type ValidationResult = z.infer<typeof ValidationResult>;
 
 const DOMAIN_TYPES = new Set([
@@ -19,6 +21,14 @@ const DOMAIN_TYPES = new Set([
 	"invariant",
 ]);
 
+/**
+ * Validate a SysProM document for structural and semantic correctness.
+ *
+ * Checks for duplicate node IDs, dangling relationship endpoints, and
+ * invariant violations (INV2: changes must reference decisions, INV3:
+ * decisions affecting domain nodes must have must_preserve, INV13:
+ * decisions must have options and selected).
+ */
 export const validateOp = defineOperation({
 	name: "validate",
 	description:

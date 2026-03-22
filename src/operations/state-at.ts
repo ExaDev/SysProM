@@ -2,14 +2,17 @@ import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Node, SysProMDocument } from "../schema.js";
 
+/** Zod schema for a node's active lifecycle states at a point in time. */
 export const NodeState = z.object({
 	nodeId: z.string(),
 	nodeName: z.string(),
 	activeStates: z.array(z.string()),
 });
 
+/** A node's active lifecycle states at a given point in time. */
 export type NodeState = z.infer<typeof NodeState>;
 
+/** Determine the active lifecycle states of all nodes at a specific point in time. Boolean lifecycle values are always included; ISO date values are included if they precede the query timestamp. */
 export const stateAtOp = defineOperation({
 	name: "state-at",
 	description:
