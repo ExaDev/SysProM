@@ -135,6 +135,7 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 | [C4](https://c4model.com/) | ✅ | | ✅ | | | | 🔶 | ✅ | | | | | | |
 | [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | 🔶 | | | | 🔶 | | | | 🔶 |
 | [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | 🔶 | | 🔶 | | | | | ✅ | ✅ | ✅ |
+| [PRD](https://en.wikipedia.org/wiki/Product_requirements_document) | ✅ | | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | 🔶 | | | ✅ | 🔶 |
 | [ADR](https://adr.github.io/) | ✅ | | | ✅ | 🔶 | | | | | | | | | |
 | [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
 | [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
