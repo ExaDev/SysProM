@@ -1,3 +1,13 @@
+## [1.0.6](https://github.com/ExaDev/SysProM/compare/v1.0.5...v1.0.6) (2026-03-22)
+
+### Bug Fixes
+
+* **pkg:** remove leading ./ from bin paths ([59f4e86](https://github.com/ExaDev/SysProM/commit/59f4e86ac3e8a3193af4f4a5fa2640894825a9db))
+
+### Build System
+
+* **pkg:** update homepage to GitHub Pages URL ([6ee3371](https://github.com/ExaDev/SysProM/commit/6ee3371c811a5b129f5e9040410df0fa1269e8bc))
+
 ## [1.0.5](https://github.com/ExaDev/SysProM/compare/v1.0.4...v1.0.5) (2026-03-22)
 
 ### Bug Fixes
