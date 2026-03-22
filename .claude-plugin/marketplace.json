@@ -11,7 +11,7 @@
       "name": "sysprom",
       "description": "SysProM (System Provenance Model) — create, query, and manage provenance graphs",
       "version": "1.9.0",
-      "source": ".",
+      "source": "./",
       "category": "productivity",
       "homepage": "https://github.com/ExaDev/SysProM",
       "skills": "./.claude/skills/",
