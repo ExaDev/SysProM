@@ -3354,21 +3354,21 @@
 				},
 				{
 					"description": "Create operations for remaining CLI-only commands (init, json2md, md2json, plan, task, speckit)",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Extract shared CLI concerns (--json, --dry-run, --sync, <input>) into reusable schemas and adapter factories",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Deduplicate CLI argument descriptions that repeat operation input descriptions",
-					"done": false
+					"done": true
 				}
 			],
 			"scope": [
 				"EL3"
 			],
-			"status": "in_progress",
+			"status": "complete",
 			"type": "change"
 		},
 		{

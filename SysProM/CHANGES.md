@@ -598,7 +598,7 @@ Create defineOperation infrastructure, define operations for all domain function
 
 - Implements: D29
 
-- Status: in_progress
+- Status: complete
 
 Scope:
 - EL3
@@ -612,9 +612,9 @@ Scope:
 - [x] Refactor CLI commands to thin adapters
 - [x] Update src/index.ts exports
 - [x] Verify and test
-- [ ] Create operations for remaining CLI-only commands (init, json2md, md2json, plan, task, speckit)
-- [ ] Extract shared CLI concerns (--json, --dry-run, --sync, <input>) into reusable schemas and adapter factories
-- [ ] Deduplicate CLI argument descriptions that repeat operation input descriptions
+- [x] Create operations for remaining CLI-only commands (init, json2md, md2json, plan, task, speckit)
+- [x] Extract shared CLI concerns (--json, --dry-run, --sync, <input>) into reusable schemas and adapter factories
+- [x] Deduplicate CLI argument descriptions that repeat operation input descriptions
 
 #### Lifecycle
 
