@@ -10,7 +10,7 @@
     {
       "name": "sysprom",
       "description": "SysProM (System Provenance Model) — skills for creating, querying, and managing provenance graphs",
-      "version": "1.9.2",
+      "version": "1.9.3",
       "source": "./",
       "category": "productivity",
       "homepage": "https://github.com/ExaDev/SysProM",
@@ -20,7 +20,7 @@
     {
       "name": "sysprom-mcp",
       "description": "SysProM (System Provenance Model) — MCP server for provenance graph operations",
-      "version": "1.9.2",
+      "version": "1.9.3",
       "source": "./",
       "category": "productivity",
       "homepage": "https://github.com/ExaDev/SysProM",

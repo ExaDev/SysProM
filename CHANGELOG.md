@@ -1,3 +1,9 @@
+## [1.9.3](https://github.com/ExaDev/SysProM/compare/v1.9.2...v1.9.3) (2026-03-22)
+
+### Code Refactoring
+
+* **plugin:** split into skills and MCP server plugins ([97d333d](https://github.com/ExaDev/SysProM/commit/97d333d63cb4d5c1e20f9f3a77fcf6d2b8a8b44d))
+
 ## [1.9.2](https://github.com/ExaDev/SysProM/compare/v1.9.1...v1.9.2) (2026-03-22)
 
 ### Bug Fixes
