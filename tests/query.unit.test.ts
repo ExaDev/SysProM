@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { queryNodes, queryNode, queryRelationships, traceFromNode } from "../src/query.js";
+import { queryNodes, queryNode, queryRelationships, traceFromNode, type TraceNode } from "../src/index.js";
 import type { SysProMDocument } from "../src/schema.js";
 
 function makeDoc(): SysProMDocument {
@@ -110,7 +110,7 @@ describe("traceFromNode", () => {
     assert.equal(c1Trace.id, "C1");
     assert.equal(c1Trace.children.length, 2); // C2 and E1 both point to C1
 
-    const childIds = c1Trace.children.map((c) => c.id);
+    const childIds = c1Trace.children.map((c) => (c as TraceNode).id);
     assert.ok(childIds.includes("C2"));
     assert.ok(childIds.includes("E1"));
   });

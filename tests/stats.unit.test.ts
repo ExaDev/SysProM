@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { stats } from "../src/stats.js";
+import { stats } from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeDoc(nodes: Node[] = [], metadata?: SysProMDocument["metadata"]): SysProMDocument {

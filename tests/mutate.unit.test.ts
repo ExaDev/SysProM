@@ -7,7 +7,7 @@ import {
   addRelationship,
   removeRelationship,
   updateMetadata,
-} from "../src/mutate.js";
+} from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeDoc(nodes: Node[] = []): SysProMDocument {

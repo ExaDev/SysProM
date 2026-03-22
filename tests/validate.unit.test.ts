@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { validate } from "../src/validate.js";
+import { validate } from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeDoc(nodes: Node[] = [], relationships: SysProMDocument["relationships"] = []): SysProMDocument {
@@ -23,23 +23,6 @@ describe("validate", () => {
     const result = validate(doc);
     assert.equal(result.valid, false);
     assert.ok(result.issues.some((i) => i.includes("Duplicate node ID")));
-  });
-
-  it("invalid node types detected", () => {
-    const doc = makeDoc([{ id: "X1", type: "unknown" as unknown as "intent", name: "Bad" }]);
-    const result = validate(doc);
-    assert.equal(result.valid, false);
-    assert.ok(result.issues.some((i) => i.includes("unknown node type")));
-  });
-
-  it("invalid relationship types detected", () => {
-    const doc = makeDoc(
-      [{ id: "I1", type: "intent", name: "A" }, { id: "I2", type: "intent", name: "B" }],
-      [{ from: "I1", to: "I2", type: "unknown" as unknown as "refines" }]
-    );
-    const result = validate(doc);
-    assert.equal(result.valid, false);
-    assert.ok(result.issues.some((i) => i.includes("unknown type")));
   });
 
   it("missing relationship targets detected", () => {

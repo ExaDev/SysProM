@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { timeline, nodeHistory, stateAt } from "../src/temporal.js";
+import { timeline, nodeHistory, stateAt } from "../src/index.js";
 import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
 
 function makeDoc(

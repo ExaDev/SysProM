@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { addPlanTask, updatePlanTask } from "../src/mutate.js";
+import { addPlanTask, updatePlanTask } from "../src/index.js";
 import type { SysProMDocument, Node } from "../src/schema.js";
 
 function makeChangeDoc(
