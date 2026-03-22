@@ -10,6 +10,12 @@
   "projectDocuments": ["docs/cli/README.md"],
   "excludePrivate": true,
   "excludeInternal": true,
+  "navigation": {
+    "includeCategories": false,
+    "includeGroups": false,
+    "includeFolders": true,
+    "compactFolders": false
+  },
   "validation": {
     "notExported": true,
     "invalidLink": true,
