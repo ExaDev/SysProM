@@ -598,7 +598,7 @@ Create defineOperation infrastructure, define operations for all domain function
 
 - Implements: D29
 
-- Status: complete
+- Status: in_progress
 
 Scope:
 - EL3
@@ -612,9 +612,27 @@ Scope:
 - [x] Refactor CLI commands to thin adapters
 - [x] Update src/index.ts exports
 - [x] Verify and test
+- [ ] Create operations for remaining CLI-only commands (init, json2md, md2json, plan, task, speckit)
+- [ ] Extract shared CLI concerns (--json, --dry-run, --sync, <input>) into reusable schemas and adapter factories
+- [ ] Deduplicate CLI argument descriptions that repeat operation input descriptions
 
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+
+### CH28 — Implement Claude Code Plugin
+
+Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).
+
+- Implements: D30
+
+- Status: proposed
+
+Scope:
+- EL3
+
+#### Lifecycle
+
+- [x] proposed (2026-03-22)
 

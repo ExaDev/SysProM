@@ -730,3 +730,24 @@ Rationale: Single source of truth eliminates duplication and drift. Operations a
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
+### D30 — Distribute SysProM as a Claude Code Plugin
+
+- Status: accepted
+
+Context: SysProM is a CLI tool and library for tracking system provenance. Claude Code supports plugins that extend its capabilities with skills, commands, hooks, and agents. A plugin would give Claude native awareness of SysProM workflows — recording decisions, tracking changes, checking invariants — directly within coding sessions. The plugin is pure markdown (no compiled code) and delegates to the spm CLI at runtime.
+
+Options:
+- D30-OPT-A: Pure-markdown plugin with skills, commands, hooks, and agents that call spm via Bash. Use spm if globally installed, otherwise npx -y sysprom after npm publication. Instruct user to install from GitHub pre-publication.
+- D30-OPT-B: Bundle compiled CLI into the plugin as a single-file JavaScript bundle. Fully self-contained but requires committing compiled code to git.
+- D30-OPT-C: MCP server wrapping the programmatic API. Provides structured tool access but adds complexity and a Node.js runtime dependency within the plugin.
+- D30-OPT-D: No plugin. Users rely on CLAUDE.md instructions and manual spm invocation.
+
+Chosen: D30-OPT-A
+
+Rationale: A pure-markdown plugin requires no compiled code in git and no build step. Skills teach Claude how to use SysProM; the CLI is resolved at runtime via spm or npx. This follows the pattern of other CLI-wrapping plugins (wayback, devops tools) that treat the CLI as a prerequisite. Distribution via GitHub marketplace requires only a marketplace.json in the repo.
+
+#### Lifecycle
+
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
+
