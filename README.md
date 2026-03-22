@@ -159,9 +159,11 @@ Round-trip conversion between JSON and Markdown is supported with zero informati
 ## Development
 
 ```sh
-pnpm build            # Typecheck + compile + generate schema.json
-pnpm test             # Run all tests
-pnpm test:coverage    # Run tests with coverage report
+pnpm build            # Typecheck + compile + schema + docs (cached via Turbo)
+pnpm test             # Typecheck + run all tests (cached via Turbo)
+pnpm docs             # Generate API + CLI markdown docs
+pnpm docs:html        # Generate HTML site for GitHub Pages
+pnpm docs:serve       # Live-reload HTML docs during development
 ```
 
 ## Self-Description
