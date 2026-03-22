@@ -17,7 +17,10 @@ function makeDoc(nodes: Node[] = []): SysProMDocument {
 describe("addNode", () => {
 	it("adds to nodes array", () => {
 		const doc = makeDoc();
-		const newDoc = addNodeOp({ doc, node: { id: "I1", type: "intent", name: "Test" } });
+		const newDoc = addNodeOp({
+			doc,
+			node: { id: "I1", type: "intent", name: "Test" },
+		});
 		assert.equal(newDoc.nodes.length, 1);
 		assert.equal(newDoc.nodes[0].id, "I1");
 		// Original should be unchanged
@@ -27,7 +30,8 @@ describe("addNode", () => {
 	it("rejects duplicate ID", () => {
 		const doc = makeDoc([{ id: "I1", type: "intent", name: "Existing" }]);
 		assert.throws(
-			() => addNodeOp({ doc, node: { id: "I1", type: "concept", name: "New" } }),
+			() =>
+				addNodeOp({ doc, node: { id: "I1", type: "concept", name: "New" } }),
 			/already exists/,
 		);
 	});
@@ -98,10 +102,14 @@ describe("removeNode", () => {
 describe("updateNode", () => {
 	it("updates specified fields", () => {
 		const doc = makeDoc([{ id: "I1", type: "intent", name: "Old" }]);
-		const newDoc = updateNodeOp({ doc, id: "I1", fields: {
-			name: "New",
-			description: "Updated",
-		}});
+		const newDoc = updateNodeOp({
+			doc,
+			id: "I1",
+			fields: {
+				name: "New",
+				description: "Updated",
+			},
+		});
 		assert.equal(newDoc.nodes[0].name, "New");
 		assert.equal(newDoc.nodes[0].description, "Updated");
 	});
@@ -130,11 +138,14 @@ describe("addRelationship", () => {
 			{ id: "I1", type: "intent", name: "A" },
 			{ id: "I2", type: "intent", name: "B" },
 		]);
-		const newDoc = addRelationshipOp({ doc, rel: {
-			from: "I1",
-			to: "I2",
-			type: "refines",
-		}});
+		const newDoc = addRelationshipOp({
+			doc,
+			rel: {
+				from: "I1",
+				to: "I2",
+				type: "refines",
+			},
+		});
 		assert.equal(newDoc.relationships?.length, 1);
 		assert.equal(newDoc.relationships?.[0].type, "refines");
 	});
@@ -142,7 +153,11 @@ describe("addRelationship", () => {
 	it("throws for missing from node", () => {
 		const doc = makeDoc([{ id: "I2", type: "intent", name: "B" }]);
 		assert.throws(
-			() => addRelationshipOp({ doc, rel: { from: "I1", to: "I2", type: "refines" } }),
+			() =>
+				addRelationshipOp({
+					doc,
+					rel: { from: "I1", to: "I2", type: "refines" },
+				}),
 			/Node not found.*I1/,
 		);
 	});
@@ -150,7 +165,11 @@ describe("addRelationship", () => {
 	it("throws for missing to node", () => {
 		const doc = makeDoc([{ id: "I1", type: "intent", name: "A" }]);
 		assert.throws(
-			() => addRelationshipOp({ doc, rel: { from: "I1", to: "I2", type: "refines" } }),
+			() =>
+				addRelationshipOp({
+					doc,
+					rel: { from: "I1", to: "I2", type: "refines" },
+				}),
 			/Node not found.*I2/,
 		);
 	});
@@ -165,7 +184,12 @@ describe("removeRelationship", () => {
 			],
 			relationships: [{ from: "I1", to: "I2", type: "refines" }],
 		};
-		const newDoc = removeRelationshipOp({ doc, from: "I1", type: "refines", to: "I2" });
+		const newDoc = removeRelationshipOp({
+			doc,
+			from: "I1",
+			type: "refines",
+			to: "I2",
+		});
 		assert.equal(newDoc.relationships?.length ?? 0, 0);
 	});
 
@@ -178,7 +202,8 @@ describe("removeRelationship", () => {
 			relationships: [],
 		};
 		assert.throws(
-			() => removeRelationshipOp({ doc, from: "I1", type: "refines", to: "I2" }),
+			() =>
+				removeRelationshipOp({ doc, from: "I1", type: "refines", to: "I2" }),
 			/not found/,
 		);
 	});

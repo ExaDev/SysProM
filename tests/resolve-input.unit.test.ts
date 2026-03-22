@@ -57,35 +57,23 @@ describe("resolveInput", () => {
 
 	it("finds glob match *.spm.json", () => {
 		writeFileSync(join(TMP, "project.spm.json"), "{}");
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, "project.spm.json"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, "project.spm.json"));
 	});
 
 	it("finds glob match *.spm.md", () => {
 		writeFileSync(join(TMP, "project.spm.md"), "");
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, "project.spm.md"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, "project.spm.md"));
 	});
 
 	it("finds glob match *.spm/ directory", () => {
 		mkdirSync(join(TMP, "project.spm"));
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, "project.spm"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, "project.spm"));
 	});
 
 	it("prefers *.spm.json over *.spm.md", () => {
 		writeFileSync(join(TMP, "project.spm.json"), "{}");
 		writeFileSync(join(TMP, "project.spm.md"), "");
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, "project.spm.json"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, "project.spm.json"));
 	});
 
 	it("errors on multiple *.spm.json matches", () => {
@@ -151,18 +139,12 @@ describe("resolveInput", () => {
 
 	it("finds .SysProM.json (case-insensitive)", () => {
 		writeFileSync(join(TMP, ".SysProM.json"), "{}");
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, ".SysProM.json"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, ".SysProM.json"));
 	});
 
 	it("finds Project.SPM.JSON (case-insensitive glob)", () => {
 		writeFileSync(join(TMP, "Project.SPM.JSON"), "{}");
-		assert.equal(
-			resolveInput(undefined, TMP),
-			join(TMP, "Project.SPM.JSON"),
-		);
+		assert.equal(resolveInput(undefined, TMP), join(TMP, "Project.SPM.JSON"));
 	});
 
 	it("finds .SYSPROM/ directory (case-insensitive)", () => {
@@ -181,25 +163,33 @@ describe("resolveInput", () => {
 		return result;
 	})();
 
-	it("errors on case-variant exact matches (.spm.json vs .SPM.json)", {
-		skip: !caseSensitiveFs && "case-insensitive filesystem",
-	}, () => {
-		writeFileSync(join(TMP, ".spm.json"), "{}");
-		writeFileSync(join(TMP, ".SPM.json"), "{}");
-		assert.throws(
-			() => resolveInput(undefined, TMP),
-			/Multiple SysProM documents found/,
-		);
-	});
+	it(
+		"errors on case-variant exact matches (.spm.json vs .SPM.json)",
+		{
+			skip: !caseSensitiveFs && "case-insensitive filesystem",
+		},
+		() => {
+			writeFileSync(join(TMP, ".spm.json"), "{}");
+			writeFileSync(join(TMP, ".SPM.json"), "{}");
+			assert.throws(
+				() => resolveInput(undefined, TMP),
+				/Multiple SysProM documents found/,
+			);
+		},
+	);
 
-	it("errors on case-variant glob matches (a.spm.json vs A.SPM.JSON)", {
-		skip: !caseSensitiveFs && "case-insensitive filesystem",
-	}, () => {
-		writeFileSync(join(TMP, "a.spm.json"), "{}");
-		writeFileSync(join(TMP, "A.SPM.JSON"), "{}");
-		assert.throws(
-			() => resolveInput(undefined, TMP),
-			/Multiple SysProM documents found/,
-		);
-	});
+	it(
+		"errors on case-variant glob matches (a.spm.json vs A.SPM.JSON)",
+		{
+			skip: !caseSensitiveFs && "case-insensitive filesystem",
+		},
+		() => {
+			writeFileSync(join(TMP, "a.spm.json"), "{}");
+			writeFileSync(join(TMP, "A.SPM.JSON"), "{}");
+			assert.throws(
+				() => resolveInput(undefined, TMP),
+				/Multiple SysProM documents found/,
+			);
+		},
+	);
 });

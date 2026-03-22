@@ -23,7 +23,9 @@ function spm(args: string): string {
 
 describe("spm init", () => {
 	beforeEach(() => mkdirSync(TMP, { recursive: true }));
-	afterEach(() => rmSync(TMP, { recursive: true, force: true }));
+	afterEach(() => {
+		rmSync(TMP, { recursive: true, force: true });
+	});
 
 	it("creates .spm.json in existing directory (default format)", () => {
 		spm(`init ${TMP}`);
@@ -74,9 +76,7 @@ describe("spm init", () => {
 
 	it("respects --title and --scope", () => {
 		spm(`init ${TMP} --title "My Project" --scope application`);
-		const doc = JSON.parse(
-			readFileSync(join(TMP, ".spm.json"), "utf8"),
-		);
+		const doc = JSON.parse(readFileSync(join(TMP, ".spm.json"), "utf8"));
 		assert.equal(doc.metadata.title, "My Project");
 		assert.equal(doc.metadata.scope, "application");
 	});

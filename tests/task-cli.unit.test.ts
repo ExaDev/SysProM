@@ -18,7 +18,11 @@ function makeChangeDoc(
 describe("addPlanTask", () => {
 	it("appends task when plan already exists", () => {
 		const doc = makeChangeDoc([{ description: "existing task", done: false }]);
-		const newDoc = addPlanTaskOp({ doc, changeId: "CH1", description: "new task" });
+		const newDoc = addPlanTaskOp({
+			doc,
+			changeId: "CH1",
+			description: "new task",
+		});
 		assert.equal(newDoc.nodes[0].plan?.length, 2);
 		assert.equal(newDoc.nodes[0].plan?.[1].description, "new task");
 		assert.equal(newDoc.nodes[0].plan?.[1].done, false);
@@ -26,7 +30,11 @@ describe("addPlanTask", () => {
 
 	it("creates plan array when plan is undefined", () => {
 		const doc = makeChangeDoc();
-		const newDoc = addPlanTaskOp({ doc, changeId: "CH1", description: "first task" });
+		const newDoc = addPlanTaskOp({
+			doc,
+			changeId: "CH1",
+			description: "first task",
+		});
 		assert.equal(newDoc.nodes[0].plan?.length, 1);
 		assert.equal(newDoc.nodes[0].plan?.[0].description, "first task");
 		assert.equal(newDoc.nodes[0].plan?.[0].done, false);
@@ -50,20 +58,31 @@ describe("addPlanTask", () => {
 describe("updatePlanTask", () => {
 	it("sets done: true at a valid index", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
-		const newDoc = updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true });
+		const newDoc = updatePlanTaskOp({
+			doc,
+			changeId: "CH1",
+			taskIndex: 0,
+			done: true,
+		});
 		assert.equal(newDoc.nodes[0].plan?.[0].done, true);
 	});
 
 	it("sets done: false at a valid index (undone)", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: true }]);
-		const newDoc = updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: false });
+		const newDoc = updatePlanTaskOp({
+			doc,
+			changeId: "CH1",
+			taskIndex: 0,
+			done: false,
+		});
 		assert.equal(newDoc.nodes[0].plan?.[0].done, false);
 	});
 
 	it("throws out-of-range for index equal to plan length", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		assert.throws(
-			() => updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 1, done: true }),
+			() =>
+				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 1, done: true }),
 			/Task index 1 out of range/,
 		);
 	});
@@ -71,20 +90,31 @@ describe("updatePlanTask", () => {
 	it("throws out-of-range for negative index", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		assert.throws(
-			() => updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: -1, done: true }),
+			() =>
+				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: -1, done: true }),
 			/Task index -1 out of range/,
 		);
 	});
 
 	it("throws when plan is undefined", () => {
 		const doc = makeChangeDoc();
-		assert.throws(() => updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true }), /out of range/);
+		assert.throws(
+			() =>
+				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true }),
+			/out of range/,
+		);
 	});
 
 	it("throws Node not found for unknown change ID", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		assert.throws(
-			() => updatePlanTaskOp({ doc, changeId: "MISSING", taskIndex: 0, done: true }),
+			() =>
+				updatePlanTaskOp({
+					doc,
+					changeId: "MISSING",
+					taskIndex: 0,
+					done: true,
+				}),
 			/Node not found.*MISSING/,
 		);
 	});
@@ -100,7 +130,12 @@ describe("updatePlanTask", () => {
 			{ description: "task A", done: false },
 			{ description: "task B", done: false },
 		]);
-		const newDoc = updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true });
+		const newDoc = updatePlanTaskOp({
+			doc,
+			changeId: "CH1",
+			taskIndex: 0,
+			done: true,
+		});
 		assert.equal(newDoc.nodes[0].plan?.[1].done, false);
 	});
 });
