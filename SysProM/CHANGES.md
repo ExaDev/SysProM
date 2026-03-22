@@ -488,8 +488,8 @@ Operations:
 
 #### Lifecycle
 
-- [ ] proposed (2026-03-21)
 - [ ] implemented (2026-03-21)
+- [ ] proposed (2026-03-21)
 
 ### CH20 — Add Turborepo Build Orchestration
 
@@ -508,6 +508,45 @@ Operations:
 
 #### Lifecycle
 
-- [ ] proposed (2026-03-21)
 - [ ] implemented (2026-03-21)
+- [ ] proposed (2026-03-21)
+
+### CH21 — Add CI/CD Pipeline
+
+Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub Pages deployment, and npm publishing via OIDC trusted publishers. Add commitlint with husky hooks, semantic-release with all commit types triggering releases, and Dependabot for dependency updates.
+
+- Implements: D23
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
+
+### CH22 — Remove Type Assertions
+
+Replace all as type coercions across library and CLI code with runtime validation. Use Zod .is() and .safeParse() for domain type narrowing, isRecord() for object checks, instanceof for error handling, and properly typed Commander action handlers.
+
+- Implements: D24
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
+
+### CH23 — Switch to Compiled Distribution
+
+Update package.json entry points to reference compiled JavaScript in dist/. Move tsx from dependencies to devDependencies. Change CLI shebang to #!/usr/bin/env node.
+
+- Implements: D25
+
+- Status: complete
+
+#### Lifecycle
+
+- [ ] implemented (2026-03-22)
+- [ ] proposed (2026-03-22)
 

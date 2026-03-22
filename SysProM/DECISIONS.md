@@ -543,8 +543,8 @@ Rationale: TypeDoc directly generates docs from TypeScript source with minimal c
 
 #### Lifecycle
 
-- [ ] proposed (2026-03-21)
 - [ ] accepted (2026-03-21)
+- [ ] proposed (2026-03-21)
 
 ### D22 — Adopt Turborepo for Build Orchestration
 
@@ -566,6 +566,75 @@ Rationale: Turborepo provides automatic caching (FULL TURBO on repeat builds), p
 
 #### Lifecycle
 
-- [ ] proposed (2026-03-21)
 - [ ] accepted (2026-03-21)
+- [ ] proposed (2026-03-21)
+
+### D23 — Enforce Conventional Commits and Automated Releases
+
+Adopt commitlint for commit message enforcement, semantic-release for automated publishing, and husky for git hook management.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The project uses conventional commit messages informally. Enforcing them with tooling enables automated releases, changelogs, and consistent commit history.
+
+Options:
+- D23-OPT-A: commitlint with conventional commits preset, semantic-release with all commit types triggering releases, and husky for pre-commit and commit-msg hooks.
+- D23-OPT-B: Manual release process with no commit message enforcement.
+
+Chosen: D23-OPT-A
+
+Rationale: Automated enforcement ensures every commit follows conventional format, enabling semantic-release to determine version bumps and generate changelogs. All commit types trigger patch releases so no work is excluded.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
+
+### D24 — Eliminate Type Assertions
+
+Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The codebase contained numerous as type assertions that bypass the type checker, telling the compiler to trust the developer rather than proving correctness at runtime.
+
+Options:
+- D24-OPT-A: Replace all as assertions with runtime validation using Zod .is() type guards, instanceof checks, and properly typed function parameters.
+- D24-OPT-B: Keep type assertions where TypeScript cannot express the constraint. Accept the risk of runtime type mismatches.
+
+Chosen: D24-OPT-A
+
+Rationale: Runtime validation catches type errors that assertions silently mask. The Zod schema provides .is() type guards via defineSchema — using them is both safer and consistent with the single-source-of-truth pattern.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
+
+### D25 — Ship Compiled JavaScript
+
+Switch package entry points (main, exports, bin) from TypeScript source to compiled JavaScript in dist/, removing the tsx runtime dependency for consumers.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: The package previously shipped TypeScript source and required tsx at runtime. Consumers needed tsx as a dependency to use the CLI or import the library.
+
+Options:
+- D25-OPT-A: Point main, exports, and bin to compiled dist/ output. Move tsx to devDependencies. Consumers only need Node.js.
+- D25-OPT-B: Keep shipping TypeScript source with tsx as a runtime dependency.
+
+Chosen: D25-OPT-A
+
+Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, reduces install size, and follows standard npm package conventions.
+
+#### Lifecycle
+
+- [ ] accepted (2026-03-22)
+- [ ] proposed (2026-03-22)
 

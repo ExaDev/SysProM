@@ -2983,8 +2983,8 @@
 			"description": "Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.",
 			"id": "D21",
 			"lifecycle": {
-				"proposed": "2026-03-21",
-				"accepted": "2026-03-21"
+				"accepted": "2026-03-21",
+				"proposed": "2026-03-21"
 			},
 			"name": "Adopt TypeDoc for Documentation",
 			"options": [
@@ -3006,8 +3006,8 @@
 			"description": "Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.",
 			"id": "CH19",
 			"lifecycle": {
-				"proposed": "2026-03-21",
-				"implemented": "2026-03-21"
+				"implemented": "2026-03-21",
+				"proposed": "2026-03-21"
 			},
 			"name": "Add TypeDoc Documentation Pipeline",
 			"operations": [
@@ -3035,8 +3035,8 @@
 			"description": "Choose Turborepo for build task orchestration with dependency management and output caching.",
 			"id": "D22",
 			"lifecycle": {
-				"proposed": "2026-03-21",
-				"accepted": "2026-03-21"
+				"accepted": "2026-03-21",
+				"proposed": "2026-03-21"
 			},
 			"name": "Adopt Turborepo for Build Orchestration",
 			"options": [
@@ -3058,8 +3058,8 @@
 			"description": "Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.",
 			"id": "CH20",
 			"lifecycle": {
-				"proposed": "2026-03-21",
-				"implemented": "2026-03-21"
+				"implemented": "2026-03-21",
+				"proposed": "2026-03-21"
 			},
 			"name": "Add Turborepo Build Orchestration",
 			"operations": [
@@ -3075,6 +3075,111 @@
 			"scope": [
 				"EL3"
 			],
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"context": "The project uses conventional commit messages informally. Enforcing them with tooling enables automated releases, changelogs, and consistent commit history.",
+			"description": "Adopt commitlint for commit message enforcement, semantic-release for automated publishing, and husky for git hook management.",
+			"id": "D23",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Enforce Conventional Commits and Automated Releases",
+			"options": [
+				{
+					"description": "commitlint with conventional commits preset, semantic-release with all commit types triggering releases, and husky for pre-commit and commit-msg hooks.",
+					"id": "D23-OPT-A"
+				},
+				{
+					"description": "Manual release process with no commit message enforcement.",
+					"id": "D23-OPT-B"
+				}
+			],
+			"rationale": "Automated enforcement ensures every commit follows conventional format, enabling semantic-release to determine version bumps and generate changelogs. All commit types trigger patch releases so no work is excluded.",
+			"selected": "D23-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub Pages deployment, and npm publishing via OIDC trusted publishers. Add commitlint with husky hooks, semantic-release with all commit types triggering releases, and Dependabot for dependency updates.",
+			"id": "CH21",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Add CI/CD Pipeline",
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"context": "The codebase contained numerous as type assertions that bypass the type checker, telling the compiler to trust the developer rather than proving correctness at runtime.",
+			"description": "Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.",
+			"id": "D24",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Eliminate Type Assertions",
+			"options": [
+				{
+					"description": "Replace all as assertions with runtime validation using Zod .is() type guards, instanceof checks, and properly typed function parameters.",
+					"id": "D24-OPT-A"
+				},
+				{
+					"description": "Keep type assertions where TypeScript cannot express the constraint. Accept the risk of runtime type mismatches.",
+					"id": "D24-OPT-B"
+				}
+			],
+			"rationale": "Runtime validation catches type errors that assertions silently mask. The Zod schema provides .is() type guards via defineSchema — using them is both safer and consistent with the single-source-of-truth pattern.",
+			"selected": "D24-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Replace all as type coercions across library and CLI code with runtime validation. Use Zod .is() and .safeParse() for domain type narrowing, isRecord() for object checks, instanceof for error handling, and properly typed Commander action handlers.",
+			"id": "CH22",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Remove Type Assertions",
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"context": "The package previously shipped TypeScript source and required tsx at runtime. Consumers needed tsx as a dependency to use the CLI or import the library.",
+			"description": "Switch package entry points (main, exports, bin) from TypeScript source to compiled JavaScript in dist/, removing the tsx runtime dependency for consumers.",
+			"id": "D25",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Ship Compiled JavaScript",
+			"options": [
+				{
+					"description": "Point main, exports, and bin to compiled dist/ output. Move tsx to devDependencies. Consumers only need Node.js.",
+					"id": "D25-OPT-A"
+				},
+				{
+					"description": "Keep shipping TypeScript source with tsx as a runtime dependency.",
+					"id": "D25-OPT-B"
+				}
+			],
+			"rationale": "Shipping compiled JavaScript removes the tsx runtime dependency, reduces install size, and follows standard npm package conventions.",
+			"selected": "D25-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Update package.json entry points to reference compiled JavaScript in dist/. Move tsx from dependencies to devDependencies. Change CLI shebang to #!/usr/bin/env node.",
+			"id": "CH23",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Switch to Compiled Distribution",
 			"status": "complete",
 			"type": "change"
 		}
@@ -3983,6 +4088,36 @@
 		},
 		{
 			"from": "D22",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH21",
+			"to": "D23",
+			"type": "implements"
+		},
+		{
+			"from": "D23",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH22",
+			"to": "D24",
+			"type": "implements"
+		},
+		{
+			"from": "D24",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH23",
+			"to": "D25",
+			"type": "implements"
+		},
+		{
+			"from": "D25",
 			"to": "INV2",
 			"type": "must_preserve"
 		}
