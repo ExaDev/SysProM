@@ -1,0 +1,9 @@
+{
+	"mcpServers": {
+		"sysprom": {
+			"command": "npx",
+			"args": ["-y", "sysprom-mcp"],
+			"env": {}
+		}
+	}
+}

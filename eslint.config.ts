@@ -18,7 +18,7 @@ const noReExports: Rule.RuleModule = {
 		},
 	},
 	create(context) {
-		const filename = context.filename ?? context.getFilename();
+		const filename = context.filename;
 		const isIndex = /\/index\.[cm]?[jt]sx?$/.test(filename);
 		if (isIndex) return {};
 
@@ -44,7 +44,7 @@ const indexReExportsOnly: Rule.RuleModule = {
 		},
 	},
 	create(context) {
-		const filename = context.filename ?? context.getFilename();
+		const filename = context.filename;
 		const isIndex = /\/index\.[cm]?[jt]sx?$/.test(filename);
 		if (!isIndex) return {};
 
@@ -147,6 +147,7 @@ export default defineConfig(
 	},
 	{
 		rules: {
+			"@typescript-eslint/ban-ts-comment": "error",
 			"@typescript-eslint/consistent-type-assertions": [
 				"error",
 				{ assertionStyle: "never" },
