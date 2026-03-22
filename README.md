@@ -237,3 +237,75 @@ spm md2json ./.spm .spm.json
 ```
 
 > **Important:** Always keep `.spm.json` and `./.spm/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `spm validate` before committing.
+
+## Claude Code Plugin
+
+SysProM is available as a Claude Code plugin with 28 skills for managing provenance documents. The plugin is defined in `.claude-plugin/marketplace.json` with skills in `.claude/skills/`.
+
+### Install from Marketplace
+
+```sh
+# Add the SysProM marketplace
+/plugin marketplace add ExaDev/SysProM
+
+# Install the plugin
+/plugin install sysprom@sysprom
+```
+
+Skills are namespaced when installed as a plugin (e.g. `/sysprom:add-decision`, `/sysprom:query-nodes`).
+
+### Local Development
+
+When working on the SysProM repo itself, skills in `.claude/skills/` are auto-discovered without plugin installation. Skills use short names (e.g. `/add-decision`, `/query-nodes`).
+
+### Skills by Category
+
+**Node Creation (4 skills)**
+- `add-decision` — Create decision nodes with context, options, rationale, and invariant links
+- `add-change` — Create change nodes with scope, operations, and task tracking
+- `add-invariant` — Create invariant nodes representing system rules and constraints
+- `add-node` — Generic node creation for any SysProM type
+
+**Node Modification (3 skills)**
+- `update-node` — Modify node fields, status, lifecycle, context, or rationale
+- `remove-node` — Delete nodes with safety flags (hard delete, recursive, repair)
+- `rename-node` — Rename node IDs across all references
+
+**Relationships (2 skills)**
+- `add-relationship` — Create relationships between nodes with specific types
+- `remove-relationship` — Delete relationships
+
+**Query & Analysis (5 skills)**
+- `query-nodes` — Search nodes by type, status, text, or ID
+- `query-relationships` — Query relationships by source, target, or type
+- `trace-node` — Trace refinement chains through abstraction layers
+- `check-document` — Validate document structure and report issues
+- `stats` — Show document statistics and composition metrics
+
+**Visualisation (1 skill)**
+- `graph` — Generate Mermaid or DOT graphs with filtering
+
+**Format Conversion (4 skills)**
+- `init-document` — Create new SysProM documents with metadata
+- `json-to-markdown` — Convert JSON to Markdown format
+- `markdown-to-json` — Convert Markdown to JSON format
+- `sync-formats` — Bidirectional sync between JSON and Markdown
+
+**Spec-Kit Integration (4 skills)**
+- `speckit-import` — Import Spec-Kit features as SysProM nodes
+- `speckit-export` — Export SysProM nodes to Spec-Kit format
+- `speckit-sync` — Bidirectional sync with Spec-Kit specifications
+- `speckit-diff` — Show differences between SysProM and Spec-Kit
+
+**Task Management (3 skills)**
+- `task-list` — List tasks in a change node with progress
+- `task-add` — Add tasks to a change
+- `task-mark-done` — Mark tasks as complete
+
+**Plan Management (2 skills)**
+- `plan-init` — Initialise plans with phases and gates
+- `plan-status` — Show plan progress and phase gates
+
+### Fallback to `npx`
+
+If `spm` is not globally installed, skills automatically fall back to `npx -y sysprom` for command execution. All skills work with either global or per-project installation.
