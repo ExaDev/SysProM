@@ -5,6 +5,7 @@ import { textToString } from "../text.js";
 // Types
 // ============================================================================
 
+/** Comprehensive status of all plan components — constitution, spec, plan, tasks, checklist, and next step. */
 export interface PlanStatus {
 	constitution: { defined: boolean; principleCount: number };
 	spec: {
@@ -18,6 +19,7 @@ export interface PlanStatus {
 	nextStep: string;
 }
 
+/** Per-phase progress metrics — task counts and completion percentage. */
 export interface PhaseProgress {
 	phase: number;
 	name: string;
@@ -26,18 +28,21 @@ export interface PhaseProgress {
 	percent: number;
 }
 
+/** A specific issue preventing gate entry — incomplete tasks, missing acceptance criteria, or unlinked requirements. */
 export type GateIssue =
 	| { kind: "previous_tasks_incomplete"; phase: number; remaining: number }
 	| { kind: "user_story_no_change"; storyId: string }
 	| { kind: "user_story_no_acceptance_criteria"; storyId: string }
 	| { kind: "fr_no_change"; frId: string };
 
+/** Result of a gate check — phase number, readiness flag, and any blocking issues. */
 export interface GateResult {
 	phase: number;
 	ready: boolean;
 	issues: GateIssue[];
 }
 
+/** Task completion counts — total and done. */
 export interface TaskCount {
 	total: number;
 	done: number;

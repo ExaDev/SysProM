@@ -103,6 +103,7 @@ function formatStatus(status?: string): string {
 // generate Constitution
 // ============================================================================
 
+/** Generate a Spec-Kit constitution file from a SysProM document's principles and invariants. */
 export function generateConstitution(
 	doc: SysProMDocument,
 	prefix: string,
@@ -191,6 +192,7 @@ export function generateConstitution(
 // generateSpec
 // ============================================================================
 
+/** Generate a Spec-Kit specification file from a SysProM document's user stories, FRs, and acceptance criteria. */
 export function generateSpec(doc: SysProMDocument, prefix: string): string {
 	const specId = `${prefix}-SPEC`;
 	const spec = findNode(doc, specId);
@@ -330,6 +332,7 @@ export function generateSpec(doc: SysProMDocument, prefix: string): string {
 // generatePlan
 // ============================================================================
 
+/** Generate a Spec-Kit plan file from a SysProM document's phases and milestones. */
 export function generatePlan(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
 	const protocol = findNode(doc, implProtocolId);
@@ -387,6 +390,7 @@ export function generatePlan(doc: SysProMDocument, prefix: string): string {
 // generateTasks
 // ============================================================================
 
+/** Generate a Spec-Kit tasks file from a SysProM document's change nodes. */
 export function generateTasks(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
 	const protocol = findNode(doc, implProtocolId);
@@ -576,6 +580,7 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 // generateChecklist
 // ============================================================================
 
+/** Generate a Spec-Kit checklist file from a SysProM document's gate nodes. */
 export function generateChecklist(
 	doc: SysProMDocument,
 	prefix: string,
@@ -643,6 +648,7 @@ export function generateChecklist(
 // generateSpecKitProject
 // ============================================================================
 
+/** Generate a complete Spec-Kit project directory from a SysProM document — constitution, spec, plan, tasks, and checklist files. */
 export function generateSpecKitProject(
 	doc: SysProMDocument,
 	outputDir: string,

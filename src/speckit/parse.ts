@@ -18,8 +18,11 @@ interface Section {
 	children: Section[];
 }
 
+/** Result of parsing a Spec-Kit file — extracted nodes and relationships. */
 export interface ParseResult {
+	/** Nodes extracted from the parsed content. */
 	nodes: Node[];
+	/** Relationships extracted from the parsed content. */
 	relationships: Relationship[];
 }
 
@@ -187,6 +190,7 @@ function extractValue(body: string, key: string): string | undefined {
 // constitution.md parser
 // ---------------------------------------------------------------------------
 
+/** Parse a Spec-Kit constitution file into SysProM nodes (principles and invariants) and relationships. */
 export function parseConstitution(
 	content: string,
 	idPrefix: string,
@@ -296,6 +300,7 @@ export function parseConstitution(
 // spec.md parser
 // ---------------------------------------------------------------------------
 
+/** Parse a Spec-Kit specification file into SysProM nodes (user stories, functional requirements, acceptance criteria). */
 export function parseSpec(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -508,6 +513,7 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
 // plan.md parser
 // ---------------------------------------------------------------------------
 
+/** Parse a Spec-Kit plan file into SysProM nodes (phases, milestones) and relationships. */
 export function parsePlan(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -613,6 +619,7 @@ export function parsePlan(content: string, idPrefix: string): ParseResult {
 // tasks.md parser
 // ---------------------------------------------------------------------------
 
+/** Parse a Spec-Kit tasks file into SysProM change nodes with task plans. */
 export function parseTasks(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -739,6 +746,7 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
 // checklist.md parser
 // ---------------------------------------------------------------------------
 
+/** Parse a Spec-Kit checklist file into SysProM gate nodes with task plans. */
 export function parseChecklist(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
 	const allSections = flattenSections(sections);
@@ -799,6 +807,7 @@ export function parseChecklist(content: string, idPrefix: string): ParseResult {
 // Full feature directory parser
 // ---------------------------------------------------------------------------
 
+/** Parse an entire Spec-Kit feature directory into a SysProM document, combining constitution, spec, plan, tasks, and checklist. */
 export function parseSpecKitFeature(
 	featureDir: string,
 	idPrefix: string,

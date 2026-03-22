@@ -1,13 +1,19 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+/** Detected Spec-Kit project structure — root directory and paths to key directories and files. */
 export interface SpecKitProject {
-	root: string; // project root directory
-	specifyDir: string | null; // path to .specify/ if found
-	specsDir: string | null; // path to specs/ if found
-	constitutionPath: string | null; // path to constitution.md
+	/** Project root directory. */
+	root: string;
+	/** Path to `.specify/` directory, or null if not found. */
+	specifyDir: string | null;
+	/** Path to `specs/` directory, or null if not found. */
+	specsDir: string | null;
+	/** Path to `constitution.md`, or null if not found. */
+	constitutionPath: string | null;
 }
 
+/** A single Spec-Kit feature with its metadata and file paths. */
 export interface SpecKitFeature {
 	id: string; // e.g., "001-feature-name"
 	number: number; // e.g., 1
