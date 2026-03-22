@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/ExaDev/SysProM/compare/v1.9.3...v1.10.0) (2026-03-22)
+
+### Features
+
+* **cli:** add mcp subcommand for reliable MCP server invocation ([46e779b](https://github.com/ExaDev/SysProM/commit/46e779b1892de70d367ccc6cbf516cb84caaf496))
+
 ## [1.9.3](https://github.com/ExaDev/SysProM/compare/v1.9.2...v1.9.3) (2026-03-22)
 
 ### Code Refactoring
