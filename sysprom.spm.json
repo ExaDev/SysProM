@@ -3374,14 +3374,10 @@
 		{
 			"context": "SysProM is a CLI tool and library for tracking system provenance. Claude Code supports plugins that extend its capabilities with skills, commands, hooks, and agents. A plugin would give Claude native awareness of SysProM workflows — recording decisions, tracking changes, checking invariants — directly within coding sessions. The plugin is pure markdown (no compiled code) and delegates to the spm CLI at runtime.",
 			"id": "D30",
-			"lifecycle": {
-				"accepted": "2026-03-22",
-				"proposed": "2026-03-22"
-			},
 			"name": "Distribute SysProM as a Claude Code Plugin",
 			"options": [
 				{
-					"description": "Pure-markdown plugin with skills, commands, hooks, and agents that call spm via Bash. Use spm if globally installed, otherwise npx -y sysprom after npm publication. Instruct user to install from GitHub pre-publication.",
+					"description": "Pure-markdown plugin with skills, commands, hooks, and agents that call spm via Bash. Use spm if globally installed, otherwise npx -y sysprom after npm publication.",
 					"id": "D30-OPT-A"
 				},
 				{
@@ -3399,20 +3395,74 @@
 			],
 			"rationale": "A pure-markdown plugin requires no compiled code in git and no build step. Skills teach Claude how to use SysProM; the CLI is resolved at runtime via spm or npx. This follows the pattern of other CLI-wrapping plugins (wayback, devops tools) that treat the CLI as a prerequisite. Distribution via GitHub marketplace requires only a marketplace.json in the repo.",
 			"selected": "D30-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
 			"description": "Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).",
 			"id": "CH28",
-			"lifecycle": {
-				"proposed": "2026-03-22"
-			},
 			"name": "Implement Claude Code Plugin",
-			"scope": [
-				"EL3"
+			"plan": [
+				{
+					"description": "Create .claude-plugin/plugin.json manifest",
+					"done": false
+				},
+				{
+					"description": "Create .claude-plugin/marketplace.json for GitHub distribution",
+					"done": false
+				},
+				{
+					"description": "Create sysprom-workflow skill — core workflow guidance for using SysProM during development",
+					"done": false
+				},
+				{
+					"description": "Create decision-recording skill — how to structure decisions with context, options, rationale",
+					"done": false
+				},
+				{
+					"description": "Create change-tracking skill — lifecycle management for changes (proposed to complete)",
+					"done": false
+				},
+				{
+					"description": "Create /spm-decide command — interactive decision recording",
+					"done": false
+				},
+				{
+					"description": "Create /spm-change command — record a change with scope and operations",
+					"done": false
+				},
+				{
+					"description": "Create /spm-status command — show project state and timeline",
+					"done": false
+				},
+				{
+					"description": "Create /spm-trace command — trace dependencies from a node",
+					"done": false
+				},
+				{
+					"description": "Create /spm-sync command — sync JSON and Markdown representations",
+					"done": false
+				},
+				{
+					"description": "Create provenance-tracker agent — auto-tracks decisions during dev work",
+					"done": false
+				},
+				{
+					"description": "Create Stop hook — remind to record decisions at session end",
+					"done": false
+				},
+				{
+					"description": "Add CLI fallback pattern — try spm, then npx -y sysprom, then instruct user to install",
+					"done": false
+				},
+				{
+					"description": "Add README.md for plugin with installation and usage instructions",
+					"done": false
+				},
+				{
+					"description": "Sync JSON to Markdown",
+					"done": false
+				}
 			],
-			"status": "proposed",
 			"type": "change"
 		}
 	],

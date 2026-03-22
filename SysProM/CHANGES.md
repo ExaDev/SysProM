@@ -627,12 +627,21 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 
 - Implements: D30
 
-- Status: proposed
+#### Plan
 
-Scope:
-- EL3
-
-#### Lifecycle
-
-- [x] proposed (2026-03-22)
+- [ ] Create .claude-plugin/plugin.json manifest
+- [ ] Create .claude-plugin/marketplace.json for GitHub distribution
+- [ ] Create sysprom-workflow skill — core workflow guidance for using SysProM during development
+- [ ] Create decision-recording skill — how to structure decisions with context, options, rationale
+- [ ] Create change-tracking skill — lifecycle management for changes (proposed to complete)
+- [ ] Create /spm-decide command — interactive decision recording
+- [ ] Create /spm-change command — record a change with scope and operations
+- [ ] Create /spm-status command — show project state and timeline
+- [ ] Create /spm-trace command — trace dependencies from a node
+- [ ] Create /spm-sync command — sync JSON and Markdown representations
+- [ ] Create provenance-tracker agent — auto-tracks decisions during dev work
+- [ ] Create Stop hook — remind to record decisions at session end
+- [ ] Add CLI fallback pattern — try spm, then npx -y sysprom, then instruct user to install
+- [ ] Add README.md for plugin with installation and usage instructions
+- [ ] Sync JSON to Markdown
 
