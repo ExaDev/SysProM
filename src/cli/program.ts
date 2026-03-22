@@ -23,32 +23,32 @@ const VERSION = "1.0.0";
 export const program = new Command();
 
 program
-  .name("sysprom")
-  .description(
-    "System Provenance Model CLI — record where every part of a system came from",
-  )
-  .version(VERSION)
-  .showHelpAfterError(true);
+	.name("sysprom")
+	.description(
+		"System Provenance Model CLI — record where every part of a system came from",
+	)
+	.version(VERSION)
+	.showHelpAfterError(true);
 
 export const commands: CommandDef[] = [
-  validateCommand,
-  statsCommand,
-  json2mdCommand,
-  md2jsonCommand,
-  queryCommand,
-  addCommand,
-  removeCommand,
-  updateCommand,
-  initCommand,
-  searchCommand,
-  checkCommand,
-  graphCommand,
-  renameCommand,
-  speckitCommand,
-  taskCommand,
-  planCommand,
+	validateCommand,
+	statsCommand,
+	json2mdCommand,
+	md2jsonCommand,
+	queryCommand,
+	addCommand,
+	removeCommand,
+	updateCommand,
+	initCommand,
+	searchCommand,
+	checkCommand,
+	graphCommand,
+	renameCommand,
+	speckitCommand,
+	taskCommand,
+	planCommand,
 ];
 
 for (const cmd of commands) {
-  buildCommander(cmd, program);
+	buildCommander(cmd, program);
 }

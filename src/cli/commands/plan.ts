@@ -32,7 +32,7 @@ const initSubcommand: CommandDef<typeof initArgs, typeof initOpts> = {
 	action(args, opts) {
 		const outputPath = args.output;
 		const prefix = opts.prefix;
-		const name = opts.name || prefix;
+		const name = opts.name ?? prefix;
 
 		if (existsSync(outputPath)) {
 			console.error(`Output file already exists: ${outputPath}`);
@@ -119,19 +119,19 @@ const statusSubcommand: CommandDef<typeof statusArgs, typeof statusOpts> = {
 				defined ? "✅ defined" : "❌ not defined";
 
 			console.log(
-				`Constitution: ${formatBoolean(status.constitution.defined)} (${status.constitution.principleCount} principles)`,
+				`Constitution: ${formatBoolean(status.constitution.defined)} (${String(status.constitution.principleCount)} principles)`,
 			);
 			console.log(
-				`Spec:         ${formatBoolean(status.spec.defined)} (${status.spec.userStoryCount} user stories)`,
+				`Spec:         ${formatBoolean(status.spec.defined)} (${String(status.spec.userStoryCount)} user stories)`,
 			);
 			console.log(
-				`Plan:         ${formatBoolean(status.plan.defined)} (${status.plan.phaseCount} phases)`,
+				`Plan:         ${formatBoolean(status.plan.defined)} (${String(status.plan.phaseCount)} phases)`,
 			);
 			console.log(
-				`Tasks:        ${status.tasks.done}/${status.tasks.total} done`,
+				`Tasks:        ${String(status.tasks.done)}/${String(status.tasks.total)} done`,
 			);
 			console.log(
-				`Checklist:    ${formatBoolean(status.checklist.defined)} (${status.checklist.done}/${status.checklist.total})`,
+				`Checklist:    ${formatBoolean(status.checklist.defined)} (${String(status.checklist.done)}/${String(status.checklist.total)})`,
 			);
 			console.log();
 			console.log(`Next: ${status.nextStep}`);
@@ -180,7 +180,7 @@ const progressSubcommand: CommandDef<typeof progressArgs, typeof progressOpts> =
 					const bar = "█".repeat(filledCount) + "░".repeat(emptyCount);
 					const name = phase.name.padEnd(20);
 					const percent = String(phase.percent).padStart(3);
-					const ratio = `(${phase.done}/${phase.total})`;
+					const ratio = `(${String(phase.done)}/${String(phase.total)})`;
 
 					console.log(`${name} [${bar}] ${percent}% ${ratio}`);
 				}
@@ -229,14 +229,14 @@ const gateSubcommand: CommandDef<typeof gateArgs, typeof gateOpts> = {
 
 			// Format: Gate check result with detailed issues
 			if (result.ready) {
-				console.log(`Gate check for phase ${phaseNum}: ✅ READY`);
+				console.log(`Gate check for phase ${String(phaseNum)}: ✅ READY`);
 			} else {
-				console.log(`Gate check for phase ${phaseNum}: ❌ NOT READY`);
+				console.log(`Gate check for phase ${String(phaseNum)}: ❌ NOT READY`);
 				for (const issue of result.issues) {
 					switch (issue.kind) {
 						case "previous_tasks_incomplete":
 							console.log(
-								`  ❌ Phase ${issue.phase} has ${issue.remaining} incomplete tasks`,
+								`  ❌ Phase ${String(issue.phase)} has ${String(issue.remaining)} incomplete tasks`,
 							);
 							break;
 						case "user_story_no_change":

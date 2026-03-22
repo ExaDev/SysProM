@@ -54,7 +54,7 @@ const listSubcommand: CommandDef<typeof listArgs, typeof listOpts> = {
 				);
 			}
 
-			console.log(`\n${rows.length} task(s)`);
+			console.log(`\n${String(rows.length)} task(s)`);
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
 			process.exit(1);
@@ -86,9 +86,10 @@ const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 				description: args.description,
 			});
 			saveDocument(newDoc, format, path);
-			const node = newDoc.nodes.find((n) => n.id === args.changeId)!;
+			const node = newDoc.nodes.find((n) => n.id === args.changeId);
+			if (!node) throw new Error(`Node ${args.changeId} not found`);
 			const newIndex = (node.plan?.length ?? 1) - 1;
-			console.log(`Added task ${newIndex} to ${args.changeId}`);
+			console.log(`Added task ${String(newIndex)} to ${args.changeId}`);
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
 			process.exit(1);
@@ -127,7 +128,7 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 				done: true,
 			});
 			saveDocument(newDoc, format, path);
-			console.log(`Marked task ${taskIndex} done on ${args.changeId}`);
+			console.log(`Marked task ${String(taskIndex)} done on ${args.changeId}`);
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
 			process.exit(1);
@@ -166,7 +167,9 @@ const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 				done: false,
 			});
 			saveDocument(newDoc, format, path);
-			console.log(`Marked task ${taskIndex} undone on ${args.changeId}`);
+			console.log(
+				`Marked task ${String(taskIndex)} undone on ${args.changeId}`,
+			);
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
 			process.exit(1);

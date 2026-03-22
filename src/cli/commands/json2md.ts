@@ -14,6 +14,16 @@ interface Opts {
 	singleFile?: boolean;
 }
 
+function isArgs(arg: unknown): arg is Args {
+	return (
+		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
+	);
+}
+
+function isOpts(opt: unknown): opt is Opts {
+	return typeof opt === "object" && opt !== null;
+}
+
 export const json2mdCommand: CommandDef = {
 	name: "json2md",
 	description: jsonToMarkdownOp.def.description,
@@ -31,8 +41,10 @@ export const json2mdCommand: CommandDef = {
 		})
 		.strict(),
 	action(args: unknown, opts: unknown) {
-		const typedArgs = args as Args;
-		const typedOpts = opts as Opts;
+		if (!isArgs(args)) throw new Error("Invalid args");
+		if (!isOpts(opts)) throw new Error("Invalid opts");
+		const typedArgs = args;
+		const typedOpts = opts;
 		const inputPath = resolve(typedArgs.input);
 		const outputPath = resolve(typedArgs.output);
 

@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
-import { checkGate, type GateResult, type GateIssue } from "../speckit/plan.js";
+import { checkGate } from "../speckit/plan.js";
 
 export const GateIssueSchema = z.union([
 	z.object({

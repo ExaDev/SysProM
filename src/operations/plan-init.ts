@@ -12,7 +12,7 @@ export const planInitOp = defineOperation({
 	}),
 	output: SysProMDocument,
 	fn({ prefix, name }) {
-		const planName = name || prefix;
+		const planName = name ?? prefix;
 		return initDocument(prefix, planName);
 	},
 });

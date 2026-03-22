@@ -18,12 +18,7 @@ export const speckitImportOp = defineOperation({
 	output: SysProMDocument,
 	fn: ({ speckitDir, prefix }) => {
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = prefix;
-		if (!idPrefix) {
-			// Extract the feature directory name (e.g., "001-feature-name")
-			const dirName = speckitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = prefix ?? speckitDir.split("/").pop() ?? "FEAT";
 
 		// Find constitution file by detecting the project from parent directories
 		let constitutionPath: string | undefined;

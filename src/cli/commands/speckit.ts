@@ -4,22 +4,8 @@ import { existsSync } from "node:fs";
 import type { CommandDef } from "../define-command.js";
 import { loadDocument, saveDocument } from "../../io.js";
 import type { SysProMDocument, Node } from "../../schema.js";
-import {
-	parseSpecKitFeature,
-	parseConstitution,
-	parseSpec,
-	parsePlan,
-	parseTasks,
-	parseChecklist,
-} from "../../speckit/parse.js";
-import {
-	generateSpecKitProject,
-	generateConstitution,
-	generateSpec,
-	generatePlan,
-	generateTasks,
-	generateChecklist,
-} from "../../speckit/generate.js";
+import { parseSpecKitFeature } from "../../speckit/parse.js";
+import { generateSpecKitProject } from "../../speckit/generate.js";
 import { detectSpecKitProject } from "../../speckit/project.js";
 import {
 	speckitImportOp,
@@ -56,8 +42,8 @@ function compareDocuments(
 	oldDoc: SysProMDocument,
 	newDoc: SysProMDocument,
 ): NodeDiff {
-	const oldNodes = new Map((oldDoc.nodes ?? []).map((n) => [n.id, n]));
-	const newNodes = new Map((newDoc.nodes ?? []).map((n) => [n.id, n]));
+	const oldNodes = new Map(oldDoc.nodes.map((n) => [n.id, n]));
+	const newNodes = new Map(newDoc.nodes.map((n) => [n.id, n]));
 
 	const added: Node[] = [];
 	const modified: { old: Node; new: Node }[] = [];
@@ -114,12 +100,7 @@ const importSubcommand: CommandDef<typeof importArgs, typeof importOpts> = {
 		}
 
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = opts.prefix;
-		if (!idPrefix) {
-			// Extract the feature directory name (e.g., "001-feature-name")
-			const dirName = specKitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = opts.prefix ?? specKitDir.split("/").pop() ?? "FEAT";
 
 		// Find constitution file by detecting the project from parent directories
 		let constitutionPath: string | undefined;
@@ -146,10 +127,12 @@ const importSubcommand: CommandDef<typeof importArgs, typeof importOpts> = {
 		saveDocument(doc, format, outputPath);
 
 		// Print summary
-		const nodeCount = doc.nodes?.length ?? 0;
+		const nodeCount = doc.nodes.length;
 		const relationshipCount = doc.relationships?.length ?? 0;
 		console.log(`Imported Spec-Kit from ${specKitDir} to ${outputPath}`);
-		console.log(`  ${nodeCount} nodes, ${relationshipCount} relationships`);
+		console.log(
+			`  ${String(nodeCount)} nodes, ${String(relationshipCount)} relationships`,
+		);
 	},
 };
 
@@ -222,11 +205,7 @@ const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
 		}
 
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = opts.prefix;
-		if (!idPrefix) {
-			const dirName = specKitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = opts.prefix ?? specKitDir.split("/").pop() ?? "FEAT";
 
 		// Load SysProM document
 		const { doc: syspromDoc, format } = loadDocument(inputPath);
@@ -256,10 +235,8 @@ const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
 		const diff = compareDocuments(syspromDoc, specKitDoc);
 
 		// Merge: Spec-Kit wins for content (description, status), SysProM wins for structure
-		const mergedNodes = new Map((syspromDoc.nodes ?? []).map((n) => [n.id, n]));
-		const specKitNodes = new Map(
-			(specKitDoc.nodes ?? []).map((n) => [n.id, n]),
-		);
+		const mergedNodes = new Map(syspromDoc.nodes.map((n) => [n.id, n]));
+		const specKitNodes = new Map(specKitDoc.nodes.map((n) => [n.id, n]));
 
 		for (const [id, specKitNode] of specKitNodes) {
 			const syspromNode = mergedNodes.get(id);
@@ -305,13 +282,13 @@ const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
 		// Print what changed
 		console.log(`Synced SysProM document with Spec-Kit directory`);
 		if (diff.added.length > 0) {
-			console.log(`  Added: ${diff.added.length} node(s)`);
+			console.log(`  Added: ${String(diff.added.length)} node(s)`);
 		}
 		if (diff.modified.length > 0) {
-			console.log(`  Modified: ${diff.modified.length} node(s)`);
+			console.log(`  Modified: ${String(diff.modified.length)} node(s)`);
 		}
 		if (diff.removed.length > 0) {
-			console.log(`  Removed: ${diff.removed.length} node(s)`);
+			console.log(`  Removed: ${String(diff.removed.length)} node(s)`);
 		}
 	},
 };
@@ -348,11 +325,7 @@ const diffSubcommand: CommandDef<typeof diffArgs, typeof diffOpts> = {
 		}
 
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = opts.prefix;
-		if (!idPrefix) {
-			const dirName = specKitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = opts.prefix ?? specKitDir.split("/").pop() ?? "FEAT";
 
 		// Load SysProM document
 		const { doc: syspromDoc } = loadDocument(inputPath);
@@ -391,19 +364,19 @@ const diffSubcommand: CommandDef<typeof diffArgs, typeof diffOpts> = {
 			console.log(`  (no changes)`);
 		} else {
 			if (diff.added.length > 0) {
-				console.log(`  Added: ${diff.added.length} node(s)`);
+				console.log(`  Added: ${String(diff.added.length)} node(s)`);
 				for (const node of diff.added) {
 					console.log(`    - ${node.id}: ${node.name}`);
 				}
 			}
 			if (diff.modified.length > 0) {
-				console.log(`  Modified: ${diff.modified.length} node(s)`);
-				for (const { old, new: newNode } of diff.modified) {
+				console.log(`  Modified: ${String(diff.modified.length)} node(s)`);
+				for (const { old } of diff.modified) {
 					console.log(`    - ${old.id}: ${old.name}`);
 				}
 			}
 			if (diff.removed.length > 0) {
-				console.log(`  Removed: ${diff.removed.length} node(s)`);
+				console.log(`  Removed: ${String(diff.removed.length)} node(s)`);
 				for (const node of diff.removed) {
 					console.log(`    - ${node.id}: ${node.name}`);
 				}

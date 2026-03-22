@@ -785,3 +785,36 @@ Chosen: OPT-A
 
 Rationale: Keyed registry gives type-safe lookup, avoids stringly-typed dispatch, and the ProviderKey union auto-updates when new providers are added. satisfies Record<string, ExternalFormatProvider> enforces the interface while preserving concrete types per key. Consistent with the codebase defineOperation pattern.
 
+### D34 — Safe Graph Removal with Soft Delete Default
+
+- Must preserve: INV23
+
+Context: Current removeNode and removeRelationship operations silently break must_follow chains, leave dangling scope/operation references, and can lose nested subsystems without warning. Need safe removal that preserves graph integrity by default.
+
+Options:
+- OPT-A: Soft delete default with hard mode — default removal sets status: retired (preserves all edges), --hard does physical removal with automatic must_follow chain repair, scope cleanup, and structured impact summary. --hard on nodes with subsystems requires --recursive.
+- OPT-B: Always physical removal with impact report — show what will break before removing, let the caller abort. No soft delete.
+- OPT-C: Refuse if referenced — only allow removal when nothing references the node. Safe but overly restrictive.
+
+Chosen: OPT-A
+
+Rationale: Soft delete via existing status: retired is zero-cost (no schema change) and never breaks the graph. Hard mode with chain repair handles the common must_follow case deterministically. Requiring --recursive for subsystem loss prevents accidental data destruction.
+
+### D35 — Graph Mutation Safety Guards
+
+- Must preserve:
+  - INV24
+  - INV25
+  - INV26
+
+Context: Several mutation operations (updateNode, addRelationship) lack safety checks. Status transitions to retired have no impact awareness. Duplicate relationships can be added. Type changes can invalidate existing relationships. addRelationship has no semantic validation of endpoint types.
+
+Options:
+- OPT-A: Comprehensive guards — add retirement impact check to updateNode, duplicate prevention to addRelationship, type-change guard with relationship validity map, and relationship semantic validation for endpoint node types. Enforce in mutation operations and validate.
+- OPT-B: Validation only — add checks to validate but do not guard mutation operations. Catch-after-the-fact approach.
+- OPT-C: Guards only for high-severity — retirement impact and duplicate prevention only. Defer type and semantic validation.
+
+Chosen: OPT-A
+
+Rationale: All four gaps are real and independently discoverable. Validation-only misses the opportunity to prevent bad state. Deferring type/semantic checks leaves a class of silent corruption. A relationship-type-to-endpoint-type map serves both the type-change guard and the semantic validation, so they share implementation cost.
+

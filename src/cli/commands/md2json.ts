@@ -10,7 +10,12 @@ interface Args {
 	input: string;
 	output: string;
 }
-type Opts = Record<string, never>;
+
+function isArgs(arg: unknown): arg is Args {
+	return (
+		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
+	);
+}
 
 export const md2jsonCommand: CommandDef = {
 	name: "md2json",
@@ -21,8 +26,9 @@ export const md2jsonCommand: CommandDef = {
 		output: z.string().describe("Output JSON file path"),
 	}),
 	opts: z.object({}).strict(),
-	action(args: unknown, opts: unknown) {
-		const typedArgs = args as Args;
+	action(args: unknown) {
+		if (!isArgs(args)) throw new Error("Invalid args");
+		const typedArgs = args;
 		const inputPath = resolve(typedArgs.input);
 		const outputPath = resolve(typedArgs.output);
 

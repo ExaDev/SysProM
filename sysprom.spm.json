@@ -3686,6 +3686,198 @@
 			],
 			"status": "proposed",
 			"type": "change"
+		},
+		{
+			"context": "Current removeNode and removeRelationship operations silently break must_follow chains, leave dangling scope/operation references, and can lose nested subsystems without warning. Need safe removal that preserves graph integrity by default.",
+			"id": "D34",
+			"name": "Safe Graph Removal with Soft Delete Default",
+			"options": [
+				{
+					"description": "Soft delete default with hard mode — default removal sets status: retired (preserves all edges), --hard does physical removal with automatic must_follow chain repair, scope cleanup, and structured impact summary. --hard on nodes with subsystems requires --recursive.",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Always physical removal with impact report — show what will break before removing, let the caller abort. No soft delete.",
+					"id": "OPT-B"
+				},
+				{
+					"description": "Refuse if referenced — only allow removal when nothing references the node. Safe but overly restrictive.",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "Soft delete via existing status: retired is zero-cost (no schema change) and never breaks the graph. Hard mode with chain repair handles the common must_follow case deterministically. Requiring --recursive for subsystem loss prevents accidental data destruction.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CH32",
+			"name": "Implement Safe Graph Removal",
+			"plan": [
+				{
+					"description": "Add RemovalImpact type (orphaned rels, chain breaks, subsystem loss, scope refs, governance loss, traceability loss)",
+					"done": false
+				},
+				{
+					"description": "Implement impactReport(doc, id) function that computes RemovalImpact without mutating",
+					"done": false
+				},
+				{
+					"description": "Implement must_follow chain repair: when removing node B from A→B→C, relink to A→C",
+					"done": false
+				},
+				{
+					"description": "Implement scope and operation reference cleanup (remove ghost IDs from scope[] and operations[].target)",
+					"done": false
+				},
+				{
+					"description": "Refactor removeNode: default to soft delete (set status: retired), --hard flag for physical removal with chain repair and cleanup",
+					"done": false
+				},
+				{
+					"description": "Add --recursive guard: --hard on nodes with non-empty subsystems requires --recursive, otherwise refuse",
+					"done": false
+				},
+				{
+					"description": "Refactor removeRelationship: add --repair flag for must_follow chain relinking",
+					"done": false
+				},
+				{
+					"description": "Return structured impact summary from both operations (nodes affected, chains repaired, refs cleaned)",
+					"done": false
+				},
+				{
+					"description": "Add unit tests: soft delete preserves edges, hard delete repairs chains, --recursive guard, impact report accuracy",
+					"done": false
+				},
+				{
+					"description": "Update CLI commands (spm remove node, spm update remove-rel) to expose --hard, --recursive, --repair flags",
+					"done": false
+				},
+				{
+					"description": "Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown",
+					"done": false
+				},
+				{
+					"description": "Implement retired node relationship guard in addRelationship: refuse operational rel types (depends_on, implements, constrained_by, must_follow, governed_by, affects, etc.) when either endpoint has status: retired; allow supersedes, derived_from, references",
+					"done": false
+				},
+				{
+					"description": "Add retired node relationship check to validate operation (report as issue, not just warning)",
+					"done": false
+				},
+				{
+					"description": "Add unit tests for retired relationship guard: refused types throw, allowed types succeed, validate flags existing violations",
+					"done": false
+				}
+			],
+			"status": "proposed",
+			"type": "change"
+		},
+		{
+			"description": "Relationships to or from retired nodes are only permitted for semantically appropriate types (supersedes, derived_from, references). Operational relationship types (depends_on, implements, constrained_by, must_follow, governed_by, affects, etc.) are refused. Enforced in addRelationship and checked by validate.",
+			"id": "INV23",
+			"name": "Retired Node Relationship Guard",
+			"type": "invariant"
+		},
+		{
+			"context": "Several mutation operations (updateNode, addRelationship) lack safety checks. Status transitions to retired have no impact awareness. Duplicate relationships can be added. Type changes can invalidate existing relationships. addRelationship has no semantic validation of endpoint types.",
+			"id": "D35",
+			"name": "Graph Mutation Safety Guards",
+			"options": [
+				{
+					"description": "Comprehensive guards — add retirement impact check to updateNode, duplicate prevention to addRelationship, type-change guard with relationship validity map, and relationship semantic validation for endpoint node types. Enforce in mutation operations and validate.",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Validation only — add checks to validate but do not guard mutation operations. Catch-after-the-fact approach.",
+					"id": "OPT-B"
+				},
+				{
+					"description": "Guards only for high-severity — retirement impact and duplicate prevention only. Defer type and semantic validation.",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "All four gaps are real and independently discoverable. Validation-only misses the opportunity to prevent bad state. Deferring type/semantic checks leaves a class of silent corruption. A relationship-type-to-endpoint-type map serves both the type-change guard and the semantic validation, so they share implementation cost.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CH33",
+			"name": "Implement Graph Mutation Safety Guards",
+			"plan": [
+				{
+					"description": "Define RELATIONSHIP_ENDPOINT_TYPES map: for each relationship type, list valid source and target node types",
+					"done": false
+				},
+				{
+					"description": "Add duplicate check to addRelationship: refuse if identical (from, type, to) already exists",
+					"done": false
+				},
+				{
+					"description": "Add endpoint type validation to addRelationship: refuse if source or target node type is not in the valid set for the relationship type",
+					"done": false
+				},
+				{
+					"description": "Add type-change guard to updateNode: when changing node type, check all existing relationships still have valid endpoint types, refuse if any would be invalidated",
+					"done": false
+				},
+				{
+					"description": "Add retirement impact to updateNode: when setting status to retired, compute and return active dependents via operational relationships (reuse impactReport from CH32)",
+					"done": false
+				},
+				{
+					"description": "Add duplicate relationship check to validate operation",
+					"done": false
+				},
+				{
+					"description": "Add endpoint type validity check to validate operation",
+					"done": false
+				},
+				{
+					"description": "Add retirement dependency check to validate operation (flag operational rels to/from retired nodes)",
+					"done": false
+				},
+				{
+					"description": "Unit tests: duplicate relationship refused by addRelationship, flagged by validate",
+					"done": false
+				},
+				{
+					"description": "Unit tests: endpoint type validation — valid combos succeed, invalid combos refused, validate flags existing violations",
+					"done": false
+				},
+				{
+					"description": "Unit tests: type-change guard — refuse when existing rels would be invalidated, allow when all rels remain valid",
+					"done": false
+				},
+				{
+					"description": "Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes",
+					"done": false
+				},
+				{
+					"description": "Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown",
+					"done": false
+				}
+			],
+			"status": "proposed",
+			"type": "change"
+		},
+		{
+			"description": "A document must not contain two relationships with identical from, type, and to. Enforced in addRelationship (refuse) and validate (report).",
+			"id": "INV24",
+			"name": "No Duplicate Relationships",
+			"type": "invariant"
+		},
+		{
+			"description": "Each relationship type has a set of valid source and target node types. For example, implements must go from a change to a decision; governed_by must point at a protocol. Enforced in addRelationship (refuse) and validate (report).",
+			"id": "INV25",
+			"name": "Relationship Endpoint Type Validity",
+			"type": "invariant"
+		},
+		{
+			"description": "Setting a node to status: retired via updateNode must report all active nodes that hold operational relationships (depends_on, implements, constrained_by, must_follow, governed_by, affects) to/from it. The caller sees the impact before the change is applied.",
+			"id": "INV26",
+			"name": "Retirement Impact Awareness",
+			"type": "invariant"
 		}
 	],
 	"relationships": [
@@ -4694,6 +4886,41 @@
 			"from": "CH31",
 			"to": "D33",
 			"type": "implements"
+		},
+		{
+			"from": "CH32",
+			"to": "D34",
+			"type": "implements"
+		},
+		{
+			"from": "D34",
+			"to": "INV23",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH33",
+			"to": "D35",
+			"type": "implements"
+		},
+		{
+			"from": "CH33",
+			"to": "CH32",
+			"type": "depends_on"
+		},
+		{
+			"from": "D35",
+			"to": "INV24",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D35",
+			"to": "INV25",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D35",
+			"to": "INV26",
+			"type": "must_preserve"
 		}
 	]
 }

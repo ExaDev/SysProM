@@ -16,8 +16,8 @@ function compareDocuments(
 	oldDoc: SysProMDocument,
 	newDoc: SysProMDocument,
 ): NodeDiff {
-	const oldNodes = new Map((oldDoc.nodes ?? []).map((n) => [n.id, n]));
-	const newNodes = new Map((newDoc.nodes ?? []).map((n) => [n.id, n]));
+	const oldNodes = new Map(oldDoc.nodes.map((n) => [n.id, n]));
+	const newNodes = new Map(newDoc.nodes.map((n) => [n.id, n]));
 
 	const added: Node[] = [];
 	const modified: { old: Node; new: Node }[] = [];
@@ -65,11 +65,7 @@ export const speckitSyncOp = defineOperation({
 	output: SyncResult,
 	fn: ({ doc: syspromDoc, speckitDir, prefix }) => {
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = prefix;
-		if (!idPrefix) {
-			const dirName = speckitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = prefix ?? speckitDir.split("/").pop() ?? "FEAT";
 
 		// Find constitution file
 		let constitutionPath: string | undefined;
@@ -96,17 +92,12 @@ export const speckitSyncOp = defineOperation({
 		const diff = compareDocuments(syspromDoc, specKitDoc);
 
 		// Merge: Spec-Kit wins for content (description, status), SysProM wins for structure
-		const mergedNodes = new Map((syspromDoc.nodes ?? []).map((n) => [n.id, n]));
-		const specKitNodes = new Map(
-			(specKitDoc.nodes ?? []).map((n) => [n.id, n]),
-		);
+		const mergedNodes = new Map(syspromDoc.nodes.map((n) => [n.id, n]));
+		const specKitNodes = new Map(specKitDoc.nodes.map((n) => [n.id, n]));
 
 		for (const [id, specKitNode] of specKitNodes) {
 			const syspromNode = mergedNodes.get(id);
-			if (!syspromNode) {
-				// Add new node from Spec-Kit
-				mergedNodes.set(id, specKitNode);
-			} else {
+			if (syspromNode) {
 				// Merge: Spec-Kit content wins, SysProM structure wins
 				const merged: Node = {
 					...syspromNode,
@@ -121,6 +112,9 @@ export const speckitSyncOp = defineOperation({
 					plan: specKitNode.plan ?? syspromNode.plan,
 				};
 				mergedNodes.set(id, merged);
+			} else {
+				// Add new node from Spec-Kit
+				mergedNodes.set(id, specKitNode);
 			}
 		}
 

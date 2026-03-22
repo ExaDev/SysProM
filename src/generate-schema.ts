@@ -5,7 +5,11 @@ import { canonicalise } from "./canonical-json.js";
 import { toJSONSchema } from "./schema.js";
 
 const schema = toJSONSchema();
-const outPath = resolve(dirname(fileURLToPath(import.meta.url)), "..", "schema.json");
+const outPath = resolve(
+	dirname(fileURLToPath(import.meta.url)),
+	"..",
+	"schema.json",
+);
 
 writeFileSync(outPath, canonicalise(schema, { indent: "\t" }) + "\n");
 console.log(`Written to ${outPath}`);

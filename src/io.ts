@@ -8,16 +8,16 @@ import { canonicalise } from "./canonical-json.js";
 export type Format = "json" | "single-md" | "multi-md";
 
 export interface LoadedDocument {
-  doc: SysProMDocument;
-  format: Format;
-  path: string;
+	doc: SysProMDocument;
+	format: Format;
+	path: string;
 }
 
 function detectFormat(input: string): Format {
-  const stat = statSync(input);
-  if (stat.isDirectory()) return "multi-md";
-  if (input.endsWith(".json")) return "json";
-  return "single-md";
+	const stat = statSync(input);
+	if (stat.isDirectory()) return "multi-md";
+	if (input.endsWith(".json")) return "json";
+	return "single-md";
 }
 
 /**
@@ -27,34 +27,34 @@ function detectFormat(input: string): Format {
  * @returns The loaded document with its detected format and resolved path.
  */
 export function loadDocument(input: string): LoadedDocument {
-  const path = resolve(input);
-  const format = detectFormat(path);
+	const path = resolve(input);
+	const format = detectFormat(path);
 
-  let doc: SysProMDocument;
-  switch (format) {
-    case "json": {
-      const raw: unknown = JSON.parse(readFileSync(path, "utf8"));
-      const result = SysProMDocument.safeParse(raw);
-      if (!result.success) {
-        throw new Error(
-          `Invalid SysProM document:\n${result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")}`,
-        );
-      }
-      doc = result.data;
-      break;
-    }
-    case "single-md": {
-      const content = readFileSync(path, "utf8");
-      doc = markdownSingleToJson(content);
-      break;
-    }
-    case "multi-md": {
-      doc = markdownMultiDocToJson(path);
-      break;
-    }
-  }
+	let doc: SysProMDocument;
+	switch (format) {
+		case "json": {
+			const raw: unknown = JSON.parse(readFileSync(path, "utf8"));
+			const result = SysProMDocument.safeParse(raw);
+			if (!result.success) {
+				throw new Error(
+					`Invalid SysProM document:\n${result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")}`,
+				);
+			}
+			doc = result.data;
+			break;
+		}
+		case "single-md": {
+			const content = readFileSync(path, "utf8");
+			doc = markdownSingleToJson(content);
+			break;
+		}
+		case "multi-md": {
+			doc = markdownMultiDocToJson(path);
+			break;
+		}
+	}
 
-  return { doc, format, path };
+	return { doc, format, path };
 }
 
 /**
@@ -65,19 +65,19 @@ export function loadDocument(input: string): LoadedDocument {
  * @param path - Destination file path or directory.
  */
 export function saveDocument(
-  doc: SysProMDocument,
-  format: Format,
-  path: string,
+	doc: SysProMDocument,
+	format: Format,
+	path: string,
 ): void {
-  switch (format) {
-    case "json":
-      writeFileSync(path, canonicalise(doc, { indent: "\t" }) + "\n");
-      break;
-    case "single-md":
-      writeFileSync(path, jsonToMarkdownSingle(doc));
-      break;
-    case "multi-md":
-      jsonToMarkdownMultiDoc(doc, path);
-      break;
-  }
+	switch (format) {
+		case "json":
+			writeFileSync(path, canonicalise(doc, { indent: "\t" }) + "\n");
+			break;
+		case "single-md":
+			writeFileSync(path, jsonToMarkdownSingle(doc));
+			break;
+		case "multi-md":
+			jsonToMarkdownMultiDoc(doc, path);
+			break;
+	}
 }

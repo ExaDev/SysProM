@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
-import { planProgress, type PhaseProgress } from "../speckit/plan.js";
+import { planProgress } from "../speckit/plan.js";
 
 export const PhaseProgressSchema = z.object({
 	phase: z.number(),

@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
-import { planStatus, type PlanStatus } from "../speckit/plan.js";
+import { planStatus } from "../speckit/plan.js";
 
 export const PlanStatusSchema = z.object({
 	constitution: z.object({

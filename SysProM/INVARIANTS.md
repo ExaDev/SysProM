@@ -133,6 +133,22 @@ Node types, node statuses, relationship types, and external reference roles MUST
 Unknown values MUST be rejected at validation time.
 Extensions MUST add new values to the enum rather than bypassing it.
 
+### INV23 — Retired Node Relationship Guard
+
+Relationships to or from retired nodes are only permitted for semantically appropriate types (supersedes, derived_from, references). Operational relationship types (depends_on, implements, constrained_by, must_follow, governed_by, affects, etc.) are refused. Enforced in addRelationship and checked by validate.
+
+### INV24 — No Duplicate Relationships
+
+A document must not contain two relationships with identical from, type, and to. Enforced in addRelationship (refuse) and validate (report).
+
+### INV25 — Relationship Endpoint Type Validity
+
+Each relationship type has a set of valid source and target node types. For example, implements must go from a change to a decision; governed_by must point at a protocol. Enforced in addRelationship (refuse) and validate (report).
+
+### INV26 — Retirement Impact Awareness
+
+Setting a node to status: retired via updateNode must report all active nodes that hold operational relationships (depends_on, implements, constrained_by, must_follow, governed_by, affects) to/from it. The caller sees the impact before the change is applied.
+
 ## Principles
 
 ### PR1 — Separate What From Why From How

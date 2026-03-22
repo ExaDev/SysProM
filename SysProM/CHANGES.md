@@ -710,3 +710,49 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update CLI commands to expose --format flag, update help text
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
+### CH32 — Implement Safe Graph Removal
+
+- Implements: D34
+
+- Status: proposed
+
+#### Plan
+
+- [ ] Add RemovalImpact type (orphaned rels, chain breaks, subsystem loss, scope refs, governance loss, traceability loss)
+- [ ] Implement impactReport(doc, id) function that computes RemovalImpact without mutating
+- [ ] Implement must_follow chain repair: when removing node B from A→B→C, relink to A→C
+- [ ] Implement scope and operation reference cleanup (remove ghost IDs from scope[] and operations[].target)
+- [ ] Refactor removeNode: default to soft delete (set status: retired), --hard flag for physical removal with chain repair and cleanup
+- [ ] Add --recursive guard: --hard on nodes with non-empty subsystems requires --recursive, otherwise refuse
+- [ ] Refactor removeRelationship: add --repair flag for must_follow chain relinking
+- [ ] Return structured impact summary from both operations (nodes affected, chains repaired, refs cleaned)
+- [ ] Add unit tests: soft delete preserves edges, hard delete repairs chains, --recursive guard, impact report accuracy
+- [ ] Update CLI commands (spm remove node, spm update remove-rel) to expose --hard, --recursive, --repair flags
+- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
+- [ ] Implement retired node relationship guard in addRelationship: refuse operational rel types (depends_on, implements, constrained_by, must_follow, governed_by, affects, etc.) when either endpoint has status: retired; allow supersedes, derived_from, references
+- [ ] Add retired node relationship check to validate operation (report as issue, not just warning)
+- [ ] Add unit tests for retired relationship guard: refused types throw, allowed types succeed, validate flags existing violations
+
+### CH33 — Implement Graph Mutation Safety Guards
+
+- Implements: D35
+- Depends on: CH32
+
+- Status: proposed
+
+#### Plan
+
+- [ ] Define RELATIONSHIP_ENDPOINT_TYPES map: for each relationship type, list valid source and target node types
+- [ ] Add duplicate check to addRelationship: refuse if identical (from, type, to) already exists
+- [ ] Add endpoint type validation to addRelationship: refuse if source or target node type is not in the valid set for the relationship type
+- [ ] Add type-change guard to updateNode: when changing node type, check all existing relationships still have valid endpoint types, refuse if any would be invalidated
+- [ ] Add retirement impact to updateNode: when setting status to retired, compute and return active dependents via operational relationships (reuse impactReport from CH32)
+- [ ] Add duplicate relationship check to validate operation
+- [ ] Add endpoint type validity check to validate operation
+- [ ] Add retirement dependency check to validate operation (flag operational rels to/from retired nodes)
+- [ ] Unit tests: duplicate relationship refused by addRelationship, flagged by validate
+- [ ] Unit tests: endpoint type validation — valid combos succeed, invalid combos refused, validate flags existing violations
+- [ ] Unit tests: type-change guard — refuse when existing rels would be invalidated, allow when all rels remain valid
+- [ ] Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes
+- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
+

@@ -15,8 +15,8 @@ function compareDocuments(
 	oldDoc: SysProMDocument,
 	newDoc: SysProMDocument,
 ): NodeDiff {
-	const oldNodes = new Map((oldDoc.nodes ?? []).map((n) => [n.id, n]));
-	const newNodes = new Map((newDoc.nodes ?? []).map((n) => [n.id, n]));
+	const oldNodes = new Map(oldDoc.nodes.map((n) => [n.id, n]));
+	const newNodes = new Map(newDoc.nodes.map((n) => [n.id, n]));
 
 	const added: Node[] = [];
 	const modified: { old: Node; new: Node }[] = [];
@@ -80,11 +80,7 @@ export const speckitDiffOp = defineOperation({
 	output: DiffResult,
 	fn: ({ doc: syspromDoc, speckitDir, prefix }) => {
 		// Determine the prefix: use flag if provided, otherwise use directory name
-		let idPrefix = prefix;
-		if (!idPrefix) {
-			const dirName = speckitDir.split("/").pop() || "FEAT";
-			idPrefix = dirName;
-		}
+		const idPrefix = prefix ?? speckitDir.split("/").pop() ?? "FEAT";
 
 		// Find constitution file
 		let constitutionPath: string | undefined;

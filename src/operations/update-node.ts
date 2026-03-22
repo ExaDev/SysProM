@@ -3,26 +3,27 @@ import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Node } from "../schema.js";
 
 export const updateNodeOp = defineOperation({
-  name: "updateNode",
-  description: "Update specified fields on a node. Throws if the node is not found.",
-  input: z.object({
-    doc: SysProMDocument,
-    id: z.string(),
-    fields: Node.partial(),
-  }),
-  output: SysProMDocument,
-  fn({ doc, id, fields }) {
-    const nodeIdx = doc.nodes.findIndex((n) => n.id === id);
-    if (nodeIdx === -1) {
-      throw new Error(`Node not found: ${id}`);
-    }
+	name: "updateNode",
+	description:
+		"Update specified fields on a node. Throws if the node is not found.",
+	input: z.object({
+		doc: SysProMDocument,
+		id: z.string(),
+		fields: Node.partial(),
+	}),
+	output: SysProMDocument,
+	fn({ doc, id, fields }) {
+		const nodeIdx = doc.nodes.findIndex((n) => n.id === id);
+		if (nodeIdx === -1) {
+			throw new Error(`Node not found: ${id}`);
+		}
 
-    const oldNode = doc.nodes[nodeIdx];
-    const newNode = { ...oldNode, ...fields };
+		const oldNode = doc.nodes[nodeIdx];
+		const newNode = { ...oldNode, ...fields };
 
-    const newNodes = [...doc.nodes];
-    newNodes[nodeIdx] = newNode;
+		const newNodes = [...doc.nodes];
+		newNodes[nodeIdx] = newNode;
 
-    return { ...doc, nodes: newNodes };
-  },
+		return { ...doc, nodes: newNodes };
+	},
 });
