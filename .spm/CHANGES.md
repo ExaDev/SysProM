@@ -651,14 +651,14 @@ Add a unified 'spm sync' command that performs bidirectional synchronisation bet
 
 - Implements: D31
 
-- Status: proposed
+- Status: introduced
 
 Scope:
 - D31
 
 #### Plan
 
-- [ ] Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed
+- [x] Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed
 - [ ] Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other
 - [ ] Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth
 - [ ] Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth
@@ -714,7 +714,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: D34
 
-- Status: in_progress
+- Status: complete
 
 #### Plan
 

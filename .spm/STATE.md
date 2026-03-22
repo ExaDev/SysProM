@@ -698,6 +698,22 @@ No change may be executed unless its scope can be identified.
 
 Approval cannot occur until review has completed.
 
+##### PROT1 — Consensus Planning
+
+##### ST1 — Draft Plan
+
+- Part of: PROT1
+
+##### ST2 — Architectural Review
+
+- Part of: PROT1
+- Must follow: ST1
+
+##### ST3 — Critical Evaluation
+
+- Part of: PROT1
+- Must follow: ST2
+
 ##### ROLE1 — Planner
 
 Produces an initial scoped plan.
@@ -715,22 +731,6 @@ Reviews structural and design soundness.
 Evaluates quality, completeness, and testability.
 
 - Performs: ST3
-
-##### PROT1 — Consensus Planning
-
-##### ST1 — Draft Plan
-
-- Part of: PROT1
-
-##### ST2 — Architectural Review
-
-- Part of: PROT1
-- Must follow: ST1
-
-##### ST3 — Critical Evaluation
-
-- Part of: PROT1
-- Must follow: ST2
 
 ##### G1 — Scope Gate
 

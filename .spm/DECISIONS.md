@@ -16,7 +16,6 @@ doc_type: "decisions"
 - Must preserve: INV1
 
 Context: The model needs to represent systems, workflows, and history.
-Mixing these concerns makes the graph hard to query and reason about.
 
 Options:
 - D1-O1: Single flat node type for everything
@@ -26,7 +25,6 @@ Options:
 Chosen: D1-O3
 
 Rationale: Grouping into families enforces separation of concerns.
-Domain structure should not be tangled with process mechanics or evolution history.
 
 #### Lifecycle
 
@@ -52,7 +50,6 @@ Options:
 Chosen: D2-O3
 
 Rationale: Decisions are the causal mechanism of system evolution.
-Graph nodes with typed relationships make decisions queryable, traceable, and enforceable.
 
 #### Lifecycle
 
@@ -104,7 +101,6 @@ Options:
 Chosen: D4-O3
 
 Rationale: Without process nodes, roles become invisible, gates become buried in decision prose, and artefact lineage is lost.
-Full process modelling makes the model capable of encoding systems like Spec Kit, Ralplan, and get-shit-done.
 
 #### Lifecycle
 
@@ -128,7 +124,6 @@ Options:
 Chosen: D5-O3
 
 Rationale: Markdown is human-readable, Git-friendly, renders on GitHub/GitLab, and supports front matter, headings, links, and checkboxes which map directly to model concepts.
-Other formats remain valid.
 
 #### Lifecycle
 
@@ -203,7 +198,6 @@ Rationale: Append-only preserves the full provenance chain.
   - POL20
 
 Context: Nodes often relate to resources outside the graph.
-The model must handle this without coupling to a specific serialisation format.
 
 Options:
 - D8-O1: No external reference support — all content must be internalised
@@ -213,7 +207,6 @@ Options:
 Chosen: D8-O3
 
 Rationale: Internalisation enables portability. References enable traceability.
-Supporting both gives implementors flexibility without losing either property.
 
 #### Lifecycle
 
@@ -230,8 +223,6 @@ Supporting both gives implementors flexibility without losing either property.
 - Must preserve: INV21
 
 Context: JSON does not support multiline strings.
-Long descriptions serialised as single strings with embedded \n are hard to read and produce poor diffs.
-An array of lines preserves readability in serialised form.
 
 Options:
 - D9-O1: Single string only — use \n for newlines
@@ -241,8 +232,6 @@ Options:
 Chosen: D9-O3
 
 Rationale: Short descriptions gain nothing from being wrapped in an array.
-Long descriptions gain readability and diff quality from line-per-element arrays.
-Accepting both avoids forcing a style while enabling better ergonomics where it matters.
 
 #### Lifecycle
 
@@ -259,8 +248,6 @@ Accepting both avoids forcing a style while enabling better ergonomics where it 
   - INV18
 
 Context: SysProM's purpose is provenance and traceability.
-If relationship types, node types, and statuses are arbitrary strings, layer constraints cannot be enforced, labels cannot be derived for rendering, and semantic validation is impossible.
-The extensibility section says extensions MUST NOT violate core constraints, but an open string type makes that unenforceable.
 
 Options:
 - D10-O1: Open strings with examples — any value accepted, core types documented only
@@ -269,7 +256,6 @@ Options:
 Chosen: D10-O2
 
 Rationale: Strict enums enable schema-level validation, type-safe label derivation, and enforceable layer constraints.
-The DRY labelledEnum pattern ensures each type is defined once with its label, eliminating duplication.
 
 #### Lifecycle
 
@@ -284,7 +270,6 @@ The DRY labelledEnum pattern ensures each type is defined once with its label, e
 - Must preserve: POL19
 
 Context: The README generator was producing navigation links and document role entries for all possible files (INTENT, INVARIANTS, STATE, DECISIONS, CHANGES) regardless of whether the subsystem had nodes of those types.
-This created dead links in subsystem READMEs.
 
 Options:
 - D11-O1: Always link to all files — accept dead links as informational
@@ -306,7 +291,6 @@ Rationale: Dead links mislead readers and break tooling. Links should reflect re
 - Affects: R1
 
 Context: The README contained a Navigation section and a Document Roles table that restated what the filenames already communicate.
-Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain.
 
 Options:
 - D12-O1: Keep both Navigation and Document Roles
@@ -330,9 +314,6 @@ Rationale: Removing redundant sections reduces noise and maintenance burden. The
 - Must preserve: INV3
 
 Context: INV3 required every decision to identify preserved invariants.
-Operational decisions (naming, tooling, presentation) genuinely have no invariants at risk.
-Forcing must_preserve on these creates friction that discourages recording decisions, which defeats SysProM's provenance purpose.
-SysProM already distinguishes domain nodes (intent, concept, capability, element, invariant) from non-domain nodes (realisation, policy, protocol, etc.).
 
 Options:
 - D13-O1: Keep INV3 as MUST for all decisions
@@ -343,9 +324,6 @@ Options:
 Chosen: D13-O4
 
 Rationale: Automatic classification from affects relationships means no user burden.
-Domain nodes define what the system IS — decisions affecting them must consider invariants.
-Non-domain nodes define how the system works — decisions affecting only these are operational.
-Leverages the existing layer model rather than adding new concepts.
 
 #### Lifecycle
 
@@ -362,9 +340,6 @@ Leverages the existing layer model rather than adding new concepts.
   - ART3
 
 Context: The distilled/ folder contained four reference documents (Specification, Comparisons, Examples, Naming) produced during SysProM's design.
-These were external to the JSON but contained valuable content.
-The specification is already captured as the JSON itself.
-The comparisons, examples, and naming rationale could be modelled as artefact nodes with subsystems.
 
 Options:
 - D14-O1: Keep distilled/ as separate files, reference from JSON
@@ -387,8 +362,6 @@ Rationale: Internalising makes the JSON self-contained. Artefact nodes with subs
 - Must preserve: POL20
 
 Context: Small subsystems (e.g. 6 node type definitions) are cleaner as single .spm.md files.
-Large subsystems (e.g. 24 relationship type definitions at 107 lines) become unwieldy in a single file.
-The file type count heuristic alone doesn't catch single-type subsystems that are too long.
 
 Options:
 - D15-O1: Split only by file type count — single type always stays as one file
@@ -416,8 +389,6 @@ Rationale: Combining both heuristics keeps small subsystems compact while splitt
   - INV22
 
 Context: SysProM can model Spec-Kit workflows as nodes and relationships, but could not read or write actual Spec-Kit files.
-Users working with Spec-Kit (spec.md, plan.md, tasks.md, constitution.md, checklist.md) had no way to import their existing work into SysProM or export SysProM graphs to Spec-Kit format.
-A parser+generator pair enables lossless round-trips between both ecosystems.
 
 Options:
 - D16-O1: Import-only — parse Spec-Kit files into SysProM nodes, no export
@@ -440,8 +411,6 @@ Rationale: Full bidirectional support allows users to start in either ecosystem 
 - Affects: CH14
 
 Context: Change nodes have a plan field (array of {description, done} tasks) defined in the schema, but no CLI command existed to manipulate it.
-Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.
-A dedicated task command enables fully CLI-driven subagent workflows against sysprom.spm.json files.
 
 Options:
 - D17-O1: Extend the update command with --plan-add and --plan-done flags
@@ -771,8 +740,8 @@ Rationale: Same package avoids monorepo overhead. The MCP server is a thin wrapp
 
 ### D33 — Abstract External Format Interop into Keyed Provider Registry
 
-- Must preserve: CN6
 - Supersedes: CH14
+- Must preserve: CN6
 
 Context: SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.
 
