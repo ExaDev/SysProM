@@ -756,3 +756,22 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
+### CH34 — Add default input resolution and init command
+
+Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.
+
+- Implements: D36
+
+Scope:
+- src/cli/shared.ts
+- src/cli/commands/init.ts
+
+#### Plan
+
+- [ ] Add resolveInput() function to shared.ts
+- [ ] Make inputArg optional in shared.ts
+- [ ] Update all commands to use resolveInput()
+- [ ] Rework init command with optional path and --format flag
+- [ ] Write tests for resolveInput
+- [ ] Write tests for init command
+

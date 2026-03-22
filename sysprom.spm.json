@@ -3878,6 +3878,56 @@
 			"id": "INV26",
 			"name": "Retirement Impact Awareness",
 			"type": "invariant"
+		},
+		{
+			"context": "CLI commands require explicit file paths. Users want sensible defaults (.spm.json, .spm.md, .spm/) and an init command that creates documents with context-dependent format.",
+			"id": "D36",
+			"name": "Default input resolution and init command",
+			"options": [
+				{
+					"description": "Priority-based auto-detection with init --format flag",
+					"id": "OPT-A"
+				}
+			],
+			"rationale": "Priority order matches user expectations; --format flag gives explicit control when defaults are wrong",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"description": "Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.",
+			"id": "CH34",
+			"name": "Add default input resolution and init command",
+			"plan": [
+				{
+					"description": "Add resolveInput() function to shared.ts",
+					"done": false
+				},
+				{
+					"description": "Make inputArg optional in shared.ts",
+					"done": false
+				},
+				{
+					"description": "Update all commands to use resolveInput()",
+					"done": false
+				},
+				{
+					"description": "Rework init command with optional path and --format flag",
+					"done": false
+				},
+				{
+					"description": "Write tests for resolveInput",
+					"done": false
+				},
+				{
+					"description": "Write tests for init command",
+					"done": false
+				}
+			],
+			"scope": [
+				"src/cli/shared.ts",
+				"src/cli/commands/init.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4921,6 +4971,11 @@
 			"from": "D35",
 			"to": "INV26",
 			"type": "must_preserve"
+		},
+		{
+			"from": "CH34",
+			"to": "D36",
+			"type": "implements"
 		}
 	]
 }

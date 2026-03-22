@@ -818,3 +818,14 @@ Chosen: OPT-A
 
 Rationale: All four gaps are real and independently discoverable. Validation-only misses the opportunity to prevent bad state. Deferring type/semantic checks leaves a class of silent corruption. A relationship-type-to-endpoint-type map serves both the type-change guard and the semantic validation, so they share implementation cost.
 
+### D36 — Default input resolution and init command
+
+Context: CLI commands require explicit file paths. Users want sensible defaults (.spm.json, .spm.md, .spm/) and an init command that creates documents with context-dependent format.
+
+Options:
+- OPT-A: Priority-based auto-detection with init --format flag
+
+Chosen: OPT-A
+
+Rationale: Priority order matches user expectations; --format flag gives explicit control when defaults are wrong
+
