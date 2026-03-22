@@ -190,4 +190,127 @@ describe("CH32: Safe Graph Removal", () => {
 			assert.equal(result.doc.external_references?.length ?? 0, 0);
 		});
 	});
+
+	describe("Relationship preservation", () => {
+		it("warns but preserves relationships in current implementation", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "I1", type: "intent", name: "A" },
+					{ id: "I2", type: "intent", name: "B" },
+					{ id: "I3", type: "intent", name: "C" },
+				],
+				relationships: [
+					{ from: "I1", to: "I2", type: "refines" },
+					{ from: "I2", to: "I3", type: "depends_on" },
+				],
+			};
+			const result = removeNodeOp({ doc, id: "I2" });
+			// Should warn about orphaned relationships
+			assert.ok(
+				result.warnings.some((w) => w.includes("Removed relationships")),
+				"should warn about removed relationships",
+			);
+		});
+	});
+
+	describe("Chain detection", () => {
+		it("detects must_follow chains that would be broken", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "S1", type: "stage", name: "Stage 1" },
+					{ id: "S2", type: "stage", name: "Stage 2" },
+					{ id: "S3", type: "stage", name: "Stage 3" },
+				],
+				relationships: [
+					{ from: "S1", to: "S2", type: "must_follow" },
+					{ from: "S2", to: "S3", type: "must_follow" },
+				],
+			};
+			const result = removeNodeOp({ doc, id: "S2" });
+			assert.ok(result.warnings, "should report chain break");
+		});
+	});
+
+	describe("Complex cleanup scenarios", () => {
+		it("handles node with multiple types of references", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "I1", type: "intent", name: "Intent" },
+					{
+						id: "C1",
+						type: "change",
+						name: "Change",
+						scope: ["I1"],
+						operations: [{ type: "update", target: "I1" }],
+					},
+					{ id: "V1", type: "view", name: "View", includes: ["I1"] },
+				],
+				relationships: [{ from: "I1", to: "C1", type: "affects" }],
+				external_references: [
+					{ identifier: "http://example.com", role: "source", node_id: "I1" },
+				],
+			};
+			const result = removeNodeOp({ doc, id: "I1" });
+
+			// Check all cleanup occurred
+			const change = result.doc.nodes.find((n) => n.id === "C1");
+			assert.equal(change?.scope, undefined, "scope should be cleaned");
+			assert.equal(
+				change?.operations,
+				undefined,
+				"operations should be cleaned",
+			);
+
+			const view = result.doc.nodes.find((n) => n.id === "V1");
+			assert.equal(view?.includes, undefined, "includes should be cleaned");
+
+			assert.equal(
+				result.doc.external_references?.length ?? 0,
+				0,
+				"external references should be cleaned",
+			);
+
+			assert.equal(result.doc.relationships?.length ?? 0, 0, "relationships removed");
+		});
+
+		it("preserves other scopes while cleaning up reference", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "I1", type: "intent", name: "Intent 1" },
+					{ id: "I2", type: "intent", name: "Intent 2" },
+					{
+						id: "C1",
+						type: "change",
+						name: "Change",
+						scope: ["I1", "I2"],
+					},
+				],
+			};
+			const result = removeNodeOp({ doc, id: "I1" });
+			const change = result.doc.nodes.find((n) => n.id === "C1");
+			assert.deepEqual(change?.scope, ["I2"], "scope should retain I2");
+		});
+
+		it("preserves other operations while cleaning up target", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "I1", type: "intent", name: "Intent 1" },
+					{ id: "I2", type: "intent", name: "Intent 2" },
+					{
+						id: "C1",
+						type: "change",
+						name: "Change",
+						operations: [
+							{ type: "update", target: "I1" },
+							{ type: "add", target: "I2" },
+						],
+					},
+				],
+			};
+			const result = removeNodeOp({ doc, id: "I1" });
+			const change = result.doc.nodes.find((n) => n.id === "C1");
+			assert.equal(change?.operations?.length, 1);
+			assert.equal(change?.operations?.[0].target, "I2");
+		});
+	});
 });
