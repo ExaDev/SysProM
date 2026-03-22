@@ -1,6 +1,7 @@
 import eslint from "@eslint/js";
 import type { Linter, Rule } from "eslint";
 import { defineConfig } from "eslint/config";
+import jsdoc from "eslint-plugin-jsdoc";
 import prettier from "eslint-plugin-prettier/recommended";
 import tseslint from "typescript-eslint";
 
@@ -89,6 +90,35 @@ export default defineConfig(
 	tseslint.configs.strictTypeChecked,
 	tseslint.configs.stylisticTypeChecked,
 	prettier,
+	{
+		files: ["src/**/*.ts"],
+		...jsdoc.configs["flat/recommended-tsdoc"],
+		rules: {
+			...jsdoc.configs["flat/recommended-tsdoc"].rules,
+			"jsdoc/require-jsdoc": [
+				"warn",
+				{
+					publicOnly: true,
+					require: {
+						FunctionDeclaration: true,
+						ClassDeclaration: true,
+						ArrowFunctionExpression: true,
+					},
+					contexts: [
+						"TSInterfaceDeclaration",
+						"TSTypeAliasDeclaration",
+						"TSEnumDeclaration",
+					],
+				},
+			],
+			"jsdoc/require-description": "warn",
+			"jsdoc/require-param": "off",
+			"jsdoc/require-returns": "off",
+			"jsdoc/tag-lines": "off",
+			"jsdoc/multiline-blocks": "off",
+			"jsdoc/check-tag-names": "warn",
+		},
+	},
 	{
 		plugins: {
 			barrel: barrelPlugin,

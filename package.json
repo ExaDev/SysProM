@@ -76,6 +76,7 @@
     "conventional-changelog-conventionalcommits": "9.3.0",
     "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-jsdoc": "62.8.0",
     "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",
     "prettier": "3.8.1",
