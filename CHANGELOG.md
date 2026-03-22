@@ -1,3 +1,29 @@
+## [1.1.0](https://github.com/ExaDev/SysProM/compare/v1.0.7...v1.1.0) (2026-03-22)
+
+### Features
+
+* **cli:** auto-detect SysProM documents with --path option ([ba2f8a1](https://github.com/ExaDev/SysProM/commit/ba2f8a1a68f848affbc7472a69f1bf4e2e03bf14))
+* **cli:** rework init with optional path and --format flag ([ddeaa69](https://github.com/ExaDev/SysProM/commit/ddeaa69a93c33fbf940c8028e37db9462c79272d))
+
+### Code Refactoring
+
+* **cli:** migrate task and plan commands to --path option ([b108eae](https://github.com/ExaDev/SysProM/commit/b108eae54d79031d20f112f9d5cb0f1ea196fa69))
+* rename sysprom.spm.json to .spm.json and SysProM/ to .spm/ ([6ae15d1](https://github.com/ExaDev/SysProM/commit/6ae15d152f40ac48b19100bd1cd71b99073c9662))
+
+### Documentation
+
+* **core:** add JSDoc to canonical JSON, I/O, and markdown conversion ([891ec05](https://github.com/ExaDev/SysProM/commit/891ec0592741bd5cdc82a90912afebb9ad2915e2))
+* **operations:** add JSDoc to all operation exports ([99f99fa](https://github.com/ExaDev/SysProM/commit/99f99fac1cc42d6b80fe496c6a1571fca9040211))
+* **operations:** add JSDoc to operation definition framework ([2376a5f](https://github.com/ExaDev/SysProM/commit/2376a5f05d358c9fd9422d03a09e56d241ff4bc1))
+* **schema:** add JSDoc to exported types, schemas, and label maps ([a63b3d3](https://github.com/ExaDev/SysProM/commit/a63b3d3affff58fb6152541166dfa2d8c2934434))
+* **speckit:** add JSDoc and replace inline comments with doc comments ([93edf7e](https://github.com/ExaDev/SysProM/commit/93edf7e2eb714016aa760dd4a3908a422adcf907))
+* **sysprom:** add D36 and CH34 for default input resolution and init command ([988af00](https://github.com/ExaDev/SysProM/commit/988af00047db96156da41eb64b0f1d0cabc0b4b1))
+* **sysprom:** mark CH34 complete, sync markdown ([6719d8c](https://github.com/ExaDev/SysProM/commit/6719d8cfdc00eb1bbe96906bba09ef2a413ac9cc))
+
+### Miscellaneous Chores
+
+* **settings:** deny pnpm run _* in addition to pnpm _* ([1217c1c](https://github.com/ExaDev/SysProM/commit/1217c1cd5073f652e530d587b1c4cfa614ff1856))
+
 ## [1.0.7](https://github.com/ExaDev/SysProM/compare/v1.0.6...v1.0.7) (2026-03-22)
 
 ### Code Refactoring
