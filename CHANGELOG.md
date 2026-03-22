@@ -1,3 +1,26 @@
+## [1.2.1](https://github.com/ExaDev/SysProM/compare/v1.2.0...v1.2.1) (2026-03-22)
+
+### Documentation
+
+* **cli:** add JSDoc to exported types and functions ([9c1b5ae](https://github.com/ExaDev/SysProM/commit/9c1b5aef377d125257e4bddfdbffdd976733c95e))
+* **jsdoc:** add [@param](https://github.com/param) and [@returns](https://github.com/returns) to CLI command definitions ([c7b4e58](https://github.com/ExaDev/SysProM/commit/c7b4e58dd07a1610712820cb14ec107b246de73a))
+* **jsdoc:** add [@param](https://github.com/param) and [@returns](https://github.com/returns) to speckit library functions ([dd1cb33](https://github.com/ExaDev/SysProM/commit/dd1cb331790fb1de20b1501ff66bd65823471a86))
+* **jsdoc:** add [@throws](https://github.com/throws) {Error} type annotations to operation modules ([6aad9b9](https://github.com/ExaDev/SysProM/commit/6aad9b9dd199f8cca8807878d0e7e7f733a8d731))
+* **jsdoc:** add JSDoc to conversion modules ([d7363da](https://github.com/ExaDev/SysProM/commit/d7363da8d71f4ceff3b180d6034d79f41a82ff62))
+* **jsdoc:** add JSDoc to schema and core utility modules ([a4a58b1](https://github.com/ExaDev/SysProM/commit/a4a58b121a557e93062bfa14b2a41dfd19f52cc5))
+* **operations:** use [@template](https://github.com/template) instead of [@type](https://github.com/type)Param for TSDoc ([cae1691](https://github.com/ExaDev/SysProM/commit/cae169100a4f669382bf5bd30d02ec19a2a05dd1))
+* **readme:** add OpenSpec to comparison table ([54fe83e](https://github.com/ExaDev/SysProM/commit/54fe83e1c7934aec799d458aeddb6e99a487fabc))
+* **sysprom:** add INV27 auto-sync JSON and Markdown representations ([8d78af0](https://github.com/ExaDev/SysProM/commit/8d78af03d23aa1cc3d1a5bd6f2374cf415db4d2f))
+
+### Styles
+
+* **tests:** apply prettier formatting ([f72c9c2](https://github.com/ExaDev/SysProM/commit/f72c9c202f858a005c43f66bd0a109fa63ba40da))
+
+### Miscellaneous Chores
+
+* **lint:** add eslint-plugin-jsdoc for TSDoc validation ([a79ba18](https://github.com/ExaDev/SysProM/commit/a79ba1865b480005b66db00c08635a66e8571343))
+* **lint:** switch jsdoc preset to recommended-typescript ([d4f06b5](https://github.com/ExaDev/SysProM/commit/d4f06b5573df88223e68b37a9e4dcb45441c7afb))
+
 ## [1.2.0](https://github.com/ExaDev/SysProM/compare/v1.1.0...v1.2.0) (2026-03-22)
 
 ### Features
