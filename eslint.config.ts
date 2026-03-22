@@ -92,16 +92,16 @@ export default defineConfig(
 	prettier,
 	{
 		files: ["src/**/*.ts"],
-		...jsdoc.configs["flat/recommended-typescript"],
+		...jsdoc.configs["flat/recommended-typescript-error"],
 		rules: {
-			...jsdoc.configs["flat/recommended-typescript"].rules,
-			...jsdoc.configs["flat/requirements-typescript"].rules,
-			...jsdoc.configs["flat/contents-typescript"].rules,
-			...jsdoc.configs["flat/logical-typescript"].rules,
-			...jsdoc.configs["flat/stylistic-typescript"].rules,
-			"jsdoc/require-hyphen-before-param-description": ["warn", "always"],
+			...jsdoc.configs["flat/recommended-typescript-error"].rules,
+			...jsdoc.configs["flat/requirements-typescript-error"].rules,
+			...jsdoc.configs["flat/contents-typescript-error"].rules,
+			...jsdoc.configs["flat/logical-typescript-error"].rules,
+			...jsdoc.configs["flat/stylistic-typescript-error"].rules,
+			"jsdoc/require-hyphen-before-param-description": ["error", "always"],
 			"jsdoc/require-jsdoc": [
-				"warn",
+				"error",
 				{
 					publicOnly: true,
 					require: {
@@ -116,7 +116,7 @@ export default defineConfig(
 					],
 				},
 			],
-			"jsdoc/require-description": "warn",
+			"jsdoc/require-description": "error",
 		},
 	},
 	{
