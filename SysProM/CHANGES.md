@@ -762,16 +762,18 @@ Make input arg optional with priority-based auto-detection (.spm.json > .spm.md 
 
 - Implements: D36
 
+- Status: complete
+
 Scope:
 - src/cli/shared.ts
 - src/cli/commands/init.ts
 
 #### Plan
 
-- [ ] Add resolveInput() function to shared.ts
-- [ ] Make inputArg optional in shared.ts
-- [ ] Update all commands to use resolveInput()
-- [ ] Rework init command with optional path and --format flag
-- [ ] Write tests for resolveInput
-- [ ] Write tests for init command
+- [x] Add resolveInput() function to shared.ts
+- [x] Make inputArg optional in shared.ts
+- [x] Update all commands to use resolveInput()
+- [x] Rework init command with optional path and --format flag
+- [x] Write tests for resolveInput
+- [x] Write tests for init command
 

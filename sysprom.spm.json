@@ -3900,33 +3900,34 @@
 			"plan": [
 				{
 					"description": "Add resolveInput() function to shared.ts",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Make inputArg optional in shared.ts",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Update all commands to use resolveInput()",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Rework init command with optional path and --format flag",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Write tests for resolveInput",
-					"done": false
+					"done": true
 				},
 				{
 					"description": "Write tests for init command",
-					"done": false
+					"done": true
 				}
 			],
 			"scope": [
 				"src/cli/shared.ts",
 				"src/cli/commands/init.ts"
 			],
+			"status": "complete",
 			"type": "change"
 		}
 	],
