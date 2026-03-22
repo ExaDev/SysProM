@@ -1,9 +1,10 @@
 {
   "permissions": {
-    "deny": [
-      "Write(sysprom.spm.json)",
-      "Update(sysprom.spm.json)",
-      "Bash(pnpm _*)"
+    "deny": ["Write(sysprom.spm.json)", "Bash(pnpm _*)"],
+    "ask": [
+      "Write(eslint.config.ts)",
+      "Update(eslint.config.ts)",
+      "Update(sysprom.spm.json)"
     ]
   }
 }

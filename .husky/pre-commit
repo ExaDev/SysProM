@@ -1,4 +1,4 @@
-staged=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' | tr '\n' ' ')
+staged=$(git diff --cached --name-only --diff-filter=ACMR -- 'src/**/*.ts' 'scripts/**/*.ts' | tr '\n' ' ')
 if [ -n "$staged" ]; then
   npx eslint --fix --no-error-on-unmatched-pattern $staged
   echo "$staged" | xargs git add

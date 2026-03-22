@@ -1,11 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
-  parseConstitution,
-  parseSpec,
-  parsePlan,
-  parseTasks,
-  parseChecklist,
+	parseConstitution,
+	parseSpec,
+	parsePlan,
+	parseTasks,
+	parseChecklist,
 } from "../src/speckit/parse.js";
 
 // ============================================================================
@@ -13,7 +13,7 @@ import {
 // ============================================================================
 
 describe("parseConstitution", () => {
-  const SAMPLE_CONSTITUTION = `# TestProject Constitution
+	const SAMPLE_CONSTITUTION = `# TestProject Constitution
 
 ## Core Principles
 
@@ -32,74 +32,74 @@ Changes to principles require team consensus.
 **Version**: 1.0 | **Ratified**: 2025-01-01 | **Last Amended**: 2025-06-01
 `;
 
-  it("creates a protocol node with name containing Constitution", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    const protocolNode = result.nodes.find((n) => n.type === "protocol");
-    assert(protocolNode, "protocol node should exist");
-    assert.match(
-      protocolNode.name,
-      /Constitution/i,
-      "protocol name should contain Constitution",
-    );
-  });
+	it("creates a protocol node with name containing Constitution", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		const protocolNode = result.nodes.find((n) => n.type === "protocol");
+		assert(protocolNode, "protocol node should exist");
+		assert.match(
+			protocolNode.name,
+			/Constitution/i,
+			"protocol name should contain Constitution",
+		);
+	});
 
-  it("creates invariant nodes for each principle", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    const invariants = result.nodes.filter((n) => n.type === "invariant");
-    assert.equal(invariants.length, 2, "should have 2 invariant nodes");
+	it("creates invariant nodes for each principle", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		const invariants = result.nodes.filter((n) => n.type === "invariant");
+		assert.equal(invariants.length, 2, "should have 2 invariant nodes");
 
-    const names = invariants.map((n) => n.name);
-    assert(
-      names.some((n) => n.includes("Simplicity First")),
-      "should have Simplicity First invariant",
-    );
-    assert(
-      names.some((n) => n.includes("Test Everything")),
-      "should have Test Everything invariant",
-    );
-  });
+		const names = invariants.map((n) => n.name);
+		assert(
+			names.some((n) => n.includes("Simplicity First")),
+			"should have Simplicity First invariant",
+		);
+		assert(
+			names.some((n) => n.includes("Test Everything")),
+			"should have Test Everything invariant",
+		);
+	});
 
-  it("creates a policy node for Governance", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    const policyNode = result.nodes.find(
-      (n) => n.type === "policy" && n.name === "Governance",
-    );
-    assert(policyNode, "governance policy node should exist");
-  });
+	it("creates a policy node for Governance", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		const policyNode = result.nodes.find(
+			(n) => n.type === "policy" && n.name === "Governance",
+		);
+		assert(policyNode, "governance policy node should exist");
+	});
 
-  it("invariant nodes have part_of relationship to protocol", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    const invariants = result.nodes.filter((n) => n.type === "invariant");
-    const protocolId = result.nodes.find((n) => n.type === "protocol")?.id;
+	it("invariant nodes have part_of relationship to protocol", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		const invariants = result.nodes.filter((n) => n.type === "invariant");
+		const protocolId = result.nodes.find((n) => n.type === "protocol")?.id;
 
-    for (const inv of invariants) {
-      const rel = result.relationships.find(
-        (r) => r.from === inv.id && r.to === protocolId && r.type === "part_of",
-      );
-      assert(
-        rel,
-        `invariant ${inv.id} should have part_of relationship to protocol`,
-      );
-    }
-  });
+		for (const inv of invariants) {
+			const rel = result.relationships.find(
+				(r) => r.from === inv.id && r.to === protocolId && r.type === "part_of",
+			);
+			assert(
+				rel,
+				`invariant ${inv.id} should have part_of relationship to protocol`,
+			);
+		}
+	});
 
-  it("correct number of nodes created", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    // 1 protocol + 2 invariants + 1 policy = 4
-    assert.equal(result.nodes.length, 4, "should have 4 nodes total");
-  });
+	it("correct number of nodes created", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		// 1 protocol + 2 invariants + 1 policy = 4
+		assert.equal(result.nodes.length, 4, "should have 4 nodes total");
+	});
 
-  it("correct number of relationships", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    // 2 part_of for invariants + 1 part_of for policy = 3
-    assert.equal(result.relationships.length, 3, "should have 3 relationships");
-  });
+	it("correct number of relationships", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		// 2 part_of for invariants + 1 part_of for policy = 3
+		assert.equal(result.relationships.length, 3, "should have 3 relationships");
+	});
 
-  it("all relationships are part_of type", () => {
-    const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
-    const allPartOf = result.relationships.every((r) => r.type === "part_of");
-    assert(allPartOf, "all relationships should be part_of type");
-  });
+	it("all relationships are part_of type", () => {
+		const result = parseConstitution(SAMPLE_CONSTITUTION, "TEST");
+		const allPartOf = result.relationships.every((r) => r.type === "part_of");
+		assert(allPartOf, "all relationships should be part_of type");
+	});
 });
 
 // ============================================================================
@@ -107,7 +107,7 @@ Changes to principles require team consensus.
 // ============================================================================
 
 describe("parseSpec", () => {
-  const SAMPLE_SPEC = `# Feature Specification: User Authentication
+	const SAMPLE_SPEC = `# Feature Specification: User Authentication
 
 **Feature Branch**: \`001-user-auth\`
 **Created**: 2025-01-15
@@ -168,132 +168,132 @@ Users can reset their password via email link.
 - **SC-002**: 99.9% uptime for authentication service
 `;
 
-  it("creates an artefact node for the spec", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const specNode = result.nodes.find((n) => n.type === "artefact");
-    assert(specNode, "spec artefact node should exist");
-    assert.match(
-      specNode.name,
-      /User Authentication/,
-      "spec name should match feature name",
-    );
-  });
+	it("creates an artefact node for the spec", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const specNode = result.nodes.find((n) => n.type === "artefact");
+		assert(specNode, "spec artefact node should exist");
+		assert.match(
+			specNode.name,
+			/User Authentication/,
+			"spec name should match feature name",
+		);
+	});
 
-  it("spec artefact has status proposed (mapped from Draft)", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const specNode = result.nodes.find((n) => n.type === "artefact");
-    assert.equal(
-      specNode?.status,
-      "proposed",
-      "spec status should be proposed",
-    );
-  });
+	it("spec artefact has status proposed (mapped from Draft)", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const specNode = result.nodes.find((n) => n.type === "artefact");
+		assert.equal(
+			specNode?.status,
+			"proposed",
+			"spec status should be proposed",
+		);
+	});
 
-  it("creates 2 capability nodes for user stories", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const capabilities = result.nodes.filter((n) => n.type === "capability");
-    assert.equal(
-      capabilities.length,
-      2,
-      "should have 2 capability nodes for user stories",
-    );
-  });
+	it("creates 2 capability nodes for user stories", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const capabilities = result.nodes.filter((n) => n.type === "capability");
+		assert.equal(
+			capabilities.length,
+			2,
+			"should have 2 capability nodes for user stories",
+		);
+	});
 
-  it("user story 1 has priority info in name or description", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const capability = result.nodes.find(
-      (n) => n.type === "capability" && n.name.includes("Login with Email"),
-    );
-    assert(capability, "should find Login with Email capability");
+	it("user story 1 has priority info in name or description", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const capability = result.nodes.find(
+			(n) => n.type === "capability" && n.name.includes("Login with Email"),
+		);
+		assert(capability, "should find Login with Email capability");
 
-    const content = [capability.name, capability.description]
-      .join(" ")
-      .toUpperCase();
-    assert.match(content, /P1/, "user story should contain priority P1");
-  });
+		const content = [capability.name, capability.description]
+			.join(" ")
+			.toUpperCase();
+		assert.match(content, /P1/, "user story should contain priority P1");
+	});
 
-  it("creates 3 invariant nodes for functional requirements", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const frNodes = result.nodes.filter(
-      (n) => n.type === "invariant" && n.id.includes("FR-"),
-    );
-    assert.equal(frNodes.length, 3, "should have 3 FR invariant nodes");
-  });
+	it("creates 3 invariant nodes for functional requirements", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const frNodes = result.nodes.filter(
+			(n) => n.type === "invariant" && n.id.includes("FR-"),
+		);
+		assert.equal(frNodes.length, 3, "should have 3 FR invariant nodes");
+	});
 
-  it("FR-003 has status proposed (NEEDS CLARIFICATION)", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const fr003 = result.nodes.find(
-      (n) => n.type === "invariant" && n.name === "FR-3",
-    );
-    assert(fr003, "FR-003 should exist");
-    assert.equal(
-      fr003.status,
-      "proposed",
-      "FR-003 should have proposed status due to NEEDS CLARIFICATION",
-    );
-  });
+	it("FR-003 has status proposed (NEEDS CLARIFICATION)", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const fr003 = result.nodes.find(
+			(n) => n.type === "invariant" && n.name === "FR-3",
+		);
+		assert(fr003, "FR-003 should exist");
+		assert.equal(
+			fr003.status,
+			"proposed",
+			"FR-003 should have proposed status due to NEEDS CLARIFICATION",
+		);
+	});
 
-  it("creates 2 invariant nodes for success criteria", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const scNodes = result.nodes.filter(
-      (n) => n.type === "invariant" && n.id.includes("SC-"),
-    );
-    assert.equal(scNodes.length, 2, "should have 2 SC invariant nodes");
-  });
+	it("creates 2 invariant nodes for success criteria", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const scNodes = result.nodes.filter(
+			(n) => n.type === "invariant" && n.id.includes("SC-"),
+		);
+		assert.equal(scNodes.length, 2, "should have 2 SC invariant nodes");
+	});
 
-  it("creates 2 concept nodes for key entities", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const concepts = result.nodes.filter((n) => n.type === "concept");
-    assert.equal(
-      concepts.length,
-      2,
-      "should have 2 concept nodes for entities",
-    );
+	it("creates 2 concept nodes for key entities", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const concepts = result.nodes.filter((n) => n.type === "concept");
+		assert.equal(
+			concepts.length,
+			2,
+			"should have 2 concept nodes for entities",
+		);
 
-    const names = concepts.map((n) => n.name);
-    assert(names.includes("User"), "should have User entity concept");
-    assert(names.includes("Session"), "should have Session entity concept");
-  });
+		const names = concepts.map((n) => n.name);
+		assert(names.includes("User"), "should have User entity concept");
+		assert(names.includes("Session"), "should have Session entity concept");
+	});
 
-  it("capabilities have refines relationship to spec artefact", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const capabilities = result.nodes.filter((n) => n.type === "capability");
-    const specId = result.nodes.find((n) => n.type === "artefact")?.id;
+	it("capabilities have refines relationship to spec artefact", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const capabilities = result.nodes.filter((n) => n.type === "capability");
+		const specId = result.nodes.find((n) => n.type === "artefact")?.id;
 
-    for (const cap of capabilities) {
-      const rel = result.relationships.find(
-        (r) => r.from === cap.id && r.to === specId && r.type === "refines",
-      );
-      assert(
-        rel,
-        `capability ${cap.id} should have refines relationship to spec`,
-      );
-    }
-  });
+		for (const cap of capabilities) {
+			const rel = result.relationships.find(
+				(r) => r.from === cap.id && r.to === specId && r.type === "refines",
+			);
+			assert(
+				rel,
+				`capability ${cap.id} should have refines relationship to spec`,
+			);
+		}
+	});
 
-  it("requirements have constrained_by relationship to spec artefact", () => {
-    const result = parseSpec(SAMPLE_SPEC, "TEST");
-    const requirements = result.nodes.filter(
-      (n) =>
-        n.type === "invariant" &&
-        (n.id.includes("FR-") || n.id.includes("SC-")),
-    );
-    const specId = result.nodes.find((n) => n.type === "artefact")?.id;
+	it("requirements have constrained_by relationship to spec artefact", () => {
+		const result = parseSpec(SAMPLE_SPEC, "TEST");
+		const requirements = result.nodes.filter(
+			(n) =>
+				n.type === "invariant" &&
+				(n.id.includes("FR-") || n.id.includes("SC-")),
+		);
+		const specId = result.nodes.find((n) => n.type === "artefact")?.id;
 
-    for (const req of requirements) {
-      const rel = result.relationships.find(
-        (r) =>
-          r.from === req.id && r.to === specId && r.type === "constrained_by",
-      );
-      assert(
-        rel,
-        `requirement ${req.id} should have constrained_by relationship to spec`,
-      );
-    }
-  });
+		for (const req of requirements) {
+			const rel = result.relationships.find(
+				(r) =>
+					r.from === req.id && r.to === specId && r.type === "constrained_by",
+			);
+			assert(
+				rel,
+				`requirement ${req.id} should have constrained_by relationship to spec`,
+			);
+		}
+	});
 
-  it("handles missing status field with Draft default", () => {
-    const specNoStatus = `# Feature Specification: Test Feature
+	it("handles missing status field with Draft default", () => {
+		const specNoStatus = `# Feature Specification: Test Feature
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -312,14 +312,14 @@ Test story description.
 ### Measurable Outcomes
 `;
 
-    const result = parseSpec(specNoStatus, "TEST");
-    const specNode = result.nodes.find((n) => n.type === "artefact");
-    assert.equal(
-      specNode?.status,
-      "proposed",
-      "missing status should default to proposed",
-    );
-  });
+		const result = parseSpec(specNoStatus, "TEST");
+		const specNode = result.nodes.find((n) => n.type === "artefact");
+		assert.equal(
+			specNode?.status,
+			"proposed",
+			"missing status should default to proposed",
+		);
+	});
 });
 
 // ============================================================================
@@ -327,7 +327,7 @@ Test story description.
 // ============================================================================
 
 describe("parsePlan", () => {
-  const SAMPLE_PLAN = `# Implementation Plan: User Authentication
+	const SAMPLE_PLAN = `# Implementation Plan: User Authentication
 
 **Branch**: \`001-user-auth\`
 **Date**: 2025-01-16
@@ -358,65 +358,65 @@ models/
   user.ts
 `;
 
-  it("creates a plan artefact node", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const planNode = result.nodes.find((n) => n.type === "artefact");
-    assert(planNode, "plan artefact node should exist");
-    assert.match(
-      planNode.name,
-      /User Authentication/,
-      "plan name should contain feature name",
-    );
-  });
+	it("creates a plan artefact node", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const planNode = result.nodes.find((n) => n.type === "artefact");
+		assert(planNode, "plan artefact node should exist");
+		assert.match(
+			planNode.name,
+			/User Authentication/,
+			"plan name should contain feature name",
+		);
+	});
 
-  it("creates an element node for technical context", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const techNode = result.nodes.find(
-      (n) => n.type === "element" && n.name === "Technical Context",
-    );
-    assert(techNode, "technical context element node should exist");
-    assert(techNode.description, "technical context should have description");
-  });
+	it("creates an element node for technical context", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const techNode = result.nodes.find(
+			(n) => n.type === "element" && n.name === "Technical Context",
+		);
+		assert(techNode, "technical context element node should exist");
+		assert(techNode.description, "technical context should have description");
+	});
 
-  it("creates a gate node for constitution check", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const gateNode = result.nodes.find(
-      (n) => n.type === "gate" && n.name === "Constitution Check",
-    );
-    assert(gateNode, "constitution check gate node should exist");
-  });
+	it("creates a gate node for constitution check", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const gateNode = result.nodes.find(
+			(n) => n.type === "gate" && n.name === "Constitution Check",
+		);
+		assert(gateNode, "constitution check gate node should exist");
+	});
 
-  it("creates an element node for project structure", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const structNode = result.nodes.find(
-      (n) => n.type === "element" && n.name === "Project Structure",
-    );
-    assert(structNode, "project structure element node should exist");
-  });
+	it("creates an element node for project structure", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const structNode = result.nodes.find(
+			(n) => n.type === "element" && n.name === "Project Structure",
+		);
+		assert(structNode, "project structure element node should exist");
+	});
 
-  it("plan has depends_on relationship to spec", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const planNode = result.nodes.find((n) => n.type === "artefact");
-    const dependsRel = result.relationships.find(
-      (r) => r.from === planNode?.id && r.type === "depends_on",
-    );
-    assert(dependsRel, "plan should have depends_on relationship to spec");
-    assert.match(dependsRel.to, /SPEC/, "depends_on should target spec node");
-  });
+	it("plan has depends_on relationship to spec", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const planNode = result.nodes.find((n) => n.type === "artefact");
+		const dependsRel = result.relationships.find(
+			(r) => r.from === planNode?.id && r.type === "depends_on",
+		);
+		assert(dependsRel, "plan should have depends_on relationship to spec");
+		assert.match(dependsRel.to, /SPEC/, "depends_on should target spec node");
+	});
 
-  it("gate has governed_by relationship to constitution protocol", () => {
-    const result = parsePlan(SAMPLE_PLAN, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    const govRel = result.relationships.find(
-      (r) => r.from === gateNode?.id && r.type === "governed_by",
-    );
-    assert(govRel, "gate should have governed_by relationship to protocol");
-    assert.match(
-      govRel.to,
-      /CONST/,
-      "governed_by should target constitution protocol",
-    );
-  });
+	it("gate has governed_by relationship to constitution protocol", () => {
+		const result = parsePlan(SAMPLE_PLAN, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		const govRel = result.relationships.find(
+			(r) => r.from === gateNode?.id && r.type === "governed_by",
+		);
+		assert(govRel, "gate should have governed_by relationship to protocol");
+		assert.match(
+			govRel.to,
+			/CONST/,
+			"governed_by should target constitution protocol",
+		);
+	});
 });
 
 // ============================================================================
@@ -424,7 +424,7 @@ models/
 // ============================================================================
 
 describe("parseTasks", () => {
-  const SAMPLE_TASKS = `# Task List: User Authentication
+	const SAMPLE_TASKS = `# Task List: User Authentication
 
 ## Phase 1: Setup
 
@@ -444,122 +444,122 @@ describe("parseTasks", () => {
 - [ ] T008 [US2] Write reset tests
 `;
 
-  it("creates a protocol node for implementation", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.type === "protocol");
-    assert(protocolNode, "implementation protocol node should exist");
-  });
+	it("creates a protocol node for implementation", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.type === "protocol");
+		assert(protocolNode, "implementation protocol node should exist");
+	});
 
-  it("creates phase change nodes (CHG-1, CHG-2, CHG-3)", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const changes = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
-    );
-    assert.equal(changes?.length, 3, "should have 3 phase-level change nodes");
-  });
+	it("creates phase change nodes (CHG-1, CHG-2, CHG-3)", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+		const changes = protocolNode.subsystem?.nodes?.filter(
+			(n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
+		);
+		assert.equal(changes?.length, 3, "should have 3 phase-level change nodes");
+	});
 
-  it("phase change nodes have must_follow relationships in order", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const changes = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
-    );
-    const subsystemRels = protocolNode.subsystem?.relationships ?? [];
+	it("phase change nodes have must_follow relationships in order", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+		const changes = protocolNode.subsystem?.nodes?.filter(
+			(n) => n.type === "change" && /^CHG-\d+$/.test(n.id),
+		);
+		const subsystemRels = protocolNode.subsystem?.relationships ?? [];
 
-    const sortedChanges = (changes ?? []).sort((a, b) => {
-      const aNum = parseInt(a.id.split("-").pop() || "0");
-      const bNum = parseInt(b.id.split("-").pop() || "0");
-      return aNum - bNum;
-    });
+		const sortedChanges = (changes ?? []).sort((a, b) => {
+			const aNum = parseInt(a.id.split("-").pop() || "0");
+			const bNum = parseInt(b.id.split("-").pop() || "0");
+			return aNum - bNum;
+		});
 
-    // Check that consecutive phase changes have must_follow relationships
-    for (let i = 1; i < sortedChanges.length; i++) {
-      const change = sortedChanges[i];
-      const prevChange = sortedChanges[i - 1];
-      const mustFollowRel = subsystemRels.find(
-        (r) =>
-          r.from === change.id &&
-          r.to === prevChange.id &&
-          r.type === "must_follow",
-      );
-      assert(
-        mustFollowRel,
-        `change ${change.id} should have must_follow relationship to previous change`,
-      );
-    }
-  });
+		// Check that consecutive phase changes have must_follow relationships
+		for (let i = 1; i < sortedChanges.length; i++) {
+			const change = sortedChanges[i];
+			const prevChange = sortedChanges[i - 1];
+			const mustFollowRel = subsystemRels.find(
+				(r) =>
+					r.from === change.id &&
+					r.to === prevChange.id &&
+					r.type === "must_follow",
+			);
+			assert(
+				mustFollowRel,
+				`change ${change.id} should have must_follow relationship to previous change`,
+			);
+		}
+	});
 
-  it("creates change nodes with task plans", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const changeNodes = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "change",
-    );
-    assert(
-      (changeNodes?.length ?? 0) > 0,
-      "should have change nodes for tasks",
-    );
+	it("creates change nodes with task plans", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+		const changeNodes = protocolNode.subsystem?.nodes?.filter(
+			(n) => n.type === "change",
+		);
+		assert(
+			(changeNodes?.length ?? 0) > 0,
+			"should have change nodes for tasks",
+		);
 
-    for (const change of changeNodes ?? []) {
-      assert(change.plan, `change ${change.id} should have plan array`);
-      assert(Array.isArray(change.plan), "plan should be an array");
-      for (const task of change.plan) {
-        assert(
-          typeof task.done === "boolean",
-          "each task should have done boolean",
-        );
-        assert(task.description, "each task should have description");
-      }
-    }
-  });
+		for (const change of changeNodes ?? []) {
+			assert(change.plan, `change ${change.id} should have plan array`);
+			assert(Array.isArray(change.plan), "plan should be an array");
+			for (const task of change.plan) {
+				assert(
+					typeof task.done === "boolean",
+					"each task should have done boolean",
+				);
+				assert(task.description, "each task should have description");
+			}
+		}
+	});
 
-  it("T003 and T006 are marked done in their plan arrays", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const changeNodes = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "change",
-    );
+	it("T003 and T006 are marked done in their plan arrays", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+		const changeNodes = protocolNode.subsystem?.nodes?.filter(
+			(n) => n.type === "change",
+		);
 
-    let foundCompleted = false;
-    for (const change of changeNodes ?? []) {
-      for (const task of change.plan || []) {
-        const desc = task.description;
-        if (
-          (desc.includes("T003") ||
-            desc.includes("Configure linting") ||
-            desc.includes("T006") ||
-            desc.includes("Write login tests")) &&
-          task.done
-        ) {
-          foundCompleted = true;
-        }
-      }
-    }
+		let foundCompleted = false;
+		for (const change of changeNodes ?? []) {
+			for (const task of change.plan || []) {
+				const desc = task.description;
+				if (
+					(desc.includes("T003") ||
+						desc.includes("Configure linting") ||
+						desc.includes("T006") ||
+						desc.includes("Write login tests")) &&
+					task.done
+				) {
+					foundCompleted = true;
+				}
+			}
+		}
 
-    assert(foundCompleted, "completed tasks should be marked with done: true");
-  });
+		assert(foundCompleted, "completed tasks should be marked with done: true");
+	});
 
-  it("total task count matches", () => {
-    const result = parseTasks(SAMPLE_TASKS, "TEST");
-    const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
-    assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
-    const changeNodes = protocolNode.subsystem?.nodes?.filter(
-      (n) => n.type === "change",
-    );
+	it("total task count matches", () => {
+		const result = parseTasks(SAMPLE_TASKS, "TEST");
+		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
+		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
+		const changeNodes = protocolNode.subsystem?.nodes?.filter(
+			(n) => n.type === "change",
+		);
 
-    let totalTasks = 0;
-    for (const change of changeNodes ?? []) {
-      totalTasks += (change.plan || []).length;
-    }
+		let totalTasks = 0;
+		for (const change of changeNodes ?? []) {
+			totalTasks += (change.plan || []).length;
+		}
 
-    // 8 tasks total: T001-T008
-    assert.equal(totalTasks, 8, "should have 8 total tasks");
-  });
+		// 8 tasks total: T001-T008
+		assert.equal(totalTasks, 8, "should have 8 total tasks");
+	});
 });
 
 // ============================================================================
@@ -567,7 +567,7 @@ describe("parseTasks", () => {
 // ============================================================================
 
 describe("parseChecklist", () => {
-  const SAMPLE_CHECKLIST = `# Review Checklist: User Authentication
+	const SAMPLE_CHECKLIST = `# Review Checklist: User Authentication
 
 **Purpose**: Pre-launch review
 **Created**: 2025-01-20
@@ -584,79 +584,67 @@ describe("parseChecklist", () => {
 - [ ] CHK005 Load testing completed
 `;
 
-  it("creates a gate node", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert(gateNode, "checklist gate node should exist");
-    assert.match(
-      gateNode.name,
-      /Review Checklist/,
-      "gate name should match checklist title",
-    );
-  });
+	it("creates a gate node", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert(gateNode, "checklist gate node should exist");
+		assert.match(
+			gateNode.name,
+			/Review Checklist/,
+			"gate name should match checklist title",
+		);
+	});
 
-  it("lifecycle map has correct checked/unchecked states", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert(gateNode?.lifecycle, "gate should have lifecycle map");
-    assert(
-      Object.keys(gateNode.lifecycle).length > 0,
-      "lifecycle should have entries",
-    );
-  });
+	it("lifecycle map has correct checked/unchecked states", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert(gateNode?.lifecycle, "gate should have lifecycle map");
+		assert(
+			Object.keys(gateNode.lifecycle).length > 0,
+			"lifecycle should have entries",
+		);
+	});
 
-  it("CHK001 is true (checked)", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert.equal(
-      gateNode?.lifecycle?.["CHK001"],
-      true,
-      "CHK001 should be checked",
-    );
-  });
+	it("CHK001 is true (checked)", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert.equal(gateNode?.lifecycle?.CHK001, true, "CHK001 should be checked");
+	});
 
-  it("CHK002 is false (unchecked)", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert.equal(
-      gateNode?.lifecycle?.["CHK002"],
-      false,
-      "CHK002 should be unchecked",
-    );
-  });
+	it("CHK002 is false (unchecked)", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert.equal(
+			gateNode?.lifecycle?.CHK002,
+			false,
+			"CHK002 should be unchecked",
+		);
+	});
 
-  it("CHK003 and CHK004 are true (checked)", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert.equal(
-      gateNode?.lifecycle?.["CHK003"],
-      true,
-      "CHK003 should be checked",
-    );
-    assert.equal(
-      gateNode?.lifecycle?.["CHK004"],
-      true,
-      "CHK004 should be checked",
-    );
-  });
+	it("CHK003 and CHK004 are true (checked)", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert.equal(gateNode?.lifecycle?.CHK003, true, "CHK003 should be checked");
+		assert.equal(gateNode?.lifecycle?.CHK004, true, "CHK004 should be checked");
+	});
 
-  it("CHK005 is false (unchecked)", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert.equal(
-      gateNode?.lifecycle?.["CHK005"],
-      false,
-      "CHK005 should be unchecked",
-    );
-  });
+	it("CHK005 is false (unchecked)", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert.equal(
+			gateNode?.lifecycle?.CHK005,
+			false,
+			"CHK005 should be unchecked",
+		);
+	});
 
-  it("includes purpose in description", () => {
-    const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
-    const gateNode = result.nodes.find((n) => n.type === "gate");
-    assert.equal(
-      gateNode?.context,
-      "2025-01-20",
-      "context should contain created date",
-    );
-  });
+	it("includes purpose in description", () => {
+		const result = parseChecklist(SAMPLE_CHECKLIST, "TEST");
+		const gateNode = result.nodes.find((n) => n.type === "gate");
+		assert.equal(
+			gateNode?.context,
+			"2025-01-20",
+			"context should contain created date",
+		);
+	});
 });
