@@ -1,3 +1,19 @@
+## [1.2.2](https://github.com/ExaDev/SysProM/compare/v1.2.1...v1.2.2) (2026-03-22)
+
+### Documentation
+
+* **jsdoc:** add [@example](https://github.com/example) tags to CLI functions ([e5198fc](https://github.com/ExaDev/SysProM/commit/e5198fc6e2f9c909037677370ce17b5d931b4e0f))
+* **jsdoc:** add [@example](https://github.com/example) tags to conversion functions ([726ac35](https://github.com/ExaDev/SysProM/commit/726ac354de2fd6a18490bb53f909393028f26a68))
+* **jsdoc:** add [@example](https://github.com/example) tags to core modules ([9c7f84c](https://github.com/ExaDev/SysProM/commit/9c7f84c65473b972b17343f9dd63bc70a9a587b8))
+* **jsdoc:** add [@example](https://github.com/example) tags to speckit library functions ([f405c46](https://github.com/ExaDev/SysProM/commit/f405c461e82edff67b733f94c33407dc2ac9f70f))
+* **readme:** add GSD-2, Kiro, cc-sdd, and Ouroboros to comparison table ([a5dc1dc](https://github.com/ExaDev/SysProM/commit/a5dc1dc30dfaf2f57608ba7d96d616fc011d53e8))
+* **readme:** add PRD to comparison table ([1355006](https://github.com/ExaDev/SysProM/commit/13550060b8809ab680abf3da976db19a001b548d))
+* **readme:** add Spec Kitty and Shotgun to comparison table ([3fc1de4](https://github.com/ExaDev/SysProM/commit/3fc1de42c885a250457dce8f8ccbb12ac65bb890))
+
+### Miscellaneous Chores
+
+* **lint:** add jsdoc requirements-typescript preset ([8daa999](https://github.com/ExaDev/SysProM/commit/8daa999c3b080c465cccff1c1eb50de671f27aa6))
+
 ## [1.2.1](https://github.com/ExaDev/SysProM/compare/v1.2.0...v1.2.1) (2026-03-22)
 
 ### Documentation
