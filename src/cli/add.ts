@@ -72,6 +72,21 @@ export function run(args: string[]): void {
   const scope = parseFlagAll(args, "--scope");
   if (scope.length > 0) node.scope = scope;
 
+  const selected = parseFlag(args, "--selected");
+  if (selected) node.selected = selected;
+
+  const optionArgs = parseFlagAll(args, "--option");
+  if (optionArgs.length > 0) {
+    node.options = optionArgs.map((arg) => {
+      const colonIdx = arg.indexOf(":");
+      if (colonIdx < 0) {
+        console.error(`Invalid --option format: ${arg} (expected id:description)`);
+        process.exit(1);
+      }
+      return { id: arg.slice(0, colonIdx), description: arg.slice(colonIdx + 1) };
+    });
+  }
+
   try {
     const newDoc = addNode(doc, node);
     saveDocument(newDoc, format, path);

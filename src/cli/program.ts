@@ -198,6 +198,8 @@ program
   .option("--context <text>", "background context (for decisions)")
   .option("--rationale <text>", "reasoning for the choice (for decisions)")
   .option("--scope <id>", "affected node ID, repeatable (for changes)", collect, [])
+  .option("--option <id:description>", "decision option, repeatable (e.g. OPT-A:Use framework X)", collect, [])
+  .option("--selected <id>", "selected option ID (for decisions)")
   .action(
     (
       input: string,
@@ -210,6 +212,8 @@ program
         context?: string;
         rationale?: string;
         scope: string[];
+        option: string[];
+        selected?: string;
       },
     ) => {
       const args = [input, nodeType, "--id", opts.id, "--name", opts.name];
@@ -218,6 +222,8 @@ program
       if (opts.context) args.push("--context", opts.context);
       if (opts.rationale) args.push("--rationale", opts.rationale);
       for (const s of opts.scope) args.push("--scope", s);
+      for (const o of opts.option) args.push("--option", o);
+      if (opts.selected) args.push("--selected", opts.selected);
       runAdd(args);
     },
   );
