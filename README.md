@@ -138,9 +138,11 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 | [PRD](https://en.wikipedia.org/wiki/Product_requirements_document) | ✅ | | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | 🔶 | | | ✅ | 🔶 |
 | [ADR](https://adr.github.io/) | ✅ | | | ✅ | 🔶 | | | | | | | | | |
 | [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
+| [BDD (Gherkin)](https://cucumber.io/docs/gherkin/) | ✅ | ✅ | 🔶 | | | ✅ | 🔶 | | | | | 🔶 | 🔶 | ✅ |
 | [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
 | [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | | |
 | [GSD-2](https://github.com/gsd-build/gsd-2) | ✅ | 🔶 | ✅ | 🔶 | ✅ | 🔶 | ✅ | | | 🔶 | | ✅ | ✅ | ✅ |
+| [Taskmaster](https://github.com/eyaltoledano/claude-task-master) | ✅ | ✅ | ✅ | 🔶 | 🔶 | | ✅ | | 🔶 | 🔶 | | 🔶 | ✅ | ✅ |
 | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | ✅ | 🔶 | ✅ | ✅ | ✅ | | 🔶 | | | | | ✅ | ✅ | ✅ |
 | [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
 | [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
