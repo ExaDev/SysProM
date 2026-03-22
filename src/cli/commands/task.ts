@@ -1,7 +1,7 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { loadDocument, saveDocument } from "../../io.js";
-import { addPlanTask, updatePlanTask } from "../../mutate.js";
+import { addPlanTaskOp, updatePlanTaskOp } from "../../operations/index.js";
 import { textToString } from "../../text.js";
 
 // ============================================================================
@@ -95,7 +95,7 @@ const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
     const { doc, format, path } = loadDocument(args.input);
 
     try {
-      const newDoc = addPlanTask(doc, args.changeId, args.description);
+      const newDoc = addPlanTaskOp({ doc, changeId: args.changeId, description: args.description });
       saveDocument(newDoc, format, path);
       const node = newDoc.nodes.find((n) => n.id === args.changeId)!;
       const newIndex = (node.plan?.length ?? 1) - 1;
@@ -130,7 +130,7 @@ const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
     }
 
     try {
-      const newDoc = updatePlanTask(doc, args.changeId, taskIndex, true);
+      const newDoc = updatePlanTaskOp({ doc, changeId: args.changeId, taskIndex, done: true });
       saveDocument(newDoc, format, path);
       console.log(`Marked task ${taskIndex} done on ${args.changeId}`);
     } catch (err: unknown) {
@@ -163,7 +163,7 @@ const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
     }
 
     try {
-      const newDoc = updatePlanTask(doc, args.changeId, taskIndex, false);
+      const newDoc = updatePlanTaskOp({ doc, changeId: args.changeId, taskIndex, done: false });
       saveDocument(newDoc, format, path);
       console.log(`Marked task ${taskIndex} undone on ${args.changeId}`);
     } catch (err: unknown) {

@@ -4,40 +4,19 @@ import type { CommandDef } from "../define-command.js";
 import { textToString } from "../../text.js";
 import { loadDocument } from "../../io.js";
 import {
-  queryNodes,
-  queryNode,
-  queryRelationships,
-  traceFromNode,
-} from "../../query.js";
-import { timeline, nodeHistory, stateAt } from "../../temporal.js";
+  queryNodesOp,
+  queryNodeOp,
+  queryRelationshipsOp,
+  traceFromNodeOp,
+  timelineOp,
+  nodeHistoryOp,
+  stateAtOp,
+} from "../../operations/index.js";
 import { NodeType, NodeStatus } from "../../schema.js";
 import type { Node } from "../../schema.js";
-import type { TraceNode } from "../../query.js";
 
 // ---------------------------------------------------------------------------
-// Type aliases for action handlers
-// ---------------------------------------------------------------------------
-
-type NodesArgs = { input: string };
-type NodesOpts = { type?: string; status?: string; json?: boolean };
-
-type NodeArgs = { input: string; id: string };
-type NodeOpts = { json?: boolean };
-
-type RelsArgs = { input: string };
-type RelsOpts = { from?: string; to?: string; type?: string; json?: boolean };
-
-type TraceArgs = { input: string; id: string };
-type TraceOpts = { json?: boolean };
-
-type TimelineArgs = { input: string };
-type TimelineOpts = { node?: string; json?: boolean };
-
-type StateAtArgs = { input: string; time: string };
-type StateAtOpts = { json?: boolean };
-
-// ---------------------------------------------------------------------------
-// Helper functions
+// Presentation helpers
 // ---------------------------------------------------------------------------
 
 function printNode(r: Node, verbose: boolean): void {
@@ -73,7 +52,20 @@ function printNode(r: Node, verbose: boolean): void {
   }
 }
 
-function printTraceTree(tn: TraceNode, depth: number): void {
+/** Matches the recursive trace structure returned by traceFromNodeOp. */
+interface TraceTreeNode {
+  id: string;
+  node?: Node | null;
+  children: readonly TraceTreeNode[];
+}
+
+function isTraceTreeNode(value: unknown): value is TraceTreeNode {
+  if (typeof value !== "object" || value === null) return false;
+  return "id" in value && typeof value.id === "string"
+    && "children" in value && Array.isArray(value.children);
+}
+
+function printTraceTree(tn: TraceTreeNode, depth: number): void {
   if (!tn.node) return;
   const indent = "  ".repeat(depth);
   console.log(
@@ -85,30 +77,76 @@ function printTraceTree(tn: TraceNode, depth: number): void {
 }
 
 // ---------------------------------------------------------------------------
+// Arg/opt schemas
+// ---------------------------------------------------------------------------
+
+const nodesArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+});
+const nodesOpts = z.object({
+  type: NodeType.optional().describe("filter by node type"),
+  status: NodeStatus.optional().describe("filter by node status"),
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+const nodeArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+  id: z.string().describe("node ID to retrieve"),
+});
+const nodeOpts = z.object({
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+const relsArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+});
+const relsOpts = z.object({
+  from: z.string().optional().describe("filter relationships by source node"),
+  to: z.string().optional().describe("filter relationships by target node"),
+  type: z.string().optional().describe("filter by relationship type"),
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+const traceArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+  id: z.string().describe("node ID to start trace from"),
+});
+const traceOpts = z.object({
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+const timelineArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+});
+const timelineOpts = z.object({
+  node: z.string().optional().describe("filter events to a specific node"),
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+const stateAtArgs = z.object({
+  input: z.string().describe("SysProM document to query"),
+  time: z.string().describe("ISO timestamp to query"),
+});
+const stateAtOpts = z.object({
+  json: z.boolean().optional().default(false).describe("output as JSON"),
+});
+
+// ---------------------------------------------------------------------------
 // Subcommands
 // ---------------------------------------------------------------------------
 
 const nodesSubcommand: CommandDef = {
   name: "nodes",
-  description: "List nodes, optionally filtered by type or status",
-  apiLink: "queryNodes",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-  }),
-  opts: z.object({
-    type: NodeType.optional().describe("filter by node type"),
-    status: NodeStatus.optional().describe("filter by node status"),
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as NodesArgs;
-    const typedOpts = opts as NodesOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const nodes = queryNodes(doc, {
-      type: typedOpts.type,
-      status: typedOpts.status,
-    });
-    if (typedOpts.json) {
+  description: queryNodesOp.def.description,
+  apiLink: queryNodesOp.def.name,
+  args: nodesArgs,
+  opts: nodesOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = nodesArgs.parse(rawArgs);
+    const opts = nodesOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const nodes = queryNodesOp({ doc, type: opts.type, status: opts.status });
+    if (opts.json) {
       console.log(JSON.stringify(nodes, null, 2));
     } else {
       for (const n of nodes) printNode(n, false);
@@ -119,25 +157,20 @@ const nodesSubcommand: CommandDef = {
 
 const nodeSubcommand: CommandDef = {
   name: "node",
-  description: "Show single node detail with incoming and outgoing relationships",
-  apiLink: "queryNode",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-    id: z.string().describe("node ID to retrieve"),
-  }),
-  opts: z.object({
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as NodeArgs;
-    const typedOpts = opts as NodeOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const result = queryNode(doc, typedArgs.id);
+  description: queryNodeOp.def.description,
+  apiLink: queryNodeOp.def.name,
+  args: nodeArgs,
+  opts: nodeOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = nodeArgs.parse(rawArgs);
+    const opts = nodeOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const result = queryNodeOp({ doc, id: args.id });
     if (!result) {
-      console.error(`Node not found: ${typedArgs.id}`);
+      console.error(`Node not found: ${args.id}`);
       process.exit(1);
     }
-    if (typedOpts.json) {
+    if (opts.json) {
       console.log(JSON.stringify(result.node, null, 2));
     } else {
       printNode(result.node, true);
@@ -157,27 +190,21 @@ const nodeSubcommand: CommandDef = {
 
 const relsSubcommand: CommandDef = {
   name: "rels",
-  description: "List all relationships, optionally filtered by type or endpoints",
-  apiLink: "queryRelationships",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-  }),
-  opts: z.object({
-    from: z.string().optional().describe("filter relationships by source node"),
-    to: z.string().optional().describe("filter relationships by target node"),
-    type: z.string().optional().describe("filter by relationship type"),
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as RelsArgs;
-    const typedOpts = opts as RelsOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const rels = queryRelationships(doc, {
-      from: typedOpts.from,
-      to: typedOpts.to,
-      type: typedOpts.type,
+  description: queryRelationshipsOp.def.description,
+  apiLink: queryRelationshipsOp.def.name,
+  args: relsArgs,
+  opts: relsOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = relsArgs.parse(rawArgs);
+    const opts = relsOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const rels = queryRelationshipsOp({
+      doc,
+      from: opts.from,
+      to: opts.to,
+      type: opts.type,
     });
-    if (typedOpts.json) {
+    if (opts.json) {
       console.log(JSON.stringify(rels, null, 2));
     } else {
       for (const r of rels) {
@@ -192,23 +219,18 @@ const relsSubcommand: CommandDef = {
 
 const traceSubcommand: CommandDef = {
   name: "trace",
-  description: "Trace refinement chain from a node through its descendants",
-  apiLink: "traceFromNode",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-    id: z.string().describe("node ID to start trace from"),
-  }),
-  opts: z.object({
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as TraceArgs;
-    const typedOpts = opts as TraceOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const trace = traceFromNode(doc, typedArgs.id);
-    if (typedOpts.json) {
+  description: traceFromNodeOp.def.description,
+  apiLink: traceFromNodeOp.def.name,
+  args: traceArgs,
+  opts: traceOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = traceArgs.parse(rawArgs);
+    const opts = traceOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const trace = traceFromNodeOp({ doc, startId: args.id });
+    if (opts.json) {
       console.log(JSON.stringify(trace, null, 2));
-    } else {
+    } else if (isTraceTreeNode(trace)) {
       printTraceTree(trace, 0);
     }
   },
@@ -216,22 +238,18 @@ const traceSubcommand: CommandDef = {
 
 const timelineSubcommand: CommandDef = {
   name: "timeline",
-  description:
-    "Show timestamped events across the system, optionally filtered by node",
-  apiLink: "timeline",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-  }),
-  opts: z.object({
-    node: z.string().optional().describe("filter events to a specific node"),
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as TimelineArgs;
-    const typedOpts = opts as TimelineOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const events = typedOpts.node ? nodeHistory(doc, typedOpts.node) : timeline(doc);
-    if (typedOpts.json) {
+  description: timelineOp.def.description,
+  apiLink: timelineOp.def.name,
+  args: timelineArgs,
+  opts: timelineOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = timelineArgs.parse(rawArgs);
+    const opts = timelineOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const events = opts.node
+      ? nodeHistoryOp({ doc, nodeId: opts.node })
+      : timelineOp({ doc });
+    if (opts.json) {
       console.log(JSON.stringify(events, null, 2));
     } else {
       if (events.length === 0) {
@@ -249,25 +267,20 @@ const timelineSubcommand: CommandDef = {
 
 const stateAtSubcommand: CommandDef = {
   name: "state-at",
-  description: "Query active node states at a specific timestamp",
-  apiLink: "stateAt",
-  args: z.object({
-    input: z.string().describe("SysProM document to query"),
-    time: z.string().describe("ISO timestamp to query"),
-  }),
-  opts: z.object({
-    json: z.boolean().optional().default(false).describe("output as JSON"),
-  }),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as StateAtArgs;
-    const typedOpts = opts as StateAtOpts;
-    const { doc } = loadDocument(typedArgs.input);
-    const result = stateAt(doc, typedArgs.time);
-    if (typedOpts.json) {
+  description: stateAtOp.def.description,
+  apiLink: stateAtOp.def.name,
+  args: stateAtArgs,
+  opts: stateAtOpts,
+  action(rawArgs: unknown, rawOpts: unknown) {
+    const args = stateAtArgs.parse(rawArgs);
+    const opts = stateAtOpts.parse(rawOpts);
+    const { doc } = loadDocument(args.input);
+    const result = stateAtOp({ doc, timestamp: args.time });
+    if (opts.json) {
       console.log(JSON.stringify(result, null, 2));
     } else {
       if (result.length === 0) {
-        console.log(`(no active states at ${typedArgs.time})`);
+        console.log(`(no active states at ${args.time})`);
       } else {
         for (const nodeState of result) {
           console.log(

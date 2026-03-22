@@ -1,24 +1,24 @@
 import * as z from "zod";
 import pc from "picocolors";
 import type { CommandDef } from "../define-command.js";
-import { validate as validateDoc } from "../../validate.js";
+import { validateOp } from "../../operations/index.js";
 import { loadDocument } from "../../io.js";
 
-type Args = { input: string };
-type Opts = Record<string, never>;
+const argsSchema = z.object({
+  input: z.string().describe("Path to SysProM document"),
+});
 
-export const validateCommand: CommandDef = {
+const optsSchema = z.object({}).strict();
+
+export const validateCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
   name: "validate",
-  description: "Validate a SysProM document against the schema",
-  apiLink: "validate",
-  args: z.object({
-    input: z.string().describe("Path to SysProM document"),
-  }),
-  opts: z.object({}).strict(),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as Args;
-    const { doc } = loadDocument(typedArgs.input);
-    const result = validateDoc(doc);
+  description: validateOp.def.description,
+  apiLink: validateOp.def.name,
+  args: argsSchema,
+  opts: optsSchema,
+  action(args) {
+    const { doc } = loadDocument(args.input);
+    const result = validateOp({ doc });
 
     if (result.valid) {
       console.log(pc.green("Valid SysProM document."));

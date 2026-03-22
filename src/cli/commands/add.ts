@@ -1,102 +1,86 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { NodeType, NodeStatus, type Node } from "../../schema.js";
-import { addNode, nextId } from "../../mutate.js";
+import { addNodeOp, nextIdOp } from "../../operations/index.js";
 import { loadDocument, saveDocument } from "../../io.js";
 import { jsonToMarkdownMultiDoc } from "../../json-to-md.js";
 
-type Args = { input: string; nodeType: string };
-type Opts = {
-  id?: string;
-  name: string;
-  description?: string;
-  status?: string;
-  context?: string;
-  rationale?: string;
-  scope?: string[];
-  selected?: string;
-  option?: string[];
-  dryRun?: boolean;
-  json?: boolean;
-  sync?: string;
-};
+const argsSchema = z.object({
+  input: z.string().describe("SysProM document to modify (saved in place)"),
+  nodeType: z.string().describe("Node type to add"),
+});
 
-export const addCommand: CommandDef = {
+const optsSchema = z.object({
+  id: z.string().optional().describe("Node ID (auto-generated if omitted)"),
+  name: z.string().describe("Human-readable node name"),
+  description: z.string().optional().describe("Node description"),
+  status: z.string().optional().describe("Lifecycle status"),
+  context: z.string().optional().describe("Decision context"),
+  rationale: z.string().optional().describe("Decision rationale"),
+  scope: z.array(z.string()).optional().describe("Change scope (repeatable)"),
+  selected: z.string().optional().describe("Selected option ID"),
+  option: z.array(z.string()).optional().describe("Option in format 'ID:description' or just 'description' (repeatable)"),
+  dryRun: z.boolean().optional().describe("Show what would be added without saving"),
+  json: z.boolean().optional().describe("Output result as JSON"),
+  sync: z.string().optional().describe("Auto-generate markdown in this directory after adding"),
+});
+
+export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
   name: "add",
-  description: "Add a node to a SysProM document",
-  apiLink: "addNode",
-  args: z.object({
-    input: z.string().describe("SysProM document to modify (saved in place)"),
-    nodeType: z.string().describe("Node type to add"),
-  }),
-  opts: z.object({
-    id: z.string().optional().describe("Node ID (auto-generated if omitted)"),
-    name: z.string().describe("Human-readable node name"),
-    description: z.string().optional().describe("Node description"),
-    status: z.string().optional().describe("Lifecycle status"),
-    context: z.string().optional().describe("Decision context"),
-    rationale: z.string().optional().describe("Decision rationale"),
-    scope: z.array(z.string()).optional().describe("Change scope (repeatable)"),
-    selected: z.string().optional().describe("Selected option ID"),
-    option: z.array(z.string()).optional().describe("Option in format 'ID:description' or just 'description' (repeatable)"),
-    dryRun: z.boolean().optional().describe("Show what would be added without saving"),
-    json: z.boolean().optional().describe("Output result as JSON"),
-    sync: z.string().optional().describe("Auto-generate markdown in this directory after adding"),
-  }),
+  description: addNodeOp.def.description,
+  apiLink: addNodeOp.def.name,
+  args: argsSchema,
+  opts: optsSchema,
 
-  action(args: unknown, opts: unknown) {
-    // Type assertions are necessary here because define-command.ts calls action with
-    // parsed but dynamically-typed values from the command-line parser.
-    const typedArgs = args as Args;
-    const typedOpts = opts as Opts;
-
-    if (!typedOpts.name) {
+  action(args, opts) {
+    if (!opts.name) {
       console.error("--name is required.");
       process.exit(1);
     }
 
-    const { doc, format, path } = loadDocument(typedArgs.input);
-    const type = typedArgs.nodeType;
+    const { doc, format, path } = loadDocument(args.input);
+    const type = args.nodeType;
 
     if (!NodeType.is(type)) {
       console.error(`Unknown node type: ${type}`);
       process.exit(1);
     }
 
-    const id = typedOpts.id ?? nextId(doc, type);
+    const id = opts.id ?? nextIdOp({ doc, type });
 
-    const node: Node = { id, type, name: typedOpts.name };
+    // Build the node from CLI options
+    const node: Node = { id, type, name: opts.name };
 
-    if (typedOpts.description) {
-      node.description = typedOpts.description;
+    if (opts.description) {
+      node.description = opts.description;
     }
 
-    if (typedOpts.status) {
-      if (!NodeStatus.is(typedOpts.status)) {
-        console.error(`Unknown status: ${typedOpts.status}`);
+    if (opts.status) {
+      if (!NodeStatus.is(opts.status)) {
+        console.error(`Unknown status: ${opts.status}`);
         process.exit(1);
       }
-      node.status = typedOpts.status;
+      node.status = opts.status;
     }
 
-    if (typedOpts.context) {
-      node.context = typedOpts.context;
+    if (opts.context) {
+      node.context = opts.context;
     }
 
-    if (typedOpts.rationale) {
-      node.rationale = typedOpts.rationale;
+    if (opts.rationale) {
+      node.rationale = opts.rationale;
     }
 
-    if (typedOpts.scope && typedOpts.scope.length > 0) {
-      node.scope = typedOpts.scope;
+    if (opts.scope && opts.scope.length > 0) {
+      node.scope = opts.scope;
     }
 
-    if (typedOpts.selected) {
-      node.selected = typedOpts.selected;
+    if (opts.selected) {
+      node.selected = opts.selected;
     }
 
-    if (typedOpts.option && typedOpts.option.length > 0) {
-      node.options = typedOpts.option.map((arg, i) => {
+    if (opts.option && opts.option.length > 0) {
+      node.options = opts.option.map((arg, i) => {
         const colonIdx = arg.indexOf(":");
         if (colonIdx >= 0) {
           return { id: arg.slice(0, colonIdx), description: arg.slice(colonIdx + 1) };
@@ -108,21 +92,21 @@ export const addCommand: CommandDef = {
     }
 
     try {
-      const newDoc = addNode(doc, node);
+      const newDoc = addNodeOp({ doc, node });
 
-      if (!typedOpts.dryRun) {
+      if (!opts.dryRun) {
         saveDocument(newDoc, format, path);
 
-        if (typedOpts.sync) {
-          jsonToMarkdownMultiDoc(newDoc, typedOpts.sync);
-          console.log(`Synced to ${typedOpts.sync}`);
+        if (opts.sync) {
+          jsonToMarkdownMultiDoc(newDoc, opts.sync);
+          console.log(`Synced to ${opts.sync}`);
         }
       }
 
-      if (typedOpts.json) {
+      if (opts.json) {
         console.log(JSON.stringify(node, null, 2));
       } else {
-        console.log(`${typedOpts.dryRun ? "[dry-run] Would add" : "Added"} ${type} ${id} — ${typedOpts.name}`);
+        console.log(`${opts.dryRun ? "[dry-run] Would add" : "Added"} ${type} ${id} — ${opts.name}`);
       }
     } catch (err: unknown) {
       console.error(err instanceof Error ? err.message : String(err));

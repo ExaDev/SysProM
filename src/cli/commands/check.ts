@@ -1,98 +1,27 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
+import { checkOp } from "../../operations/index.js";
 import { loadDocument } from "../../io.js";
-import type { SysProMDocument, Node } from "../../schema.js";
 
-interface CheckResult {
-  warnings: string[];
-  info: string[];
-}
+const argsSchema = z.object({
+  input: z.string().describe("Path to SysProM document"),
+});
 
-function check(doc: SysProMDocument): CheckResult {
-  const warnings: string[] = [];
-  const info: string[] = [];
-  const ids = new Set(doc.nodes.map((n: Node) => n.id));
-  const relTargets = new Set<string>();
+const optsSchema = z.object({
+  json: z.boolean().optional().describe("Output results as JSON"),
+}).strict();
 
-  for (const r of doc.relationships ?? []) {
-    relTargets.add(r.from);
-    relTargets.add(r.to);
-  }
-
-  for (const node of doc.nodes) {
-    // Decisions without rationale
-    if (node.type === "decision" && !node.rationale) {
-      warnings.push(`${node.id}: decision has no rationale`);
-    }
-
-    // Decisions without context
-    if (node.type === "decision" && !node.context) {
-      info.push(`${node.id}: decision has no context`);
-    }
-
-    // Changes without scope
-    if (
-      node.type === "change" &&
-      (!node.scope || node.scope.length === 0)
-    ) {
-      warnings.push(`${node.id}: change has no scope`);
-    }
-
-    // Changes without operations
-    if (
-      node.type === "change" &&
-      (!node.operations || node.operations.length === 0)
-    ) {
-      info.push(`${node.id}: change has no operations`);
-    }
-
-    // Nodes with no description
-    if (!node.description) {
-      info.push(`${node.id}: no description`);
-    }
-
-    // Orphan nodes (not referenced by any relationship)
-    if (!relTargets.has(node.id)) {
-      // Intent nodes are expected to be roots
-      if (node.type !== "intent") {
-        info.push(`${node.id}: orphan node (no relationships)`);
-      }
-    }
-
-    // Scope references non-existent nodes
-    if (node.scope) {
-      for (const s of node.scope) {
-        if (!ids.has(s)) {
-          warnings.push(
-            `${node.id}: scope references non-existent node ${s}`,
-          );
-        }
-      }
-    }
-  }
-
-  return { warnings, info };
-}
-
-type Args = { input: string };
-type Opts = { json?: boolean };
-
-export const checkCommand: CommandDef = {
+export const checkCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
   name: "check",
-  description: "Check a SysProM document for issues and warnings",
-  args: z.object({
-    input: z.string().describe("Path to SysProM document"),
-  }),
-  opts: z.object({
-    json: z.boolean().optional().describe("Output results as JSON"),
-  }).strict(),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as Args;
-    const typedOpts = opts as Opts;
-    const { doc } = loadDocument(typedArgs.input);
-    const result = check(doc);
+  description: checkOp.def.description,
+  apiLink: checkOp.def.name,
+  args: argsSchema,
+  opts: optsSchema,
+  action(args, opts) {
+    const { doc } = loadDocument(args.input);
+    const result = checkOp({ doc });
 
-    if (typedOpts.json) {
+    if (opts.json) {
       console.log(JSON.stringify(result, null, 2));
     } else {
       if (result.warnings.length === 0 && result.info.length === 0) {

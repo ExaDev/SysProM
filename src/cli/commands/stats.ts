@@ -1,24 +1,24 @@
 import * as z from "zod";
 import pc from "picocolors";
 import type { CommandDef } from "../define-command.js";
-import { stats as computeStats } from "../../stats.js";
+import { statsOp } from "../../operations/index.js";
 import { loadDocument } from "../../io.js";
 
-type Args = { input: string };
-type Opts = Record<string, never>;
+const argsSchema = z.object({
+  input: z.string().describe("Path to SysProM document"),
+});
 
-export const statsCommand: CommandDef = {
+const optsSchema = z.object({}).strict();
+
+export const statsCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
   name: "stats",
-  description: "Display statistics about a SysProM document",
-  apiLink: "stats",
-  args: z.object({
-    input: z.string().describe("Path to SysProM document"),
-  }),
-  opts: z.object({}).strict(),
-  action(args: unknown, opts: unknown) {
-    const typedArgs = args as Args;
-    const { doc } = loadDocument(typedArgs.input);
-    const s = computeStats(doc);
+  description: statsOp.def.description,
+  apiLink: statsOp.def.name,
+  args: argsSchema,
+  opts: optsSchema,
+  action(args) {
+    const { doc } = loadDocument(args.input);
+    const s = statsOp({ doc });
 
     console.log(`${pc.bold("SysProM Document")}: ${s.title}`);
     console.log("");
