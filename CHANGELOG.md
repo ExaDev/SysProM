@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/ExaDev/SysProM/compare/v1.0.2...v1.0.3) (2026-03-22)
+
+### Bug Fixes
+
+* **ci:** set NODE_AUTH_TOKEN to empty for OIDC publishing ([c66bd8f](https://github.com/ExaDev/SysProM/commit/c66bd8fda2b63ad4a22f46e991dd3024ad6ed38f)), closes [semantic-release/npm#1069](https://github.com/semantic-release/npm/issues/1069)
+
 ## [1.0.2](https://github.com/ExaDev/SysProM/compare/v1.0.1...v1.0.2) (2026-03-22)
 
 ### Bug Fixes
