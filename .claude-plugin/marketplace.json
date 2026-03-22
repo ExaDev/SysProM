@@ -15,6 +15,12 @@
       "category": "productivity",
       "homepage": "https://github.com/ExaDev/SysProM",
       "skills": "./.claude/skills/",
+      "mcpServers": {
+        "sysprom": {
+          "command": "npx",
+          "args": ["-y", "--package", "sysprom", "sysprom-mcp"]
+        }
+      },
       "strict": false
     }
   ]
