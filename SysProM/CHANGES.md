@@ -592,3 +592,29 @@ Scope:
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
+### CH27 — Implement defineOperation Pattern
+
+Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.
+
+- Implements: D29
+
+- Status: complete
+
+Scope:
+- EL3
+
+#### Plan
+
+- [x] Create src/operations/define-operation.ts
+- [x] Create mutation operations
+- [x] Create query and temporal operations
+- [x] Create new API operations (search, check, graph, rename)
+- [x] Refactor CLI commands to thin adapters
+- [x] Update src/index.ts exports
+- [x] Verify and test
+
+#### Lifecycle
+
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
+

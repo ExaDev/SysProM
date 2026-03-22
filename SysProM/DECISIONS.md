@@ -707,3 +707,26 @@ Rationale: A single defineCommand pattern eliminates duplication. Commander prog
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
+### D29 — Unify Library API and CLI with defineOperation
+
+Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.
+
+- Must preserve: INV2
+
+- Status: accepted
+
+Context: Library functions have no metadata. CLI commands redeclare descriptions, types, and validation. Adding a feature requires updating 3 places.
+
+Options:
+- D29-OPT-A: defineOperation pattern — operations carry Zod schemas, CLI is a thin adapter
+- D29-OPT-B: Keep separate layers — library functions, CLI commands, and doc generator remain independent
+
+Chosen: D29-OPT-A
+
+Rationale: Single source of truth eliminates duplication and drift. Operations are callable functions with introspectable schemas.
+
+#### Lifecycle
+
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
+

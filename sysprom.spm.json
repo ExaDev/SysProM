@@ -3290,6 +3290,118 @@
 			],
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"context": "Library functions have no metadata. CLI commands redeclare descriptions, types, and validation. Adding a feature requires updating 3 places.",
+			"description": "Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.",
+			"id": "D29",
+			"lifecycle": {
+				"accepted": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Unify Library API and CLI with defineOperation",
+			"options": [
+				{
+					"description": "defineOperation pattern — operations carry Zod schemas, CLI is a thin adapter",
+					"id": "D29-OPT-A"
+				},
+				{
+					"description": "Keep separate layers — library functions, CLI commands, and doc generator remain independent",
+					"id": "D29-OPT-B"
+				}
+			],
+			"rationale": "Single source of truth eliminates duplication and drift. Operations are callable functions with introspectable schemas.",
+			"selected": "D29-OPT-A",
+			"status": "accepted",
+			"type": "decision"
+		},
+		{
+			"description": "Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.",
+			"id": "CH27",
+			"lifecycle": {
+				"implemented": "2026-03-22",
+				"proposed": "2026-03-22"
+			},
+			"name": "Implement defineOperation Pattern",
+			"plan": [
+				{
+					"description": "Create src/operations/define-operation.ts",
+					"done": true
+				},
+				{
+					"description": "Create mutation operations",
+					"done": true
+				},
+				{
+					"description": "Create query and temporal operations",
+					"done": true
+				},
+				{
+					"description": "Create new API operations (search, check, graph, rename)",
+					"done": true
+				},
+				{
+					"description": "Refactor CLI commands to thin adapters",
+					"done": true
+				},
+				{
+					"description": "Update src/index.ts exports",
+					"done": true
+				},
+				{
+					"description": "Verify and test",
+					"done": true
+				}
+			],
+			"scope": [
+				"EL3"
+			],
+			"status": "complete",
+			"type": "change"
+		},
+		{
+			"id": "D30",
+			"type": "decision",
+			"name": "Distribute SysProM as a Claude Code Plugin",
+			"status": "accepted",
+			"context": "SysProM is a CLI tool and library for tracking system provenance. Claude Code supports plugins that extend its capabilities with skills, commands, hooks, and agents. A plugin would give Claude native awareness of SysProM workflows — recording decisions, tracking changes, checking invariants — directly within coding sessions. The plugin is pure markdown (no compiled code) and delegates to the spm CLI at runtime.",
+			"options": [
+				{
+					"id": "D30-OPT-A",
+					"description": "Pure-markdown plugin with skills, commands, hooks, and agents that call spm via Bash. Use spm if globally installed, otherwise npx -y sysprom after npm publication. Instruct user to install from GitHub pre-publication."
+				},
+				{
+					"id": "D30-OPT-B",
+					"description": "Bundle compiled CLI into the plugin as a single-file JavaScript bundle. Fully self-contained but requires committing compiled code to git."
+				},
+				{
+					"id": "D30-OPT-C",
+					"description": "MCP server wrapping the programmatic API. Provides structured tool access but adds complexity and a Node.js runtime dependency within the plugin."
+				},
+				{
+					"id": "D30-OPT-D",
+					"description": "No plugin. Users rely on CLAUDE.md instructions and manual spm invocation."
+				}
+			],
+			"selected": "D30-OPT-A",
+			"rationale": "A pure-markdown plugin requires no compiled code in git and no build step. Skills teach Claude how to use SysProM; the CLI is resolved at runtime via spm or npx. This follows the pattern of other CLI-wrapping plugins (wayback, devops tools) that treat the CLI as a prerequisite. Distribution via GitHub marketplace requires only a marketplace.json in the repo.",
+			"lifecycle": {
+				"proposed": "2026-03-22",
+				"accepted": "2026-03-22"
+			}
+		},
+		{
+			"id": "CH28",
+			"type": "change",
+			"name": "Implement Claude Code Plugin",
+			"status": "proposed",
+			"description": "Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).",
+			"scope": [
+				"EL3"
+			],
+			"lifecycle": {
+				"proposed": "2026-03-22"
+			}
 		}
 	],
 	"relationships": [
@@ -4258,6 +4370,21 @@
 			"from": "D28",
 			"to": "INV2",
 			"type": "must_preserve"
+		},
+		{
+			"from": "CH27",
+			"to": "D29",
+			"type": "implements"
+		},
+		{
+			"from": "D29",
+			"to": "INV2",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CH28",
+			"to": "D30",
+			"type": "implements"
 		}
 	]
 }
