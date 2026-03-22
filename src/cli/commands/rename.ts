@@ -1,38 +1,10 @@
-import { loadDocument, saveDocument } from "../io.js";
-import type { SysProMDocument } from "../schema.js";
+import * as z from "zod";
+import type { CommandDef } from "../define-command.js";
+import { loadDocument, saveDocument } from "../../io.js";
+import type { SysProMDocument } from "../../schema.js";
 
-export function run(args: string[]): void {
-  if (args.length < 3) {
-    console.error("Usage: sysprom rename <input> <old-id> <new-id>");
-    process.exit(1);
-  }
-
-  try {
-    const { doc, format, path } = loadDocument(args[0]);
-    const oldId = args[1];
-    const newId = args[2];
-
-    // Check old ID exists
-    const node = doc.nodes.find((n) => n.id === oldId);
-    if (!node) {
-      console.error(`Node not found: ${oldId}`);
-      process.exit(1);
-    }
-
-    // Check new ID doesn't already exist
-    if (doc.nodes.some((n) => n.id === newId)) {
-      console.error(`Node already exists: ${newId}`);
-      process.exit(1);
-    }
-
-    const updated = renameNodeId(doc, oldId, newId);
-    saveDocument(updated, format, path);
-    console.log(`Renamed ${oldId} → ${newId}`);
-  } catch (err: unknown) {
-    console.error(err instanceof Error ? err.message : String(err));
-    process.exit(1);
-  }
-}
+type Args = { input: string; oldId: string; newId: string };
+type Opts = Record<string, never>;
 
 function renameNodeId(
   doc: SysProMDocument,
@@ -104,8 +76,50 @@ function renameNodeReferences(node: unknown, oldId: string, newId: string): unkn
 
   // Recurse into subsystems
   if (typeof updated.subsystem === "object" && updated.subsystem !== null) {
-    updated.subsystem = renameNodeId(updated.subsystem as SysProMDocument, oldId, newId);
+    updated.subsystem = renameNodeId(
+      updated.subsystem as SysProMDocument,
+      oldId,
+      newId,
+    );
   }
 
   return updated;
 }
+
+export const renameCommand: CommandDef = {
+  name: "rename",
+  description: "Rename a node in a SysProM document",
+  apiLink: "renameNodeId",
+  args: z.object({
+    input: z.string().describe("Path to SysProM document"),
+    oldId: z.string().describe("Current node ID"),
+    newId: z.string().describe("New node ID"),
+  }),
+  opts: z.object({}).strict(),
+  action(args: unknown, opts: unknown) {
+    const typedArgs = args as Args;
+    try {
+      const { doc, format, path } = loadDocument(typedArgs.input);
+
+      // Check old ID exists
+      const node = doc.nodes.find((n) => n.id === typedArgs.oldId);
+      if (!node) {
+        console.error(`Node not found: ${typedArgs.oldId}`);
+        process.exit(1);
+      }
+
+      // Check new ID doesn't already exist
+      if (doc.nodes.some((n) => n.id === typedArgs.newId)) {
+        console.error(`Node already exists: ${typedArgs.newId}`);
+        process.exit(1);
+      }
+
+      const updated = renameNodeId(doc, typedArgs.oldId, typedArgs.newId);
+      saveDocument(updated, format, path);
+      console.log(`Renamed ${typedArgs.oldId} → ${typedArgs.newId}`);
+    } catch (err: unknown) {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
+  },
+};

@@ -1,31 +1,16 @@
-import { loadDocument } from "../io.js";
-import type { SysProMDocument } from "../schema.js";
+import * as z from "zod";
+import type { CommandDef } from "../define-command.js";
+import { loadDocument } from "../../io.js";
+import type { SysProMDocument } from "../../schema.js";
 
-export function run(args: string[]): void {
-  if (args.length < 1) {
-    console.error("Usage: sysprom graph <input> [--format mermaid|dot] [--type <type>]");
-    process.exit(1);
-  }
+type Args = { input: string };
+type Opts = { format?: "mermaid" | "dot"; type?: string };
 
-  try {
-    const { doc } = loadDocument(args[0]);
-
-    // Parse flags
-    const formatIdx = args.indexOf("--format");
-    const format = formatIdx >= 0 && args[formatIdx + 1] ? args[formatIdx + 1] : "mermaid";
-
-    const typeIdx = args.indexOf("--type");
-    const typeFilter = typeIdx >= 0 && args[typeIdx + 1] ? args[typeIdx + 1] : undefined;
-
-    const output = generateGraph(doc, format, typeFilter);
-    console.log(output);
-  } catch (err: unknown) {
-    console.error(err instanceof Error ? err.message : String(err));
-    process.exit(1);
-  }
-}
-
-function generateGraph(doc: SysProMDocument, format: string, typeFilter?: string): string {
+function generateGraph(
+  doc: SysProMDocument,
+  format: string,
+  typeFilter?: string,
+): string {
   let rels = doc.relationships ?? [];
   if (typeFilter) {
     rels = rels.filter((r) => r.type === typeFilter);
@@ -97,3 +82,34 @@ function generateMermaid(
 function sanitiseMermaidId(id: string): string {
   return id.replace(/[^a-zA-Z0-9_]/g, "_");
 }
+
+export const graphCommand: CommandDef = {
+  name: "graph",
+  description: "Generate a graph of the SysProM document",
+  apiLink: "generateGraph",
+  args: z.object({
+    input: z.string().describe("Path to SysProM document"),
+  }),
+  opts: z
+    .object({
+      format: z
+        .enum(["mermaid", "dot"])
+        .optional()
+        .describe("Output format"),
+      type: z.string().optional().describe("Filter by relationship type"),
+    })
+    .strict(),
+  action(args: unknown, opts: unknown) {
+    const typedArgs = args as Args;
+    const typedOpts = opts as Opts;
+    try {
+      const { doc } = loadDocument(typedArgs.input);
+
+      const output = generateGraph(doc, typedOpts.format ?? "mermaid", typedOpts.type);
+      console.log(output);
+    } catch (err: unknown) {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
+  },
+};
