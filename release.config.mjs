@@ -42,11 +42,18 @@ export default {
 			},
 		],
 		["@semantic-release/npm", { npmPublish: false }],
+		[
+			"@semantic-release/exec",
+			{
+				prepareCmd:
+					"tsx scripts/bump-marketplace-version.ts ${nextRelease.version}",
+			},
+		],
 		"@semantic-release/changelog",
 		[
 			"@semantic-release/git",
 			{
-				assets: ["CHANGELOG.md", "package.json"],
+				assets: ["CHANGELOG.md", "package.json", ".claude-plugin/marketplace.json"],
 				message:
 					"chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
 			},
