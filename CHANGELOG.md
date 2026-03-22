@@ -1,3 +1,17 @@
+## [1.7.1](https://github.com/ExaDev/SysProM/compare/v1.7.0...v1.7.1) (2026-03-22)
+
+### Bug Fixes
+
+* resolve linting violations in src/ ([7f4c2c7](https://github.com/ExaDev/SysProM/commit/7f4c2c7952d7539958a3cd1a42c0804332530a0c))
+
+### Documentation
+
+* **sysprom:** record CH30 completion and sync document ([79be820](https://github.com/ExaDev/SysProM/commit/79be820400c38e31621523f79af6aaddbce19533))
+
+### Miscellaneous Chores
+
+* **eslint:** disable type-safety rules in test files ([df150ba](https://github.com/ExaDev/SysProM/commit/df150ba494ed5a72af17ec4f191e3e22f2eb1404))
+
 ## [1.7.0](https://github.com/ExaDev/SysProM/compare/v1.6.0...v1.7.0) (2026-03-22)
 
 ### Features
