@@ -645,3 +645,27 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 - [ ] Add README.md for plugin with installation and usage instructions
 - [ ] Sync JSON to Markdown
 
+### CH29 — Implement Bidirectional Sync Command
+
+Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.
+
+- Implements: D31
+
+- Status: proposed
+
+Scope:
+- D31
+
+#### Plan
+
+- [ ] Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed
+- [ ] Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other
+- [ ] Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth
+- [ ] Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth
+- [ ] Add --interactive flag: prompt the user to choose per-conflict when both sides have diverged
+- [ ] Add --dry-run flag: preview sync actions without writing any files
+- [ ] Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified
+- [ ] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)
+- [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
+- [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
+

@@ -744,3 +744,15 @@ Chosen: D30-OPT-A
 
 Rationale: A pure-markdown plugin requires no compiled code in git and no build step. Skills teach Claude how to use SysProM; the CLI is resolved at runtime via spm or npx. This follows the pattern of other CLI-wrapping plugins (wayback, devops tools) that treat the CLI as a prerequisite. Distribution via GitHub marketplace requires only a marketplace.json in the repo.
 
+### D31 — Bidirectional Sync by Default
+
+Context: Currently json2md and md2json are separate one-directional commands. Users must remember which direction to convert, and there is no conflict detection or resolution when both sides have diverged. A single sync command that is bidirectional by default would reduce friction and prevent data loss.
+
+Options:
+- OPT-A: Add a unified 'spm sync' command that is bidirectional by default, with sub-commands or flags for conflict handling (--prefer-json, --prefer-md, --interactive, --dry-run). Deprecate separate json2md/md2json as the primary workflow.
+- OPT-B: Keep json2md and md2json as primary commands but add conflict detection warnings when the target has unsaved changes.
+
+Chosen: OPT-A
+
+Rationale: A single sync command aligns with the principle of least surprise and reduces cognitive load. Explicit conflict-handling flags give users precise control when needed, while the default bidirectional behaviour covers the common case.
+

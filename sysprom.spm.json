@@ -3464,6 +3464,76 @@
 				}
 			],
 			"type": "change"
+		},
+		{
+			"context": "Currently json2md and md2json are separate one-directional commands. Users must remember which direction to convert, and there is no conflict detection or resolution when both sides have diverged. A single sync command that is bidirectional by default would reduce friction and prevent data loss.",
+			"id": "D31",
+			"name": "Bidirectional Sync by Default",
+			"options": [
+				{
+					"description": "Add a unified 'spm sync' command that is bidirectional by default, with sub-commands or flags for conflict handling (--prefer-json, --prefer-md, --interactive, --dry-run). Deprecate separate json2md/md2json as the primary workflow.",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Keep json2md and md2json as primary commands but add conflict detection warnings when the target has unsaved changes.",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "A single sync command aligns with the principle of least surprise and reduces cognitive load. Explicit conflict-handling flags give users precise control when needed, while the default bidirectional behaviour covers the common case.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"description": "Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.",
+			"id": "CH29",
+			"name": "Implement Bidirectional Sync Command",
+			"plan": [
+				{
+					"description": "Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed",
+					"done": false
+				},
+				{
+					"description": "Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other",
+					"done": false
+				},
+				{
+					"description": "Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth",
+					"done": false
+				},
+				{
+					"description": "Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth",
+					"done": false
+				},
+				{
+					"description": "Add --interactive flag: prompt the user to choose per-conflict when both sides have diverged",
+					"done": false
+				},
+				{
+					"description": "Add --dry-run flag: preview sync actions without writing any files",
+					"done": false
+				},
+				{
+					"description": "Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified",
+					"done": false
+				},
+				{
+					"description": "Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)",
+					"done": false
+				},
+				{
+					"description": "Update CLI help text and CLAUDE.md documentation to reflect the new sync command",
+					"done": false
+				},
+				{
+					"description": "Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.",
+					"done": false
+				}
+			],
+			"scope": [
+				"D31"
+			],
+			"status": "proposed",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4446,6 +4516,11 @@
 		{
 			"from": "CH28",
 			"to": "D30",
+			"type": "implements"
+		},
+		{
+			"from": "CH29",
+			"to": "D31",
 			"type": "implements"
 		}
 	]
