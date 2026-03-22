@@ -7,7 +7,6 @@ import * as z from "zod";
 /**
  * Definition of a SysProM operation — a named, typed function with Zod schemas
  * for input validation and output description.
- *
  * @template TInput - Zod schema type for the operation's input.
  * @template TOutput - Zod schema type for the operation's output.
  */
@@ -31,7 +30,6 @@ export interface OperationDef<
  * A callable operation with attached metadata. Can be invoked directly as a
  * function, and also exposes `.def`, `.inputSchema`, and `.outputSchema` for
  * introspection.
- *
  * @template TInput - Zod schema type for the operation's input.
  * @template TOutput - Zod schema type for the operation's output.
  */
@@ -54,10 +52,9 @@ export type DefinedOperation<
 /**
  * Create a callable operation from a definition. The returned function validates
  * input against the Zod schema before delegating to the implementation.
- *
  * @param def - The operation definition with name, schemas, and implementation.
  * @returns A callable function with `.def`, `.inputSchema`, and `.outputSchema` attached.
- * @throws If the input fails Zod validation.
+ * @throws {Error} If the input fails Zod validation.
  */
 export function defineOperation<
 	TInput extends z.ZodType,

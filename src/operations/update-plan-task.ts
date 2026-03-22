@@ -4,8 +4,7 @@ import { SysProMDocument } from "../schema.js";
 
 /**
  * Set the done status of a task in a change node's plan array. Returns a new document.
- *
- * @throws If the change node is not found or the task index is out of range.
+ * @throws {Error} If the change node is not found or the task index is out of range.
  */
 export const updatePlanTaskOp = defineOperation({
 	name: "updatePlanTask",

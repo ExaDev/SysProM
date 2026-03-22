@@ -14,8 +14,7 @@ export type RemoveResult = z.infer<typeof RemoveResult>;
 /**
  * Remove a node and all relationships involving it. Also removes the node from
  * view includes and external references. Warns if scope or operation references remain.
- *
- * @throws If the node ID is not found.
+ * @throws {Error} If the node ID is not found.
  */
 export const removeNodeOp = defineOperation({
 	name: "removeNode",

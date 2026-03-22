@@ -4,8 +4,7 @@ import { SysProMDocument, Node } from "../schema.js";
 
 /**
  * Add a node to a SysProM document. Returns a new document with the node appended.
- *
- * @throws If a node with the same ID already exists.
+ * @throws {Error} If a node with the same ID already exists.
  */
 export const addNodeOp = defineOperation({
 	name: "addNode",

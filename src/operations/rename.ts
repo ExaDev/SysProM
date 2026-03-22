@@ -122,8 +122,7 @@ function renameNodeId(
  * Rename a node ID across all references in the document — the node itself,
  * relationships, scope, includes, operation targets, external references, and
  * recursively into subsystems.
- *
- * @throws If the old ID is not found or the new ID already exists.
+ * @throws {Error} If the old ID is not found or the new ID already exists.
  */
 export const renameOp = defineOperation({
 	name: "rename",
