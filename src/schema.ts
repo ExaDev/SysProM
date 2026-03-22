@@ -16,8 +16,13 @@ function defineSchema<T extends z.ZodType>(schema: T) {
 // Text type — allows a string or an array of lines
 // ---------------------------------------------------------------------------
 
+/**
+ * Zod schema for flexible text content — accepts either a single string or an
+ * array of lines. Includes a `.is()` type guard for runtime checks.
+ */
 export const Text = defineSchema(z.union([z.string(), z.array(z.string())]));
 
+/** A text value: either a single string or an array of lines. */
 export type Text = z.infer<typeof Text>;
 
 // ---------------------------------------------------------------------------
@@ -88,15 +93,23 @@ const nodeTypeDef = labelledEnum({
 	version: "Versions",
 });
 
+/** Zod schema for the set of valid node types (e.g. `"intent"`, `"decision"`, `"change"`). */
 export const NodeType = nodeTypeDef.schema;
+
+/** A valid node type string. */
 export type NodeType = z.infer<typeof NodeType>;
+
+/** Map from node type key to its human-readable label (e.g. `intent` → `"Intent"`). */
 export const NODE_TYPE_LABELS = nodeTypeDef.labels;
+
+/** Reverse map from human-readable label to node type key (e.g. `"Intent"` → `"intent"`). */
 export const NODE_LABEL_TO_TYPE = nodeTypeDef.reverse;
 
 // ---------------------------------------------------------------------------
 // Node statuses
 // ---------------------------------------------------------------------------
 
+/** All valid node status values, ordered by typical lifecycle progression. */
 export const NODE_STATUSES = [
 	"proposed",
 	"accepted",
@@ -116,7 +129,10 @@ export const NODE_STATUSES = [
 	"deferred",
 ] as const;
 
+/** Zod schema for the set of valid node statuses (e.g. `"proposed"`, `"active"`, `"deprecated"`). */
 export const NodeStatus = defineSchema(z.enum(NODE_STATUSES));
+
+/** A valid node status string. */
 export type NodeStatus = z.infer<typeof NodeStatus>;
 
 // ---------------------------------------------------------------------------
@@ -150,9 +166,16 @@ const relationshipTypeDef = labelledEnum({
 	disables: "Disables",
 });
 
+/** Zod schema for the set of valid relationship types (e.g. `"refines"`, `"depends_on"`, `"affects"`). */
 export const RelationshipType = relationshipTypeDef.schema;
+
+/** A valid relationship type string. */
 export type RelationshipType = z.infer<typeof RelationshipType>;
+
+/** Map from relationship type key to its human-readable label (e.g. `refines` → `"Refines"`). */
 export const RELATIONSHIP_TYPE_LABELS = relationshipTypeDef.labels;
+
+/** Reverse map from human-readable label to relationship type key (e.g. `"Refines"` → `"refines"`). */
 export const RELATIONSHIP_LABEL_TO_TYPE = relationshipTypeDef.reverse;
 
 // ---------------------------------------------------------------------------
@@ -169,9 +192,16 @@ const externalReferenceRoleDef = labelledEnum({
 	prior_art: "Prior art",
 });
 
+/** Zod schema for external reference roles (e.g. `"input"`, `"output"`, `"evidence"`). */
 export const ExternalReferenceRole = externalReferenceRoleDef.schema;
+
+/** A valid external reference role string. */
 export type ExternalReferenceRole = z.infer<typeof ExternalReferenceRole>;
+
+/** Map from external reference role key to its human-readable label. */
 export const EXTERNAL_REFERENCE_ROLE_LABELS = externalReferenceRoleDef.labels;
+
+/** Reverse map from human-readable label to external reference role key. */
 export const EXTERNAL_REFERENCE_LABEL_TO_ROLE =
 	externalReferenceRoleDef.reverse;
 
@@ -179,6 +209,7 @@ export const EXTERNAL_REFERENCE_LABEL_TO_ROLE =
 // Leaf schemas
 // ---------------------------------------------------------------------------
 
+/** Zod schema for a decision option — an alternative considered during a decision. */
 export const Option = defineSchema(
 	z
 		.looseObject({
@@ -187,8 +218,10 @@ export const Option = defineSchema(
 		})
 		.describe("An alternative considered as part of a decision."),
 );
+/** An alternative considered as part of a decision, with an ID and description. */
 export type Option = z.infer<typeof Option>;
 
+/** Zod schema for an atomic operation within a change (add, update, remove, or link). */
 export const Operation = defineSchema(
 	z
 		.looseObject({
@@ -198,8 +231,10 @@ export const Operation = defineSchema(
 		})
 		.describe("An atomic operation within a change."),
 );
+/** An atomic operation within a change, targeting a specific node. */
 export type Operation = z.infer<typeof Operation>;
 
+/** Zod schema for a task within a change's execution plan. */
 export const Task = defineSchema(
 	z
 		.looseObject({
@@ -208,8 +243,10 @@ export const Task = defineSchema(
 		})
 		.describe("A single task within a change's execution plan."),
 );
+/** A single task within a change's execution plan, with a description and done flag. */
 export type Task = z.infer<typeof Task>;
 
+/** Zod schema for an external reference — a link to a resource outside the SysProM graph. */
 export const ExternalReference = defineSchema(
 	z
 		.object({
@@ -232,8 +269,10 @@ export const ExternalReference = defineSchema(
 		})
 		.describe("A reference to a resource outside the SysProM graph."),
 );
+/** A reference to a resource outside the SysProM graph (URI, file path, DOI, etc.). */
 export type ExternalReference = z.infer<typeof ExternalReference>;
 
+/** Zod schema for document-level metadata (title, scope, status, version). */
 export const Metadata = defineSchema(
 	z
 		.looseObject({
@@ -257,8 +296,10 @@ export const Metadata = defineSchema(
 			"Document-level metadata. Analogous to front matter in Markdown.",
 		),
 );
+/** Document-level metadata — title, scope, status, and version. */
 export type Metadata = z.infer<typeof Metadata>;
 
+/** Zod schema for a typed, directed relationship between two nodes. */
 export const Relationship = defineSchema(
 	z
 		.looseObject({
@@ -269,6 +310,7 @@ export const Relationship = defineSchema(
 		})
 		.describe("A typed, directed connection between two nodes."),
 );
+/** A typed, directed connection between two nodes, with from/to IDs and a relationship type. */
 export type Relationship = z.infer<typeof Relationship>;
 
 // ---------------------------------------------------------------------------
@@ -376,10 +418,25 @@ const NodeSchema = z
 	.describe("A uniquely identifiable entity within the system.");
 
 // Attach .is() type guards after both schemas are declared
+
+/**
+ * Zod schema for a complete SysProM document — the root container holding
+ * nodes, relationships, external references, and metadata. Includes a `.is()`
+ * type guard for runtime validation.
+ */
 export const SysProMDocument = defineSchema(SysProMDocumentSchema);
+
+/** A complete SysProM document with metadata, nodes, relationships, and external references. */
 export type SysProMDocument = z.infer<typeof SysProMDocument>;
 
+/**
+ * Zod schema for a single node in the SysProM graph. Nodes are typed entities
+ * with optional lifecycle, decisions, operations, and recursive subsystems.
+ * Includes a `.is()` type guard for runtime validation.
+ */
 export const Node = defineSchema(NodeSchema);
+
+/** A uniquely identifiable entity within the SysProM graph. */
 export type Node = z.infer<typeof Node>;
 
 // ---------------------------------------------------------------------------
