@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/ExaDev/SysProM/compare/v1.0.0...v1.0.1) (2026-03-22)
+
+### Code Refactoring
+
+* **api:** split task done/undone into separate operations ([ef2a682](https://github.com/ExaDev/SysProM/commit/ef2a6820b6015d0807ff71c6d519e8cda2958145))
+
 ## 1.0.0 (2026-03-22)
 
 ### Features
