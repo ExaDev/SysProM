@@ -1,3 +1,9 @@
+## [1.2.5](https://github.com/ExaDev/SysProM/compare/v1.2.4...v1.2.5) (2026-03-22)
+
+### Documentation
+
+* **readme:** convert comparison table to HTML with colspan band headers ([10baf07](https://github.com/ExaDev/SysProM/commit/10baf07e5991ed7f121e0d649afae113a26f6e94))
+
 ## [1.2.4](https://github.com/ExaDev/SysProM/compare/v1.2.3...v1.2.4) (2026-03-22)
 
 ### Miscellaneous Chores
