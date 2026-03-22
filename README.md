@@ -139,6 +139,7 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 | [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
 | [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
 | [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | | |
+| [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | | ✅ | ✅ | ✅ |
 | **SysProM** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🔶 | | 🔶 | ✅ | ✅ | ✅ | ✅ |
 
 ✅ = first-class support. 🔶 = partial or implicit.
