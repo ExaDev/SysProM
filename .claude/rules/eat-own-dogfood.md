@@ -13,8 +13,8 @@ SysProM is a self-describing system. Use SysProM's own tools and formats to mana
 ## Using the CLI
 
 - Use the CLI (`spm add`, `spm update`, `spm task`, `spm plan`, `spm validate`) rather than editing the JSON by hand where possible.
-- Keep `sysprom.spm.json` and `./SysProM/` in sync after every change — run `spm json2md` or `spm md2json` as appropriate.
-- Validate with `spm validate sysprom.spm.json` before committing.
+- Keep `.spm.json` and `./.spm/` in sync after every change — run `spm json2md` or `spm md2json` as appropriate. The CLI auto-detects both files when run from the project root.
+- Validate with `spm validate` before committing.
 
 ## Improving the Tool
 

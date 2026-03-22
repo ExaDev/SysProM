@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import * as z from "zod";
 import schema from "../schema.json" with { type: "json" };
-import spmDocument from "../sysprom.spm.json" with { type: "json" };
+import spmDocument from "../.spm.json" with { type: "json" };
 
 type JSONSchema = Parameters<typeof z.fromJSONSchema>[0];
 

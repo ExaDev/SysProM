@@ -23,38 +23,38 @@ Both `sysprom` and `spm` are available as commands.
 
 ```sh
 # Convert between formats
-spm json2md sysprom.spm.json ./SysProM
-spm md2json ./SysProM output.spm.json
+spm json2md .spm.json ./.spm
+spm md2json ./.spm output.spm.json
 
-# Validate and summarise
-spm validate sysprom.spm.json
-spm stats sysprom.spm.json
+# Validate and summarise (auto-detects .spm.json in current directory)
+spm validate
+spm stats
 
 # Query nodes and relationships
-spm query nodes sysprom.spm.json --type decision
-spm query node sysprom.spm.json D1
-spm query rels sysprom.spm.json --from D1
-spm query trace sysprom.spm.json I1
-spm query timeline sysprom.spm.json
-spm query state-at sysprom.spm.json --time 2026-03-22
+spm query nodes --type decision
+spm query node D1
+spm query rels --from D1
+spm query trace I1
+spm query timeline
+spm query state-at 2026-03-22
 
 # Add nodes (ID auto-generated from type prefix if --id omitted)
-spm add sysprom.spm.json invariant --name "New Rule" --description "Must hold"
-spm add sysprom.spm.json decision --name "Choose X" \
+spm add invariant --name "New Rule" --description "Must hold"
+spm add decision --name "Choose X" \
   --option "OPT-A:Use framework X" --option "OPT-B:Use framework Y" \
   --selected OPT-A --rationale "Lower migration effort"
 
 # Remove nodes
-spm remove sysprom.spm.json INV23
+spm remove INV23
 
 # Update nodes, relationships, and metadata
-spm update node sysprom.spm.json D1 --status deprecated
-spm update add-rel sysprom.spm.json D1 affects EL5
-spm update remove-rel sysprom.spm.json D1 affects EL5
-spm update meta sysprom.spm.json --meta version=2
+spm update node D1 --status deprecated
+spm update add-rel D1 affects EL5
+spm update remove-rel D1 affects EL5
+spm update meta --fields version=2
 ```
 
-All commands auto-detect format — they work on `.spm.json` files, `.spm.md` files, and multi-document folders.
+All commands auto-detect the document — they search the current directory for `.spm.json`, `.spm.md`, or `.spm/` (in that priority order), then fall back to `*.spm.json`, `*.spm.md`, or `*.spm/`. Use `--path` to specify an explicit path.
 
 ## Programmatic API
 
@@ -101,7 +101,7 @@ import {
 } from "sysprom";
 
 // Validate
-const doc = JSON.parse(fs.readFileSync("sysprom.spm.json", "utf8"));
+const doc = JSON.parse(fs.readFileSync(".spm.json", "utf8"));
 const result = validate(doc);
 console.log(result.valid, result.issues);
 
@@ -183,26 +183,26 @@ pnpm spm <command>    # Run the CLI from source (e.g. pnpm spm validate ...)
 
 ## Self-Description
 
-`sysprom.spm.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document. The `./SysProM/` folder contains the same content as human-readable Markdown.
+`.spm.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document. The `./.spm/` folder contains the same content as human-readable Markdown.
 
-All significant activity — decisions, changes, new capabilities, and invariants — should be recorded in the self-describing document. Updates can be made either by editing the Markdown files in `./SysProM/` directly or by using the CLI:
+All significant activity — decisions, changes, new capabilities, and invariants — should be recorded in the self-describing document. Updates can be made either by editing the Markdown files in `./.spm/` directly or by using the CLI:
 
 ```sh
 # Add a decision via the CLI
-spm add sysprom.spm.json decision --id D23 --name "My Decision" --context "Why this was needed"
+spm add decision --id D23 --name "My Decision" --context "Why this was needed"
 
-# Or edit ./SysProM/DECISIONS.md directly, then sync
-spm md2json ./SysProM sysprom.spm.json
+# Or edit ./.spm/DECISIONS.md directly, then sync
+spm md2json ./.spm .spm.json
 ```
 
 Keep both representations in sync after any change:
 
 ```sh
 # JSON → Markdown
-spm json2md sysprom.spm.json ./SysProM
+spm json2md .spm.json ./.spm
 
 # Markdown → JSON
-spm md2json ./SysProM sysprom.spm.json
+spm md2json ./.spm .spm.json
 ```
 
-> **Important:** Always keep `sysprom.spm.json` and `./SysProM/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `spm validate sysprom.spm.json` before committing.
+> **Important:** Always keep `.spm.json` and `./.spm/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `spm validate` before committing.
