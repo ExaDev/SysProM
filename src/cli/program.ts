@@ -17,6 +17,7 @@ import { updateCommand } from "./commands/update.js";
 import { speckitCommand } from "./commands/speckit.js";
 import { taskCommand } from "./commands/task.js";
 import { planCommand } from "./commands/plan.js";
+import { syncCommandDef } from "./commands/sync.js";
 
 const VERSION = "1.0.0";
 
@@ -47,6 +48,7 @@ export const commands: CommandDef[] = [
 	speckitCommand,
 	taskCommand,
 	planCommand,
+	syncCommandDef,
 ];
 
 for (const cmd of commands) {
