@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/ExaDev/SysProM/compare/v1.10.0...v1.10.1) (2026-03-22)
+
+### Bug Fixes
+
+* **ci:** add missing _docs:api:html npm script ([82839d5](https://github.com/ExaDev/SysProM/commit/82839d51bd570600130c0832ae6054b24661816c))
+
 ## [1.10.0](https://github.com/ExaDev/SysProM/compare/v1.9.3...v1.10.0) (2026-03-22)
 
 ### Features
