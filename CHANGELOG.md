@@ -1,3 +1,9 @@
+## [1.0.5](https://github.com/ExaDev/SysProM/compare/v1.0.4...v1.0.5) (2026-03-22)
+
+### Bug Fixes
+
+* **ci:** upgrade to Node 24 for native npm OIDC support ([af676e2](https://github.com/ExaDev/SysProM/commit/af676e2ebe162d99fa85f502faa5c8e7b8ed9075))
+
 ## [1.0.4](https://github.com/ExaDev/SysProM/compare/v1.0.3...v1.0.4) (2026-03-22)
 
 ### Bug Fixes
