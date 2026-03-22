@@ -1,6 +1,8 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["./src/index.ts"],
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "exclude": ["**/cli/**", "**/generate-schema.ts", "**/index.ts"],
   "out": "site",
   "plugin": ["typedoc-plugin-zod"],
   "name": "SysProM",
