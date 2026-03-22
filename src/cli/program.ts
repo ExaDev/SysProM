@@ -54,3 +54,10 @@ export const commands: CommandDef[] = [
 for (const cmd of commands) {
 	buildCommander(cmd, program);
 }
+
+program
+	.command("mcp")
+	.description("Start the SysProM MCP server (stdio transport)")
+	.action(async () => {
+		await import("../mcp/server.js");
+	});

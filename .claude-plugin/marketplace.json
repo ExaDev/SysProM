@@ -27,12 +27,7 @@
       "mcpServers": {
         "sysprom": {
           "command": "npx",
-          "args": [
-            "-y",
-            "--package",
-            "sysprom",
-            "sysprom-mcp"
-          ]
+          "args": ["-y", "sysprom", "mcp"]
         }
       },
       "strict": false
