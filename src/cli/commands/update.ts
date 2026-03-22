@@ -180,14 +180,14 @@ const removeRelSubcommand: CommandDef = {
 		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 
-		const newDoc = removeRelationshipOp({
+		const result = removeRelationshipOp({
 			doc,
 			from: args.from,
 			type: args.type,
 			to: args.to,
 		});
 
-		persistDoc(newDoc, loaded, opts);
+		persistDoc(result.doc, loaded, opts);
 
 		if (opts.json) {
 			console.log(

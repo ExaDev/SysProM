@@ -22,7 +22,7 @@ describe("CH32: Safe Graph Removal", () => {
 			assert.ok(result.warnings, "should report removal impact");
 		});
 
-		it("detects orphaned relationships when removing node", () => {
+		it("preserves relationships when soft deleting node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "I1", type: "intent", name: "Intent" },
@@ -31,9 +31,10 @@ describe("CH32: Safe Graph Removal", () => {
 				relationships: [{ from: "I1", to: "CN1", type: "refines" }],
 			};
 			const result = removeNodeOp({ doc, id: "I1" });
-			assert.ok(
-				result.warnings.some((w) => w.includes("relationship")),
-				"should warn about affected relationships",
+			assert.equal(
+				result.doc.relationships?.length,
+				1,
+				"relationships should be preserved in soft delete",
 			);
 		});
 
@@ -192,7 +193,7 @@ describe("CH32: Safe Graph Removal", () => {
 	});
 
 	describe("Relationship preservation", () => {
-		it("warns but preserves relationships in current implementation", () => {
+		it("preserves relationships in soft delete", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "I1", type: "intent", name: "A" },
@@ -205,11 +206,8 @@ describe("CH32: Safe Graph Removal", () => {
 				],
 			};
 			const result = removeNodeOp({ doc, id: "I2" });
-			// Should warn about orphaned relationships
-			assert.ok(
-				result.warnings.some((w) => w.includes("Removed relationships")),
-				"should warn about removed relationships",
-			);
+			// Relationships should be preserved in soft delete
+			assert.equal(result.doc.relationships?.length, 2, "relationships should be preserved");
 		});
 	});
 
@@ -270,7 +268,7 @@ describe("CH32: Safe Graph Removal", () => {
 				"external references should be cleaned",
 			);
 
-			assert.equal(result.doc.relationships?.length ?? 0, 0, "relationships removed");
+			assert.equal(result.doc.relationships?.length ?? 0, 1, "relationships preserved in soft delete");
 		});
 
 		it("preserves other scopes while cleaning up reference", () => {

@@ -38,7 +38,7 @@ describe("addNode", () => {
 });
 
 describe("removeNode", () => {
-	it("removes node and relationships", () => {
+	it("hard deletes node and relationships when hard: true", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{ id: "I1", type: "intent", name: "A" },
@@ -46,7 +46,7 @@ describe("removeNode", () => {
 			],
 			relationships: [{ from: "I1", to: "I2", type: "refines" }],
 		};
-		const result = removeNodeOp({ doc, id: "I1" });
+		const result = removeNodeOp({ doc, id: "I1", hard: true });
 		assert.equal(result.doc.nodes.length, 1);
 		assert.equal(result.doc.nodes[0].id, "I2");
 		// relationships array is removed entirely when empty
@@ -184,13 +184,13 @@ describe("removeRelationship", () => {
 			],
 			relationships: [{ from: "I1", to: "I2", type: "refines" }],
 		};
-		const newDoc = removeRelationshipOp({
+		const result = removeRelationshipOp({
 			doc,
 			from: "I1",
 			type: "refines",
 			to: "I2",
 		});
-		assert.equal(newDoc.relationships?.length ?? 0, 0);
+		assert.equal(result.doc.relationships?.length ?? 0, 0);
 	});
 
 	it("throws if relationship not found", () => {
