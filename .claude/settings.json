@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "deny": [
+      "Write(sysprom.spm.json)",
+      "Update(sysprom.spm.json)",
+      "Bash(pnpm _*)"
+    ]
+  }
+}
