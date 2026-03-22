@@ -19,7 +19,6 @@ export interface FormatOptions {
 
 /**
  * Serialise a value to canonical JSON with RFC 8785 key ordering.
- *
  * @param value - The value to serialise.
  * @param options - Formatting options (e.g. indentation).
  * @returns The canonical JSON string.

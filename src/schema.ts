@@ -494,7 +494,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/** Generate the JSON Schema representation of the SysProM document schema. */
+/**
+ * Generate the JSON Schema representation of the SysProM document schema.
+ * @returns The JSON Schema object with Draft 2020-12 metadata.
+ */
 export function toJSONSchema(): Record<string, unknown> {
 	const generated = z.toJSONSchema(SysProMDocument, {
 		target: "draft-2020-12",

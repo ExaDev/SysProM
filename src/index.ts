@@ -3,7 +3,6 @@
  *
  * A recursive, decision-driven model for recording where every part of a
  * system came from, what decisions shaped it, and how it reached its current form.
- *
  * @packageDocumentation
  */
 

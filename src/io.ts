@@ -27,7 +27,6 @@ function detectFormat(input: string): Format {
 
 /**
  * Load a SysProM document from a file (JSON or Markdown).
- *
  * @param input - File path or directory to load from.
  * @returns The loaded document with its detected format and resolved path.
  */
@@ -64,7 +63,6 @@ export function loadDocument(input: string): LoadedDocument {
 
 /**
  * Save a SysProM document to a file (JSON or Markdown).
- *
  * @param doc - The SysProM document to save.
  * @param format - Output format: 'json', 'single-md', or 'multi-md'.
  * @param path - Destination file path or directory.
