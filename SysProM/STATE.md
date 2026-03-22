@@ -676,9 +676,9 @@ Rationale: Execution location is a realisation concern.
 
 ###### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 
 ### ART3 — Planning Workflow Example
 

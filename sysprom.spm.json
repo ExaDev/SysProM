@@ -1104,9 +1104,9 @@
 			],
 			"id": "D1",
 			"lifecycle": {
-				"accepted": "2025-06-15",
+				"accepted": "2026-03-21",
 				"implemented": true,
-				"proposed": "2025-06-01",
+				"proposed": "2026-03-21",
 				"superseded": false
 			},
 			"name": "Separate Domain From Process From Evolution",
@@ -1135,9 +1135,9 @@
 			"context": "Systems evolve through choices, but most models bury decisions in prose or lose them entirely.",
 			"id": "D2",
 			"lifecycle": {
-				"accepted": "2025-06-20",
+				"accepted": "2026-03-21",
 				"implemented": true,
-				"proposed": "2025-06-05",
+				"proposed": "2026-03-21",
 				"superseded": false
 			},
 			"name": "Make Decisions First-Class Entities",
@@ -1166,9 +1166,9 @@
 			"context": "Systems have rules at different levels of rigidity. Collapsing all rules into one type loses critical information.",
 			"id": "D3",
 			"lifecycle": {
-				"accepted": "2025-06-22T14:30:00Z",
+				"accepted": "2026-03-21",
 				"implemented": true,
-				"proposed": "2025-06-10T09:15:00Z",
+				"proposed": "2026-03-21",
 				"superseded": false
 			},
 			"name": "Distinguish Invariants From Principles From Policies",

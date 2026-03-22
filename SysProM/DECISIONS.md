@@ -30,9 +30,9 @@ Domain structure should not be tangled with process mechanics or evolution histo
 
 #### Lifecycle
 
-- [ ] accepted (2025-06-15)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 - [x] implemented
-- [ ] proposed (2025-06-01)
 - [ ] superseded
 
 ### D2 — Make Decisions First-Class Entities
@@ -56,9 +56,9 @@ Graph nodes with typed relationships make decisions queryable, traceable, and en
 
 #### Lifecycle
 
-- [ ] accepted (2025-06-20)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 - [x] implemented
-- [ ] proposed (2025-06-05)
 - [ ] superseded
 
 ### D3 — Distinguish Invariants From Principles From Policies
@@ -82,9 +82,9 @@ Rationale: The three-way split matches how real systems distinguish structural g
 
 #### Lifecycle
 
-- [ ] accepted (2025-06-22T14:30:00Z)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 - [x] implemented
-- [ ] proposed (2025-06-10T09:15:00Z)
 - [ ] superseded
 
 ### D4 — Add Process Modelling
@@ -108,9 +108,9 @@ Full process modelling makes the model capable of encoding systems like Spec Kit
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D5 — Format-Agnostic With Markdown as Primary Representation
@@ -132,9 +132,9 @@ Other formats remain valid.
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D6 — Recursive Composition Using Same Conventions
@@ -155,9 +155,9 @@ Rationale: Recursive consistency means any node can be understood in isolation u
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D7 — Append-Only History
@@ -177,9 +177,9 @@ Rationale: Append-only preserves the full provenance chain.
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D8 — Support External Resources via Reference and Internalisation
@@ -217,9 +217,9 @@ Supporting both gives implementors flexibility without losing either property.
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D9 — Allow Array-of-Lines for Text Fields
@@ -246,9 +246,9 @@ Accepting both avoids forcing a style while enabling better ergonomics where it 
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D10 — Use Strict Enums for Core Types
@@ -273,9 +273,9 @@ The DRY labelledEnum pattern ensures each type is defined once with its label, e
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D11 — Only Link to Present Files in README
@@ -296,9 +296,9 @@ Rationale: Dead links mislead readers and break tooling. Links should reflect re
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D12 — Remove Navigation and Document Roles from README
@@ -319,9 +319,9 @@ Rationale: Removing redundant sections reduces noise and maintenance burden. The
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [ ] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D13 — Layer-Dependent Invariant Preservation
@@ -349,9 +349,9 @@ Leverages the existing layer model rather than adding new concepts.
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D14 — Internalise Design Archive into SysProM JSON
@@ -376,9 +376,9 @@ Rationale: Internalising makes the JSON self-contained. Artefact nodes with subs
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D15 — Size-Based Subsystem Splitting
@@ -400,9 +400,9 @@ Rationale: Combining both heuristics keeps small subsystems compact while splitt
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D16 — Add Bidirectional Spec-Kit Interoperability
@@ -430,9 +430,9 @@ Rationale: Full bidirectional support allows users to start in either ecosystem 
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D17 — Add Task Subcommand for Change Plan Tracking
@@ -453,9 +453,9 @@ Rationale: A dedicated command keeps the update command focused on node fields a
 
 #### Lifecycle
 
+- [x] proposed
 - [x] accepted
 - [x] implemented
-- [x] proposed
 - [ ] superseded
 
 ### D18 — Recursive Change Nodes for Planning
@@ -520,8 +520,8 @@ Rationale: Commander.js has zero dependencies, the lowest migration effort from 
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 
 ### D21 — Adopt TypeDoc for Documentation
 
@@ -543,8 +543,8 @@ Rationale: TypeDoc directly generates docs from TypeScript source with minimal c
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 
 ### D22 — Adopt Turborepo for Build Orchestration
 
@@ -566,8 +566,8 @@ Rationale: Turborepo provides automatic caching (FULL TURBO on repeat builds), p
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] accepted (2026-03-21)
 
 ### D23 — Enforce Conventional Commits and Automated Releases
 
@@ -589,8 +589,8 @@ Rationale: Automated enforcement ensures every commit follows conventional forma
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 
 ### D24 — Eliminate Type Assertions
 
@@ -612,8 +612,8 @@ Rationale: Runtime validation catches type errors that assertions silently mask.
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 
 ### D25 — Ship Compiled JavaScript
 
@@ -635,8 +635,8 @@ Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, redu
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 
 ### D26 — Auto-Generate Node IDs
 
@@ -658,8 +658,8 @@ Rationale: The existing ID convention (D for decisions, CH for changes, INV for 
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 
 ### D27 — CLI UX Improvements
 
@@ -681,8 +681,8 @@ Rationale: Each improvement targets a specific friction point: auto-IDs reduce m
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 
 ### D28 — Unify CLI with Zod-Driven Command Definitions
 
@@ -704,6 +704,6 @@ Rationale: A single defineCommand pattern eliminates duplication. Commander prog
 
 #### Lifecycle
 
-- [ ] accepted (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] accepted (2026-03-22)
 

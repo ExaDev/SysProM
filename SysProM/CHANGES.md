@@ -50,9 +50,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH2 — Add Process Modelling
 
@@ -80,9 +80,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH3 — Add File Representation Conventions
 
@@ -124,9 +124,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH4 — Add External Resources Model
 
@@ -152,9 +152,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH5 — Add Lifecycle Protocols
 
@@ -174,9 +174,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH6 — Encode Full Normative Specification
 
@@ -217,9 +217,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH7 — Add Text Field Duality
 
@@ -240,9 +240,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH8 — Switch to Strict Enums with Labelled Definitions
 
@@ -264,9 +264,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH9 — Fix Dead Links in Subsystem READMEs
 
@@ -286,9 +286,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH10 — Remove Navigation and Document Roles from README
 
@@ -305,9 +305,9 @@ Operations:
 
 #### Lifecycle
 
-- [ ] complete
 - [x] defined
 - [ ] introduced
+- [ ] complete
 
 ### CH11 — Make Invariant Preservation Layer-Dependent
 
@@ -325,9 +325,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH12 — Internalise Design Archive
 
@@ -351,9 +351,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH13 — Add Size-Based Subsystem Splitting and Auto-Grouping
 
@@ -375,9 +375,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH14 — Implement Spec-Kit File Support
 
@@ -408,9 +408,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH15 — Implement task CLI Command for Subagent Plan Tracking
 
@@ -434,9 +434,9 @@ Operations:
 
 #### Lifecycle
 
-- [x] complete
 - [x] defined
 - [x] introduced
+- [x] complete
 
 ### CH16 — Implement Plan Command with Recursive Task Model
 
@@ -467,8 +467,8 @@ Replace manual process.argv parsing across all CLI command files with Commander.
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] implemented (2026-03-21)
 
 ### CH19 — Add TypeDoc Documentation Pipeline
 
@@ -488,8 +488,8 @@ Operations:
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] implemented (2026-03-21)
 
 ### CH20 — Add Turborepo Build Orchestration
 
@@ -508,8 +508,8 @@ Operations:
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-21)
-- [ ] proposed (2026-03-21)
+- [x] proposed (2026-03-21)
+- [x] implemented (2026-03-21)
 
 ### CH21 — Add CI/CD Pipeline
 
@@ -521,8 +521,8 @@ Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub P
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
 ### CH22 — Remove Type Assertions
 
@@ -534,8 +534,8 @@ Replace all as type coercions across library and CLI code with runtime validatio
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
 ### CH23 — Switch to Compiled Distribution
 
@@ -547,8 +547,8 @@ Update package.json entry points to reference compiled JavaScript in dist/. Move
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
 ### CH24 — Add Auto-ID Generation to CLI
 
@@ -560,8 +560,8 @@ Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add comm
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
 ### CH25 — CLI UX Improvements
 
@@ -573,8 +573,8 @@ Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
 ### CH26 — Implement defineCommand Pattern
 
@@ -589,6 +589,6 @@ Scope:
 
 #### Lifecycle
 
-- [ ] implemented (2026-03-22)
-- [ ] proposed (2026-03-22)
+- [x] proposed (2026-03-22)
+- [x] implemented (2026-03-22)
 
