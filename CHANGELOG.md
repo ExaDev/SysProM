@@ -1,3 +1,13 @@
+## [1.0.7](https://github.com/ExaDev/SysProM/compare/v1.0.6...v1.0.7) (2026-03-22)
+
+### Code Refactoring
+
+* **api:** remove convenience wrappers, operations are the API ([e3bf2ef](https://github.com/ExaDev/SysProM/commit/e3bf2ef0fae6f60e970ce6f96e5aaa376f61bd4f))
+
+### Documentation
+
+* **readme:** add Superpowers to comparison table ([ebb1d32](https://github.com/ExaDev/SysProM/commit/ebb1d322cf92f77e0e0aa0b9abd19d07d7ab90e9))
+
 ## [1.0.6](https://github.com/ExaDev/SysProM/compare/v1.0.5...v1.0.6) (2026-03-22)
 
 ### Bug Fixes
