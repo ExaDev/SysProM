@@ -42,3 +42,13 @@ export { searchOp } from "./search.js";
 export { checkOp } from "./check.js";
 export { graphOp } from "./graph.js";
 export { renameOp } from "./rename.js";
+
+// Conversion operations
+export { jsonToMarkdownOp } from "./json-to-markdown.js";
+export { markdownToJsonOp } from "./markdown-to-json.js";
+
+// Spec-Kit interoperability operations
+export { speckitImportOp } from "./speckit-import.js";
+export { speckitExportOp } from "./speckit-export.js";
+export { speckitSyncOp, type SyncResult } from "./speckit-sync.js";
+export { speckitDiffOp, type DiffResult } from "./speckit-diff.js";

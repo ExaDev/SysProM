@@ -21,6 +21,12 @@ import {
 	generateChecklist,
 } from "../../speckit/generate.js";
 import { detectSpecKitProject } from "../../speckit/project.js";
+import {
+	speckitImportOp,
+	speckitExportOp,
+	speckitSyncOp,
+	speckitDiffOp,
+} from "../../operations/index.js";
 
 // ============================================================================
 // Helper: Format detection
@@ -95,8 +101,7 @@ const importOpts = z.object({
 
 const importSubcommand: CommandDef<typeof importArgs, typeof importOpts> = {
 	name: "import",
-	// TODO: create specKitImportOp and derive description from it
-	description: "Import a Spec-Kit feature directory into SysProM",
+	description: speckitImportOp.def.description,
 	args: importArgs,
 	opts: importOpts,
 	action(args, opts) {
@@ -159,8 +164,7 @@ const exportOpts = z.object({
 
 const exportSubcommand: CommandDef<typeof exportArgs, typeof exportOpts> = {
 	name: "export",
-	// TODO: create specKitExportOp and derive description from it
-	description: "Export SysProM document to Spec-Kit format",
+	description: speckitExportOp.def.description,
 	args: exportArgs,
 	opts: exportOpts,
 	action(args, opts) {
@@ -200,8 +204,7 @@ const syncOpts = z.object({
 
 const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
 	name: "sync",
-	// TODO: create specKitSyncOp and derive description from it
-	description: "Synchronise SysProM document with Spec-Kit directory",
+	description: speckitSyncOp.def.description,
 	args: syncArgs,
 	opts: syncOpts,
 	action(args, opts) {
@@ -327,9 +330,7 @@ const diffOpts = z.object({
 
 const diffSubcommand: CommandDef<typeof diffArgs, typeof diffOpts> = {
 	name: "diff",
-	// TODO: create specKitDiffOp and derive description from it
-	description:
-		"Show differences between SysProM document and Spec-Kit directory",
+	description: speckitDiffOp.def.description,
 	args: diffArgs,
 	opts: diffOpts,
 	action(args, opts) {

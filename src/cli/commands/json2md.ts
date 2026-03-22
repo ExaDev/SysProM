@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import type { CommandDef } from "../define-command.js";
 import { SysProMDocument } from "../../schema.js";
 import { jsonToMarkdown } from "../../json-to-md.js";
+import { jsonToMarkdownOp } from "../../operations/index.js";
 
 interface Args {
 	input: string;
@@ -15,9 +16,8 @@ interface Opts {
 
 export const json2mdCommand: CommandDef = {
 	name: "json2md",
-	// TODO: create jsonToMarkdownOp and derive description from it
-	description: "Convert SysProM JSON to Markdown format",
-	apiLink: "jsonToMarkdown",
+	description: jsonToMarkdownOp.def.description,
+	apiLink: jsonToMarkdownOp.def.name,
 	args: z.object({
 		input: z.string().describe("Path to SysProM JSON file"),
 		output: z.string().describe("Output path (file or directory)"),
