@@ -7,7 +7,7 @@
   "bugs": "https://github.com/ExaDev/SysProM/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ExaDev/SysProM.git"
+    "url": "git+https://github.com/ExaDev/SysProM.git"
   },
   "keywords": [
     "sysprom",
