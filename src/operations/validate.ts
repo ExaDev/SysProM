@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
+import { isValidEndpointPair } from "../endpoint-types.js";
 
 /** Zod schema for the result of validating a SysProM document. */
 export const ValidationResult = z.object({
@@ -56,6 +57,57 @@ export const validateOp = defineOperation({
 			}
 			if (!ids.has(r.to)) {
 				issues.push(`Relationship references unknown target: ${r.to}`);
+			}
+		}
+
+		// Duplicate relationships
+		const relSet = new Set<string>();
+		for (const r of input.doc.relationships ?? []) {
+			const key = `${r.from}:${r.type}:${r.to}`;
+			if (relSet.has(key)) {
+				issues.push(`Duplicate relationship: ${r.from} --${r.type}--> ${r.to}`);
+			}
+			relSet.add(key);
+		}
+
+		// Endpoint type validation
+		const nodeMap = new Map(input.doc.nodes.map((n) => [n.id, n]));
+		for (const r of input.doc.relationships ?? []) {
+			const fromNode = nodeMap.get(r.from);
+			const toNode = nodeMap.get(r.to);
+			if (
+				fromNode &&
+				toNode &&
+				!isValidEndpointPair(r.type, fromNode.type, toNode.type)
+			) {
+				issues.push(
+					`Invalid endpoint types for ${r.type}: ${fromNode.type} → ${toNode.type} (${r.from} → ${r.to})`,
+				);
+			}
+		}
+
+		// Operational relationships to retired nodes
+		const OPERATIONAL_REL_TYPES = new Set([
+			"depends_on",
+			"constrained_by",
+			"requires",
+			"affects",
+			"must_preserve",
+			"performs",
+			"must_follow",
+			"part_of",
+			"governed_by",
+			"modifies",
+			"applies_to",
+			"produces",
+			"consumes",
+		]);
+		for (const r of input.doc.relationships ?? []) {
+			const toNode = nodeMap.get(r.to);
+			if (toNode?.status === "retired" && OPERATIONAL_REL_TYPES.has(r.type)) {
+				issues.push(
+					`Operational relationship ${r.type} targets retired node ${r.to}`,
+				);
 			}
 		}
 

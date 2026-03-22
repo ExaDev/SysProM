@@ -103,6 +103,12 @@ export {
 	markdownToJson,
 } from "./md-to-json.js";
 
+// Validation
+export {
+	RELATIONSHIP_ENDPOINT_TYPES,
+	isValidEndpointPair,
+} from "./endpoint-types.js";
+
 // Utilities
 export { canonicalise, type FormatOptions } from "./canonical-json.js";
 export {
