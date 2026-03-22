@@ -3929,6 +3929,12 @@
 			],
 			"status": "complete",
 			"type": "change"
+		},
+		{
+			"description": "When both JSON and Markdown representations of a SysProM document exist, mutations via the CLI must automatically keep them in sync. Users should not need to manually run json2md or md2json after every change.",
+			"id": "INV27",
+			"name": "Auto-sync JSON and Markdown representations",
+			"type": "invariant"
 		}
 	],
 	"relationships": [

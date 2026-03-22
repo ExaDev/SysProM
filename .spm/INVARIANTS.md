@@ -149,6 +149,10 @@ Each relationship type has a set of valid source and target node types. For exam
 
 Setting a node to status: retired via updateNode must report all active nodes that hold operational relationships (depends_on, implements, constrained_by, must_follow, governed_by, affects) to/from it. The caller sees the impact before the change is applied.
 
+### INV27 — Auto-sync JSON and Markdown representations
+
+When both JSON and Markdown representations of a SysProM document exist, mutations via the CLI must automatically keep them in sync. Users should not need to manually run json2md or md2json after every change.
+
 ## Principles
 
 ### PR1 — Separate What From Why From How
