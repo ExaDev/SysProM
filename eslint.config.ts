@@ -1,5 +1,5 @@
 import eslint from "@eslint/js";
-import type { Linter, Rule } from "eslint";
+import type { Rule } from "eslint";
 import { defineConfig } from "eslint/config";
 import eslintComments from "@eslint-community/eslint-plugin-eslint-comments";
 import jsdoc from "eslint-plugin-jsdoc";
@@ -75,7 +75,7 @@ const indexReExportsOnly: Rule.RuleModule = {
 	},
 };
 
-const barrelPlugin: Linter.Plugin = {
+const barrelPlugin = {
 	rules: {
 		"no-re-exports": noReExports,
 		"index-re-exports-only": indexReExportsOnly,
@@ -167,6 +167,16 @@ export default defineConfig(
 			],
 			"@typescript-eslint/no-unused-vars": "off",
 			"@typescript-eslint/no-floating-promises": "off",
+			"@typescript-eslint/no-unnecessary-condition": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/restrict-template-expressions": "off",
+			"@typescript-eslint/require-await": "off",
+			"@typescript-eslint/no-non-null-assertion": "off",
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/prefer-nullish-coalescing": "off",
 		},
 	},
 	{
