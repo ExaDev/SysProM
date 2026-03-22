@@ -1,3 +1,15 @@
+## [1.2.3](https://github.com/ExaDev/SysProM/compare/v1.2.2...v1.2.3) (2026-03-22)
+
+### Documentation
+
+* **jsdoc:** fix informative-docs and match-description warnings in plan ([daa1daf](https://github.com/ExaDev/SysProM/commit/daa1daf10e7f0f317fb3b61cf42eff0fe6c5b593))
+* **readme:** add BDD (Gherkin) and Taskmaster to comparison table ([4366aa8](https://github.com/ExaDev/SysProM/commit/4366aa8f10a986e0d6a3fe3c8bfdf3c9e7aa283e))
+* **readme:** reorder table rows and columns for logical grouping ([da4c6da](https://github.com/ExaDev/SysProM/commit/da4c6da7bb19d33ea2990e79b40ca8c7d8b1d825))
+
+### Miscellaneous Chores
+
+* **lint:** add jsdoc contents, logical, and stylistic presets ([193601b](https://github.com/ExaDev/SysProM/commit/193601b96cfac9f998f40e9642a55706b4438490))
+
 ## [1.2.2](https://github.com/ExaDev/SysProM/compare/v1.2.1...v1.2.2) (2026-03-22)
 
 ### Documentation
