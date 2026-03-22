@@ -35,6 +35,14 @@ export interface SpecKitFeature {
  * Looks for .specify/ and specs/ subdirectories.
  * @param dir - Directory to scan.
  * @returns Detected project structure.
+ * @example
+ * ```ts
+ * const project = detectSpecKitProject("./my-project");
+ * ```
+ * @example
+ * ```ts
+ * const project = detectSpecKitProject("./my-project");
+ * ```
  */
 export function detectSpecKitProject(dir: string): SpecKitProject {
 	const specifyDir = checkDir(join(dir, ".specify"));
@@ -67,6 +75,10 @@ export function detectSpecKitProject(dir: string): SpecKitProject {
  * List all features in the specs/ directory, sorted by number.
  * @param project - The detected project.
  * @returns Sorted list of features.
+ * @example
+ * ```ts
+ * const features = listFeatures(project);
+ * ```
  */
 export function listFeatures(project: SpecKitProject): SpecKitFeature[] {
 	if (!project.specsDir) {
@@ -110,6 +122,10 @@ export function listFeatures(project: SpecKitProject): SpecKitFeature[] {
  * @param project - The detected project.
  * @param idOrName - Feature ID, number, or name.
  * @returns The matching feature, or null.
+ * @example
+ * ```ts
+ * const feature = getFeature(project, "001-auth");
+ * ```
  */
 export function getFeature(
 	project: SpecKitProject,
@@ -137,6 +153,10 @@ export function getFeature(
  * Resolve the constitution.md file, checking .specify/memory/ first, then root.
  * @param project - The detected project.
  * @returns Path to constitution.md, or null.
+ * @example
+ * ```ts
+ * const path = resolveConstitution(project);
+ * ```
  */
 export function resolveConstitution(project: SpecKitProject): string | null {
 	return project.constitutionPath;
@@ -146,6 +166,10 @@ export function resolveConstitution(project: SpecKitProject): string | null {
  * Check if a directory exists, return path or null.
  * @param path - Path to check.
  * @returns The path if it exists as a directory, or null.
+ * @example
+ * ```ts
+ * const dir = checkDir("/path/to/dir");
+ * ```
  */
 function checkDir(path: string): string | null {
 	try {
@@ -161,6 +185,10 @@ function checkDir(path: string): string | null {
  * @param dir - Directory to search.
  * @param dirName - Subdirectory name pattern.
  * @returns Array of matching directory paths.
+ * @example
+ * ```ts
+ * const feature = parseFeatureDirectory("./specs", "001-auth");
+ * ```
  */
 function parseFeatureDirectory(
 	dir: string,
@@ -197,6 +225,10 @@ function parseFeatureDirectory(
  * @param dir - Directory to search.
  * @param filename - File name to find.
  * @returns Array of matching file paths.
+ * @example
+ * ```ts
+ * const specPath = checkFile("./feature", "spec.md");
+ * ```
  */
 function checkFile(dir: string, filename: string): string | null {
 	const path = join(dir, filename);

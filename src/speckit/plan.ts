@@ -57,6 +57,10 @@ export interface TaskCount {
  * @param doc - The SysProM document.
  * @param id - Node ID to find.
  * @returns The result.
+ * @example
+ * ```ts
+ * const node = findNode(doc, "PLAN-SPEC");
+ * ```
  */
 function findNode(doc: SysProMDocument, id: string): Node | null {
 	return doc.nodes.find((n) => n.id === id) ?? null;
@@ -67,6 +71,10 @@ function findNode(doc: SysProMDocument, id: string): Node | null {
  * @param subsystem - The subsystem document.
  * @param id - Node ID to find.
  * @returns The result.
+ * @example
+ * ```ts
+ * const node = findNodeInSubsystem(subsystem, "CH1");
+ * ```
  */
 function findNodeInSubsystem(
 	subsystem: SysProMDocument | undefined,
@@ -81,6 +89,10 @@ function findNodeInSubsystem(
  * @param doc - The SysProM document.
  * @param type - Node type to filter by.
  * @returns The result.
+ * @example
+ * ```ts
+ * const changes = findNodesByType(doc, "change");
+ * ```
  */
 function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 	return doc.nodes.filter((n) => n.type === type);
@@ -91,6 +103,10 @@ function findNodesByType(doc: SysProMDocument, type: string): Node[] {
  * @param subsystem - The subsystem document.
  * @param type - Node type to filter by.
  * @returns The result.
+ * @example
+ * ```ts
+ * const gates = findNodesByTypeInSubsystem(subsystem, "gate");
+ * ```
  */
 function findNodesByTypeInSubsystem(
 	subsystem: SysProMDocument | undefined,
@@ -106,6 +122,10 @@ function findNodesByTypeInSubsystem(
  * @param fromId - Source node ID.
  * @param relationType - Relationship type filter.
  * @returns The result.
+ * @example
+ * ```ts
+ * const rels = findRelationshipsFrom(subsystem, "CH1");
+ * ```
  */
 function findRelationshipsFrom(
 	subsystem: SysProMDocument | undefined,
@@ -126,6 +146,10 @@ function findRelationshipsFrom(
  * @param toId - Target node ID.
  * @param relationType - Relationship type filter.
  * @returns The result.
+ * @example
+ * ```ts
+ * const rels = findRelationshipsTo(subsystem, "CH2");
+ * ```
  */
 function findRelationshipsTo(
 	subsystem: SysProMDocument | undefined,
@@ -145,6 +169,10 @@ function findRelationshipsTo(
  * Looks for GIVEN/WHEN/THEN patterns (case-insensitive).
  * @param description - Task description text.
  * @returns The result.
+ * @example
+ * ```ts
+ * hasAcceptanceCriteria("Given X When Y Then Z"); // => true
+ * ```
  */
 function hasAcceptanceCriteria(
 	description: string | string[] | undefined,
@@ -159,6 +187,10 @@ function hasAcceptanceCriteria(
  * @param subsystem - The subsystem document.
  * @param changeNodes - Array of change nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const sorted = sortChangesByOrder(subsystem, changeNodes);
+ * ```
  */
 function sortChangesByOrder(
 	subsystem: SysProMDocument | undefined,
@@ -232,6 +264,10 @@ function sortChangesByOrder(
  * @param prefix - Plan prefix.
  * @param name - Name for the new item.
  * @returns The result.
+ * @example
+ * ```ts
+ * const doc = initDocument("PLAN", "My Plan");
+ * ```
  */
 export function initDocument(prefix: string, name: string): SysProMDocument {
 	const nodes: Node[] = [
@@ -308,6 +344,10 @@ export function initDocument(prefix: string, name: string): SysProMDocument {
  * @param name - Name for the new item.
  * @param parentId - Parent task ID.
  * @returns The result.
+ * @example
+ * ```ts
+ * const updated = addTask(doc, "PLAN", "Implement auth");
+ * ```
  */
 export function addTask(
 	doc: SysProMDocument,
@@ -387,6 +427,10 @@ export function addTask(
  * @param parentId - Parent task ID.
  * @param name - Name for the new item.
  * @returns The result.
+ * @example
+ * ```ts
+ * const updated = addTaskToParent(doc, protImpl, "PLAN", "CH1");
+ * ```
  */
 function addTaskToParent(
 	doc: SysProMDocument,
@@ -551,6 +595,10 @@ function addTaskToParent(
  *   - All children must be recursively done AND own plan items (if any) must be done
  * @param node - The node to check.
  * @returns The result.
+ * @example
+ * ```ts
+ * isTaskDone(changeNode); // => true if all plan items done
+ * ```
  */
 export function isTaskDone(node: Node): boolean {
 	// If the node has a subsystem with change children, check those recursively
@@ -589,6 +637,10 @@ export function isTaskDone(node: Node): boolean {
  * subsystem (and their subsystems).
  * @param node - The node to check.
  * @returns The result.
+ * @example
+ * ```ts
+ * const { total, done } = countTasks(changeNode);
+ * ```
  */
 export function countTasks(node: Node): TaskCount {
 	let total = 0;
@@ -624,6 +676,10 @@ export function countTasks(node: Node): TaskCount {
  * @param doc - The SysProM document.
  * @param prefix - Plan prefix.
  * @returns The result.
+ * @example
+ * ```ts
+ * const status = planStatus(doc, "PLAN");
+ * ```
  */
 export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
 	const constitution = findNode(doc, `${prefix}-CONST`);
@@ -736,6 +792,10 @@ export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
  * @param doc - The SysProM document.
  * @param prefix - Plan prefix.
  * @returns The result.
+ * @example
+ * ```ts
+ * const phases = planProgress(doc, "PLAN");
+ * ```
  */
 export function planProgress(
 	doc: SysProMDocument,
@@ -794,6 +854,10 @@ export function planProgress(
  * @param prefix - Plan prefix.
  * @param phase - Phase number (1-indexed).
  * @returns Gate check result with readiness flag and issues.
+ * @example
+ * ```ts
+ * const result = checkGate(doc, "PLAN", 2);
+ * ```
  */
 export function checkGate(
 	doc: SysProMDocument,

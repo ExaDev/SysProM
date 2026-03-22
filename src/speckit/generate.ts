@@ -12,6 +12,10 @@ import { textToString } from "../text.js";
  * @param doc - The document to search.
  * @param id - The node ID to find.
  * @returns The matching node, or null.
+ * @example
+ * ```ts
+ * findNode(doc, "D1")
+ * ```
  */
 function findNode(doc: SysProMDocument, id: string): Node | null {
 	return doc.nodes.find((n) => n.id === id) ?? null;
@@ -22,6 +26,10 @@ function findNode(doc: SysProMDocument, id: string): Node | null {
  * @param doc - The document to search.
  * @param type - The node type to filter by.
  * @returns Matching nodes.
+ * @example
+ * ```ts
+ * const decisions = findNodesByType(doc, "decision");
+ * ```
  */
 function findNodesByType(doc: SysProMDocument, type: string): Node[] {
 	return doc.nodes.filter((n) => n.type === type);
@@ -33,6 +41,10 @@ function findNodesByType(doc: SysProMDocument, type: string): Node[] {
  * @param fromId - Source node ID.
  * @param relationType - Optional relationship type filter.
  * @returns Matching relationships.
+ * @example
+ * ```ts
+ * const rels = findRelationshipsFrom(doc, "D1", "affects");
+ * ```
  */
 function findRelationshipsFrom(
 	doc: SysProMDocument,
@@ -52,6 +64,10 @@ function findRelationshipsFrom(
  * @param toId - Target node ID.
  * @param relationType - Optional relationship type filter.
  * @returns Matching relationships.
+ * @example
+ * ```ts
+ * const rels = findRelationshipsTo(doc, "INV1", "must_preserve");
+ * ```
  */
 function findRelationshipsTo(
 	doc: SysProMDocument,
@@ -70,6 +86,10 @@ function findRelationshipsTo(
  * Looks for patterns like "P1", "P2", "Priority: P1", etc.
  * @param node - The node to extract priority from.
  * @returns Priority string (e.g. "P1").
+ * @example
+ * ```ts
+ * const priority = extractPriority(node);
+ * ```
  */
 function extractPriority(node: Node): string {
 	const text = [
@@ -88,6 +108,10 @@ function extractPriority(node: Node): string {
  * Extract numeric suffix from an ID (e.g., "PREFIX-SPEC-001" -> "001").
  * @param id - The node ID.
  * @returns The numeric suffix.
+ * @example
+ * ```ts
+ * getIdSuffix("FEAT-SPEC-001"); // => "001"
+ * ```
  */
 function getIdSuffix(id: string): string {
 	const parts = id.split("-");
@@ -98,6 +122,10 @@ function getIdSuffix(id: string): string {
  * Parse tasks from a change node's plan array.
  * @param node - The change node.
  * @returns Array of task descriptions and done flags.
+ * @example
+ * ```ts
+ * const tasks = parseTasks(changeNode);
+ * ```
  */
 function parseTasks(node: Node): { description: string; done: boolean }[] {
 	return (node.plan ?? []).map((task) => ({
@@ -110,6 +138,10 @@ function parseTasks(node: Node): { description: string; done: boolean }[] {
  * Format the status for spec output: "proposed" -> "Draft", etc.
  * @param status - The node status string.
  * @returns Formatted status label.
+ * @example
+ * ```ts
+ * formatStatus("proposed"); // => "Draft"
+ * ```
  */
 function formatStatus(status?: string): string {
 	if (!status) return "Draft";
@@ -130,6 +162,10 @@ function formatStatus(status?: string): string {
  * @param doc - The SysProM document.
  * @param prefix - ID prefix identifying nodes to include.
  * @returns The generated markdown.
+ * @example
+ * ```ts
+ * const md = generateConstitution(doc, "FEAT");
+ * ```
  */
 export function generateConstitution(
 	doc: SysProMDocument,
@@ -224,6 +260,10 @@ export function generateConstitution(
  * @param doc - The SysProM document.
  * @param prefix - ID prefix identifying nodes to include.
  * @returns The generated markdown.
+ * @example
+ * ```ts
+ * const md = generateSpec(doc, "FEAT");
+ * ```
  */
 export function generateSpec(doc: SysProMDocument, prefix: string): string {
 	const specId = `${prefix}-SPEC`;
@@ -369,6 +409,10 @@ export function generateSpec(doc: SysProMDocument, prefix: string): string {
  * @param doc - The SysProM document.
  * @param prefix - ID prefix identifying nodes to include.
  * @returns The generated markdown.
+ * @example
+ * ```ts
+ * const md = generatePlan(doc, "FEAT");
+ * ```
  */
 export function generatePlan(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
@@ -432,6 +476,10 @@ export function generatePlan(doc: SysProMDocument, prefix: string): string {
  * @param doc - The SysProM document.
  * @param prefix - ID prefix identifying nodes to include.
  * @returns The generated markdown.
+ * @example
+ * ```ts
+ * const md = generateTasks(doc, "FEAT");
+ * ```
  */
 export function generateTasks(doc: SysProMDocument, prefix: string): string {
 	const implProtocolId = `${prefix}-PROT-IMPL`;
@@ -627,6 +675,10 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
  * @param doc - The SysProM document.
  * @param prefix - ID prefix identifying nodes to include.
  * @returns The generated markdown.
+ * @example
+ * ```ts
+ * const md = generateChecklist(doc, "FEAT");
+ * ```
  */
 export function generateChecklist(
 	doc: SysProMDocument,
@@ -700,6 +752,10 @@ export function generateChecklist(
  * @param doc - The SysProM document.
  * @param outputDir - Output directory path.
  * @param prefix - ID prefix identifying nodes to include.
+ * @example
+ * ```ts
+ * generateSpecKitProject(doc, "./output", "FEAT");
+ * ```
  */
 export function generateSpecKitProject(
 	doc: SysProMDocument,

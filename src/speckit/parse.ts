@@ -40,6 +40,10 @@ interface CheckboxItem {
  * Parse markdown content into a hierarchical section tree by heading level.
  * @param body - Markdown body text.
  * @returns The result.
+ * @example
+ * ```ts
+ * const sections = parseSections(markdownBody);
+ * ```
  */
 function parseSections(body: string): Section[] {
 	const lines = body.split("\n");
@@ -91,6 +95,10 @@ function parseSections(body: string): Section[] {
  * Extract bold key-value pairs from markdown like "**Key**: value" or "**Key**: value text".
  * @param content - Markdown file content.
  * @returns The result.
+ * @example
+ * ```ts
+ * const meta = parseFrontMatterish(content);
+ * ```
  */
 function parseFrontMatterish(content: string): Record<string, string> {
 	const result: Record<string, string> = {};
@@ -111,6 +119,10 @@ function parseFrontMatterish(content: string): Record<string, string> {
  * Parse checkbox lines like "- [x] ID text" or "- [ ] ID text".
  * @param body - Markdown body text.
  * @returns The result.
+ * @example
+ * ```ts
+ * const items = parseCheckboxes(body);
+ * ```
  */
 function parseCheckboxes(body: string): CheckboxItem[] {
 	const items: CheckboxItem[] = [];
@@ -137,6 +149,10 @@ function parseCheckboxes(body: string): CheckboxItem[] {
  * Flatten all sections in the tree into a single array for easier searching.
  * @param sections - Parsed section tree.
  * @returns The result.
+ * @example
+ * ```ts
+ * const flat = flattenSections(sections);
+ * ```
  */
 function flattenSections(sections: Section[]): Section[] {
 	const result: Section[] = [];
@@ -153,6 +169,10 @@ function flattenSections(sections: Section[]): Section[] {
  * @param sections - Parsed section tree.
  * @param predicate - Filter function.
  * @returns The result.
+ * @example
+ * ```ts
+ * const s = findSection(sections, (h) => h.startsWith("Phase"));
+ * ```
  */
 function findSection(
 	sections: Section[],
@@ -165,6 +185,10 @@ function findSection(
  * Convert status-like strings to NodeStatus. Recognizes common spec-kit patterns.
  * @param value - Raw status string.
  * @returns The result.
+ * @example
+ * ```ts
+ * mapStatusValue("Draft"); // => "proposed"
+ * ```
  */
 function mapStatusValue(value: string): NodeStatus {
 	const lower = value.toLowerCase().trim();
@@ -195,6 +219,10 @@ function mapStatusValue(value: string): NodeStatus {
  * @param body - Markdown body text.
  * @param key - Front-matter key to extract.
  * @returns The result.
+ * @example
+ * ```ts
+ * extractValue(body, "Created"); // => "2025-01-01"
+ * ```
  */
 function extractValue(body: string, key: string): string | undefined {
 	const pattern = new RegExp(`^\\*\\*${key}\\*\\*:\\s*(.+)$`, "m");
@@ -211,6 +239,10 @@ function extractValue(body: string, key: string): string | undefined {
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const result = parseConstitution(content, "FEAT");
+ * ```
  */
 export function parseConstitution(
 	content: string,
@@ -326,6 +358,10 @@ export function parseConstitution(
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const result = parseSpec(content, "FEAT");
+ * ```
  */
 export function parseSpec(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
@@ -544,6 +580,10 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const result = parsePlan(content, "FEAT");
+ * ```
  */
 export function parsePlan(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
@@ -655,6 +695,10 @@ export function parsePlan(content: string, idPrefix: string): ParseResult {
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const result = parseTasks(content, "FEAT");
+ * ```
  */
 export function parseTasks(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
@@ -787,6 +831,10 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
+ * @example
+ * ```ts
+ * const result = parseChecklist(content, "FEAT");
+ * ```
  */
 export function parseChecklist(content: string, idPrefix: string): ParseResult {
 	const sections = parseSections(content);
@@ -854,6 +902,10 @@ export function parseChecklist(content: string, idPrefix: string): ParseResult {
  * @param idPrefix - ID prefix for generated nodes.
  * @param constitutionPath - Path to constitution.md, or undefined.
  * @returns The parsed SysProM document.
+ * @example
+ * ```ts
+ * const doc = parseSpecKitFeature("./features/auth", "AUTH");
+ * ```
  */
 export function parseSpecKitFeature(
 	featureDir: string,
