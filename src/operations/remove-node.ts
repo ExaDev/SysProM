@@ -13,13 +13,13 @@ export type RemoveResult = z.infer<typeof RemoveResult>;
 
 /**
  * Remove a node and all relationships involving it. Also removes the node from
- * view includes and external references. Warns if scope or operation references remain.
+ * view includes and external references. Cleans up scope and operation references.
  * @throws {Error} If the node ID is not found.
  */
 export const removeNodeOp = defineOperation({
 	name: "removeNode",
 	description:
-		"Remove a node and all relationships involving it. Also removes the node from view includes and external references.",
+		"Remove a node and all relationships involving it. Cleans up all references in scopes, operations, views, and external references.",
 	input: z.object({
 		doc: SysProMDocument,
 		id: z.string(),
@@ -36,31 +36,50 @@ export const removeNodeOp = defineOperation({
 		// Remove the node
 		const newNodes = doc.nodes.filter((n) => n.id !== id);
 
-		// Update view includes
-		const nodesWithIncludes = newNodes.map((n) => {
+		// Clean up all references to the removed node
+		const cleanedNodes = newNodes.map((n) => {
+			let updated = n;
+
+			// Remove from view includes
 			if (n.includes?.includes(id)) {
 				const newIncludes = n.includes.filter((i) => i !== id);
-				return {
-					...n,
+				updated = {
+					...updated,
 					includes: newIncludes.length > 0 ? newIncludes : undefined,
 				};
 			}
-			return n;
+
+			// Remove from scope
+			if (n.scope?.includes(id)) {
+				const newScope = n.scope.filter((s) => s !== id);
+				warnings.push(`${n.id} scope still references ${id}`);
+				updated = {
+					...updated,
+					scope: newScope.length > 0 ? newScope : undefined,
+				};
+			}
+
+			// Remove from operations
+			const opsWithTarget = n.operations?.some((op) => op.target === id);
+			if (opsWithTarget) {
+				const newOps = n.operations?.filter((op) => op.target !== id);
+				warnings.push(`${n.id} operations still reference ${id}`);
+				updated = {
+					...updated,
+					operations: newOps && newOps.length > 0 ? newOps : undefined,
+				};
+			}
+
+			return updated;
 		});
 
 		// Remove relationships involving this node
+		const oldRelCount = (doc.relationships ?? []).length;
 		const newRelationships = (doc.relationships ?? []).filter(
 			(r) => r.from !== id && r.to !== id,
 		);
-
-		// Check for scope and operation references
-		for (const n of nodesWithIncludes) {
-			if (n.scope?.includes(id)) {
-				warnings.push(`${n.id} scope still references ${id}`);
-			}
-			if (n.operations?.some((op) => op.target === id)) {
-				warnings.push(`${n.id} operations still reference ${id}`);
-			}
+		if (newRelationships.length < oldRelCount) {
+			warnings.push(`Removed relationships involving ${id}`);
 		}
 
 		// Remove from external references
@@ -71,7 +90,7 @@ export const removeNodeOp = defineOperation({
 		return {
 			doc: {
 				...doc,
-				nodes: nodesWithIncludes,
+				nodes: cleanedNodes,
 				relationships:
 					newRelationships.length > 0 ? newRelationships : undefined,
 				external_references:
