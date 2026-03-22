@@ -8,8 +8,8 @@ import * as z from "zod";
  * Definition of a SysProM operation — a named, typed function with Zod schemas
  * for input validation and output description.
  *
- * @typeParam TInput - Zod schema type for the operation's input.
- * @typeParam TOutput - Zod schema type for the operation's output.
+ * @template TInput - Zod schema type for the operation's input.
+ * @template TOutput - Zod schema type for the operation's output.
  */
 export interface OperationDef<
 	TInput extends z.ZodType = z.ZodType,
@@ -32,8 +32,8 @@ export interface OperationDef<
  * function, and also exposes `.def`, `.inputSchema`, and `.outputSchema` for
  * introspection.
  *
- * @typeParam TInput - Zod schema type for the operation's input.
- * @typeParam TOutput - Zod schema type for the operation's output.
+ * @template TInput - Zod schema type for the operation's input.
+ * @template TOutput - Zod schema type for the operation's output.
  */
 export type DefinedOperation<
 	TInput extends z.ZodType = z.ZodType,
