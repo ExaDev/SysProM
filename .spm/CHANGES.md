@@ -651,7 +651,7 @@ Add a unified 'spm sync' command that performs bidirectional synchronisation bet
 
 - Implements: D31
 
-- Status: introduced
+- Status: complete
 
 Scope:
 - D31

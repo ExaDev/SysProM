@@ -1,4 +1,5 @@
 ---
+$schema: "./schema.json"
 title: "SysProM — System Provenance Model"
 doc_type: "sysprom"
 scope: "system"
