@@ -124,33 +124,33 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 
 ## How SysProM Compares
 
-| System | Readable | Parseable | State | Rationale | History | Constraints | Nesting | Diagrams | Inference | Impact | Temporal | Scaffolding | Planning | Tracking |
-|--------|----------|-----------|-------|-----------|---------|-------------|---------|----------|-----------|--------|----------|-------------|----------|----------|
-| [MBSE (SysML)](https://www.omg.org/spec/SysML/) | 🔶 | ✅ | ✅ | 🔶 | 🔶 | ✅ | ✅ | ✅ | | ✅ | | | | |
-| [Knowledge Graphs](https://www.w3.org/TR/rdf12-concepts/) | | ✅ | ✅ | | | 🔶 | ✅ | 🔶 | ✅ | | | | | |
-| [EA (ArchiMate)](https://pubs.opengroup.org/architecture/archimate-spec/) | ✅ | 🔶 | ✅ | | | 🔶 | 🔶 | ✅ | | ✅ | | | | |
-| [Git](https://git-scm.com/) | 🔶 | ✅ | ✅ | | ✅ | | | | | | ✅ | | | 🔶 |
-| [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) | | ✅ | 🔶 | | ✅ | 🔶 | | | | | ✅ | | | |
-| [DDD](https://www.domainlanguage.com/ddd/) | ✅ | | ✅ | | | 🔶 | 🔶 | | | | | | | |
-| [C4](https://c4model.com/) | ✅ | | ✅ | | | | 🔶 | ✅ | | | | | | |
-| [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | 🔶 | | | | 🔶 | | | | 🔶 |
-| [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | 🔶 | | 🔶 | | | | | ✅ | ✅ | ✅ |
-| [PRD](https://en.wikipedia.org/wiki/Product_requirements_document) | ✅ | | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | 🔶 | | | ✅ | 🔶 |
-| [ADR](https://adr.github.io/) | ✅ | | | ✅ | 🔶 | | | | | | | | | |
-| [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | ✅ | 🔶 | | | | | | | | 🔶 | 🔶 |
-| [BDD (Gherkin)](https://cucumber.io/docs/gherkin/) | ✅ | ✅ | 🔶 | | | ✅ | 🔶 | | | | | 🔶 | 🔶 | ✅ |
-| [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | ✅ | | 🔶 | | | | | | | ✅ | 🔶 |
-| [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | 🔶 | | 🔶 | | | | | | | | |
-| [GSD-2](https://github.com/gsd-build/gsd-2) | ✅ | 🔶 | ✅ | 🔶 | ✅ | 🔶 | ✅ | | | 🔶 | | ✅ | ✅ | ✅ |
-| [Taskmaster](https://github.com/eyaltoledano/claude-task-master) | ✅ | ✅ | ✅ | 🔶 | 🔶 | | ✅ | | 🔶 | 🔶 | | 🔶 | ✅ | ✅ |
-| [OpenSpec](https://github.com/Fission-AI/OpenSpec) | ✅ | 🔶 | ✅ | ✅ | ✅ | | 🔶 | | | | | ✅ | ✅ | ✅ |
-| [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
-| [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
-| [Ouroboros](https://github.com/Q00/ouroboros) | ✅ | 🔶 | ✅ | ✅ | 🔶 | ✅ | | | ✅ | 🔶 | | 🔶 | ✅ | 🔶 |
-| [Spec Kitty](https://github.com/Priivacy-ai/spec-kitty) | ✅ | 🔶 | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | 🔶 | | ✅ | ✅ | ✅ |
-| [Shotgun](https://github.com/shotgun-sh/shotgun) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | | | | | 🔶 | | 🔶 | ✅ | 🔶 |
-| [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | | ✅ | ✅ | ✅ |
-| **SysProM** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🔶 | | 🔶 | ✅ | ✅ | ✅ | ✅ |
+| System | Readable | Parseable | State | Nesting | Diagrams | Rationale | Constraints | History | Temporal | Inference | Impact | Scaffolding | Planning | Tracking |
+|--------|----------|-----------|-------|---------|----------|-----------|-------------|---------|----------|-----------|--------|-------------|----------|----------|
+| [MBSE (SysML)](https://www.omg.org/spec/SysML/) | 🔶 | ✅ | ✅ | ✅ | ✅ | 🔶 | ✅ | 🔶 | | | ✅ | | | |
+| [Knowledge Graphs](https://www.w3.org/TR/rdf12-concepts/) | | ✅ | ✅ | ✅ | 🔶 | | 🔶 | | | ✅ | | | | |
+| [EA (ArchiMate)](https://pubs.opengroup.org/architecture/archimate-spec/) | ✅ | 🔶 | ✅ | 🔶 | ✅ | | 🔶 | | | | ✅ | | | |
+| [Git](https://git-scm.com/) | 🔶 | ✅ | ✅ | | | | | ✅ | ✅ | | | | | 🔶 |
+| [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) | | ✅ | 🔶 | | | | 🔶 | ✅ | ✅ | | | | | |
+| [DDD](https://www.domainlanguage.com/ddd/) | ✅ | | ✅ | 🔶 | | | 🔶 | | | | | | | |
+| [C4](https://c4model.com/) | ✅ | | ✅ | 🔶 | ✅ | | | | | | | | | |
+| [Traceability Matrices](https://en.wikipedia.org/wiki/Traceability_matrix) | ✅ | | ✅ | | | | 🔶 | | | | 🔶 | | | 🔶 |
+| [PRD](https://en.wikipedia.org/wiki/Product_requirements_document) | ✅ | | 🔶 | 🔶 | 🔶 | ✅ | 🔶 | 🔶 | | | 🔶 | | ✅ | 🔶 |
+| [ADR](https://adr.github.io/) | ✅ | | | | | ✅ | | 🔶 | | | | | | |
+| [RFC Processes](https://www.rfc-editor.org/rfc/rfc2026) | ✅ | | | | | ✅ | | 🔶 | | | | | 🔶 | 🔶 |
+| [BDD (Gherkin)](https://cucumber.io/docs/gherkin/) | ✅ | ✅ | 🔶 | 🔶 | | | ✅ | | | | | 🔶 | 🔶 | ✅ |
+| [Spec Kit](https://github.com/github/spec-kit) | ✅ | | ✅ | 🔶 | | 🔶 | | 🔶 | | | | ✅ | ✅ | ✅ |
+| [Ralplan](https://github.com/yeachan-heo/oh-my-claudecode/blob/main/skills/ralplan/SKILL.md) | ✅ | | 🔶 | | | ✅ | 🔶 | | | | | | ✅ | 🔶 |
+| [GSD](https://github.com/gsd-build/get-shit-done) | ✅ | | | | | 🔶 | 🔶 | | | | | | | |
+| [GSD-2](https://github.com/gsd-build/gsd-2) | ✅ | 🔶 | ✅ | ✅ | | 🔶 | 🔶 | ✅ | | | 🔶 | ✅ | ✅ | ✅ |
+| [Taskmaster](https://github.com/eyaltoledano/claude-task-master) | ✅ | ✅ | ✅ | ✅ | | 🔶 | | 🔶 | | 🔶 | 🔶 | 🔶 | ✅ | ✅ |
+| [OpenSpec](https://github.com/Fission-AI/OpenSpec) | ✅ | 🔶 | ✅ | 🔶 | | ✅ | | ✅ | | | | ✅ | ✅ | ✅ |
+| [Kiro](https://github.com/kirodotdev/Kiro) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
+| [cc-sdd](https://github.com/gotalab/cc-sdd) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
+| [Ouroboros](https://github.com/Q00/ouroboros) | ✅ | 🔶 | ✅ | | | ✅ | ✅ | 🔶 | | ✅ | 🔶 | 🔶 | ✅ | 🔶 |
+| [Spec Kitty](https://github.com/Priivacy-ai/spec-kitty) | ✅ | 🔶 | ✅ | 🔶 | | 🔶 | 🔶 | 🔶 | | | 🔶 | ✅ | ✅ | ✅ |
+| [Shotgun](https://github.com/shotgun-sh/shotgun) | ✅ | 🔶 | 🔶 | | | 🔶 | | 🔶 | | | 🔶 | 🔶 | ✅ | 🔶 |
+| [Superpowers](https://github.com/obra/superpowers) | ✅ | 🔶 | 🔶 | 🔶 | | 🔶 | ✅ | 🔶 | | ✅ | 🔶 | ✅ | ✅ | ✅ |
+| **SysProM** | ✅ | ✅ | ✅ | ✅ | 🔶 | ✅ | ✅ | ✅ | ✅ | | 🔶 | ✅ | ✅ | ✅ |
 
 ✅ = first-class support. 🔶 = partial or implicit.
 
