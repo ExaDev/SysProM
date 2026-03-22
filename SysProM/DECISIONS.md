@@ -769,3 +769,19 @@ Chosen: OPT-A
 
 Rationale: Same package avoids monorepo overhead. The MCP server is a thin wrapper around the existing programmatic API — one source file, one new dependency (@modelcontextprotocol/sdk), one extra bin entry. SysProM already has zod which satisfies the SDK peer dependency.
 
+### D33 — Abstract External Format Interop into Keyed Provider Registry
+
+- Must preserve: CN6
+- Supersedes: CH14
+
+Context: SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.
+
+Options:
+- OPT-A: Keyed provider registry — define an ExternalFormatProvider interface, register providers in a const object keyed by string literal, derive ProviderKey union from the registry. Auto-detect provider from directory structure, allow explicit --format flag.
+- OPT-B: Kind-string provider — each provider carries a kind: string field, registry is an array scanned at runtime. Simpler but loses type-safe lookup.
+- OPT-C: No abstraction — duplicate speckit code for superpowers with format-specific operations. Quick but violates DRY.
+
+Chosen: OPT-A
+
+Rationale: Keyed registry gives type-safe lookup, avoids stringly-typed dispatch, and the ProviderKey union auto-updates when new providers are added. satisfies Record<string, ExternalFormatProvider> enforces the interface while preserving concrete types per key. Consistent with the codebase defineOperation pattern.
+

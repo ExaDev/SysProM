@@ -3604,6 +3604,88 @@
 				}
 			],
 			"type": "change"
+		},
+		{
+			"context": "SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.",
+			"id": "D33",
+			"name": "Abstract External Format Interop into Keyed Provider Registry",
+			"options": [
+				{
+					"description": "Keyed provider registry — define an ExternalFormatProvider interface, register providers in a const object keyed by string literal, derive ProviderKey union from the registry. Auto-detect provider from directory structure, allow explicit --format flag.",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Kind-string provider — each provider carries a kind: string field, registry is an array scanned at runtime. Simpler but loses type-safe lookup.",
+					"id": "OPT-B"
+				},
+				{
+					"description": "No abstraction — duplicate speckit code for superpowers with format-specific operations. Quick but violates DRY.",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "Keyed registry gives type-safe lookup, avoids stringly-typed dispatch, and the ProviderKey union auto-updates when new providers are added. satisfies Record<string, ExternalFormatProvider> enforces the interface while preserving concrete types per key. Consistent with the codebase defineOperation pattern.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CH31",
+			"name": "Implement Keyed Provider Registry for External Formats",
+			"plan": [
+				{
+					"description": "Define ExternalFormatProvider interface, ExternalProject, and ExternalFeature types in src/providers/provider.ts",
+					"done": false
+				},
+				{
+					"description": "Define providerRegistry const object, ProviderKey type, getProvider() and detectProvider() functions in src/providers/provider.ts",
+					"done": false
+				},
+				{
+					"description": "Move src/speckit/ to src/providers/speckit/, implement ExternalFormatProvider interface, update all imports across codebase",
+					"done": false
+				},
+				{
+					"description": "Implement src/providers/superpowers/project.ts — detect docs/superpowers/{specs,plans}/ directories, list/get features by date-prefixed directory names",
+					"done": false
+				},
+				{
+					"description": "Implement src/providers/superpowers/parse.ts — parse design docs into decision nodes with options, parse plan docs into change nodes with checkbox tasks",
+					"done": false
+				},
+				{
+					"description": "Implement src/providers/superpowers/generate.ts — generate superpowers-format spec and plan markdown from SysProMDocument",
+					"done": false
+				},
+				{
+					"description": "Register superpowers provider in providerRegistry",
+					"done": false
+				},
+				{
+					"description": "Refactor speckit-import/export/sync/diff operations to dispatch through the provider registry with auto-detection and optional --format flag",
+					"done": false
+				},
+				{
+					"description": "Update Zod input schemas for operations to accept format?: z.enum(providerKeys) derived from registry",
+					"done": false
+				},
+				{
+					"description": "Add unit tests for superpowers parse (design doc round-trip) and generate (plan doc round-trip)",
+					"done": false
+				},
+				{
+					"description": "Add unit tests for provider registry auto-detection and explicit format dispatch",
+					"done": false
+				},
+				{
+					"description": "Update CLI commands to expose --format flag, update help text",
+					"done": false
+				},
+				{
+					"description": "Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown",
+					"done": false
+				}
+			],
+			"status": "proposed",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4596,6 +4678,21 @@
 		{
 			"from": "CH30",
 			"to": "D32",
+			"type": "implements"
+		},
+		{
+			"from": "D33",
+			"to": "CN6",
+			"type": "must_preserve"
+		},
+		{
+			"from": "D33",
+			"to": "CH14",
+			"type": "supersedes"
+		},
+		{
+			"from": "CH31",
+			"to": "D33",
 			"type": "implements"
 		}
 	]

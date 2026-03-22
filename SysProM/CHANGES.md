@@ -688,3 +688,25 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update plugin README with MCP server documentation
 - [ ] Sync JSON to Markdown
 
+### CH31 — Implement Keyed Provider Registry for External Formats
+
+- Implements: D33
+
+- Status: proposed
+
+#### Plan
+
+- [ ] Define ExternalFormatProvider interface, ExternalProject, and ExternalFeature types in src/providers/provider.ts
+- [ ] Define providerRegistry const object, ProviderKey type, getProvider() and detectProvider() functions in src/providers/provider.ts
+- [ ] Move src/speckit/ to src/providers/speckit/, implement ExternalFormatProvider interface, update all imports across codebase
+- [ ] Implement src/providers/superpowers/project.ts — detect docs/superpowers/{specs,plans}/ directories, list/get features by date-prefixed directory names
+- [ ] Implement src/providers/superpowers/parse.ts — parse design docs into decision nodes with options, parse plan docs into change nodes with checkbox tasks
+- [ ] Implement src/providers/superpowers/generate.ts — generate superpowers-format spec and plan markdown from SysProMDocument
+- [ ] Register superpowers provider in providerRegistry
+- [ ] Refactor speckit-import/export/sync/diff operations to dispatch through the provider registry with auto-detection and optional --format flag
+- [ ] Update Zod input schemas for operations to accept format?: z.enum(providerKeys) derived from registry
+- [ ] Add unit tests for superpowers parse (design doc round-trip) and generate (plan doc round-trip)
+- [ ] Add unit tests for provider registry auto-detection and explicit format dispatch
+- [ ] Update CLI commands to expose --format flag, update help text
+- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
+
