@@ -39,6 +39,11 @@ const pathOpt = z
  * @param input - Explicit document path, or undefined for auto-detection.
  * @param cwd - Working directory to search from (defaults to `.`).
  * @returns The resolved document path.
+ * @example
+ * ```ts
+ * resolveInput() // => auto-detects ".spm.json" in cwd
+ * resolveInput("my-doc.spm.json") // => "my-doc.spm.json"
+ * ```
  */
 export function resolveInput(input?: string, cwd?: string): string {
 	if (input) return input;
@@ -162,6 +167,10 @@ export interface LoadedDoc {
  * Load a document from a CLI input path (auto-resolved if omitted).
  * @param input - Explicit document path, or undefined for auto-detection.
  * @returns The loaded document with format and resolved path.
+ * @example
+ * ```ts
+ * const { doc, format, path } = loadDoc();
+ * ```
  */
 export function loadDoc(input?: string): LoadedDoc {
 	return loadDocument(resolveInput(input));
@@ -172,6 +181,12 @@ export function loadDoc(input?: string): LoadedDoc {
  * @param doc - The document to save.
  * @param loaded - The original loaded document (provides format and path).
  * @param opts - Mutation options (e.g. sync-to-markdown flag).
+ * @example
+ * ```ts
+ * const loaded = loadDoc();
+ * const updated = addNodeOp({ doc: loaded.doc, node });
+ * persistDoc(updated, loaded, { syncMd: "./SysProM" });
+ * ```
  */
 export function persistDoc(
 	doc: SysProMDocument,

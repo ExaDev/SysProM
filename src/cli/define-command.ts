@@ -133,6 +133,12 @@ function collect(value: string, previous: string[]): string[] {
  * @param def - The command definition to build from.
  * @param parent - The parent Commander command to attach to.
  * @returns The constructed Commander command.
+ * @example
+ * ```ts
+ * const program = new Command();
+ * buildCommander(myCommandDef, program);
+ * program.parse(process.argv);
+ * ```
  */
 export function buildCommander(def: CommandDef, parent: Command): Command {
 	const cmd = parent.command(def.name);
@@ -286,6 +292,11 @@ export interface CommandDoc {
  * Extract structured documentation from a CommandDef by introspecting its Zod schemas for args and options.
  * @param def - The command definition to extract docs from.
  * @returns Structured documentation for the command.
+ * @example
+ * ```ts
+ * const docs = extractDocs(validateCommand);
+ * console.log(docs.name, docs.args, docs.opts);
+ * ```
  */
 export function extractDocs(def: CommandDef): CommandDoc {
 	const args: ArgDoc[] = [];
