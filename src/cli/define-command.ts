@@ -128,7 +128,12 @@ function collect(value: string, previous: string[]): string[] {
 	return [...previous, value];
 }
 
-/** Build a Commander.js command tree from a declarative CommandDef, wiring up Zod-validated args, options, and actions. */
+/**
+ * Build a Commander.js command tree from a declarative CommandDef, wiring up Zod-validated args, options, and actions.
+ * @param def - The command definition to build from.
+ * @param parent - The parent Commander command to attach to.
+ * @returns The constructed Commander command.
+ */
 export function buildCommander(def: CommandDef, parent: Command): Command {
 	const cmd = parent.command(def.name);
 	cmd.description(def.description);
@@ -277,7 +282,11 @@ export interface CommandDoc {
 	apiLink?: string;
 }
 
-/** Extract structured documentation from a CommandDef by introspecting its Zod schemas for args and options. */
+/**
+ * Extract structured documentation from a CommandDef by introspecting its Zod schemas for args and options.
+ * @param def - The command definition to extract docs from.
+ * @returns Structured documentation for the command.
+ */
 export function extractDocs(def: CommandDef): CommandDoc {
 	const args: ArgDoc[] = [];
 	{

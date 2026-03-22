@@ -36,6 +36,9 @@ const pathOpt = z
  *  10. *.sysprom.json 11. *.sysprom.md 12. *.sysprom/
  *
  * All matching is case-insensitive. Glob tiers must have exactly one match.
+ * @param input - Explicit document path, or undefined for auto-detection.
+ * @param cwd - Working directory to search from (defaults to `.`).
+ * @returns The resolved document path.
  */
 export function resolveInput(input?: string, cwd?: string): string {
 	if (input) return input;
@@ -155,12 +158,21 @@ export interface LoadedDoc {
 	path: string;
 }
 
-/** Load a document from a CLI input path (auto-resolved if omitted). */
+/**
+ * Load a document from a CLI input path (auto-resolved if omitted).
+ * @param input - Explicit document path, or undefined for auto-detection.
+ * @returns The loaded document with format and resolved path.
+ */
 export function loadDoc(input?: string): LoadedDoc {
 	return loadDocument(resolveInput(input));
 }
 
-/** Persist a document and optionally sync to markdown. */
+/**
+ * Persist a document and optionally sync to markdown.
+ * @param doc - The document to save.
+ * @param loaded - The original loaded document (provides format and path).
+ * @param opts - Mutation options (e.g. sync-to-markdown flag).
+ */
 export function persistDoc(
 	doc: SysProMDocument,
 	loaded: LoadedDoc,
