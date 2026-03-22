@@ -2,107 +2,11 @@
 
 import { dirname, join } from "node:path";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import type { Command } from "commander";
+import { extractDocs, type CommandDoc } from "../src/cli/define-command.js";
+import { commands } from "../src/cli/program.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(new URL(import.meta.url).pathname);
 const projectRoot = join(__dirname, "..");
-
-const { program } = await import(join(projectRoot, "src/cli/program.js"));
-
-// ---------------------------------------------------------------------------
-// CLI command → library function mapping for {@link} cross-references
-// ---------------------------------------------------------------------------
-
-const API_LINKS: Record<string, string> = {
-  validate: "validate",
-  stats: "stats",
-  add: "addNode",
-  remove: "removeNode",
-  json2md: "jsonToMarkdown",
-  md2json: "markdownToJson",
-};
-
-const SUBCOMMAND_API_LINKS: Record<string, Record<string, string>> = {
-  query: {
-    nodes: "queryNodes",
-    node: "queryNode",
-    rels: "queryRelationships",
-    trace: "traceFromNode",
-    timeline: "timeline",
-    "state-at": "stateAt",
-  },
-  update: {
-    node: "updateNode",
-    "add-rel": "addRelationship",
-    "remove-rel": "removeRelationship",
-    meta: "updateMetadata",
-  },
-};
-
-// ---------------------------------------------------------------------------
-// Extraction types
-// ---------------------------------------------------------------------------
-
-interface ArgInfo {
-  name: string;
-  description: string;
-  required: boolean;
-  choices?: string[];
-}
-
-interface OptInfo {
-  flags: string;
-  description: string;
-  mandatory: boolean;
-  choices?: string[];
-}
-
-interface CommandInfo {
-  name: string;
-  description: string;
-  arguments: ArgInfo[];
-  options: OptInfo[];
-  subcommands?: CommandInfo[];
-}
-
-// ---------------------------------------------------------------------------
-// Extract metadata from Commander objects
-// ---------------------------------------------------------------------------
-
-function extractCommandInfo(cmd: Command): CommandInfo {
-  const info: CommandInfo = {
-    name: cmd.name(),
-    description: cmd.description() || "",
-    arguments: [],
-    options: [],
-  };
-
-  const args = (cmd as Record<string, unknown>).registeredArguments as Array<Record<string, unknown>> | undefined ?? [];
-  for (const arg of args) {
-    const name = typeof arg.name === "function" ? (arg.name as () => string)() : arg.name as string;
-    const description = typeof arg.description === "function" ? (arg.description as () => string)() : (arg.description as string) ?? "";
-    const required = typeof arg.required === "function" ? (arg.required as () => boolean)() : arg.required as boolean;
-    const choices = arg.argChoices as string[] | undefined;
-    info.arguments.push({ name, description, required, choices });
-  }
-
-  const opts = (cmd as Record<string, unknown>).options as Array<Record<string, unknown>> | undefined ?? [];
-  for (const opt of opts) {
-    const flags = (opt.flags as string) ?? "";
-    const description = (opt.description as string) ?? "";
-    const mandatory = (opt.mandatory as boolean) ?? false;
-    const choices = opt.argChoices as string[] | undefined;
-    info.options.push({ flags, description, mandatory, choices });
-  }
-
-  const subcommands = (cmd as Record<string, unknown>).commands as Command[] | undefined ?? [];
-  if (subcommands.length > 0) {
-    info.subcommands = subcommands.map(extractCommandInfo);
-  }
-
-  return info;
-}
 
 // ---------------------------------------------------------------------------
 // Markdown helpers
@@ -112,12 +16,12 @@ function esc(text: string): string {
   return text.replace(/\|/g, "\\|");
 }
 
-function fmtArg(arg: ArgInfo): string {
-  return arg.required ? `<${arg.name}>` : `[${arg.name}]`;
+function fmtArg(name: string, required: boolean): string {
+  return required ? `<${name}>` : `[${name}]`;
 }
 
-function hasInputArg(args: ArgInfo[]): boolean {
-  return args.some((a) => a.name === "input" || a.name === "speckit-dir");
+function hasInputArg(argNames: string[]): boolean {
+  return argNames.some((a) => a === "input" || a === "speckit-dir");
 }
 
 function renderChoicesAlert(label: string, choices: string[]): string {
@@ -128,12 +32,9 @@ function renderChoicesAlert(label: string, choices: string[]): string {
   return `> [!TIP]\n> Valid ${label}:\n> ${choices.map((c) => `\`${c}\``).join(", ")}\n\n`;
 }
 
-function renderApiLink(cmdName: string, subcmdName?: string): string {
-  const fn = subcmdName
-    ? SUBCOMMAND_API_LINKS[cmdName]?.[subcmdName]
-    : API_LINKS[cmdName];
-  if (!fn) return "";
-  return `> [!NOTE]\n> Library function: {@link ${fn}}\n\n`;
+function renderApiLink(apiLink: string | undefined): string {
+  if (!apiLink) return "";
+  return `> [!NOTE]\n> Library function: {@link ${apiLink}}\n\n`;
 }
 
 function renderInputNote(): string {
@@ -144,16 +45,16 @@ function renderInputNote(): string {
 // Render arguments and options tables
 // ---------------------------------------------------------------------------
 
-function renderArgsTable(args: ArgInfo[], headingLevel: string, shownChoices?: Set<string>): string {
-  if (args.length === 0) return "";
+function renderArgsTable(doc: CommandDoc, headingLevel: string, shownChoices?: Set<string>): string {
+  if (doc.args.length === 0) return "";
   let out = `${headingLevel} Arguments\n\n`;
   out += "| Argument | Description |\n";
   out += "|----------|-------------|\n";
-  for (const arg of args) {
-    out += `| \`${fmtArg(arg)}\` | ${esc(arg.description)} |\n`;
+  for (const arg of doc.args) {
+    out += `| \`${fmtArg(arg.name, arg.required)}\` | ${esc(arg.description)} |\n`;
   }
   out += "\n";
-  for (const arg of args) {
+  for (const arg of doc.args) {
     if (arg.choices) {
       const key = arg.choices.join(",");
       if (!shownChoices?.has(key)) {
@@ -165,20 +66,20 @@ function renderArgsTable(args: ArgInfo[], headingLevel: string, shownChoices?: S
   return out;
 }
 
-function renderOptsTable(opts: OptInfo[], headingLevel: string, shownChoices?: Set<string>): string {
-  if (opts.length === 0) return "";
+function renderOptsTable(doc: CommandDoc, headingLevel: string, shownChoices?: Set<string>): string {
+  if (doc.opts.length === 0) return "";
   let out = `${headingLevel} Options\n\n`;
   out += "| Flag | Description | Required |\n";
   out += "|------|-------------|----------|\n";
-  for (const opt of opts) {
-    out += `| \`${esc(opt.flags)}\` | ${esc(opt.description)} | ${opt.mandatory ? "Yes" : "" } |\n`;
+  for (const opt of doc.opts) {
+    out += `| \`${esc(opt.flag)}\` | ${esc(opt.description)} | ${opt.required ? "Yes" : "" } |\n`;
   }
   out += "\n";
-  for (const opt of opts) {
+  for (const opt of doc.opts) {
     if (opt.choices) {
       const key = opt.choices.join(",");
       if (!shownChoices?.has(key)) {
-        const label = opt.flags.replace(/^--/, "").replace(/ <.*/, "");
+        const label = opt.flag.replace(/^--/, "").replace(/ <.*/, "");
         out += renderChoicesAlert(label, opt.choices);
         shownChoices?.add(key);
       }
@@ -191,67 +92,67 @@ function renderOptsTable(opts: OptInfo[], headingLevel: string, shownChoices?: S
 // Generate a full command document
 // ---------------------------------------------------------------------------
 
-function generateCommandDoc(info: CommandInfo): string {
-  let doc = `---
-title: ${info.name}
+function generateCommandDoc(doc: CommandDoc): string {
+  let output = `---
+title: ${doc.name}
 ---
 
-# spm ${info.name}
+# spm ${doc.name}
 
-${esc(info.description)}
+${esc(doc.description)}
 
 `;
 
-  if (info.subcommands && info.subcommands.length > 0) {
+  if (doc.subcommands && doc.subcommands.length > 0) {
     // Check if any subcommand has an input argument — show note once
-    const anyHasInput = info.subcommands.some((s) => hasInputArg(s.arguments));
+    const anyHasInput = doc.subcommands.some((s) => hasInputArg(s.args.map((a) => a.name)));
     if (anyHasInput) {
-      doc += renderInputNote();
+      output += renderInputNote();
     }
 
-    doc += "## Subcommands\n\n";
+    output += "## Subcommands\n\n";
 
     // Track choices already shown on this page to avoid repetition
     const shownChoices = new Set<string>();
 
-    for (const sub of info.subcommands) {
-      doc += `### spm ${info.name} ${sub.name}\n\n`;
-      doc += `${esc(sub.description)}\n\n`;
+    for (const sub of doc.subcommands) {
+      output += `### spm ${doc.name} ${sub.name}\n\n`;
+      output += `${esc(sub.description)}\n\n`;
 
       // API cross-reference
-      doc += renderApiLink(info.name, sub.name);
+      output += renderApiLink(sub.apiLink);
 
       // Usage
-      const argsPart = sub.arguments.map(fmtArg).join(" ");
-      const hasOpts = sub.options.length > 0;
-      const usage = `spm ${info.name} ${sub.name}${argsPart ? ` ${argsPart}` : ""}${hasOpts ? " [options]" : ""}`;
-      doc += "```\n" + usage + "\n```\n\n";
+      const argsPart = sub.args.map((a) => fmtArg(a.name, a.required)).join(" ");
+      const hasOpts = sub.opts.length > 0;
+      const usage = `spm ${doc.name} ${sub.name}${argsPart ? ` ${argsPart}` : ""}${hasOpts ? " [options]" : ""}`;
+      output += "```\n" + usage + "\n```\n\n";
 
-      doc += renderArgsTable(sub.arguments, "####", shownChoices);
-      doc += renderOptsTable(sub.options, "####", shownChoices);
+      output += renderArgsTable(sub, "####", shownChoices);
+      output += renderOptsTable(sub, "####", shownChoices);
     }
   } else {
     // Simple command
     // API cross-reference
-    doc += renderApiLink(info.name);
+    output += renderApiLink(doc.apiLink);
 
-    const argsPart = info.arguments.map(fmtArg).join(" ");
-    const hasOpts = info.options.length > 0;
-    const usage = `spm ${info.name}${argsPart ? ` ${argsPart}` : ""}${hasOpts ? " [options]" : ""}`;
+    const argsPart = doc.args.map((a) => fmtArg(a.name, a.required)).join(" ");
+    const hasOpts = doc.opts.length > 0;
+    const usage = `spm ${doc.name}${argsPart ? ` ${argsPart}` : ""}${hasOpts ? " [options]" : ""}`;
 
-    doc += "## Usage\n\n";
-    doc += "```\n" + usage + "\n```\n\n";
+    output += "## Usage\n\n";
+    output += "```\n" + usage + "\n```\n\n";
 
     // Input format note
-    if (hasInputArg(info.arguments)) {
-      doc += renderInputNote();
+    if (hasInputArg(doc.args.map((a) => a.name))) {
+      output += renderInputNote();
     }
 
-    doc += renderArgsTable(info.arguments, "##");
-    doc += renderOptsTable(info.options, "##");
+    output += renderArgsTable(doc, "##");
+    output += renderOptsTable(doc, "##");
   }
 
-  return doc;
+  return output;
 }
 
 // ---------------------------------------------------------------------------
@@ -261,15 +162,14 @@ ${esc(info.description)}
 const docsCliDir = join(projectRoot, "docs", "cli");
 mkdirSync(docsCliDir, { recursive: true });
 
-const commandFiles: Array<{ file: string; info: CommandInfo }> = [];
-const topLevelCmds = (program as Record<string, unknown>).commands as Command[] ?? [];
+const commandFiles: Array<{ file: string; name: string; description: string }> = [];
 
-for (const cmd of topLevelCmds) {
-  const info = extractCommandInfo(cmd);
-  const doc = generateCommandDoc(info);
-  const file = `${info.name}.md`;
-  commandFiles.push({ file, info });
-  writeFileSync(join(docsCliDir, file), doc);
+for (const cmd of commands) {
+  const doc = extractDocs(cmd);
+  const markdown = generateCommandDoc(doc);
+  const file = `${doc.name}.md`;
+  commandFiles.push({ file, name: doc.name, description: doc.description });
+  writeFileSync(join(docsCliDir, file), markdown);
 }
 
 // Index page
@@ -293,9 +193,8 @@ Both \`sysprom\` and \`spm\` are available as commands.
 |---------|-------------|
 `;
 
-for (const { file, info } of commandFiles) {
-  const name = file.replace(".md", "");
-  indexDoc += `| [${name}](${file}) | ${esc(info.description)} |\n`;
+for (const cf of commandFiles) {
+  indexDoc += `| [${cf.name}](${cf.file}) | ${esc(cf.description)} |\n`;
 }
 
 indexDoc += "\n";
