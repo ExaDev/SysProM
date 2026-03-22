@@ -15,7 +15,8 @@ interface Opts {
 
 export const initCommand: CommandDef = {
 	name: "init",
-	description: "Create a new SysProM document",
+	description: initDocumentOp.def.description,
+	apiLink: initDocumentOp.def.name,
 	args: z.object({
 		output: z.string().describe("Output file path"),
 	}),

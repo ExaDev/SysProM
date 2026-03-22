@@ -23,7 +23,8 @@ const listOpts = z.object({
 
 const listSubcommand: CommandDef<typeof listArgs, typeof listOpts> = {
 	name: "list",
-	description: "List tasks from change nodes",
+	description: taskListOp.def.description,
+	apiLink: taskListOp.def.name,
 	args: listArgs,
 	opts: listOpts,
 	action(args, opts) {
@@ -71,7 +72,8 @@ const addOpts = z.object({});
 
 const addSubcommand: CommandDef<typeof addArgs, typeof addOpts> = {
 	name: "add",
-	description: "Add a task to a change node",
+	description: addPlanTaskOp.def.description,
+	apiLink: addPlanTaskOp.def.name,
 	args: addArgs,
 	opts: addOpts,
 	action(args) {
@@ -104,6 +106,7 @@ const doneOpts = z.object({});
 
 const doneSubcommand: CommandDef<typeof doneArgs, typeof doneOpts> = {
 	name: "done",
+	// TODO: derive description from updatePlanTaskOp (conditional on done: true)
 	description: "Mark a task as done",
 	args: doneArgs,
 	opts: doneOpts,
@@ -142,6 +145,7 @@ const undoneOpts = z.object({});
 
 const undoneSubcommand: CommandDef<typeof undoneArgs, typeof undoneOpts> = {
 	name: "undone",
+	// TODO: derive description from updatePlanTaskOp (conditional on done: false)
 	description: "Mark a task as undone",
 	args: undoneArgs,
 	opts: undoneOpts,

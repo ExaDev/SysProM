@@ -25,7 +25,8 @@ const initOpts = z.object({
 
 const initSubcommand: CommandDef<typeof initArgs, typeof initOpts> = {
 	name: "init",
-	description: "Initialise a new SysProM plan document",
+	description: planInitOp.def.description,
+	apiLink: planInitOp.def.name,
 	args: initArgs,
 	opts: initOpts,
 	action(args, opts) {
@@ -61,7 +62,8 @@ const addTaskOpts = z.object({
 
 const addTaskSubcommand: CommandDef<typeof addTaskArgs, typeof addTaskOpts> = {
 	name: "add-task",
-	description: "Add a task to a plan",
+	description: planAddTaskOp.def.description,
+	apiLink: planAddTaskOp.def.name,
 	args: addTaskArgs,
 	opts: addTaskOpts,
 	action(args, opts) {
@@ -94,7 +96,8 @@ const statusOpts = z.object({
 
 const statusSubcommand: CommandDef<typeof statusArgs, typeof statusOpts> = {
 	name: "status",
-	description: "Show plan status summary",
+	description: planStatusOp.def.description,
+	apiLink: planStatusOp.def.name,
 	args: statusArgs,
 	opts: statusOpts,
 	action(args, opts) {
@@ -151,7 +154,8 @@ const progressOpts = z.object({
 const progressSubcommand: CommandDef<typeof progressArgs, typeof progressOpts> =
 	{
 		name: "progress",
-		description: "Show plan progress with per-phase breakdown",
+		description: planProgressOp.def.description,
+		apiLink: planProgressOp.def.name,
 		args: progressArgs,
 		opts: progressOpts,
 		action(args, opts) {
@@ -199,7 +203,8 @@ const gateOpts = z.object({
 
 const gateSubcommand: CommandDef<typeof gateArgs, typeof gateOpts> = {
 	name: "gate",
-	description: "Check gate criteria for phase entry",
+	description: planGateOp.def.description,
+	apiLink: planGateOp.def.name,
 	args: gateArgs,
 	opts: gateOpts,
 	action(args, opts) {
