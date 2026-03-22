@@ -669,3 +669,22 @@ Scope:
 - [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
 - [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
 
+### CH30 — Implement MCP Server
+
+Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.
+
+- Implements: D32
+
+#### Plan
+
+- [ ] Add @modelcontextprotocol/sdk as dependency
+- [ ] Create src/mcp/index.ts — MCP server wrapping programmatic API
+- [ ] Register MCP tools: validate, stats, query-nodes, query-node, query-relationships, trace
+- [ ] Register MCP tools: add-node, remove-node, update-node, add-relationship, remove-relationship
+- [ ] Register MCP tools: timeline, state-at, search
+- [ ] Add sysprom-mcp bin entry to package.json
+- [ ] Add .mcp.json to plugin referencing npx -y sysprom-mcp
+- [ ] Add tests for MCP server tool handlers
+- [ ] Update plugin README with MCP server documentation
+- [ ] Sync JSON to Markdown
+

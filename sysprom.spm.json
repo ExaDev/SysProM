@@ -3534,6 +3534,76 @@
 			],
 			"status": "proposed",
 			"type": "change"
+		},
+		{
+			"context": "The Claude Code plugin (D30) uses CLI skills that shell out to spm. An MCP server wrapping SysProM's programmatic API would provide structured tool access with typed inputs/outputs via Zod schemas, eliminating CLI text parsing. The server uses stdio transport, ships as an extra bin entry in the same npm package, and is referenced from the plugin's .mcp.json. Same npm-publication prerequisite as the CLI.",
+			"id": "D32",
+			"name": "Add MCP Server for Programmatic API Access",
+			"options": [
+				{
+					"description": "Add MCP server as extra bin entry (sysprom-mcp) in the existing sysprom package. Single source file at src/mcp/index.ts wrapping the programmatic API. Plugin .mcp.json references it via npx.",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Separate npm package (sysprom-mcp) in a packages/ monorepo workspace. Independent versioning but more infrastructure.",
+					"id": "OPT-B"
+				},
+				{
+					"description": "No MCP server. Plugin relies entirely on CLI skills shelling out to spm.",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "Same package avoids monorepo overhead. The MCP server is a thin wrapper around the existing programmatic API — one source file, one new dependency (@modelcontextprotocol/sdk), one extra bin entry. SysProM already has zod which satisfies the SDK peer dependency.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"description": "Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.",
+			"id": "CH30",
+			"name": "Implement MCP Server",
+			"plan": [
+				{
+					"description": "Add @modelcontextprotocol/sdk as dependency",
+					"done": false
+				},
+				{
+					"description": "Create src/mcp/index.ts — MCP server wrapping programmatic API",
+					"done": false
+				},
+				{
+					"description": "Register MCP tools: validate, stats, query-nodes, query-node, query-relationships, trace",
+					"done": false
+				},
+				{
+					"description": "Register MCP tools: add-node, remove-node, update-node, add-relationship, remove-relationship",
+					"done": false
+				},
+				{
+					"description": "Register MCP tools: timeline, state-at, search",
+					"done": false
+				},
+				{
+					"description": "Add sysprom-mcp bin entry to package.json",
+					"done": false
+				},
+				{
+					"description": "Add .mcp.json to plugin referencing npx -y sysprom-mcp",
+					"done": false
+				},
+				{
+					"description": "Add tests for MCP server tool handlers",
+					"done": false
+				},
+				{
+					"description": "Update plugin README with MCP server documentation",
+					"done": false
+				},
+				{
+					"description": "Sync JSON to Markdown",
+					"done": false
+				}
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4521,6 +4591,11 @@
 		{
 			"from": "CH29",
 			"to": "D31",
+			"type": "implements"
+		},
+		{
+			"from": "CH30",
+			"to": "D32",
 			"type": "implements"
 		}
 	]

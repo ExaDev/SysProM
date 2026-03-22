@@ -756,3 +756,16 @@ Chosen: OPT-A
 
 Rationale: A single sync command aligns with the principle of least surprise and reduces cognitive load. Explicit conflict-handling flags give users precise control when needed, while the default bidirectional behaviour covers the common case.
 
+### D32 — Add MCP Server for Programmatic API Access
+
+Context: The Claude Code plugin (D30) uses CLI skills that shell out to spm. An MCP server wrapping SysProM's programmatic API would provide structured tool access with typed inputs/outputs via Zod schemas, eliminating CLI text parsing. The server uses stdio transport, ships as an extra bin entry in the same npm package, and is referenced from the plugin's .mcp.json. Same npm-publication prerequisite as the CLI.
+
+Options:
+- OPT-A: Add MCP server as extra bin entry (sysprom-mcp) in the existing sysprom package. Single source file at src/mcp/index.ts wrapping the programmatic API. Plugin .mcp.json references it via npx.
+- OPT-B: Separate npm package (sysprom-mcp) in a packages/ monorepo workspace. Independent versioning but more infrastructure.
+- OPT-C: No MCP server. Plugin relies entirely on CLI skills shelling out to spm.
+
+Chosen: OPT-A
+
+Rationale: Same package avoids monorepo overhead. The MCP server is a thin wrapper around the existing programmatic API — one source file, one new dependency (@modelcontextprotocol/sdk), one extra bin entry. SysProM already has zod which satisfies the SDK peer dependency.
+
