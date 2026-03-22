@@ -1,3 +1,13 @@
+## [1.2.0](https://github.com/ExaDev/SysProM/compare/v1.1.0...v1.2.0) (2026-03-22)
+
+### Features
+
+* **cli:** support .sysprom.* paths and case-insensitive detection ([3fc01be](https://github.com/ExaDev/SysProM/commit/3fc01beb35bc4a65c127ec467e732a1c90015fd7))
+
+### Bug Fixes
+
+* **cli:** error on ambiguous case-variant document matches ([e12efca](https://github.com/ExaDev/SysProM/commit/e12efca0781efaa6e6f612780ee1801a41446682))
+
 ## [1.1.0](https://github.com/ExaDev/SysProM/compare/v1.0.7...v1.1.0) (2026-03-22)
 
 ### Features
