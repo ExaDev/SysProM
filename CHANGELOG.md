@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/ExaDev/SysProM/compare/v1.9.1...v1.9.2) (2026-03-22)
+
+### Bug Fixes
+
+* **plugin:** use correct npm package name for MCP server ([dfaa44d](https://github.com/ExaDev/SysProM/commit/dfaa44dd6d71b30ddcb57ade26ed6ae74fd72b6e))
+
 ## [1.9.1](https://github.com/ExaDev/SysProM/compare/v1.9.0...v1.9.1) (2026-03-22)
 
 ### Bug Fixes
