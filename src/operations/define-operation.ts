@@ -55,6 +55,17 @@ export type DefinedOperation<
  * @param def - The operation definition with name, schemas, and implementation.
  * @returns A callable function with `.def`, `.inputSchema`, and `.outputSchema` attached.
  * @throws {Error} If the input fails Zod validation.
+ * @example
+ * ```ts
+ * const myOp = defineOperation({
+ *   name: "greet",
+ *   description: "Say hello",
+ *   input: z.object({ name: z.string() }),
+ *   output: z.string(),
+ *   fn: ({ name }) => `Hello, ${name}!`,
+ * });
+ * myOp({ name: "world" }); // => "Hello, world!"
+ * ```
  */
 export function defineOperation<
 	TInput extends z.ZodType,

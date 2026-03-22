@@ -22,6 +22,11 @@ export interface FormatOptions {
  * @param value - The value to serialise.
  * @param options - Formatting options (e.g. indentation).
  * @returns The canonical JSON string.
+ * @example
+ * ```ts
+ * canonicalise({ b: 1, a: 2 }) // => '{"a":2,"b":1}'
+ * canonicalise({ b: 1 }, { indent: "\t" }) // => '{\n\t"b": 1\n}'
+ * ```
  */
 export function canonicalise(
 	value: unknown,

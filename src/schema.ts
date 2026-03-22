@@ -497,6 +497,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /**
  * Generate the JSON Schema representation of the SysProM document schema.
  * @returns The JSON Schema object with Draft 2020-12 metadata.
+ * @example
+ * ```ts
+ * const schema = toJSONSchema();
+ * writeFileSync("schema.json", JSON.stringify(schema, null, 2));
+ * ```
  */
 export function toJSONSchema(): Record<string, unknown> {
 	const generated = z.toJSONSchema(SysProMDocument, {
