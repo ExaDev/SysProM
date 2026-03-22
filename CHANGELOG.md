@@ -1,3 +1,20 @@
+## [1.9.0](https://github.com/ExaDev/SysProM/compare/v1.8.0...v1.9.0) (2026-03-22)
+
+### Features
+
+* **plugin:** add 28 SysProM skills for Claude Code ([f91c880](https://github.com/ExaDev/SysProM/commit/f91c880d5bc591aa0d9461eaab2f854c19c42a5a))
+* **plugin:** add marketplace.json for plugin distribution ([1d6efeb](https://github.com/ExaDev/SysProM/commit/1d6efebdbca65a02cd70c89b2296d4cd75f962e9))
+
+### Documentation
+
+* **plugin:** add marketplace install and skill reference to README ([316a139](https://github.com/ExaDev/SysProM/commit/316a139f697203ddcf80d23264c4b383808c0b55))
+* **sysprom:** mark CH28 as introduced and update plan ([364270d](https://github.com/ExaDev/SysProM/commit/364270dca70776115fbf93ee69ac24275ca8fb60))
+
+### Build System
+
+* **plugin:** add marketplace version bump script ([cb33e95](https://github.com/ExaDev/SysProM/commit/cb33e95b67c7bc95e7280364ffc0aed367af22ea))
+* **release:** bump marketplace version on release ([273323b](https://github.com/ExaDev/SysProM/commit/273323b95fe59d1b685be2cb2dfb8b1a326998bd))
+
 ## [1.8.0](https://github.com/ExaDev/SysProM/compare/v1.7.1...v1.8.0) (2026-03-22)
 
 ### Features
