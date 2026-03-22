@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/ExaDev/SysProM/compare/v1.0.3...v1.0.4) (2026-03-22)
+
+### Bug Fixes
+
+* **ci:** publish to npm natively with --provenance ([ac021ef](https://github.com/ExaDev/SysProM/commit/ac021efca28ee788c389e1945b78a868e4cfda73))
+
 ## [1.0.3](https://github.com/ExaDev/SysProM/compare/v1.0.2...v1.0.3) (2026-03-22)
 
 ### Bug Fixes
