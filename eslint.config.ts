@@ -92,9 +92,9 @@ export default defineConfig(
 	prettier,
 	{
 		files: ["src/**/*.ts"],
-		...jsdoc.configs["flat/recommended-tsdoc"],
+		...jsdoc.configs["flat/recommended-typescript"],
 		rules: {
-			...jsdoc.configs["flat/recommended-tsdoc"].rules,
+			...jsdoc.configs["flat/recommended-typescript"].rules,
 			"jsdoc/require-jsdoc": [
 				"warn",
 				{
@@ -112,11 +112,6 @@ export default defineConfig(
 				},
 			],
 			"jsdoc/require-description": "warn",
-			"jsdoc/require-param": "off",
-			"jsdoc/require-returns": "off",
-			"jsdoc/tag-lines": "off",
-			"jsdoc/multiline-blocks": "off",
-			"jsdoc/check-tag-names": "warn",
 		},
 	},
 	{
