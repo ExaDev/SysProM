@@ -1,3 +1,23 @@
+## [1.6.0](https://github.com/ExaDev/SysProM/compare/v1.5.0...v1.6.0) (2026-03-22)
+
+### Features
+
+* **cli:** register sync command in CLI ([92791b5](https://github.com/ExaDev/SysProM/commit/92791b51a349792e32d3bf857b43627501d07f93))
+* **sync:** implement bidirectional synchronisation command ([a6b24db](https://github.com/ExaDev/SysProM/commit/a6b24db221cf2fcdab497e1173995d74fa039c08))
+
+### Bug Fixes
+
+* **md2json:** preserve multi-line text arrays and $schema in round-trip ([3c20de8](https://github.com/ExaDev/SysProM/commit/3c20de8d0fe607290a538069b7785f2e8244e77f))
+* restore sysprom document integrity and mark CH29 tasks complete ([901ecf1](https://github.com/ExaDev/SysProM/commit/901ecf111aaef7a5b30dfd777e8f31a3da0b7ae6))
+
+### Documentation
+
+* **sysprom:** sync CH29 status to introduced ([32a6ede](https://github.com/ExaDev/SysProM/commit/32a6edeedadda75e85c31f0f8f09e2315531f5cd))
+
+### Miscellaneous Chores
+
+* **sysproM:** mark CH29 complete and sync markdown ([06722c3](https://github.com/ExaDev/SysProM/commit/06722c39b8b2a7de4eb019649a70fb54f7bb7905))
+
 ## [1.5.0](https://github.com/ExaDev/SysProM/compare/v1.4.0...v1.5.0) (2026-03-22)
 
 ### Features
