@@ -627,23 +627,15 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 
 - Implements: D30
 
+- Status: introduced
+
 #### Plan
 
-- [ ] Create .claude-plugin/plugin.json manifest
-- [ ] Create .claude-plugin/marketplace.json for GitHub distribution
-- [ ] Create sysprom-workflow skill — core workflow guidance for using SysProM during development
-- [ ] Create decision-recording skill — how to structure decisions with context, options, rationale
-- [ ] Create change-tracking skill — lifecycle management for changes (proposed to complete)
-- [ ] Create /spm-decide command — interactive decision recording
-- [ ] Create /spm-change command — record a change with scope and operations
-- [ ] Create /spm-status command — show project state and timeline
-- [ ] Create /spm-trace command — trace dependencies from a node
-- [ ] Create /spm-sync command — sync JSON and Markdown representations
-- [ ] Create provenance-tracker agent — auto-tracks decisions during dev work
-- [ ] Create Stop hook — remind to record decisions at session end
-- [ ] Add CLI fallback pattern — try spm, then npx -y sysprom, then instruct user to install
-- [ ] Add README.md for plugin with installation and usage instructions
-- [ ] Sync JSON to Markdown
+- [x] Create ./.claude/plugin.json manifest
+- [x] Create 28 comprehensive skills covering all SysProM operations
+- [x] Create ./.claude/marketplace.json for GitHub distribution
+- [x] Update CLAUDE.md with plugin documentation
+- [x] Mark CH28 as introduced in SysProM document
 
 ### CH29 — Implement Bidirectional Sync Command
 
@@ -675,7 +667,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: D32
 
-- Status: introduced
+- Status: complete
 
 #### Plan
 

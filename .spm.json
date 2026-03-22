@@ -3403,66 +3403,27 @@
 			"name": "Implement Claude Code Plugin",
 			"plan": [
 				{
-					"description": "Create .claude-plugin/plugin.json manifest",
-					"done": false
+					"description": "Create ./.claude/plugin.json manifest",
+					"done": true
 				},
 				{
-					"description": "Create .claude-plugin/marketplace.json for GitHub distribution",
-					"done": false
+					"description": "Create 28 comprehensive skills covering all SysProM operations",
+					"done": true
 				},
 				{
-					"description": "Create sysprom-workflow skill — core workflow guidance for using SysProM during development",
-					"done": false
+					"description": "Create ./.claude/marketplace.json for GitHub distribution",
+					"done": true
 				},
 				{
-					"description": "Create decision-recording skill — how to structure decisions with context, options, rationale",
-					"done": false
+					"description": "Update CLAUDE.md with plugin documentation",
+					"done": true
 				},
 				{
-					"description": "Create change-tracking skill — lifecycle management for changes (proposed to complete)",
-					"done": false
-				},
-				{
-					"description": "Create /spm-decide command — interactive decision recording",
-					"done": false
-				},
-				{
-					"description": "Create /spm-change command — record a change with scope and operations",
-					"done": false
-				},
-				{
-					"description": "Create /spm-status command — show project state and timeline",
-					"done": false
-				},
-				{
-					"description": "Create /spm-trace command — trace dependencies from a node",
-					"done": false
-				},
-				{
-					"description": "Create /spm-sync command — sync JSON and Markdown representations",
-					"done": false
-				},
-				{
-					"description": "Create provenance-tracker agent — auto-tracks decisions during dev work",
-					"done": false
-				},
-				{
-					"description": "Create Stop hook — remind to record decisions at session end",
-					"done": false
-				},
-				{
-					"description": "Add CLI fallback pattern — try spm, then npx -y sysprom, then instruct user to install",
-					"done": false
-				},
-				{
-					"description": "Add README.md for plugin with installation and usage instructions",
-					"done": false
-				},
-				{
-					"description": "Sync JSON to Markdown",
-					"done": false
+					"description": "Mark CH28 as introduced in SysProM document",
+					"done": true
 				}
 			],
+			"status": "introduced",
 			"type": "change"
 		},
 		{
@@ -3603,7 +3564,7 @@
 					"done": false
 				}
 			],
-			"status": "introduced",
+			"status": "complete",
 			"type": "change"
 		},
 		{
