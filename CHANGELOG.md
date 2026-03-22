@@ -1,3 +1,15 @@
+## [1.7.0](https://github.com/ExaDev/SysProM/compare/v1.6.0...v1.7.0) (2026-03-22)
+
+### Features
+
+* **mcp:** implement Model Context Protocol server wrapping SysProM ([a372acb](https://github.com/ExaDev/SysProM/commit/a372acbe4729b21055f113acc64bf342f2a67a8d))
+
+### Miscellaneous Chores
+
+* **deps:** update get-tsconfig to 4.13.7 ([4fac0fe](https://github.com/ExaDev/SysProM/commit/4fac0feaef0d76723b4866f0f5145553f0d04d4c))
+* **eslint:** disallow all eslint directive comments ([fd52b1d](https://github.com/ExaDev/SysProM/commit/fd52b1dc5869d0b2901ca9833588b73461e33bd6))
+* **eslint:** upgrade to @eslint-community/eslint-plugin-eslint-comments v4.7.1 ([43d2ac8](https://github.com/ExaDev/SysProM/commit/43d2ac8c7a70b9fb8162cb540cf9e4919bd794d8))
+
 ## [1.6.0](https://github.com/ExaDev/SysProM/compare/v1.5.0...v1.6.0) (2026-03-22)
 
 ### Features
