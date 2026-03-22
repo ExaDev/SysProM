@@ -62,7 +62,15 @@ function parseText(raw: string): Text {
 
 type FrontMatter = Record<string, unknown>;
 
-/** Separate $schema from front matter so it becomes a top-level document key. */
+/**
+ * Separate $schema from front matter so it becomes a top-level document key.
+ * @param front - The front matter object
+ * @returns An object with extracted schema and remaining metadata
+ * @example
+ * ```ts
+ * const { schema, metadata } = extractSchema({ $schema: "...", foo: "bar" });
+ * ```
+ */
 function extractSchema(front: FrontMatter): {
 	schema: string | undefined;
 	metadata: FrontMatter;

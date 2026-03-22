@@ -1,7 +1,6 @@
 import { readFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { markdownToJson } from "./md-to-json.js";
-import { jsonToMarkdownSingle } from "./json-to-md.js";
 import { SysProMDocument } from "./schema.js";
 
 /**
@@ -19,32 +18,42 @@ export interface DetectionResult {
 /**
  * Compute a normalised hash of a document for comparison.
  * Uses canonical JSON representation.
- * @param doc The SysProM document
+ * @param doc - The SysProM document
  * @returns SHA256 hash of the canonicalised document
+ * @example
+ * ```ts
+ * const hash = normaliseHash({ nodes: [], relationships: [] });
+ * ```
  */
 function normaliseHash(doc: unknown): string {
-	const sorted = JSON.stringify(doc, Object.keys(doc as Record<string, unknown>).sort());
+	const keys = doc && typeof doc === "object" ? Object.keys(doc).sort() : [];
+	const sorted = JSON.stringify(doc, keys);
 	return createHash("sha256").update(sorted).digest("hex");
 }
 
 /**
  * Detect whether JSON and/or Markdown have changed.
  * Strategy:
- * 1. Parse both JSON and Markdown to document objects
- * 2. If documents are identical → no change
- * 3. If documents differ:
- *    - Use file modification times to determine which was edited more recently
- *    - The newer file is considered the "changed" one
- *    - If modification times are very close (< 100ms), treat as conflict
- *
- * @param jsonPath Path to JSON file
- * @param mdPath Path to Markdown file (single or multi-doc)
+ * 1. Parse both JSON and Markdown to document objects.
+ * 2. If documents are identical, no change.
+ * 3. If documents differ, use file modification times to determine which was
+ *    edited more recently. The newer file is considered the "changed" one.
+ *    If modification times are very close (< 100ms), treat as conflict.
+ * @param jsonPath - Path to JSON file
+ * @param mdPath - Path to Markdown file (single or multi-doc)
  * @returns Detection result with jsonChanged, mdChanged, and conflict flags
+ * @example
+ * ```ts
+ * const result = detectChanges("doc.spm.json", "doc.spm.md");
+ * if (result.conflict) throw new Error("Both files changed");
+ * ```
  */
-export function detectChanges(jsonPath: string, mdPath: string): DetectionResult {
+export function detectChanges(
+	jsonPath: string,
+	mdPath: string,
+): DetectionResult {
 	// Read files
 	const jsonContent = readFileSync(jsonPath, "utf8");
-	const mdContent = readFileSync(mdPath, "utf8");
 
 	// Parse JSON
 	const jsonDoc: unknown = JSON.parse(jsonContent);

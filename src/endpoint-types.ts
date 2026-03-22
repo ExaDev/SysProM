@@ -317,10 +317,14 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 /**
  * Check if a relationship type is valid for the given endpoint node types.
- * @param relType The relationship type
- * @param fromType The source node type
- * @param toType The target node type
+ * @param relType - The relationship type
+ * @param fromType - The source node type
+ * @param toType - The target node type
  * @returns true if the endpoint types are valid for this relationship
+ * @example
+ * ```ts
+ * isValidEndpointPair("refines", "intent", "concept") // true
+ * ```
  */
 export function isValidEndpointPair(
 	relType: RelationshipType,
@@ -328,11 +332,5 @@ export function isValidEndpointPair(
 	toType: NodeType,
 ): boolean {
 	const endpoints = RELATIONSHIP_ENDPOINT_TYPES[relType];
-	if (!endpoints) {
-		// Unknown relationship type — should be caught by schema validation
-		return false;
-	}
-	return (
-		endpoints.from.includes(fromType) && endpoints.to.includes(toType)
-	);
+	return endpoints.from.includes(fromType) && endpoints.to.includes(toType);
 }

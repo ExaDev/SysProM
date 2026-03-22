@@ -5,7 +5,7 @@ import { strict as assert } from "node:assert";
 // For now, we'll define what the exported functions should do
 
 describe("MCP Server Tools", () => {
-	it("defines tools list with validate, stats, query-nodes, query-node", async () => {
+	it("defines tools list with validate, stats, query-nodes, query-node", () => {
 		// This test will verify that the MCP server exports a tools array
 		// with the expected tools defined
 

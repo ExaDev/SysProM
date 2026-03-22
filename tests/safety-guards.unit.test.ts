@@ -95,14 +95,13 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 					{ id: "S1", type: "stage", name: "Stage" },
 					{ id: "D1", type: "decision", name: "Decision" },
 				],
-				relationships: [
-					{ from: "S1", to: "D1", type: "refines" },
-				],
+				relationships: [{ from: "S1", to: "D1", type: "refines" }],
 			};
 			const result = validateOp({ doc });
-			const hasTypeIssue = result.issues.some((issue) =>
-				issue.toLowerCase().includes("endpoint") ||
-				issue.toLowerCase().includes("type"),
+			const hasTypeIssue = result.issues.some(
+				(issue) =>
+					issue.toLowerCase().includes("endpoint") ||
+					issue.toLowerCase().includes("type"),
 			);
 			assert.ok(hasTypeIssue, "validate should flag invalid endpoint types");
 		});
@@ -115,15 +114,16 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 					{ id: "I1", type: "intent", name: "Intent" },
 					{ id: "CN1", type: "concept", name: "Concept", status: "retired" },
 				],
-				relationships: [
-					{ from: "I1", to: "CN1", type: "depends_on" },
-				],
+				relationships: [{ from: "I1", to: "CN1", type: "depends_on" }],
 			};
 			const result = validateOp({ doc });
 			const hasRetirementIssue = result.issues.some((issue) =>
 				issue.toLowerCase().includes("retired"),
 			);
-			assert.ok(hasRetirementIssue, "validate should flag operational rels to retired nodes");
+			assert.ok(
+				hasRetirementIssue,
+				"validate should flag operational rels to retired nodes",
+			);
 		});
 
 		it("allows supersedes relationships to retired nodes", () => {
@@ -132,15 +132,17 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 					{ id: "I1", type: "intent", name: "Intent" },
 					{ id: "CN1", type: "concept", name: "Concept", status: "retired" },
 				],
-				relationships: [
-					{ from: "I1", to: "CN1", type: "supersedes" },
-				],
+				relationships: [{ from: "I1", to: "CN1", type: "supersedes" }],
 			};
 			const result = validateOp({ doc });
 			const hasRetirementIssue = result.issues.some((issue) =>
 				issue.toLowerCase().includes("retired"),
 			);
-			assert.equal(hasRetirementIssue, false, "supersedes to retired nodes should be allowed");
+			assert.equal(
+				hasRetirementIssue,
+				false,
+				"supersedes to retired nodes should be allowed",
+			);
 		});
 	});
 });

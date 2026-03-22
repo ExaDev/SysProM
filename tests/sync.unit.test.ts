@@ -1,6 +1,12 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import { strict as assert } from "node:assert";
-import { mkdtempSync, rmSync, readFileSync, writeFileSync, utimesSync } from "node:fs";
+import {
+	mkdtempSync,
+	rmSync,
+	readFileSync,
+	writeFileSync,
+	utimesSync,
+} from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { detectChanges } from "../src/sync.js";
@@ -139,7 +145,6 @@ describe("detectChanges — conflict detection", () => {
 		assert.equal(result.mdChanged, false);
 		assert.equal(result.conflict, false);
 	});
-
 
 	it("detects mutual changes (conflict)", () => {
 		const doc = createTestDoc();

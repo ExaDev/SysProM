@@ -17,7 +17,7 @@ describe("CH32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 			const result = removeNodeOp({ doc, id: "I1" });
 			const retired = result.doc.nodes.find((n) => n.id === "I1");
 			assert.ok(retired, "node should exist after soft delete");
-			assert.equal(retired!.status, "retired", "node should be marked retired");
+			assert.equal(retired.status, "retired", "node should be marked retired");
 		});
 
 		it("preserves relationships in soft delete", () => {
@@ -241,7 +241,7 @@ describe("CH32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 				to: "S2",
 				repair: true,
 			});
-			const rels = (result.doc.relationships ?? []) as Relationship[];
+			const rels = result.doc.relationships ?? [];
 			// Should have S1→S3 added and S1→S2 removed
 			assert.equal(rels.length, 2);
 			const s1ToS3 = rels.find((r) => r.from === "S1" && r.to === "S3");
@@ -269,7 +269,7 @@ describe("CH32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 				to: "S2",
 				repair: true,
 			});
-			const rels = (result.doc.relationships ?? []) as Relationship[];
+			const rels = result.doc.relationships ?? [];
 			// S2→S3 should still exist
 			const s2ToS3 = rels.find((r) => r.from === "S2" && r.to === "S3");
 			assert.ok(s2ToS3, "S2→S3 should remain");
@@ -308,8 +308,10 @@ describe("CH32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 				repair: true,
 			});
 			assert.ok(
-				result.warnings.some((w) =>
-					w.toLowerCase().includes("repair") || w.toLowerCase().includes("chain"),
+				result.warnings.some(
+					(w) =>
+						w.toLowerCase().includes("repair") ||
+						w.toLowerCase().includes("chain"),
 				),
 				"should warn about chain repairs",
 			);

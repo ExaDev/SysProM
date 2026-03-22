@@ -106,7 +106,11 @@ describe("CH32: Safe Graph Removal", () => {
 			};
 			const result = removeNodeOp({ doc, id: "I1" });
 			const change = result.doc.nodes.find((n) => n.id === "C1");
-			assert.equal(change?.operations?.length, 1, "should remove one operation");
+			assert.equal(
+				change?.operations?.length,
+				1,
+				"should remove one operation",
+			);
 			assert.equal(change?.operations?.[0].target, "I2");
 		});
 
@@ -207,7 +211,11 @@ describe("CH32: Safe Graph Removal", () => {
 			};
 			const result = removeNodeOp({ doc, id: "I2" });
 			// Relationships should be preserved in soft delete
-			assert.equal(result.doc.relationships?.length, 2, "relationships should be preserved");
+			assert.equal(
+				result.doc.relationships?.length,
+				2,
+				"relationships should be preserved",
+			);
 		});
 	});
 
@@ -268,7 +276,11 @@ describe("CH32: Safe Graph Removal", () => {
 				"external references should be cleaned",
 			);
 
-			assert.equal(result.doc.relationships?.length ?? 0, 1, "relationships preserved in soft delete");
+			assert.equal(
+				result.doc.relationships?.length ?? 0,
+				1,
+				"relationships preserved in soft delete",
+			);
 		});
 
 		it("preserves other scopes while cleaning up reference", () => {

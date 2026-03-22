@@ -450,9 +450,7 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [
-				{ id: "I1", type: "intent", name: "Test", description: "Test." },
-			],
+			nodes: [{ id: "I1", type: "intent", name: "Test", description: "Test." }],
 		};
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
@@ -463,9 +461,7 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [
-				{ id: "I1", type: "intent", name: "Test", description: "Test." },
-			],
+			nodes: [{ id: "I1", type: "intent", name: "Test", description: "Test." }],
 		};
 		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-schema-"));
 		try {

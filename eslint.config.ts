@@ -166,9 +166,17 @@ export default defineConfig(
 				{ assertionStyle: "as", objectLiteralTypeAssertions: "allow" },
 			],
 			"@typescript-eslint/no-unused-vars": "off",
+			"@typescript-eslint/no-floating-promises": "off",
 		},
 	},
 	{
-		ignores: ["dist/", "node_modules/", "docs/"],
+		ignores: [
+			"dist/",
+			"node_modules/",
+			"docs/",
+			"commitlint.config.ts",
+			"release.config.mjs",
+			"site/assets/*.js",
+		],
 	},
 );
