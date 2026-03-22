@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             turbo-quality-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-quality-${{ runner.os }}-
-      - run: turbo run _typecheck _test
+      - run: npx turbo run _typecheck _test
 
   docs:
     name: Docs
@@ -51,7 +51,7 @@ jobs:
           restore-keys: |
             turbo-docs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-docs-${{ runner.os }}-
-      - run: turbo run _docs:cli _docs:api:html
+      - run: npx turbo run _docs:cli _docs:api:html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site/
@@ -94,7 +94,7 @@ jobs:
           restore-keys: |
             turbo-release-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-release-${{ runner.os }}-
-      - run: turbo run _compile _schema
+      - run: npx turbo run _compile _schema
       - name: Record pre-release version
         id: pre
         run: echo "version=$(npm pkg get version | tr -d '\"')" >> "$GITHUB_OUTPUT"
