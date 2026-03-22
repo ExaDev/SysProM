@@ -135,7 +135,7 @@ export default defineConfig(
 			],
 			"barrel/no-re-exports": "error",
 			"barrel/index-re-exports-only": "error",
-			"eslint-comments/no-unlimited-disable": "error",
+			"eslint-comments/no-use": "error",
 		},
 	},
 	{
