@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "sysprom",
+  "description": "SysProM (System Provenance Model) — record decisions, changes, invariants, and architecture traceability",
+  "owner": {
+    "name": "ExaDev",
+    "email": "support@exadev.io"
+  },
+  "plugins": [
+    {
+      "name": "sysprom",
+      "description": "SysProM (System Provenance Model) — create, query, and manage provenance graphs",
+      "version": "1.8.0",
+      "source": ".",
+      "category": "productivity",
+      "homepage": "https://github.com/ExaDev/SysProM",
+      "skills": "./.claude/skills/",
+      "strict": false
+    }
+  ]
+}
