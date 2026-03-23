@@ -72,6 +72,17 @@ export function resolveInput(input?: string, cwd?: string): string {
 			name.endsWith(".sysprom");
 		const found = entries.filter((e) => e === name);
 		if (found.length === 1) {
+			// Before returning, check for case-variant collisions on case-sensitive
+			// filesystems (e.g. both .spm.json and .SPM.json exist).
+			const nameLower = name.toLowerCase();
+			const caseVariants = entries.filter(
+				(e) => e !== name && e.toLowerCase() === nameLower,
+			);
+			if (caseVariants.length > 0) {
+				throw new Error(
+					`Multiple SysProM documents found: ${[name, ...caseVariants].join(", ")}. Specify one explicitly.`,
+				);
+			}
 			const candidate = join(dir, found[0]);
 			if (isDirSuffix) {
 				try {
