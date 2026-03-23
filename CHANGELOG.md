@@ -1,3 +1,9 @@
+## [1.13.1](https://github.com/ExaDev/SysProM/compare/v1.13.0...v1.13.1) (2026-03-23)
+
+### Bug Fixes
+
+* **cli:** resolve package.json at runtime to fix ERR_MODULE_NOT_FOUND ([d9e3582](https://github.com/ExaDev/SysProM/commit/d9e358297c8d590b30b7783076f591ee7a27338d))
+
 ## [1.13.0](https://github.com/ExaDev/SysProM/compare/v1.12.0...v1.13.0) (2026-03-23)
 
 ### Features
