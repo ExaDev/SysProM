@@ -3979,6 +3979,29 @@
 				}
 			],
 			"type": "change"
+		},
+		{
+			"context": "MCP tools returned success but did not write to disk",
+			"id": "DEC39",
+			"name": "Fix MCP write operations not persisting",
+			"options": [
+				{
+					"description": "Add saveDocument calls",
+					"id": "fix"
+				}
+			],
+			"rationale": "Each write operation was missing the saveDocument call after modifying the document",
+			"selected": "fix",
+			"type": "decision"
+		},
+		{
+			"description": "Add saveDocument calls to all MCP write operations",
+			"id": "CHG37",
+			"name": "Fix MCP persistence bug",
+			"scope": [
+				"src/mcp/server.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5036,6 +5059,11 @@
 		{
 			"from": "CHG36",
 			"to": "DEC38",
+			"type": "implements"
+		},
+		{
+			"from": "CHG37",
+			"to": "DEC39",
 			"type": "implements"
 		}
 	]

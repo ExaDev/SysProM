@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod";
-import { loadDocument } from "../io.js";
+import { loadDocument, saveDocument } from "../io.js";
 import { NodeType, RelationshipType } from "../schema.js";
 import {
 	validateOp,
@@ -196,16 +196,16 @@ server.registerTool(
 		}),
 	},
 	({ path, type, id, name, description }) => {
-		const { doc } = loadDocument(path);
+		const loaded = loadDocument(path);
 		const nodeType = NodeType.safeParse(type);
 		if (!nodeType.success) {
 			throw new Error(
 				`Invalid node type: "${type}". Valid types: ${NodeType.options.join(", ")}`,
 			);
 		}
-		const nodeId = id ?? nextIdOp({ doc, type: nodeType.data });
+		const nodeId = id ?? nextIdOp({ doc: loaded.doc, type: nodeType.data });
 		const updated = addNodeOp({
-			doc,
+			doc: loaded.doc,
 			node: {
 				id: nodeId,
 				type: nodeType.data,
@@ -213,6 +213,7 @@ server.registerTool(
 				...(description && { description }),
 			},
 		});
+		saveDocument(updated, loaded.format, loaded.path);
 
 		return {
 			content: [
@@ -244,8 +245,9 @@ server.registerTool(
 		}),
 	},
 	({ path, id }) => {
-		const { doc } = loadDocument(path);
-		const result = removeNodeOp({ doc, id });
+		const loaded = loadDocument(path);
+		const result = removeNodeOp({ doc: loaded.doc, id });
+		saveDocument(result.doc, loaded.format, loaded.path);
 		return {
 			content: [
 				{
@@ -277,7 +279,7 @@ server.registerTool(
 		}),
 	},
 	({ path, id, fields }) => {
-		const { doc } = loadDocument(path);
+		const loaded = loadDocument(path);
 		// Validate fields are valid node property updates
 		const validFields = Object.entries(fields).reduce<Record<string, unknown>>(
 			(acc, [key, value]) => {
@@ -308,10 +310,11 @@ server.registerTool(
 			{},
 		);
 		const updated = updateNodeOp({
-			doc,
+			doc: loaded.doc,
 			id,
 			fields: validFields,
 		});
+		saveDocument(updated, loaded.format, loaded.path);
 		const node = updated.nodes.find((n) => n.id === id);
 		return {
 			content: [
@@ -337,7 +340,7 @@ server.registerTool(
 		}),
 	},
 	({ path, from, to, type }) => {
-		const { doc } = loadDocument(path);
+		const loaded = loadDocument(path);
 		const relType = RelationshipType.safeParse(type);
 		if (!relType.success) {
 			throw new Error(
@@ -345,13 +348,14 @@ server.registerTool(
 			);
 		}
 		const updated = addRelationshipOp({
-			doc,
+			doc: loaded.doc,
 			rel: {
 				from,
 				to,
 				type: relType.data,
 			},
 		});
+		saveDocument(updated, loaded.format, loaded.path);
 		return {
 			content: [
 				{
@@ -383,7 +387,7 @@ server.registerTool(
 		}),
 	},
 	({ path, from, to, type }) => {
-		const { doc } = loadDocument(path);
+		const loaded = loadDocument(path);
 		const relType = RelationshipType.safeParse(type);
 		if (!relType.success) {
 			throw new Error(
@@ -391,11 +395,12 @@ server.registerTool(
 			);
 		}
 		const result = removeRelationshipOp({
-			doc,
+			doc: loaded.doc,
 			from,
 			to,
 			type: relType.data,
 		});
+		saveDocument(result.doc, loaded.format, loaded.path);
 		return {
 			content: [
 				{
