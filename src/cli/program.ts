@@ -1,7 +1,37 @@
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Command } from "commander";
-import packageJson from "../../package.json" with { type: "json" };
 import { buildCommander } from "./define-command.js";
 import type { CommandDef } from "./define-command.js";
+
+let cachedVersion: string | undefined;
+
+function getVersion(): string {
+	if (cachedVersion === undefined) {
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		// Works from both src/cli/ (../../) and dist/src/cli/ (../../../)
+		const candidates = [
+			resolve(__dirname, "../../package.json"),
+			resolve(__dirname, "../../../package.json"),
+		];
+		const pkgPath = candidates.find(
+			(p) => existsSync(p) && !p.includes("/dist/"),
+		);
+		if (!pkgPath) throw new Error("Could not find sysprom package.json");
+		const pkg: unknown = JSON.parse(readFileSync(pkgPath, "utf8"));
+		if (
+			typeof pkg !== "object" ||
+			pkg === null ||
+			!("version" in pkg) ||
+			typeof pkg.version !== "string"
+		) {
+			throw new Error("Invalid package.json: missing version field");
+		}
+		cachedVersion = pkg.version;
+	}
+	return cachedVersion;
+}
 import { validateCommand } from "./commands/validate.js";
 import { statsCommand } from "./commands/stats.js";
 import { json2mdCommand } from "./commands/json2md.js";
@@ -27,7 +57,11 @@ program
 	.description(
 		"System Provenance Model CLI — record where every part of a system came from",
 	)
-	.version(packageJson.version)
+	.option("-V, --version", "output the version number")
+	.on("option:version", () => {
+		console.log(getVersion());
+		process.exit(0);
+	})
 	.showHelpAfterError(true);
 
 export const commands: CommandDef[] = [
