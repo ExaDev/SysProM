@@ -7,7 +7,7 @@ import { execSync } from "node:child_process";
 
 // Helper to run CLI via tsx (works from source)
 function runInit(pathArg: string, format: string): { stdout: string; stderr: string } {
-	const projectRoot = "/Users/joe/Downloads/spec";
+	const projectRoot = resolve(import.meta.dirname, "..");
 	const cmd = `npx tsx ${projectRoot}/src/cli/index.ts init --path "${pathArg}" --format ${format}`;
 	try {
 		const stdout = execSync(cmd, { cwd: projectRoot, encoding: "utf-8", stdio: "pipe" });
