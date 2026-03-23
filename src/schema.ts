@@ -164,6 +164,7 @@ const relationshipTypeDef = labelledEnum({
 	selects: "Selects",
 	requires: "Requires",
 	disables: "Disables",
+	influence: "Influence",
 });
 
 /** Zod schema for the set of valid relationship types (e.g. `"refines"`, `"depends_on"`, `"affects"`). */
@@ -177,6 +178,26 @@ export const RELATIONSHIP_TYPE_LABELS = relationshipTypeDef.labels;
 
 /** Reverse map from human-readable label to relationship type key (e.g. `"Refines"` → `"refines"`). */
 export const RELATIONSHIP_LABEL_TO_TYPE = relationshipTypeDef.reverse;
+
+// ---------------------------------------------------------------------------
+// Impact polarity — annotation on relationships for ArchiMate/SysML compatibility
+// ---------------------------------------------------------------------------
+
+const impactPolarityDef = labelledEnum({
+	positive: "Positive",
+	negative: "Negative",
+	neutral: "Neutral",
+	uncertain: "Uncertain",
+});
+
+/** Zod schema for impact polarity (e.g. `"positive"`, `"negative"`, `"neutral"`, `"uncertain"`). */
+export const ImpactPolarity = impactPolarityDef.schema;
+
+/** Impact polarity annotation on relationships — indicates the valence of the impact. */
+export type ImpactPolarity = z.infer<typeof ImpactPolarity>;
+
+/** Map from impact polarity key to human-readable label. */
+export const IMPACT_POLARITY_LABELS = impactPolarityDef.labels;
 
 // ---------------------------------------------------------------------------
 // External reference roles
@@ -307,6 +328,13 @@ export const Relationship = defineSchema(
 			to: z.string().describe("Target node ID."),
 			type: RelationshipType,
 			description: Text.optional(),
+			polarity: ImpactPolarity.optional().describe("Impact polarity — positive, negative, neutral, or uncertain."),
+			strength: z
+				.number()
+				.min(0)
+				.max(1)
+				.optional()
+				.describe("Relationship strength as a number between 0 and 1."),
 		})
 		.describe("A typed, directed connection between two nodes."),
 );
