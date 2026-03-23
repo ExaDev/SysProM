@@ -3899,6 +3899,20 @@
 			"type": "invariant"
 		},
 		{
+			"context": "SysProM supports JSON and Markdown serialisation but users request YAML for human-readable, diff-friendly documents and multi-file JSON for large projects. Adding these formats broadens adoption without changing the core model.",
+			"id": "D37",
+			"name": "Add YAML and multi-file JSON serialisation formats",
+			"options": [
+				{
+					"description": "YAML single-file and multi-document plus multi-file JSON with new CLI commands",
+					"id": "OPT-A"
+				}
+			],
+			"rationale": "YAML is widely expected for configuration-style documents; multi-file JSON mirrors the existing multi-file Markdown pattern for consistency",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
 			"description": "Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.",
 			"id": "CH35",
 			"name": "Add YAML Support and Multi-File JSON Formats",
@@ -4950,6 +4964,11 @@
 		{
 			"from": "CH34",
 			"to": "D36",
+			"type": "implements"
+		},
+		{
+			"from": "CH35",
+			"to": "D37",
 			"type": "implements"
 		}
 	]
