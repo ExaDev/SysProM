@@ -244,6 +244,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"element",
 			"realisation",
 			"stage",
+			"gate",
 			"change",
 			"policy",
 		],

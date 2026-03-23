@@ -21,6 +21,18 @@ const optsSchema = mutationOpts.extend({
 		.string()
 		.optional()
 		.describe("Decision ID this change implements (required for change nodes)"),
+	element: z
+		.string()
+		.optional()
+		.describe(
+			"Element ID this realisation implements (required for realisation nodes)",
+		),
+	governedBy: z
+		.string()
+		.optional()
+		.describe(
+			"Invariant or policy ID this gate enforces (required for gate nodes)",
+		),
 	option: z
 		.array(z.string())
 		.optional()
@@ -100,7 +112,13 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 		}
 
 		try {
-			const newDoc = addNodeOp({ doc, node, decisionId: opts.decision });
+			const newDoc = addNodeOp({
+				doc,
+				node,
+				decisionId: opts.decision,
+				elementId: opts.element,
+				governedById: opts.governedBy,
+			});
 
 			persistDoc(newDoc, loaded, opts);
 
