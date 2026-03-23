@@ -9,10 +9,11 @@ user-invocable: true
 
 Convert a SysProM document from JSON format (`.spm.json`) to human-readable Markdown format (`.spm/` folder or `.spm.md` single file).
 
-## Arguments
+## Options
 
-- `[jsonPath]` — Path to `.spm.json` file
-- `[outputPath]` — Output directory or file path (optional)
+- `--input <value>` — Path to `.spm.json` file
+- `--output <value>` — Output directory or file path
+- `--single-file` — Force single-file output format
 
 ## Steps
 
@@ -22,12 +23,12 @@ Convert a SysProM document from JSON format (`.spm.json`) to human-readable Mark
 
 2. Convert to multi-file Markdown (in folder):
    ```bash
-   spm json2md <arg1> .spm
+   spm json2md --input .spm.json --output .spm
    ```
 
 3. Or convert to single-file Markdown:
    ```bash
-   spm json2md <arg1> .spm.md --single-file
+   spm json2md --input .spm.json --output .spm.md --single-file
    ```
 
 ## Output Structure

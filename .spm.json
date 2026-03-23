@@ -3917,6 +3917,68 @@
 			"id": "CHG35",
 			"name": "Add YAML Support and Multi-File JSON Formats",
 			"type": "change"
+		},
+		{
+			"context": "CLI commands for file I/O (init, json2md, md2json, sync, speckit, plan init) use positional arguments for paths. Flags are more consistent with other commands that already use --path, and allow auto-detection when omitted.",
+			"id": "DEC38",
+			"name": "Convert file-path positional args to flags",
+			"options": [
+				{
+					"description": "Convert all positional args to flags",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Keep positional args as-is",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Entity IDs and search terms remain positional (natural operands). File paths become flags for consistency with --path used elsewhere, and to enable auto-detection when omitted.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"description": "Move path/input/output positional arguments to --flags in init, json2md, md2json, sync, speckit (import/export/sync/diff), and plan init commands.",
+			"id": "CHG36",
+			"name": "Convert file-path positional args to flags",
+			"plan": [
+				{
+					"description": "Convert init command: path positional → --path flag",
+					"done": true
+				},
+				{
+					"description": "Convert json2md command: input/output positionals → --input/--output flags",
+					"done": true
+				},
+				{
+					"description": "Convert md2json command: input/output positionals → --input/--output flags",
+					"done": true
+				},
+				{
+					"description": "Convert sync command: input/output positionals → --input/--output flags",
+					"done": true
+				},
+				{
+					"description": "Convert speckit subcommands: path positionals → flags",
+					"done": true
+				},
+				{
+					"description": "Convert plan init: output positional → --output flag",
+					"done": true
+				},
+				{
+					"description": "Update tests for new flag-based CLI",
+					"done": true
+				},
+				{
+					"description": "Remove deprecated inputArg from shared.ts",
+					"done": true
+				},
+				{
+					"description": "Update CLAUDE.md CLI examples",
+					"done": true
+				}
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -4969,6 +5031,11 @@
 		{
 			"from": "CHG35",
 			"to": "DEC37",
+			"type": "implements"
+		},
+		{
+			"from": "CHG36",
+			"to": "DEC38",
 			"type": "implements"
 		}
 	]

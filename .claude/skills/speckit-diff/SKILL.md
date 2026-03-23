@@ -9,10 +9,11 @@ user-invocable: true
 
 Compare SysProM provenance records with Spec-Kit specifications to identify misalignments, missing features, or outdated provenance.
 
-## Arguments
+## Options
 
-- `[sysPromPath]` — Path to `.spm.json` or `.spm/`
-- `[specKitPath]` — Path to Spec-Kit directory
+- `--input <value>` — Path to SysProM document
+- `--speckit-dir <value>` — Path to Spec-Kit directory
+- `--prefix <value>` — ID prefix (optional, defaults to directory name)
 
 ## Steps
 
@@ -22,12 +23,12 @@ Compare SysProM provenance records with Spec-Kit specifications to identify misa
 
 2. Show differences:
    ```bash
-   spm speckit-diff <arg1> <arg2>
+   spm speckit diff --input .spm.json --speckit-dir ./spec-kit/
    ```
 
-3. Or show detailed diff:
+3. Or with custom prefix:
    ```bash
-   spm speckit-diff <arg1> <arg2> --detailed
+   spm speckit diff --input .spm.json --speckit-dir ./spec-kit/ --prefix AUTH
    ```
 
 ## Output

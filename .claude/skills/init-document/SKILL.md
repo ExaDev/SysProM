@@ -9,27 +9,28 @@ user-invocable: true
 
 Create a new SysProM document with metadata and directory structure. This sets up a blank document ready for building provenance records.
 
-## Arguments
+## Options
 
-- `[path]` — Output path for the document (optional, defaults to `.spm`)
+- `--path <value>` — Output path for the document (optional, defaults to current directory)
+- `--title <value>` — Document title
+- `--scope <value>` — Document scope
+- `--format <value>` — Output format: `json`, `md`, or `dir`
 
 ## Steps
 
 1. Gather document metadata:
    - Document title
    - Description
-   - Author name
-   - Project or organisation
-   - Initial version
+   - Scope
 
 2. Create a new document in Markdown format:
    ```bash
-   spm init --path .spm --title "<arg1>" --author "<arg2>" --description "<arg3>"
+   spm init --path .spm --title "My Project" --scope system
    ```
 
 3. Or create in JSON format:
    ```bash
-   spm init --path .spm.json --format json --title "<arg1>"
+   spm init --path .spm.json --format json --title "My Project"
    ```
 
 4. Review the generated structure:

@@ -9,10 +9,10 @@ user-invocable: true
 
 Convert a SysProM document from Markdown format (`.spm/` folder or `.spm.md` file) to machine-parseable JSON format (`.spm.json`).
 
-## Arguments
+## Options
 
-- `[markdownPath]` — Path to `.spm/` folder or `.spm.md` file
-- `[outputPath]` — Output JSON file path (optional, defaults to `.spm.json`)
+- `--input <value>` — Path to `.spm/` folder or `.spm.md` file
+- `--output <value>` — Output JSON file path
 
 ## Steps
 
@@ -22,12 +22,12 @@ Convert a SysProM document from Markdown format (`.spm/` folder or `.spm.md` fil
 
 2. Convert multi-file Markdown to JSON:
    ```bash
-   spm md2json .spm .spm.json
+   spm md2json --input .spm --output .spm.json
    ```
 
 3. Or convert single-file Markdown to JSON:
    ```bash
-   spm md2json .spm.md .spm.json
+   spm md2json --input .spm.md --output .spm.json
    ```
 
 ## Output Structure

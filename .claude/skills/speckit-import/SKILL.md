@@ -9,25 +9,26 @@ user-invocable: true
 
 Import features from Spec-Kit format (GitHub Spec-Kit directories) into SysProM as capability or concept nodes. Creates structured provenance records for imported specifications.
 
-## Arguments
+## Options
 
-- `[specKitPath]` — Path to Spec-Kit directory
-- `[parentNodeId]` — Parent node to attach imported features to (optional)
+- `--speckit-dir <value>` — Path to Spec-Kit feature directory
+- `--output <value>` — Path to output SysProM file
+- `--prefix <value>` — ID prefix (optional, defaults to directory name)
 
 ## Steps
 
 1. Identify the Spec-Kit directory to import:
    - Path to Spec-Kit folder structure
-   - Parent SysProM node (optional capability or concept)
+   - Output SysProM file path
 
 2. Import Spec-Kit features:
    ```bash
-   spm speckit-import <arg1>
+   spm speckit import --speckit-dir ./features --output doc.spm.json
    ```
 
-3. Or import with parent node:
+3. Or import with custom prefix:
    ```bash
-   spm speckit-import <arg1> --parent <arg2>
+   spm speckit import --speckit-dir ./features --output doc.spm.json --prefix AUTH
    ```
 
 ## Mapping

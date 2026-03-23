@@ -23,8 +23,8 @@ Both `sysprom` and `spm` are available as commands.
 
 ```sh
 # Convert between formats
-spm json2md .spm.json ./.spm
-spm md2json ./.spm output.spm.json
+spm json2md --input .spm.json --output ./.spm
+spm md2json --input ./.spm --output output.spm.json
 
 # Validate and summarise (auto-detects .spm.json in current directory)
 spm validate
@@ -223,17 +223,17 @@ All significant activity — decisions, changes, new capabilities, and invariant
 spm add decision --id D23 --name "My Decision" --context "Why this was needed"
 
 # Or edit ./.spm/DECISIONS.md directly, then sync
-spm md2json ./.spm .spm.json
+spm md2json --input ./.spm --output .spm.json
 ```
 
 Keep both representations in sync after any change:
 
 ```sh
 # JSON → Markdown
-spm json2md .spm.json ./.spm
+spm json2md --input .spm.json --output ./.spm
 
 # Markdown → JSON
-spm md2json ./.spm .spm.json
+spm md2json --input ./.spm --output .spm.json
 ```
 
 > **Important:** Always keep `.spm.json` and `./.spm/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `spm validate` before committing.

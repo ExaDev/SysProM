@@ -9,25 +9,26 @@ user-invocable: true
 
 Create a structured plan within a change node. Plans define phases, gates, and progress tracking for phased implementation.
 
-## Arguments
+## Options
 
-- `[changeNodeId]` — Change node ID to attach plan to
-- `[planName]` — Name of the plan
+- `--output <value>` — Path to output SysProM file
+- `--prefix <value>` — Plan prefix (e.g. PLAN)
+- `--name <value>` — Plan name (optional, defaults to prefix)
 
 ## Steps
 
-1. Identify the change node:
-   - Change node ID (e.g., C1, C42)
+1. Identify the plan:
    - What is being planned?
+   - What prefix to use?
 
 2. Initialise a new plan:
    ```bash
-   spm plan init <arg1> "<arg2>"
+   spm plan init --output plan.spm.json --prefix PLAN --name "My Plan"
    ```
 
-3. Or initialise with phases:
+3. Or initialise with minimal options:
    ```bash
-   spm plan init <arg1> "<arg2>" --phases "Design,Implementation,Testing,Deployment"
+   spm plan init --output plan.spm.json --prefix AUTH
    ```
 
 ## Plan Structure

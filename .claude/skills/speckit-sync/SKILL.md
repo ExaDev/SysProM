@@ -9,10 +9,11 @@ user-invocable: true
 
 Synchronise SysProM provenance records bidirectionally with Spec-Kit specification framework. Keep provenance and specifications in sync automatically.
 
-## Arguments
+## Options
 
-- `[sysPromPath]` — Path to `.spm.json` or `.spm/`
-- `[specKitPath]` — Path to Spec-Kit directory
+- `--input <value>` — Path to SysProM document
+- `--speckit-dir <value>` — Path to Spec-Kit directory
+- `--prefix <value>` — ID prefix (optional, defaults to directory name)
 
 ## Steps
 
@@ -22,17 +23,12 @@ Synchronise SysProM provenance records bidirectionally with Spec-Kit specificati
 
 2. Sync SysProM and Spec-Kit:
    ```bash
-   spm speckit-sync <arg1> <arg2>
+   spm speckit sync --input .spm.json --speckit-dir ./spec-kit/
    ```
 
-3. Or sync with specific strategy:
-   - `--prefer-sysprom` — SysProM is source of truth
-   - `--prefer-speckit` — Spec-Kit is source of truth
-   - `--report` — Report differences without modifying
-
-4. Or perform dry-run:
+3. Or sync with custom prefix:
    ```bash
-   spm speckit-sync <arg1> <arg2> --prefer-sysprom --dry-run
+   spm speckit sync --input .spm.json --speckit-dir ./spec-kit/ --prefix AUTH
    ```
 
 ## Resolution Strategies

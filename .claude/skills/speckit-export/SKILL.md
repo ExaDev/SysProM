@@ -9,25 +9,26 @@ user-invocable: true
 
 Export SysProM capability or concept nodes to Spec-Kit format for use with GitHub Spec-Kit workflows. Transforms provenance records into specification documents.
 
-## Arguments
+## Options
 
-- `[nodeIds]` — Node IDs to export (comma-separated)
-- `[outputPath]` — Output Spec-Kit directory (optional)
+- `--input <value>` — Path to SysProM document
+- `--speckit-dir <value>` — Path to Spec-Kit output directory
+- `--prefix <value>` — ID prefix identifying nodes to export
 
 ## Steps
 
 1. Identify nodes to export:
-   - Capability or concept node IDs
-   - All related nodes will be included
+   - SysProM document path
+   - Output Spec-Kit directory
 
 2. Export to Spec-Kit format:
    ```bash
-   spm speckit-export <arg1> --output spec-kit/
+   spm speckit export --input doc.spm.json --speckit-dir spec-kit/ --prefix AUTH
    ```
 
-3. Or export single node:
+3. Or export from auto-detected document:
    ```bash
-   spm speckit-export C1 --output spec-kit/features/
+   spm speckit export --input .spm.json --speckit-dir spec-kit/features/ --prefix FEAT
    ```
 
 ## Mapping

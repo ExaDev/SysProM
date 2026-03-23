@@ -9,11 +9,14 @@ user-invocable: true
 
 Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representations of a SysProM document. Handles conflicts with configurable resolution strategies.
 
-## Arguments
+## Options
 
-- `[jsonPath]` — Path to `.spm.json` file
-- `[markdownPath]` — Path to `.spm/` folder
-- `[strategy]` — Conflict resolution strategy (optional)
+- `--input <value>` — Path to `.spm.json` file
+- `--output <value>` — Path to `.spm/` folder or `.spm.md` file
+- `--prefer-json` — JSON wins on conflicts
+- `--prefer-md` — Markdown wins on conflicts
+- `--report` — Report conflicts without resolving
+- `--dry-run` — Preview changes without writing files
 
 ## Steps
 
@@ -23,17 +26,17 @@ Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representa
 
 2. Sync with default strategy (JSON is source of truth):
    ```bash
-   spm sync <arg1> <arg2>
+   spm sync --input .spm.json --output .spm
    ```
 
 3. Or sync with explicit strategy:
-   - `--prefer-json` — JSON wins on conflicts
-   - `--prefer-md` — Markdown wins on conflicts
-   - `--report` — Report conflicts without resolving
+   ```bash
+   spm sync --input .spm.json --output .spm --prefer-md
+   ```
 
 4. Or perform dry-run:
    ```bash
-   spm sync <arg1> <arg2> --prefer-json --dry-run
+   spm sync --input .spm.json --output .spm --prefer-json --dry-run
    ```
 
 ## Conflict Resolution Strategies
