@@ -3897,6 +3897,12 @@
 			"id": "INV27",
 			"name": "Auto-sync JSON and Markdown representations",
 			"type": "invariant"
+		},
+		{
+			"description": "Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.",
+			"id": "CH35",
+			"name": "Add YAML Support and Multi-File JSON Formats",
+			"type": "change"
 		}
 	],
 	"relationships": [

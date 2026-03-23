@@ -771,3 +771,7 @@ Scope:
 - [x] Write tests for resolveInput
 - [x] Write tests for init command
 
+### CH35 — Add YAML Support and Multi-File JSON Formats
+
+Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.
+
