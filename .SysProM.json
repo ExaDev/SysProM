@@ -4181,6 +4181,7 @@
 				"src/index.ts",
 				"tests/infer-impact.unit.test.ts"
 			],
+			"status": "introduced",
 			"type": "change"
 		}
 	],

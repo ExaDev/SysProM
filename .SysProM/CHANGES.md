@@ -846,6 +846,8 @@ Add bidirectional BFS, polarity/strength on relationships, influence relationshi
 
 - Implements: [DEC42](./DECISIONS.md#dec42--enhance-impact-analysis-for-sysmlarchimate-parity)
 
+- Status: introduced
+
 Scope:
 - src/schema.ts
 - src/operations/infer-impact.ts

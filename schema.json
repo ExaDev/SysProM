@@ -458,6 +458,22 @@
 						"description": "Source node ID.",
 						"type": "string"
 					},
+					"polarity": {
+						"description": "Impact polarity — positive, negative, neutral, or uncertain.",
+						"enum": [
+							"positive",
+							"negative",
+							"neutral",
+							"uncertain"
+						],
+						"type": "string"
+					},
+					"strength": {
+						"description": "Relationship strength as a number between 0 and 1.",
+						"maximum": 1,
+						"minimum": 0,
+						"type": "number"
+					},
 					"to": {
 						"description": "Target node ID.",
 						"type": "string"
@@ -487,7 +503,8 @@
 							"transforms_into",
 							"selects",
 							"requires",
-							"disables"
+							"disables",
+							"influence"
 						],
 						"type": "string"
 					}

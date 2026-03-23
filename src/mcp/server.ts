@@ -21,6 +21,7 @@ import {
 	inferCompletenessOp,
 	inferLifecycleOp,
 	inferImpactOp,
+	impactSummaryOp,
 	inferDerivedOp,
 } from "../operations/index.js";
 
@@ -476,15 +477,59 @@ server.registerTool(
 	"infer-impact",
 	{
 		description:
-			"Infer impact from a node through the graph following impact relationships",
+			"Infer impact from a node through the graph following impact relationships (CHG40 with bidirectional traversal)",
 		inputSchema: z.object({
 			path: z.string().describe("Path to SysProM file"),
 			startId: z.string().describe("Node ID to start impact analysis from"),
+			direction: z
+				.enum(["outgoing", "incoming", "bidirectional"])
+				.optional()
+				.describe("Traversal direction (default: outgoing)"),
+			maxDepth: z
+				.number()
+				.int()
+				.positive()
+				.optional()
+				.describe("Maximum traversal depth"),
+			relationshipFilter: z
+				.array(z.string())
+				.optional()
+				.describe("Relationship types to follow"),
 		}),
 	},
-	({ path, startId }) => {
+	({ path, startId, direction, maxDepth, relationshipFilter }) => {
 		const { doc } = loadDocument(path);
-		const result = inferImpactOp({ doc, startId });
+		const result = inferImpactOp({
+			doc,
+			startId,
+			direction,
+			maxDepth,
+			relationshipFilter,
+		});
+		return {
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(result, null, 2),
+				},
+			],
+		};
+	},
+);
+
+// Register infer-impact-summary tool (CHG40 hotspot analysis)
+server.registerTool(
+	"infer-impact-summary",
+	{
+		description:
+			"Analyse document for impact hotspots — nodes with high incoming/outgoing impact (CHG40)",
+		inputSchema: z.object({
+			path: z.string().describe("Path to SysProM file"),
+		}),
+	},
+	({ path }) => {
+		const { doc } = loadDocument(path);
+		const result = impactSummaryOp({ doc });
 		return {
 			content: [
 				{

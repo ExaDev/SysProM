@@ -74,6 +74,22 @@ function printDerivedRelationship(r: DerivedRelationship): void {
 
 const impactArgs = z.object({
 	id: z.string().describe("node ID to start impact analysis from"),
+	direction: z
+		.enum(["outgoing", "incoming", "bidirectional"])
+		.optional()
+		.describe(
+			"traversal direction: outgoing (default) | incoming | bidirectional",
+		),
+	maxDepth: z
+		.number()
+		.int()
+		.positive()
+		.optional()
+		.describe("maximum traversal depth"),
+	filter: z
+		.string()
+		.optional()
+		.describe("comma-separated list of relationship types to follow"),
 });
 
 // ---------------------------------------------------------------------------
@@ -155,13 +171,33 @@ const impactSubcommand: CommandDef = {
 		const args = impactArgs.parse(rawArgs);
 		const opts = readOpts.parse(rawOpts);
 		const { doc } = loadDoc(opts.path);
-		const result = inferImpactOp({ doc, startId: args.id });
+
+		// Parse relationship filter if provided
+		const relationshipFilter = args.filter
+			? args.filter.split(",").map((s) => s.trim())
+			: undefined;
+
+		const result = inferImpactOp({
+			doc,
+			startId: args.id,
+			direction: args.direction,
+			maxDepth: args.maxDepth,
+			relationshipFilter,
+		});
 
 		if (opts.json) {
 			console.log(JSON.stringify(result, null, 2));
 		} else {
+			const directionLabel = args.direction ? ` (${args.direction})` : "";
+			const depthLabel = args.maxDepth
+				? ` [depth: ${String(args.maxDepth)}]`
+				: "";
+			const filterLabel = args.filter ? ` [filter: ${args.filter}]` : "";
+
 			console.log(
-				pc.bold(`\nImpact Analysis from ${args.id}\n`) +
+				pc.bold(
+					`\nImpact Analysis from ${args.id}${directionLabel}${depthLabel}${filterLabel}\n`,
+				) +
 					pc.dim(
 						`Direct: ${String(result.summary.direct)} | Transitive: ${String(result.summary.transitive)} | Potential: ${String(result.summary.potential)} | Total: ${String(result.summary.total)}`,
 					) +
