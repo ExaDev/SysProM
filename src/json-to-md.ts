@@ -36,6 +36,75 @@ function renderFrontMatter(fields: Record<string, unknown>): string {
 }
 
 // ---------------------------------------------------------------------------
+// Node location map (for hyperlinking)
+// ---------------------------------------------------------------------------
+
+/** GitHub-compatible heading anchor slug. */
+function slugify(text: string): string {
+	return text
+		.toLowerCase()
+		.replace(/[^\w\s-]/g, "")
+		.replace(/\s/g, "-");
+}
+
+/** Heading anchor for a node: `id--name` slugified from `### ID — Name`. */
+function nodeAnchor(n: Node): string {
+	return slugify(`${n.id} — ${n.name}`);
+}
+
+interface NodeLocation {
+	file: string;
+	anchor: string;
+}
+
+type NodeLocationMap = Map<string, NodeLocation>;
+
+/** Build a map from node ID to its markdown file and heading anchor. */
+function buildNodeLocationMap(
+	nodes: Node[],
+	mode: "single-file" | "multi-doc",
+): NodeLocationMap {
+	const map: NodeLocationMap = new Map();
+	for (const n of nodes) {
+		const anchor = nodeAnchor(n);
+		if (mode === "single-file") {
+			map.set(n.id, { file: "", anchor });
+		} else {
+			const file = fileForNodeType(n.type);
+			map.set(n.id, { file, anchor });
+		}
+	}
+	return map;
+}
+
+/** Determine the markdown file a node type belongs to in multi-doc mode. */
+function fileForNodeType(type: string): string {
+	for (const [fileName, types] of Object.entries(NODE_FILE_MAP)) {
+		if (types.includes(type)) return `${fileName}.md`;
+	}
+	return "README.md";
+}
+
+/**
+ * Format a node ID as a markdown hyperlink.
+ * In single-file mode: `[ID](#anchor)`
+ * In multi-doc mode: `[ID](./FILE.md#anchor)`
+ * Falls back to plain ID if the node isn't in the map.
+ */
+function linkNodeId(
+	id: string,
+	nodeMap: NodeLocationMap,
+	currentFile?: string,
+): string {
+	const loc = nodeMap.get(id);
+	if (!loc) return id;
+	if (loc.file === "" || loc.file === currentFile) {
+		return `[${id}](#${loc.anchor})`;
+	}
+	return `[${id}](./${loc.file}#${loc.anchor})`;
+}
+
+// ---------------------------------------------------------------------------
 // Relationship lookups
 // ---------------------------------------------------------------------------
 
@@ -99,7 +168,12 @@ function renderLifecycle(
 	});
 }
 
-function renderNodeRelationships(nodeId: string, fromIdx: RelIndex): string[] {
+function renderNodeRelationships(
+	nodeId: string,
+	fromIdx: RelIndex,
+	nodeMap: NodeLocationMap,
+	currentFile?: string,
+): string[] {
 	const rels = fromIdx.get(nodeId);
 	if (!rels || rels.length === 0) return [];
 
@@ -116,11 +190,11 @@ function renderNodeRelationships(nodeId: string, fromIdx: RelIndex): string[] {
 			? RELATIONSHIP_TYPE_LABELS[type]
 			: type;
 		if (targets.length === 1) {
-			lines.push(`- ${label}: ${targets[0]}`);
+			lines.push(`- ${label}: ${linkNodeId(targets[0], nodeMap, currentFile)}`);
 		} else {
 			lines.push(`- ${label}:`);
 			for (const t of targets) {
-				lines.push(`  - ${t}`);
+				lines.push(`  - ${linkNodeId(t, nodeMap, currentFile)}`);
 			}
 		}
 	}
@@ -146,6 +220,8 @@ function renderNode(
 	n: Node,
 	headingLevel: number,
 	fromIdx: RelIndex,
+	nodeMap: NodeLocationMap,
+	currentFile?: string,
 ): string[] {
 	const prefix = "#".repeat(headingLevel);
 	const lines: string[] = [];
@@ -158,7 +234,7 @@ function renderNode(
 		lines.push("");
 	}
 
-	const rels = renderNodeRelationships(n.id, fromIdx);
+	const rels = renderNodeRelationships(n.id, fromIdx, nodeMap, currentFile);
 	if (rels.length > 0) {
 		lines.push(...rels);
 		lines.push("");
@@ -237,7 +313,7 @@ function renderNode(
 	if (n.includes && n.includes.length > 0) {
 		lines.push("Includes:");
 		for (const inc of n.includes) {
-			lines.push(`- ${inc}`);
+			lines.push(`- ${linkNodeId(inc, nodeMap, currentFile)}`);
 		}
 		lines.push("");
 	}
@@ -266,8 +342,9 @@ function renderNode(
 		const subNodes = n.subsystem.nodes;
 		const subRels = n.subsystem.relationships ?? [];
 		const subIdx = indexRelationshipsFrom(subRels);
+		const subMap = buildNodeLocationMap(subNodes, "single-file");
 		for (const sub of subNodes) {
-			lines.push(...renderNode(sub, headingLevel + 2, subIdx));
+			lines.push(...renderNode(sub, headingLevel + 2, subIdx, subMap));
 		}
 	}
 
@@ -283,6 +360,8 @@ function renderNodesGrouped(
 	types: string[],
 	fromIdx: RelIndex,
 	headingLevel: number,
+	nodeMap: NodeLocationMap,
+	currentFile?: string,
 ): string[] {
 	const lines: string[] = [];
 	for (const type of types) {
@@ -294,13 +373,13 @@ function renderNodesGrouped(
 		lines.push("");
 
 		for (const n of matching) {
-			lines.push(...renderNode(n, headingLevel + 1, fromIdx));
+			lines.push(...renderNode(n, headingLevel + 1, fromIdx, nodeMap, currentFile));
 		}
 	}
 	return lines;
 }
 
-function generateReadme(doc: SysProMDocument, fromIdx: RelIndex): string {
+function generateReadme(doc: SysProMDocument, fromIdx: RelIndex, nodeMap: NodeLocationMap): string {
 	const lines: string[] = [];
 	const title = doc.metadata?.title ?? "SysProM";
 
@@ -381,7 +460,7 @@ function generateReadme(doc: SysProMDocument, fromIdx: RelIndex): string {
 	// Views
 	const views = doc.nodes.filter((n) => n.type === "view");
 	if (views.length > 0) {
-		lines.push(...renderNodesGrouped(doc.nodes, ["view"], fromIdx, 2));
+		lines.push(...renderNodesGrouped(doc.nodes, ["view"], fromIdx, 2, nodeMap, "README.md"));
 	}
 
 	// Graph-level external references
@@ -405,6 +484,7 @@ function generateDocFile(
 	fileName: string,
 	types: string[],
 	fromIdx: RelIndex,
+	nodeMap: NodeLocationMap,
 ): string {
 	const lines: string[] = [];
 
@@ -417,7 +497,7 @@ function generateDocFile(
 	lines.push("");
 	lines.push(`# ${fileName.replace(".md", "")}`);
 	lines.push("");
-	lines.push(...renderNodesGrouped(doc.nodes, types, fromIdx, 2));
+	lines.push(...renderNodesGrouped(doc.nodes, types, fromIdx, 2, nodeMap, `${fileName}.md`));
 
 	return lines.join("\n") + "\n";
 }
@@ -443,6 +523,7 @@ export interface ConvertOptions {
  */
 export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 	const fromIdx = indexRelationshipsFrom(doc.relationships ?? []);
+	const nodeMap = buildNodeLocationMap(doc.nodes, "single-file");
 	const lines: string[] = [];
 	const title = doc.metadata?.title ?? "SysProM";
 
@@ -471,7 +552,7 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 		"version",
 	];
 
-	lines.push(...renderNodesGrouped(doc.nodes, allTypes, fromIdx, 2));
+	lines.push(...renderNodesGrouped(doc.nodes, allTypes, fromIdx, 2, nodeMap));
 
 	// Relationships summary
 	if (doc.relationships && doc.relationships.length > 0) {
@@ -516,15 +597,16 @@ export function jsonToMarkdownMultiDoc(
 	mkdirSync(outDir, { recursive: true });
 
 	const fromIdx = indexRelationshipsFrom(doc.relationships ?? []);
+	const nodeMap = buildNodeLocationMap(doc.nodes, "multi-doc");
 
-	writeFileSync(join(outDir, "README.md"), generateReadme(doc, fromIdx));
+	writeFileSync(join(outDir, "README.md"), generateReadme(doc, fromIdx, nodeMap));
 
 	for (const [fileName, types] of Object.entries(NODE_FILE_MAP)) {
 		const hasNodes = doc.nodes.some((n) => types.includes(n.type));
 		if (!hasNodes) continue;
 		writeFileSync(
 			join(outDir, `${fileName}.md`),
-			generateDocFile(doc, fileName, types, fromIdx),
+			generateDocFile(doc, fileName, types, fromIdx, nodeMap),
 		);
 	}
 

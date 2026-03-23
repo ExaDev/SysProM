@@ -17,6 +17,11 @@ import {
 	ExternalReferenceRole,
 } from "./schema.js";
 
+/** Strip markdown link syntax `[text](url)` → `text`. */
+function stripMarkdownLink(s: string): string {
+	return s.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+}
+
 const LABEL_TO_TYPE: Record<string, string> = Object.fromEntries(
 	Object.entries(NODE_LABEL_TO_TYPE).map(([k, v]) => [k.toLowerCase(), v]),
 );
@@ -218,19 +223,19 @@ function parseListItems(body: string, prefix: string): string[] {
 			collecting = true;
 			const inline = line.slice(prefix.length + 1).trim();
 			if (inline) {
-				items.push(inline);
+				items.push(stripMarkdownLink(inline));
 				collecting = false;
 			}
 			continue;
 		}
 		if (collecting && line.startsWith("  - ")) {
-			items.push(line.slice(4));
+			items.push(stripMarkdownLink(line.slice(4)));
 		} else if (
 			collecting &&
 			line.startsWith("- ") &&
 			!isRelationshipLabel(line)
 		) {
-			items.push(line.slice(2));
+			items.push(stripMarkdownLink(line.slice(2)));
 		} else if (collecting) {
 			collecting = false;
 		}
@@ -268,7 +273,7 @@ function parseRelationshipsFromBody(
 		if (items.length === 0) {
 			const val = parseSingleValue(body, `- ${label}`);
 			if (val) {
-				rels.push({ from: nodeId, to: val, type: relType });
+				rels.push({ from: nodeId, to: stripMarkdownLink(val), type: relType });
 			}
 		} else {
 			for (const target of items) {
