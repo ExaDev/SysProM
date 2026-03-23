@@ -565,10 +565,10 @@ describe("json-to-md multi-doc", () => {
 });
 
 // ---------------------------------------------------------------------------
-// .spm.json conversion
+// .SysProM.json conversion
 // ---------------------------------------------------------------------------
 
-describe("json-to-md with .spm.json", () => {
+describe("json-to-md with .SysProM.json", () => {
 	let tmpDir: string;
 
 	beforeEach(() => {
@@ -579,15 +579,15 @@ describe("json-to-md with .spm.json", () => {
 		rmSync(tmpDir, { recursive: true, force: true });
 	});
 
-	it("converts .spm.json to single file without error", async () => {
-		const doc = JSON.parse(readFileSync(".spm.json", "utf8"));
+	it("converts .SysProM.json to single file without error", async () => {
+		const doc = JSON.parse(readFileSync(".SysProM.json", "utf8"));
 		const md = jsonToMarkdownSingle(doc);
 		assert.ok(md.length > 1000, "Expected substantial markdown output");
 		assert.ok(md.includes("# SysProM"));
 	});
 
-	it("converts .spm.json to multi-doc without error", async () => {
-		const doc = JSON.parse(readFileSync(".spm.json", "utf8"));
+	it("converts .SysProM.json to multi-doc without error", async () => {
+		const doc = JSON.parse(readFileSync(".SysProM.json", "utf8"));
 		jsonToMarkdownMultiDoc(doc, tmpDir);
 		assert.ok(existsSync(join(tmpDir, "README.md")));
 		assert.ok(existsSync(join(tmpDir, "INTENT.md")));
@@ -598,7 +598,7 @@ describe("json-to-md with .spm.json", () => {
 	});
 
 	it("multi-doc output contains all decisions", async () => {
-		const doc = JSON.parse(readFileSync(".spm.json", "utf8"));
+		const doc = JSON.parse(readFileSync(".SysProM.json", "utf8"));
 		jsonToMarkdownMultiDoc(doc, tmpDir);
 		const dec = readFileSync(join(tmpDir, "DECISIONS.md"), "utf8");
 		for (const d of doc.nodes.filter(
@@ -612,7 +612,7 @@ describe("json-to-md with .spm.json", () => {
 	});
 
 	it("multi-doc output contains all invariants", async () => {
-		const doc = JSON.parse(readFileSync(".spm.json", "utf8"));
+		const doc = JSON.parse(readFileSync(".SysProM.json", "utf8"));
 		jsonToMarkdownMultiDoc(doc, tmpDir);
 		const inv = readFileSync(join(tmpDir, "INVARIANTS.md"), "utf8");
 		for (const n of doc.nodes.filter(
@@ -626,7 +626,7 @@ describe("json-to-md with .spm.json", () => {
 	});
 
 	it("creates subsystem files or folders for nodes with subsystems", async () => {
-		const doc = JSON.parse(readFileSync(".spm.json", "utf8"));
+		const doc = JSON.parse(readFileSync(".SysProM.json", "utf8"));
 		const subsystemNodes = doc.nodes.filter(
 			(n: { subsystem?: unknown }) => n.subsystem,
 		);
