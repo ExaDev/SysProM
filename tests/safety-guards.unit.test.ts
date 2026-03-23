@@ -3,21 +3,21 @@ import assert from "node:assert/strict";
 import { addRelationshipOp, validateOp } from "../src/index.js";
 import type { SysProMDocument } from "../src/schema.js";
 
-describe("CH33: Graph Mutation Safety Guards", () => {
+describe("CHG33: Graph Mutation Safety Guards", () => {
 	describe("Duplicate relationship detection", () => {
 		it("rejects duplicate relationship in addRelationship", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "A" },
-					{ id: "I2", type: "intent", name: "B" },
+					{ id: "INT1", type: "intent", name: "A" },
+					{ id: "INT2", type: "intent", name: "B" },
 				],
-				relationships: [{ from: "I1", to: "I2", type: "refines" }],
+				relationships: [{ from: "INT1", to: "INT2", type: "refines" }],
 			};
 			assert.throws(
 				() =>
 					addRelationshipOp({
 						doc,
-						rel: { from: "I1", to: "I2", type: "refines" },
+						rel: { from: "INT1", to: "INT2", type: "refines" },
 					}),
 				/duplicate|already exists/i,
 			);
@@ -26,14 +26,14 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("allows same from/to with different type", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "A" },
-					{ id: "I2", type: "intent", name: "B" },
+					{ id: "INT1", type: "intent", name: "A" },
+					{ id: "INT2", type: "intent", name: "B" },
 				],
-				relationships: [{ from: "I1", to: "I2", type: "refines" }],
+				relationships: [{ from: "INT1", to: "INT2", type: "refines" }],
 			};
 			const newDoc = addRelationshipOp({
 				doc,
-				rel: { from: "I1", to: "I2", type: "depends_on" },
+				rel: { from: "INT1", to: "INT2", type: "depends_on" },
 			});
 			assert.equal(newDoc.relationships?.length, 2);
 		});
@@ -41,12 +41,12 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("flags duplicate relationship in validate", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "A" },
-					{ id: "I2", type: "intent", name: "B" },
+					{ id: "INT1", type: "intent", name: "A" },
+					{ id: "INT2", type: "intent", name: "B" },
 				],
 				relationships: [
-					{ from: "I1", to: "I2", type: "refines" },
-					{ from: "I1", to: "I2", type: "refines" },
+					{ from: "INT1", to: "INT2", type: "refines" },
+					{ from: "INT1", to: "INT2", type: "refines" },
 				],
 			};
 			const result = validateOp({ doc });
@@ -61,15 +61,15 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("rejects relationship with invalid endpoint types", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "S1", type: "stage", name: "Stage" },
-					{ id: "D1", type: "decision", name: "Decision" },
+					{ id: "STG1", type: "stage", name: "Stage" },
+					{ id: "DEC1", type: "decision", name: "Decision" },
 				],
 			};
 			assert.throws(
 				() =>
 					addRelationshipOp({
 						doc,
-						rel: { from: "S1", to: "D1", type: "refines" },
+						rel: { from: "STG1", to: "DEC1", type: "refines" },
 					}),
 				/invalid|endpoint|type/i,
 			);
@@ -78,13 +78,13 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("allows valid endpoint type combinations", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "CN1", type: "concept", name: "Concept" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CON1", type: "concept", name: "Concept" },
 				],
 			};
 			const newDoc = addRelationshipOp({
 				doc,
-				rel: { from: "I1", to: "CN1", type: "refines" },
+				rel: { from: "INT1", to: "CON1", type: "refines" },
 			});
 			assert.equal(newDoc.relationships?.length, 1);
 		});
@@ -92,10 +92,10 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("flags invalid endpoint types in validate", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "S1", type: "stage", name: "Stage" },
-					{ id: "D1", type: "decision", name: "Decision" },
+					{ id: "STG1", type: "stage", name: "Stage" },
+					{ id: "DEC1", type: "decision", name: "Decision" },
 				],
-				relationships: [{ from: "S1", to: "D1", type: "refines" }],
+				relationships: [{ from: "STG1", to: "DEC1", type: "refines" }],
 			};
 			const result = validateOp({ doc });
 			const hasTypeIssue = result.issues.some(
@@ -111,10 +111,10 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("flags operational relationships to retired nodes", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "CN1", type: "concept", name: "Concept", status: "retired" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CON1", type: "concept", name: "Concept", status: "retired" },
 				],
-				relationships: [{ from: "I1", to: "CN1", type: "depends_on" }],
+				relationships: [{ from: "INT1", to: "CON1", type: "depends_on" }],
 			};
 			const result = validateOp({ doc });
 			const hasRetirementIssue = result.issues.some((issue) =>
@@ -129,10 +129,10 @@ describe("CH33: Graph Mutation Safety Guards", () => {
 		it("allows supersedes relationships to retired nodes", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "CN1", type: "concept", name: "Concept", status: "retired" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CON1", type: "concept", name: "Concept", status: "retired" },
 				],
-				relationships: [{ from: "I1", to: "CN1", type: "supersedes" }],
+				relationships: [{ from: "INT1", to: "CON1", type: "supersedes" }],
 			};
 			const result = validateOp({ doc });
 			const hasRetirementIssue = result.issues.some((issue) =>

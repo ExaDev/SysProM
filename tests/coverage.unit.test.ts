@@ -37,7 +37,7 @@ import {
 describe("schema .is() type guards", () => {
 	it("SysProMDocument.is() returns true for valid doc", () => {
 		assert.ok(
-			SysProMDocument.is({ nodes: [{ id: "I1", type: "intent", name: "T" }] }),
+			SysProMDocument.is({ nodes: [{ id: "INT1", type: "intent", name: "T" }] }),
 		);
 	});
 
@@ -48,11 +48,11 @@ describe("schema .is() type guards", () => {
 	});
 
 	it("Node.is() returns true for valid node", () => {
-		assert.ok(Node.is({ id: "I1", type: "intent", name: "T" }));
+		assert.ok(Node.is({ id: "INT1", type: "intent", name: "T" }));
 	});
 
 	it("Node.is() returns false for invalid node", () => {
-		assert.ok(!Node.is({ id: "I1" }));
+		assert.ok(!Node.is({ id: "INT1" }));
 		assert.ok(!Node.is(42));
 	});
 
@@ -219,7 +219,7 @@ describe("json-to-md edge cases", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "AF1",
+					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Flow",
 					input: "ART1",
@@ -236,7 +236,7 @@ describe("json-to-md edge cases", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Dec",
 					external_references: [
@@ -263,7 +263,7 @@ describe("json-to-md edge cases", () => {
 	it("jsonToMarkdown writes single file", () => {
 		const outPath = join(tmpDir, "test.md");
 		jsonToMarkdown(
-			{ nodes: [{ id: "I1", type: "intent", name: "T" }] },
+			{ nodes: [{ id: "INT1", type: "intent", name: "T" }] },
 			outPath,
 			{ form: "single-file" },
 		);
@@ -273,7 +273,7 @@ describe("json-to-md edge cases", () => {
 	it("jsonToMarkdown writes multi-doc", () => {
 		const outDir = join(tmpDir, "multi");
 		jsonToMarkdown(
-			{ nodes: [{ id: "I1", type: "intent", name: "T", description: "D." }] },
+			{ nodes: [{ id: "INT1", type: "intent", name: "T", description: "D." }] },
 			outDir,
 			{ form: "multi-doc" },
 		);
@@ -300,7 +300,7 @@ describe("md-to-json edge cases", () => {
 		const mdPath = join(tmpDir, "test.md");
 		writeFileSync(
 			mdPath,
-			'---\ntitle: "T"\n---\n\n# T\n\n## Intent\n\n### I1 — Test\n\nDesc.\n',
+			'---\ntitle: "T"\n---\n\n# T\n\n## Intent\n\n### INT1 — Test\n\nDesc.\n',
 		);
 		const doc = markdownToJson(mdPath);
 		assert.ok(doc.nodes.length > 0);
@@ -310,7 +310,7 @@ describe("md-to-json edge cases", () => {
 		jsonToMarkdownMultiDoc(
 			{
 				metadata: { title: "T" },
-				nodes: [{ id: "I1", type: "intent", name: "T", description: "D." }],
+				nodes: [{ id: "INT1", type: "intent", name: "T", description: "D." }],
 			},
 			tmpDir,
 		);
@@ -322,11 +322,11 @@ describe("md-to-json edge cases", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "CH1",
+					id: "CHG1",
 					type: "change",
 					name: "C",
 					operations: [
-						{ type: "update", target: "EL1", description: "Updated docs" },
+						{ type: "update", target: "ELEM1", description: "Updated docs" },
 					],
 					lifecycle: { defined: true },
 				},
@@ -334,7 +334,7 @@ describe("md-to-json edge cases", () => {
 		};
 		const md = jsonToMarkdownSingle(doc);
 		const result = markdownSingleToJson(md);
-		const ch1 = result.nodes.find((n) => n.id === "CH1");
+		const ch1 = result.nodes.find((n) => n.id === "CHG1");
 		assert.ok(ch1?.operations);
 		assert.equal(ch1.operations[0].type, "update");
 	});
@@ -343,7 +343,7 @@ describe("md-to-json edge cases", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "CH1",
+					id: "CHG1",
 					type: "change",
 					name: "C",
 					propagation: { concept: true, structure: false, realisation: false },
@@ -353,7 +353,7 @@ describe("md-to-json edge cases", () => {
 		};
 		const md = jsonToMarkdownSingle(doc);
 		const result = markdownSingleToJson(md);
-		const ch1 = result.nodes.find((n) => n.id === "CH1");
+		const ch1 = result.nodes.find((n) => n.id === "CHG1");
 		assert.ok(ch1?.propagation);
 		assert.equal(ch1.propagation.concept, true);
 		assert.equal(ch1.propagation.structure, false);
@@ -363,7 +363,7 @@ describe("md-to-json edge cases", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "AF1",
+					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Flow",
 					input: "A1",
@@ -373,7 +373,7 @@ describe("md-to-json edge cases", () => {
 		};
 		const md = jsonToMarkdownSingle(doc);
 		const result = markdownSingleToJson(md);
-		const af = result.nodes.find((n) => n.id === "AF1");
+		const af = result.nodes.find((n) => n.id === "FLOW1");
 		assert.equal(af?.input, "A1");
 		assert.equal(af?.output, "A2");
 	});
@@ -381,16 +381,16 @@ describe("md-to-json edge cases", () => {
 	it("parses relationship with single value (- Refines: X)", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "CP1", type: "capability", name: "Cap" },
-				{ id: "CN1", type: "concept", name: "Con" },
+				{ id: "CAP1", type: "capability", name: "Cap" },
+				{ id: "CON1", type: "concept", name: "Con" },
 			],
-			relationships: [{ from: "CP1", to: "CN1", type: "refines" }],
+			relationships: [{ from: "CAP1", to: "CON1", type: "refines" }],
 		};
 		jsonToMarkdownMultiDoc(doc, tmpDir);
 		const result = markdownMultiDocToJson(tmpDir);
 		const rels = result.relationships ?? [];
 		const found = rels.find(
-			(r) => r.from === "CP1" && r.to === "CN1" && r.type === "refines",
+			(r) => r.from === "CAP1" && r.to === "CON1" && r.type === "refines",
 		);
 		assert.ok(found, "Expected refines relationship");
 	});

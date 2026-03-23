@@ -25,7 +25,7 @@ function createTestDoc(): SysProMDocument {
 		},
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 				description: "A test intent.",
@@ -129,7 +129,7 @@ describe("detectChanges — conflict detection", () => {
 			nodes: [
 				...baseDoc.nodes,
 				{
-					id: "I2",
+					id: "INT2",
 					type: "intent",
 					name: "Another Intent",
 					description: "Added after MD was created.",
@@ -163,7 +163,7 @@ describe("detectChanges — conflict detection", () => {
 			nodes: [
 				...doc.nodes,
 				{
-					id: "I2",
+					id: "INT2",
 					type: "intent",
 					name: "Additional Intent",
 					description: "A new node.",

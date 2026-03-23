@@ -24,19 +24,19 @@ function fixture(): SysProMDocument {
 		},
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 				description: "Enable testing.",
 			},
 			{
-				id: "CN1",
+				id: "CON1",
 				type: "concept",
 				name: "Test Concept",
 				description: "A concept.",
 			},
 			{
-				id: "CP1",
+				id: "CAP1",
 				type: "capability",
 				name: "Test Capability",
 				description: "A capability.",
@@ -48,7 +48,7 @@ function fixture(): SysProMDocument {
 				description: "Must hold.",
 			},
 			{
-				id: "PR1",
+				id: "PRIN1",
 				type: "principle",
 				name: "Test Principle",
 				description: "A value.",
@@ -60,21 +60,21 @@ function fixture(): SysProMDocument {
 				description: "A rule.",
 			},
 			{
-				id: "EL1",
+				id: "ELEM1",
 				type: "element",
 				name: "Test Element",
 				description: "An element.",
 				status: "active",
 			},
 			{
-				id: "R1",
+				id: "REAL1",
 				type: "realisation",
 				name: "Test Realisation",
 				description: "A realisation.",
 				status: "active",
 			},
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				context: "We need to decide.",
@@ -87,12 +87,12 @@ function fixture(): SysProMDocument {
 				lifecycle: { proposed: true, accepted: true, implemented: false },
 			},
 			{
-				id: "CH1",
+				id: "CHG1",
 				type: "change",
 				name: "Test Change",
 				description: "A change.",
-				scope: ["EL1"],
-				operations: [{ type: "add", target: "EL1" }],
+				scope: ["ELEM1"],
+				operations: [{ type: "add", target: "ELEM1" }],
 				plan: [
 					{ description: "Step one", done: true },
 					{ description: "Step two", done: false },
@@ -100,26 +100,26 @@ function fixture(): SysProMDocument {
 				lifecycle: { defined: true, introduced: true, complete: false },
 			},
 			{
-				id: "V1",
+				id: "VIEW1",
 				type: "view",
 				name: "Domain View",
-				includes: ["I1", "CN1", "CP1"],
+				includes: ["INT1", "CON1", "CAP1"],
 			},
 		],
 		relationships: [
-			{ from: "CN1", to: "I1", type: "refines" },
-			{ from: "CP1", to: "CN1", type: "refines" },
-			{ from: "EL1", to: "CP1", type: "realises" },
-			{ from: "R1", to: "EL1", type: "implements" },
-			{ from: "D1", to: "EL1", type: "affects" },
-			{ from: "D1", to: "INV1", type: "must_preserve" },
-			{ from: "CH1", to: "D1", type: "affects" },
+			{ from: "CON1", to: "INT1", type: "refines" },
+			{ from: "CAP1", to: "CON1", type: "refines" },
+			{ from: "ELEM1", to: "CAP1", type: "realises" },
+			{ from: "REAL1", to: "ELEM1", type: "implements" },
+			{ from: "DEC1", to: "ELEM1", type: "affects" },
+			{ from: "DEC1", to: "INV1", type: "must_preserve" },
+			{ from: "CHG1", to: "DEC1", type: "affects" },
 		],
 		external_references: [
 			{
 				role: "source",
 				identifier: "https://example.com",
-				node_id: "I1",
+				node_id: "INT1",
 				description: "Source.",
 			},
 		],
@@ -156,27 +156,27 @@ function assertRelationshipsPresent(
 }
 
 function assertDecisionFields(result: SysProMDocument) {
-	const d1 = result.nodes.find((n) => n.id === "D1");
-	assert.ok(d1, "D1 missing");
-	assert.ok(d1.options, "D1 missing options");
-	assert.equal(d1.options.length, 2, "D1 should have 2 options");
-	assert.equal(d1.selected, "O2", "D1 selected mismatch");
+	const d1 = result.nodes.find((n) => n.id === "DEC1");
+	assert.ok(d1, "DEC1 missing");
+	assert.ok(d1.options, "DEC1 missing options");
+	assert.equal(d1.options.length, 2, "DEC1 should have 2 options");
+	assert.equal(d1.selected, "O2", "DEC1 selected mismatch");
 }
 
 function assertChangeFields(result: SysProMDocument) {
-	const ch1 = result.nodes.find((n) => n.id === "CH1");
-	assert.ok(ch1, "CH1 missing");
-	assert.ok(ch1.scope, "CH1 missing scope");
-	assert.ok(ch1.scope.includes("EL1"), "CH1 scope should include EL1");
-	assert.ok(ch1.plan, "CH1 missing plan");
-	assert.equal(ch1.plan.length, 2, "CH1 should have 2 plan items");
-	assert.equal(ch1.plan[0].done, true, "CH1 plan[0] should be done");
-	assert.equal(ch1.plan[1].done, false, "CH1 plan[1] should not be done");
+	const ch1 = result.nodes.find((n) => n.id === "CHG1");
+	assert.ok(ch1, "CHG1 missing");
+	assert.ok(ch1.scope, "CHG1 missing scope");
+	assert.ok(ch1.scope.includes("ELEM1"), "CHG1 scope should include ELEM1");
+	assert.ok(ch1.plan, "CHG1 missing plan");
+	assert.equal(ch1.plan.length, 2, "CHG1 should have 2 plan items");
+	assert.equal(ch1.plan[0].done, true, "CHG1 plan[0] should be done");
+	assert.equal(ch1.plan[1].done, false, "CHG1 plan[1] should not be done");
 }
 
 function assertLifecycle(result: SysProMDocument) {
-	const d1 = result.nodes.find((n) => n.id === "D1");
-	assert.ok(d1?.lifecycle, "D1 missing lifecycle");
+	const d1 = result.nodes.find((n) => n.id === "DEC1");
+	assert.ok(d1?.lifecycle, "DEC1 missing lifecycle");
 	assert.equal(d1.lifecycle.proposed, true);
 	assert.equal(d1.lifecycle.accepted, true);
 	assert.equal(d1.lifecycle.implemented, false);
@@ -226,9 +226,9 @@ describe("round trip: single file", () => {
 		const original = fixture();
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
-		const v1 = result.nodes.find((n) => n.id === "V1");
-		assert.ok(v1?.includes, "V1 missing includes");
-		assert.deepEqual(v1.includes, ["I1", "CN1", "CP1"]);
+		const v1 = result.nodes.find((n) => n.id === "VIEW1");
+		assert.ok(v1?.includes, "VIEW1 missing includes");
+		assert.deepEqual(v1.includes, ["INT1", "CON1", "CAP1"]);
 	});
 
 	it("JSON → MD → JSON preserves metadata", () => {
@@ -244,7 +244,7 @@ describe("round trip: single file", () => {
 			metadata: { title: "Lifecycle Date Test" },
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Test Decision",
 					lifecycle: {
@@ -259,8 +259,8 @@ describe("round trip: single file", () => {
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
 
-		const d1 = result.nodes.find((n) => n.id === "D1");
-		assert.ok(d1?.lifecycle, "D1 missing lifecycle");
+		const d1 = result.nodes.find((n) => n.id === "DEC1");
+		assert.ok(d1?.lifecycle, "DEC1 missing lifecycle");
 		// Date values should be preserved as strings
 		assert.equal(d1.lifecycle.proposed, "2025-06-01");
 		assert.equal(d1.lifecycle.accepted, "2025-07-15");
@@ -324,9 +324,9 @@ describe("round trip: multi-doc", () => {
 		const original = fixture();
 		jsonToMarkdownMultiDoc(original, tmpDir);
 		const result = markdownMultiDocToJson(tmpDir);
-		const v1 = result.nodes.find((n) => n.id === "V1");
-		assert.ok(v1?.includes, "V1 missing includes");
-		assert.deepEqual(v1.includes, ["I1", "CN1", "CP1"]);
+		const v1 = result.nodes.find((n) => n.id === "VIEW1");
+		assert.ok(v1?.includes, "VIEW1 missing includes");
+		assert.deepEqual(v1.includes, ["INT1", "CON1", "CAP1"]);
 	});
 
 	it("JSON → MD → JSON preserves metadata", () => {
@@ -361,7 +361,7 @@ describe("round trip: multi-line text fields", () => {
 			metadata: { title: "Multi-Line Test" },
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Test Decision",
 					context: [
@@ -386,8 +386,8 @@ describe("round trip: multi-line text fields", () => {
 		const original = multiLineFixture();
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
-		const d1 = result.nodes.find((n) => n.id === "D1");
-		assert.ok(d1, "D1 missing");
+		const d1 = result.nodes.find((n) => n.id === "DEC1");
+		assert.ok(d1, "DEC1 missing");
 		assert.deepEqual(d1.context, [
 			"The model needs to represent systems, workflows, and history.",
 			"Mixing these concerns makes the graph hard to query and reason about.",
@@ -398,8 +398,8 @@ describe("round trip: multi-line text fields", () => {
 		const original = multiLineFixture();
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
-		const d1 = result.nodes.find((n) => n.id === "D1");
-		assert.ok(d1, "D1 missing");
+		const d1 = result.nodes.find((n) => n.id === "DEC1");
+		assert.ok(d1, "DEC1 missing");
 		assert.deepEqual(d1.rationale, [
 			"Grouping into families enforces separation of concerns.",
 			"Domain structure should not be tangled with process mechanics or evolution history.",
@@ -412,8 +412,8 @@ describe("round trip: multi-line text fields", () => {
 		try {
 			jsonToMarkdownMultiDoc(original, tmpDir);
 			const result = markdownMultiDocToJson(tmpDir);
-			const d1 = result.nodes.find((n) => n.id === "D1");
-			assert.ok(d1, "D1 missing");
+			const d1 = result.nodes.find((n) => n.id === "DEC1");
+			assert.ok(d1, "DEC1 missing");
 			assert.deepEqual(d1.context, [
 				"The model needs to represent systems, workflows, and history.",
 				"Mixing these concerns makes the graph hard to query and reason about.",
@@ -429,8 +429,8 @@ describe("round trip: multi-line text fields", () => {
 		try {
 			jsonToMarkdownMultiDoc(original, tmpDir);
 			const result = markdownMultiDocToJson(tmpDir);
-			const d1 = result.nodes.find((n) => n.id === "D1");
-			assert.ok(d1, "D1 missing");
+			const d1 = result.nodes.find((n) => n.id === "DEC1");
+			assert.ok(d1, "DEC1 missing");
 			assert.deepEqual(d1.rationale, [
 				"Grouping into families enforces separation of concerns.",
 				"Domain structure should not be tangled with process mechanics or evolution history.",
@@ -450,7 +450,7 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [{ id: "I1", type: "intent", name: "Test", description: "Test." }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test", description: "Test." }],
 		};
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
@@ -461,7 +461,7 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [{ id: "I1", type: "intent", name: "Test", description: "Test." }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test", description: "Test." }],
 		};
 		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-schema-"));
 		try {
@@ -494,20 +494,20 @@ describe("round trip: subsystems", () => {
 			metadata: { title: "Parent" },
 			nodes: [
 				{
-					id: "I1",
+					id: "INT1",
 					type: "intent",
 					name: "Parent Intent",
 					description: "Parent.",
 				},
 				{
-					id: "EL1",
+					id: "ELEM1",
 					type: "element",
 					name: "Child Feature",
 					status: "active",
 					subsystem: {
 						nodes: [
 							{
-								id: "I1",
+								id: "INT1",
 								type: "intent",
 								name: "Child Intent",
 								description: "Child.",
@@ -527,12 +527,12 @@ describe("round trip: subsystems", () => {
 		jsonToMarkdownMultiDoc(original, tmpDir);
 		const result = markdownMultiDocToJson(tmpDir);
 
-		const el1 = result.nodes.find((n) => n.id === "EL1");
-		assert.ok(el1?.subsystem, "EL1 missing subsystem after round trip");
+		const el1 = result.nodes.find((n) => n.id === "ELEM1");
+		assert.ok(el1?.subsystem, "ELEM1 missing subsystem after round trip");
 		assert.ok(el1.subsystem.nodes.length > 0, "Subsystem should have nodes");
 
-		const childIntent = el1.subsystem.nodes.find((n) => n.id === "I1");
-		assert.ok(childIntent, "Child I1 missing from subsystem");
+		const childIntent = el1.subsystem.nodes.find((n) => n.id === "INT1");
+		assert.ok(childIntent, "Child INT1 missing from subsystem");
 		assert.equal(childIntent.name, "Child Intent");
 	});
 });

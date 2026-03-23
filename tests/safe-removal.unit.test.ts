@@ -3,21 +3,21 @@ import assert from "node:assert/strict";
 import { removeNodeOp } from "../src/index.js";
 import type { SysProMDocument } from "../src/schema.js";
 
-describe("CH32: Safe Graph Removal", () => {
+describe("CHG32: Safe Graph Removal", () => {
 	describe("RemovalImpact detection", () => {
 		it("detects when removing a node breaks must_follow chains", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "S1", type: "stage", name: "Stage 1" },
-					{ id: "S2", type: "stage", name: "Stage 2" },
-					{ id: "S3", type: "stage", name: "Stage 3" },
+					{ id: "STG1", type: "stage", name: "Stage 1" },
+					{ id: "STG2", type: "stage", name: "Stage 2" },
+					{ id: "STG3", type: "stage", name: "Stage 3" },
 				],
 				relationships: [
-					{ from: "S1", to: "S2", type: "must_follow" },
-					{ from: "S2", to: "S3", type: "must_follow" },
+					{ from: "STG1", to: "STG2", type: "must_follow" },
+					{ from: "STG2", to: "STG3", type: "must_follow" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "S2" });
+			const result = removeNodeOp({ doc, id: "STG2" });
 			// Should have warnings about chain break
 			assert.ok(result.warnings, "should report removal impact");
 		});
@@ -25,12 +25,12 @@ describe("CH32: Safe Graph Removal", () => {
 		it("preserves relationships when soft deleting node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "CN1", type: "concept", name: "Concept" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CON1", type: "concept", name: "Concept" },
 				],
-				relationships: [{ from: "I1", to: "CN1", type: "refines" }],
+				relationships: [{ from: "INT1", to: "CON1", type: "refines" }],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
+			const result = removeNodeOp({ doc, id: "INT1" });
 			assert.equal(
 				result.doc.relationships?.length,
 				1,
@@ -41,11 +41,11 @@ describe("CH32: Safe Graph Removal", () => {
 		it("detects scope references to removed node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "C1", type: "change", name: "Change", scope: ["I1"] },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CHG1", type: "change", name: "Change", scope: ["INT1"] },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
+			const result = removeNodeOp({ doc, id: "INT1" });
 			assert.ok(
 				result.warnings.some((w) => w.includes("scope")),
 				"should warn about scope references",
@@ -55,16 +55,16 @@ describe("CH32: Safe Graph Removal", () => {
 		it("detects operation target references to removed node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
+					{ id: "INT1", type: "intent", name: "Intent" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
-						operations: [{ type: "update", target: "I1" }],
+						operations: [{ type: "update", target: "INT1" }],
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
+			const result = removeNodeOp({ doc, id: "INT1" });
 			assert.ok(
 				result.warnings.some((w) => w.includes("operation")),
 				"should warn about operation references",
@@ -76,14 +76,14 @@ describe("CH32: Safe Graph Removal", () => {
 		it("cleans up scope references when removing node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "C1", type: "change", name: "Change", scope: ["I1", "I2"] },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CHG1", type: "change", name: "Change", scope: ["INT1", "INT2"] },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.ok(
-				!change?.scope?.includes("I1"),
+				!change?.scope?.includes("INT1"),
 				"scope should not include removed node",
 			);
 		});
@@ -91,38 +91,38 @@ describe("CH32: Safe Graph Removal", () => {
 		it("removes operation targets pointing to removed node", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "I2", type: "intent", name: "Intent 2" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "INT2", type: "intent", name: "Intent 2" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
 						operations: [
-							{ type: "update", target: "I1" },
-							{ type: "update", target: "I2" },
+							{ type: "update", target: "INT1" },
+							{ type: "update", target: "INT2" },
 						],
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(
 				change?.operations?.length,
 				1,
 				"should remove one operation",
 			);
-			assert.equal(change?.operations?.[0].target, "I2");
+			assert.equal(change?.operations?.[0].target, "INT2");
 		});
 
 		it("removes empty scope array after cleanup", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
-					{ id: "C1", type: "change", name: "Change", scope: ["I1"] },
+					{ id: "INT1", type: "intent", name: "Intent" },
+					{ id: "CHG1", type: "change", name: "Change", scope: ["INT1"] },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(
 				change?.scope,
 				undefined,
@@ -133,17 +133,17 @@ describe("CH32: Safe Graph Removal", () => {
 		it("removes empty operations array after cleanup", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
+					{ id: "INT1", type: "intent", name: "Intent" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
-						operations: [{ type: "update", target: "I1" }],
+						operations: [{ type: "update", target: "INT1" }],
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(
 				change?.operations,
 				undefined,
@@ -156,25 +156,25 @@ describe("CH32: Safe Graph Removal", () => {
 		it("removes node from view includes", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "V1", type: "view", name: "View", includes: ["I1", "I2"] },
-					{ id: "I1", type: "intent", name: "Intent 1" },
-					{ id: "I2", type: "intent", name: "Intent 2" },
+					{ id: "VIEW1", type: "view", name: "View", includes: ["INT1", "INT2"] },
+					{ id: "INT1", type: "intent", name: "Intent 1" },
+					{ id: "INT2", type: "intent", name: "Intent 2" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const view = result.doc.nodes.find((n) => n.id === "V1");
-			assert.deepEqual(view?.includes, ["I2"]);
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const view = result.doc.nodes.find((n) => n.id === "VIEW1");
+			assert.deepEqual(view?.includes, ["INT2"]);
 		});
 
 		it("removes empty includes array", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "V1", type: "view", name: "View", includes: ["I1"] },
-					{ id: "I1", type: "intent", name: "Intent" },
+					{ id: "VIEW1", type: "view", name: "View", includes: ["INT1"] },
+					{ id: "INT1", type: "intent", name: "Intent" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const view = result.doc.nodes.find((n) => n.id === "V1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const view = result.doc.nodes.find((n) => n.id === "VIEW1");
 			assert.equal(view?.includes, undefined);
 		});
 	});
@@ -182,16 +182,16 @@ describe("CH32: Safe Graph Removal", () => {
 	describe("External reference cleanup", () => {
 		it("removes external references to removed node", () => {
 			const doc: SysProMDocument = {
-				nodes: [{ id: "I1", type: "intent", name: "Intent" }],
+				nodes: [{ id: "INT1", type: "intent", name: "Intent" }],
 				external_references: [
 					{
 						identifier: "http://example.com",
 						role: "source",
-						node_id: "I1",
+						node_id: "INT1",
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
+			const result = removeNodeOp({ doc, id: "INT1" });
 			assert.equal(result.doc.external_references?.length ?? 0, 0);
 		});
 	});
@@ -200,16 +200,16 @@ describe("CH32: Safe Graph Removal", () => {
 		it("preserves relationships in soft delete", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "A" },
-					{ id: "I2", type: "intent", name: "B" },
-					{ id: "I3", type: "intent", name: "C" },
+					{ id: "INT1", type: "intent", name: "A" },
+					{ id: "INT2", type: "intent", name: "B" },
+					{ id: "INT3", type: "intent", name: "C" },
 				],
 				relationships: [
-					{ from: "I1", to: "I2", type: "refines" },
-					{ from: "I2", to: "I3", type: "depends_on" },
+					{ from: "INT1", to: "INT2", type: "refines" },
+					{ from: "INT2", to: "INT3", type: "depends_on" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I2" });
+			const result = removeNodeOp({ doc, id: "INT2" });
 			// Relationships should be preserved in soft delete
 			assert.equal(
 				result.doc.relationships?.length,
@@ -223,16 +223,16 @@ describe("CH32: Safe Graph Removal", () => {
 		it("detects must_follow chains that would be broken", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "S1", type: "stage", name: "Stage 1" },
-					{ id: "S2", type: "stage", name: "Stage 2" },
-					{ id: "S3", type: "stage", name: "Stage 3" },
+					{ id: "STG1", type: "stage", name: "Stage 1" },
+					{ id: "STG2", type: "stage", name: "Stage 2" },
+					{ id: "STG3", type: "stage", name: "Stage 3" },
 				],
 				relationships: [
-					{ from: "S1", to: "S2", type: "must_follow" },
-					{ from: "S2", to: "S3", type: "must_follow" },
+					{ from: "STG1", to: "STG2", type: "must_follow" },
+					{ from: "STG2", to: "STG3", type: "must_follow" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "S2" });
+			const result = removeNodeOp({ doc, id: "STG2" });
 			assert.ok(result.warnings, "should report chain break");
 		});
 	});
@@ -241,25 +241,25 @@ describe("CH32: Safe Graph Removal", () => {
 		it("handles node with multiple types of references", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent" },
+					{ id: "INT1", type: "intent", name: "Intent" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
-						scope: ["I1"],
-						operations: [{ type: "update", target: "I1" }],
+						scope: ["INT1"],
+						operations: [{ type: "update", target: "INT1" }],
 					},
-					{ id: "V1", type: "view", name: "View", includes: ["I1"] },
+					{ id: "VIEW1", type: "view", name: "View", includes: ["INT1"] },
 				],
-				relationships: [{ from: "I1", to: "C1", type: "affects" }],
+				relationships: [{ from: "INT1", to: "CHG1", type: "affects" }],
 				external_references: [
-					{ identifier: "http://example.com", role: "source", node_id: "I1" },
+					{ identifier: "http://example.com", role: "source", node_id: "INT1" },
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
+			const result = removeNodeOp({ doc, id: "INT1" });
 
 			// Check all cleanup occurred
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(change?.scope, undefined, "scope should be cleaned");
 			assert.equal(
 				change?.operations,
@@ -267,7 +267,7 @@ describe("CH32: Safe Graph Removal", () => {
 				"operations should be cleaned",
 			);
 
-			const view = result.doc.nodes.find((n) => n.id === "V1");
+			const view = result.doc.nodes.find((n) => n.id === "VIEW1");
 			assert.equal(view?.includes, undefined, "includes should be cleaned");
 
 			assert.equal(
@@ -286,41 +286,41 @@ describe("CH32: Safe Graph Removal", () => {
 		it("preserves other scopes while cleaning up reference", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent 1" },
-					{ id: "I2", type: "intent", name: "Intent 2" },
+					{ id: "INT1", type: "intent", name: "Intent 1" },
+					{ id: "INT2", type: "intent", name: "Intent 2" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
-						scope: ["I1", "I2"],
+						scope: ["INT1", "INT2"],
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
-			assert.deepEqual(change?.scope, ["I2"], "scope should retain I2");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
+			assert.deepEqual(change?.scope, ["INT2"], "scope should retain INT2");
 		});
 
 		it("preserves other operations while cleaning up target", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "I1", type: "intent", name: "Intent 1" },
-					{ id: "I2", type: "intent", name: "Intent 2" },
+					{ id: "INT1", type: "intent", name: "Intent 1" },
+					{ id: "INT2", type: "intent", name: "Intent 2" },
 					{
-						id: "C1",
+						id: "CHG1",
 						type: "change",
 						name: "Change",
 						operations: [
-							{ type: "update", target: "I1" },
-							{ type: "add", target: "I2" },
+							{ type: "update", target: "INT1" },
+							{ type: "add", target: "INT2" },
 						],
 					},
 				],
 			};
-			const result = removeNodeOp({ doc, id: "I1" });
-			const change = result.doc.nodes.find((n) => n.id === "C1");
+			const result = removeNodeOp({ doc, id: "INT1" });
+			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(change?.operations?.length, 1);
-			assert.equal(change?.operations?.[0].target, "I2");
+			assert.equal(change?.operations?.[0].target, "INT2");
 		});
 	});
 });

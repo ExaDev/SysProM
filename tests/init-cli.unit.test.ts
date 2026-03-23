@@ -35,6 +35,18 @@ describe("spm init", () => {
 		assert.equal(doc.metadata.doc_type, "sysprom");
 	});
 
+	it("defaults to current directory when no path specified", () => {
+		// Run init without path argument from TMP directory
+		execSync(`pnpm tsx ${join(ROOT, "src/cli/index.ts")} init`, {
+			cwd: TMP,
+			encoding: "utf8",
+		});
+		const target = join(TMP, ".spm.json");
+		assert.ok(existsSync(target), ".spm.json should exist in cwd");
+		const doc = JSON.parse(readFileSync(target, "utf8"));
+		assert.equal(doc.metadata.doc_type, "sysprom");
+	});
+
 	it("creates named .spm/ for non-existent path (default format)", () => {
 		const target = join(TMP, "myproject");
 		spm(`init ${target}`);

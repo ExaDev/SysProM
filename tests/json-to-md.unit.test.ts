@@ -27,7 +27,7 @@ function minimal(): SysProMDocument {
 		},
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 				description: "A test intent.",
@@ -48,19 +48,19 @@ function full(): SysProMDocument {
 		},
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 				description: "Enable testing.",
 			},
 			{
-				id: "CN1",
+				id: "CON1",
 				type: "concept",
 				name: "Test Concept",
 				description: "A concept.",
 			},
 			{
-				id: "CP1",
+				id: "CAP1",
 				type: "capability",
 				name: "Test Capability",
 				description: "A capability.",
@@ -72,7 +72,7 @@ function full(): SysProMDocument {
 				description: "Must hold.",
 			},
 			{
-				id: "PR1",
+				id: "PRIN1",
 				type: "principle",
 				name: "Test Principle",
 				description: "A principle.",
@@ -84,21 +84,21 @@ function full(): SysProMDocument {
 				description: "A policy.",
 			},
 			{
-				id: "EL1",
+				id: "ELEM1",
 				type: "element",
 				name: "Test Element",
 				description: "An element.",
 				status: "active",
 			},
 			{
-				id: "R1",
+				id: "REAL1",
 				type: "realisation",
 				name: "Test Realisation",
 				description: "A realisation.",
 				status: "active",
 			},
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				context: "We need to decide.",
@@ -116,12 +116,12 @@ function full(): SysProMDocument {
 				},
 			},
 			{
-				id: "CH1",
+				id: "CHG1",
 				type: "change",
 				name: "Test Change",
 				description: "A change.",
-				scope: ["EL1"],
-				operations: [{ type: "add", target: "EL1" }],
+				scope: ["ELEM1"],
+				operations: [{ type: "add", target: "ELEM1" }],
 				plan: [
 					{ description: "Step one", done: true },
 					{ description: "Step two", done: false },
@@ -129,26 +129,26 @@ function full(): SysProMDocument {
 				lifecycle: { defined: true, introduced: true, complete: false },
 			},
 			{
-				id: "V1",
+				id: "VIEW1",
 				type: "view",
 				name: "Domain View",
-				includes: ["I1", "CN1", "CP1"],
+				includes: ["INT1", "CON1", "CAP1"],
 			},
 		],
 		relationships: [
-			{ from: "CN1", to: "I1", type: "refines" },
-			{ from: "CP1", to: "CN1", type: "refines" },
-			{ from: "EL1", to: "CP1", type: "realises" },
-			{ from: "R1", to: "EL1", type: "implements" },
-			{ from: "D1", to: "EL1", type: "affects" },
-			{ from: "D1", to: "INV1", type: "must_preserve" },
-			{ from: "CH1", to: "D1", type: "affects" },
+			{ from: "CON1", to: "INT1", type: "refines" },
+			{ from: "CAP1", to: "CON1", type: "refines" },
+			{ from: "ELEM1", to: "CAP1", type: "realises" },
+			{ from: "REAL1", to: "ELEM1", type: "implements" },
+			{ from: "DEC1", to: "ELEM1", type: "affects" },
+			{ from: "DEC1", to: "INV1", type: "must_preserve" },
+			{ from: "CHG1", to: "DEC1", type: "affects" },
 		],
 		external_references: [
 			{
 				role: "source",
 				identifier: "https://example.com",
-				node_id: "I1",
+				node_id: "INT1",
 				description: "Source material.",
 			},
 		],
@@ -160,20 +160,20 @@ function withSubsystem(): SysProMDocument {
 		metadata: { title: "Parent System", doc_type: "sysprom" },
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Parent Intent",
 				description: "Parent.",
 			},
 			{
-				id: "EL1",
+				id: "ELEM1",
 				type: "element",
 				name: "Child Feature",
 				status: "active",
 				subsystem: {
 					nodes: [
 						{
-							id: "I1",
+							id: "INT1",
 							type: "intent",
 							name: "Child Intent",
 							description: "Child.",
@@ -185,7 +185,7 @@ function withSubsystem(): SysProMDocument {
 							description: "Must hold in child.",
 						},
 					],
-					relationships: [{ from: "INV1", to: "I1", type: "constrained_by" }],
+					relationships: [{ from: "INV1", to: "INT1", type: "constrained_by" }],
 				},
 			},
 		],
@@ -197,13 +197,13 @@ function withMultilineDescriptions(): SysProMDocument {
 		metadata: { title: "Multiline Test" },
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Multiline Intent",
 				description: ["First line.", "Second line.", "Third line."],
 			},
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Multiline Decision",
 				context: ["Context line one.", "Context line two."],
@@ -225,7 +225,7 @@ describe("json-to-md single file", () => {
 		const md = jsonToMarkdownSingle(minimal());
 		assert.ok(md.includes("# Test System"));
 		assert.ok(md.includes("## Intent"));
-		assert.ok(md.includes("### I1 — Test Intent"));
+		assert.ok(md.includes("### INT1 — Test Intent"));
 		assert.ok(md.includes("A test intent."));
 	});
 
@@ -269,7 +269,7 @@ describe("json-to-md single file", () => {
 
 	it("renders date lifecycle values as checked", () => {
 		const doc = full();
-		const node = doc.nodes.find((n) => n.id === "CH1")!;
+		const node = doc.nodes.find((n) => n.id === "CHG1")!;
 		// Replace boolean lifecycle with date strings
 		node.lifecycle = {
 			defined: "2026-03-21",
@@ -293,7 +293,7 @@ describe("json-to-md single file", () => {
 
 	it("renders lifecycle states in protocol order, not alphabetical", () => {
 		const doc = full();
-		const decision = doc.nodes.find((n) => n.id === "D1")!;
+		const decision = doc.nodes.find((n) => n.id === "DEC1")!;
 		// Keys in alphabetical order (as JSON.stringify would produce)
 		decision.lifecycle = {
 			accepted: true,
@@ -324,9 +324,9 @@ describe("json-to-md single file", () => {
 	it("renders change fields", () => {
 		const md = jsonToMarkdownSingle(full());
 		assert.ok(md.includes("Scope:"));
-		assert.ok(md.includes("- EL1"));
+		assert.ok(md.includes("- ELEM1"));
 		assert.ok(md.includes("Operations:"));
-		assert.ok(md.includes("- add EL1"));
+		assert.ok(md.includes("- add ELEM1"));
 		assert.ok(md.includes("- [x] Step one"));
 		assert.ok(md.includes("- [ ] Step two"));
 	});
@@ -334,7 +334,7 @@ describe("json-to-md single file", () => {
 	it("renders relationships", () => {
 		const md = jsonToMarkdownSingle(full());
 		assert.ok(md.includes("## Relationships"));
-		assert.ok(md.includes("| CN1 | refines | I1 |"));
+		assert.ok(md.includes("| CON1 | refines | INT1 |"));
 	});
 
 	it("renders external references", () => {
@@ -346,8 +346,8 @@ describe("json-to-md single file", () => {
 	it("renders view includes", () => {
 		const md = jsonToMarkdownSingle(full());
 		assert.ok(md.includes("Includes:"));
-		assert.ok(md.includes("- I1"));
-		assert.ok(md.includes("- CN1"));
+		assert.ok(md.includes("- INT1"));
+		assert.ok(md.includes("- CON1"));
 	});
 
 	it("renders multiline descriptions as separate lines", () => {
@@ -430,30 +430,30 @@ describe("json-to-md multi-doc", () => {
 		const intent = readFileSync(join(tmpDir, "INTENT.md"), "utf8");
 		assert.ok(intent.includes("## Intent"));
 		assert.ok(intent.includes("## Concepts"));
-		assert.ok(intent.includes("### CN1 — Test Concept"));
+		assert.ok(intent.includes("### CON1 — Test Concept"));
 		assert.ok(intent.includes("## Capabilities"));
-		assert.ok(intent.includes("### CP1 — Test Capability"));
+		assert.ok(intent.includes("### CAP1 — Test Capability"));
 	});
 
 	it("INVARIANTS.md contains invariants and policies", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const inv = readFileSync(join(tmpDir, "INVARIANTS.md"), "utf8");
 		assert.ok(inv.includes("### INV1 — Test Invariant"));
-		assert.ok(inv.includes("### PR1 — Test Principle"));
+		assert.ok(inv.includes("### PRIN1 — Test Principle"));
 		assert.ok(inv.includes("### POL1 — Test Policy"));
 	});
 
 	it("STATE.md contains elements and realisations", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const state = readFileSync(join(tmpDir, "STATE.md"), "utf8");
-		assert.ok(state.includes("### EL1 — Test Element"));
-		assert.ok(state.includes("### R1 — Test Realisation"));
+		assert.ok(state.includes("### ELEM1 — Test Element"));
+		assert.ok(state.includes("### REAL1 — Test Realisation"));
 	});
 
 	it("DECISIONS.md contains decision with full fields", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const dec = readFileSync(join(tmpDir, "DECISIONS.md"), "utf8");
-		assert.ok(dec.includes("### D1 — Test Decision"));
+		assert.ok(dec.includes("### DEC1 — Test Decision"));
 		assert.ok(dec.includes("Context:"));
 		assert.ok(dec.includes("Chosen: O2"));
 		assert.ok(dec.includes("- [x] proposed"));
@@ -462,7 +462,7 @@ describe("json-to-md multi-doc", () => {
 	it("CHANGES.md contains change with plan", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const chg = readFileSync(join(tmpDir, "CHANGES.md"), "utf8");
-		assert.ok(chg.includes("### CH1 — Test Change"));
+		assert.ok(chg.includes("### CHG1 — Test Change"));
 		assert.ok(chg.includes("- [x] Step one"));
 		assert.ok(chg.includes("- [ ] Step two"));
 	});
@@ -470,9 +470,9 @@ describe("json-to-md multi-doc", () => {
 	it("renders node relationships in the correct file", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const intent = readFileSync(join(tmpDir, "INTENT.md"), "utf8");
-		assert.ok(intent.includes("Refines: I1"));
+		assert.ok(intent.includes("Refines: INT1"));
 		const state = readFileSync(join(tmpDir, "STATE.md"), "utf8");
-		assert.ok(state.includes("Realises: CP1"));
+		assert.ok(state.includes("Realises: CAP1"));
 	});
 
 	it("README contains external references", () => {
@@ -484,15 +484,15 @@ describe("json-to-md multi-doc", () => {
 	it("README contains views", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const readme = readFileSync(join(tmpDir, "README.md"), "utf8");
-		assert.ok(readme.includes("### V1 — Domain View"));
-		assert.ok(readme.includes("- I1"));
+		assert.ok(readme.includes("### VIEW1 — Domain View"));
+		assert.ok(readme.includes("- INT1"));
 	});
 
 	it("creates subsystem folders", () => {
 		jsonToMarkdownMultiDoc(withSubsystem(), tmpDir);
 		const dirs = readdirSync(tmpDir);
-		const subDir = dirs.find((d) => d.startsWith("EL1-"));
-		assert.ok(subDir, "Expected a subsystem folder starting with EL1-");
+		const subDir = dirs.find((d) => d.startsWith("ELEM1-"));
+		assert.ok(subDir, "Expected a subsystem folder starting with ELEM1-");
 		assert.ok(existsSync(join(tmpDir, subDir, "README.md")));
 		assert.ok(existsSync(join(tmpDir, subDir, "INTENT.md")));
 		assert.ok(existsSync(join(tmpDir, subDir, "INVARIANTS.md")));
@@ -501,17 +501,17 @@ describe("json-to-md multi-doc", () => {
 	it("subsystem README contains correct title", () => {
 		jsonToMarkdownMultiDoc(withSubsystem(), tmpDir);
 		const dirs = readdirSync(tmpDir);
-		const subDir = dirs.find((d) => d.startsWith("EL1-"))!;
+		const subDir = dirs.find((d) => d.startsWith("ELEM1-"))!;
 		const readme = readFileSync(join(tmpDir, subDir, "README.md"), "utf8");
-		assert.ok(readme.includes("# EL1 — Child Feature"));
+		assert.ok(readme.includes("# ELEM1 — Child Feature"));
 	});
 
 	it("subsystem INTENT.md contains child nodes", () => {
 		jsonToMarkdownMultiDoc(withSubsystem(), tmpDir);
 		const dirs = readdirSync(tmpDir);
-		const subDir = dirs.find((d) => d.startsWith("EL1-"))!;
+		const subDir = dirs.find((d) => d.startsWith("ELEM1-"))!;
 		const intent = readFileSync(join(tmpDir, subDir, "INTENT.md"), "utf8");
-		assert.ok(intent.includes("### I1 — Child Intent"));
+		assert.ok(intent.includes("### INT1 — Child Intent"));
 	});
 });
 

@@ -13,9 +13,9 @@ function makeDoc(
 describe("stats", () => {
 	it("correct node counts by type", () => {
 		const doc = makeDoc([
-			{ id: "I1", type: "intent", name: "A" },
-			{ id: "I2", type: "intent", name: "B" },
-			{ id: "C1", type: "concept", name: "C" },
+			{ id: "INT1", type: "intent", name: "A" },
+			{ id: "INT2", type: "intent", name: "B" },
+			{ id: "CON1", type: "concept", name: "C" },
 		]);
 		const result = statsOp({ doc });
 		assert.equal(result.nodesByType.intent, 2);
@@ -25,12 +25,12 @@ describe("stats", () => {
 	it("correct relationship counts by type", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "I1", type: "intent", name: "A" },
-				{ id: "I2", type: "intent", name: "B" },
+				{ id: "INT1", type: "intent", name: "A" },
+				{ id: "INT2", type: "intent", name: "B" },
 			],
 			relationships: [
-				{ from: "I1", to: "I2", type: "refines" },
-				{ from: "I2", to: "I1", type: "depends_on" },
+				{ from: "INT1", to: "INT2", type: "refines" },
+				{ from: "INT2", to: "INT1", type: "depends_on" },
 			],
 		};
 		const result = statsOp({ doc });
@@ -42,17 +42,17 @@ describe("stats", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "S1",
+					id: "ELEM1",
 					type: "element",
 					name: "Subsystem",
 					subsystem: {
 						nodes: [
 							{
-								id: "S2",
+								id: "ELEM2",
 								type: "element",
 								name: "Nested",
 								subsystem: {
-									nodes: [{ id: "E1", type: "element", name: "Deep" }],
+									nodes: [{ id: "ELEM3", type: "element", name: "Deep" }],
 								},
 							},
 						],
@@ -68,13 +68,13 @@ describe("stats", () => {
 	it("correct lifecycle summaries", () => {
 		const doc = makeDoc([
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "D",
 				lifecycle: { proposed: true, reviewed: true },
 			},
-			{ id: "D2", type: "decision", name: "D2", lifecycle: { proposed: true } },
-			{ id: "C1", type: "change", name: "C", lifecycle: { implemented: true } },
+			{ id: "DEC2", type: "decision", name: "DEC2", lifecycle: { proposed: true } },
+			{ id: "CHG1", type: "change", name: "C", lifecycle: { implemented: true } },
 		]);
 		const result = statsOp({ doc });
 		assert.equal(result.decisionLifecycle.proposed, 2);
@@ -85,8 +85,8 @@ describe("stats", () => {
 	it("correct view and external reference counts", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "V1", type: "view", name: "View", includes: ["I1"] },
-				{ id: "I1", type: "intent", name: "Intent" },
+				{ id: "VIEW1", type: "view", name: "View", includes: ["INT1"] },
+				{ id: "INT1", type: "intent", name: "Intent" },
 			],
 			external_references: [
 				{ role: "source", identifier: "https://example.com" },

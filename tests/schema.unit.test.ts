@@ -36,7 +36,7 @@ describe("schema structure", () => {
 
 	it("accepts minimal valid document (single node)", () => {
 		valid({
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 
@@ -48,13 +48,13 @@ describe("schema structure", () => {
 
 	it("rejects node without type", () => {
 		invalid({
-			nodes: [{ id: "I1", name: "Test" }],
+			nodes: [{ id: "INT1", name: "Test" }],
 		});
 	});
 
 	it("rejects node without name", () => {
 		invalid({
-			nodes: [{ id: "I1", type: "intent" }],
+			nodes: [{ id: "INT1", type: "intent" }],
 		});
 	});
 });
@@ -69,7 +69,7 @@ describe("metadata", () => {
 				status: "active",
 				version: 1,
 			},
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 
@@ -80,28 +80,28 @@ describe("metadata", () => {
 				doc_type: "feature",
 				scope: "feature",
 			},
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 
 	it("accepts string version", () => {
 		valid({
 			metadata: { version: "2.1.0" },
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 
 	it("accepts integer version", () => {
 		valid({
 			metadata: { version: 3 },
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 
 	it("accepts additional metadata fields (extensibility)", () => {
 		valid({
 			metadata: { title: "Test", custom_field: "hello" },
-			nodes: [{ id: "I1", type: "intent", name: "Test" }],
+			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		});
 	});
 });
@@ -156,7 +156,7 @@ describe("node lifecycle", () => {
 		valid({
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Test",
 					lifecycle: {
@@ -183,7 +183,7 @@ describe("decision nodes", () => {
 		valid({
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Choose approach",
 					context: "We need to pick an algorithm",
@@ -200,7 +200,7 @@ describe("decision nodes", () => {
 
 	it("accepts decision without optional fields", () => {
 		valid({
-			nodes: [{ id: "D1", type: "decision", name: "Choose approach" }],
+			nodes: [{ id: "DEC1", type: "decision", name: "Choose approach" }],
 		});
 	});
 });
@@ -210,15 +210,15 @@ describe("change nodes", () => {
 		valid({
 			nodes: [
 				{
-					id: "CH1",
+					id: "CHG1",
 					type: "change",
 					name: "Add feature",
-					scope: ["EL1", "EL2"],
+					scope: ["ELEM1", "ELEM2"],
 					operations: [
-						{ type: "add", target: "EL3", description: "Add new element" },
-						{ type: "update", target: "EL1" },
-						{ type: "remove", target: "EL2" },
-						{ type: "link", description: "Link EL3 to CP1" },
+						{ type: "add", target: "ELEM3", description: "Add new element" },
+						{ type: "update", target: "ELEM1" },
+						{ type: "remove", target: "ELEM2" },
+						{ type: "link", description: "Link ELEM3 to CAP1" },
 					],
 					plan: [
 						{ description: "Design interface", done: true },
@@ -242,10 +242,10 @@ describe("view nodes", () => {
 		valid({
 			nodes: [
 				{
-					id: "V1",
+					id: "VIEW1",
 					type: "view",
 					name: "Domain View",
-					includes: ["I1", "CN1", "CP1", "EL1", "R1"],
+					includes: ["INT1", "CON1", "CAP1", "ELEM1", "REAL1"],
 				},
 			],
 		});
@@ -257,7 +257,7 @@ describe("artefact flow nodes", () => {
 		valid({
 			nodes: [
 				{
-					id: "AF1",
+					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Request to Plan",
 					input: "ART1",
@@ -370,12 +370,12 @@ describe("relationships", () => {
 describe("external references", () => {
 	it("accepts external reference at graph level", () => {
 		valid({
-			nodes: [{ id: "D1", type: "decision", name: "Test" }],
+			nodes: [{ id: "DEC1", type: "decision", name: "Test" }],
 			external_references: [
 				{
 					role: "context",
 					identifier: "https://example.com/research.pdf",
-					node_id: "D1",
+					node_id: "DEC1",
 					description: "Research that informed this decision",
 				},
 			],
@@ -386,7 +386,7 @@ describe("external references", () => {
 		valid({
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Test",
 					external_references: [
@@ -404,7 +404,7 @@ describe("external references", () => {
 		valid({
 			nodes: [
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Test",
 					external_references: [
@@ -464,10 +464,10 @@ describe("recursive composition (subsystem)", () => {
 					name: "Sync Feature",
 					subsystem: {
 						nodes: [
-							{ id: "I1", type: "intent", name: "Synchronised Access" },
+							{ id: "INT1", type: "intent", name: "Synchronised Access" },
 							{ id: "INV1", type: "invariant", name: "Requires Remote" },
 						],
-						relationships: [{ from: "INV1", to: "I1", type: "constrained_by" }],
+						relationships: [{ from: "INV1", to: "INT1", type: "constrained_by" }],
 					},
 				},
 			],
@@ -650,14 +650,14 @@ describe("full document", () => {
 			},
 			nodes: [
 				{
-					id: "I1",
+					id: "INT1",
 					type: "intent",
 					name: "Document Workspace",
 					description:
 						"Enable users to ingest, transform, store, and access documents.",
 				},
-				{ id: "CN1", type: "concept", name: "Document Transformation" },
-				{ id: "CP1", type: "capability", name: "Convert Document" },
+				{ id: "CON1", type: "concept", name: "Document Transformation" },
+				{ id: "CAP1", type: "capability", name: "Convert Document" },
 				{
 					id: "INV1",
 					type: "invariant",
@@ -669,21 +669,21 @@ describe("full document", () => {
 					type: "invariant",
 					name: "Placement-Agnostic Conversion",
 				},
-				{ id: "EL1", type: "element", name: "Transformation Engine" },
+				{ id: "ELEM1", type: "element", name: "Transformation Engine" },
 				{
-					id: "R1",
+					id: "REAL1",
 					type: "realisation",
 					name: "Local Conversion",
 					status: "active",
 				},
 				{
-					id: "R2",
+					id: "REAL2",
 					type: "realisation",
 					name: "Remote Conversion",
 					status: "active",
 				},
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Select Local Conversion as Default",
 					context: "Need to choose a default conversion strategy",
@@ -702,11 +702,11 @@ describe("full document", () => {
 					},
 				},
 				{
-					id: "CH1",
+					id: "CHG1",
 					type: "change",
 					name: "Introduce Remote Conversion",
-					scope: ["EL1", "R2"],
-					operations: [{ type: "add", target: "R2" }],
+					scope: ["ELEM1", "REAL2"],
+					operations: [{ type: "add", target: "REAL2" }],
 					plan: [
 						{ description: "Define conversion contract", done: true },
 						{ description: "Implement remote service", done: false },
@@ -721,28 +721,28 @@ describe("full document", () => {
 					},
 				},
 				{
-					id: "V1",
+					id: "VIEW1",
 					type: "view",
 					name: "Domain View",
-					includes: ["I1", "CN1", "CP1", "INV1", "INV2", "EL1", "R1", "R2"],
+					includes: ["INT1", "CON1", "CAP1", "INV1", "INV2", "ELEM1", "REAL1", "REAL2"],
 				},
 			],
 			relationships: [
-				{ from: "CN1", to: "I1", type: "refines" },
-				{ from: "CP1", to: "CN1", type: "refines" },
-				{ from: "EL1", to: "CP1", type: "realises" },
-				{ from: "R1", to: "EL1", type: "implements" },
-				{ from: "R2", to: "EL1", type: "implements" },
-				{ from: "D1", to: "EL1", type: "affects" },
-				{ from: "D1", to: "R1", type: "selects" },
-				{ from: "D1", to: "INV2", type: "must_preserve" },
-				{ from: "CH1", to: "D1", type: "affects" },
+				{ from: "CON1", to: "INT1", type: "refines" },
+				{ from: "CAP1", to: "CON1", type: "refines" },
+				{ from: "ELEM1", to: "CAP1", type: "realises" },
+				{ from: "REAL1", to: "ELEM1", type: "implements" },
+				{ from: "REAL2", to: "ELEM1", type: "implements" },
+				{ from: "DEC1", to: "ELEM1", type: "affects" },
+				{ from: "DEC1", to: "REAL1", type: "selects" },
+				{ from: "DEC1", to: "INV2", type: "must_preserve" },
+				{ from: "CHG1", to: "DEC1", type: "affects" },
 			],
 			external_references: [
 				{
 					role: "prior_art",
 					identifier: "https://github.com/github/spec-kit",
-					node_id: "I1",
+					node_id: "INT1",
 					description: "Spec Kit was evaluated during design",
 				},
 			],

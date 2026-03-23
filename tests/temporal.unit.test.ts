@@ -28,7 +28,7 @@ describe("timeline", () => {
 	it("returns empty array when nodes have only boolean lifecycle values", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -46,7 +46,7 @@ describe("timeline", () => {
 	it("extracts timestamped events and sorts chronologically", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -70,7 +70,7 @@ describe("timeline", () => {
 	it("interleaves and sorts events from multiple nodes", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "First Decision",
 				lifecycle: {
@@ -79,7 +79,7 @@ describe("timeline", () => {
 				},
 			},
 			{
-				id: "D2",
+				id: "DEC2",
 				type: "decision",
 				name: "Second Decision",
 				lifecycle: {
@@ -92,27 +92,27 @@ describe("timeline", () => {
 		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 4);
-		// Sorted chronologically: D2 proposed, D1 proposed, D2 accepted, D1 accepted
-		assert.equal(events[0].nodeId, "D2");
+		// Sorted chronologically: DEC2 proposed, DEC1 proposed, DEC2 accepted, DEC1 accepted
+		assert.equal(events[0].nodeId, "DEC2");
 		assert.equal(events[0].timestamp, "2025-06-15");
-		assert.equal(events[1].nodeId, "D1");
+		assert.equal(events[1].nodeId, "DEC1");
 		assert.equal(events[1].timestamp, "2025-07-01");
-		assert.equal(events[2].nodeId, "D2");
+		assert.equal(events[2].nodeId, "DEC2");
 		assert.equal(events[2].timestamp, "2025-07-15");
-		assert.equal(events[3].nodeId, "D1");
+		assert.equal(events[3].nodeId, "DEC1");
 		assert.equal(events[3].timestamp, "2025-08-01");
 	});
 
 	it("includes nodes from subsystems", () => {
 		const nodes: Node[] = [
 			{
-				id: "E1",
+				id: "ELEM1",
 				type: "element",
 				name: "Parent Element",
 				subsystem: {
 					nodes: [
 						{
-							id: "D1",
+							id: "DEC1",
 							type: "decision",
 							name: "Nested Decision",
 							lifecycle: {
@@ -127,7 +127,7 @@ describe("timeline", () => {
 		const events = timelineOp({ doc });
 
 		assert.equal(events.length, 1);
-		assert.equal(events[0].nodeId, "D1");
+		assert.equal(events[0].nodeId, "DEC1");
 		assert.equal(events[0].nodeName, "Nested Decision");
 		assert.equal(events[0].timestamp, "2025-05-01");
 	});
@@ -135,7 +135,7 @@ describe("timeline", () => {
 	it("preserves node metadata in events", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "My Decision",
 				lifecycle: {
@@ -146,7 +146,7 @@ describe("timeline", () => {
 		const doc = makeDoc(nodes);
 		const events = timelineOp({ doc });
 
-		assert.equal(events[0].nodeId, "D1");
+		assert.equal(events[0].nodeId, "DEC1");
 		assert.equal(events[0].nodeName, "My Decision");
 		assert.equal(events[0].nodeType, "decision");
 		assert.equal(events[0].state, "proposed");
@@ -161,7 +161,7 @@ describe("nodeHistory", () => {
 	it("returns empty array for non-existent node", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -177,7 +177,7 @@ describe("nodeHistory", () => {
 	it("returns timestamped events for a specific node, sorted chronologically", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -188,7 +188,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistoryOp({ doc, nodeId: "D1" });
+		const history = nodeHistoryOp({ doc, nodeId: "DEC1" });
 
 		assert.equal(history.length, 3);
 		assert.equal(history[0].state, "accepted");
@@ -202,7 +202,7 @@ describe("nodeHistory", () => {
 	it("skips boolean lifecycle entries", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -214,7 +214,7 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistoryOp({ doc, nodeId: "D1" });
+		const history = nodeHistoryOp({ doc, nodeId: "DEC1" });
 
 		assert.equal(history.length, 2);
 		assert.ok(history.every((e) => typeof e.timestamp === "string"));
@@ -226,13 +226,13 @@ describe("nodeHistory", () => {
 	it("finds node in nested subsystem", () => {
 		const nodes: Node[] = [
 			{
-				id: "E1",
+				id: "ELEM1",
 				type: "element",
 				name: "Parent Element",
 				subsystem: {
 					nodes: [
 						{
-							id: "D1",
+							id: "DEC1",
 							type: "decision",
 							name: "Nested Decision",
 							lifecycle: {
@@ -245,10 +245,10 @@ describe("nodeHistory", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const history = nodeHistoryOp({ doc, nodeId: "D1" });
+		const history = nodeHistoryOp({ doc, nodeId: "DEC1" });
 
 		assert.equal(history.length, 2);
-		assert.equal(history[0].nodeId, "D1");
+		assert.equal(history[0].nodeId, "DEC1");
 		assert.equal(history[0].nodeName, "Nested Decision");
 	});
 });
@@ -267,7 +267,7 @@ describe("stateAt", () => {
 	it("includes states with date <= query timestamp", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -281,7 +281,7 @@ describe("stateAt", () => {
 		const states = stateAtOp({ doc, timestamp: "2025-07-15" });
 
 		assert.equal(states.length, 1);
-		assert.equal(states[0].nodeId, "D1");
+		assert.equal(states[0].nodeId, "DEC1");
 		assert.equal(states[0].activeStates.length, 2);
 		assert.ok(states[0].activeStates.includes("proposed"));
 		assert.ok(states[0].activeStates.includes("accepted"));
@@ -290,7 +290,7 @@ describe("stateAt", () => {
 	it("excludes states with date > query timestamp", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -310,7 +310,7 @@ describe("stateAt", () => {
 	it("includes boolean true states (undated but active)", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -333,7 +333,7 @@ describe("stateAt", () => {
 	it("excludes boolean false states", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -357,7 +357,7 @@ describe("stateAt", () => {
 	it("excludes nodes with no active states", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -366,7 +366,7 @@ describe("stateAt", () => {
 				},
 			},
 			{
-				id: "D2",
+				id: "DEC2",
 				type: "decision",
 				name: "Active Decision",
 				lifecycle: {
@@ -378,13 +378,13 @@ describe("stateAt", () => {
 		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
-		assert.equal(states[0].nodeId, "D2");
+		assert.equal(states[0].nodeId, "DEC2");
 	});
 
 	it("handles nodes without lifecycle gracefully", () => {
 		const nodes: Node[] = [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 			},
@@ -398,7 +398,7 @@ describe("stateAt", () => {
 	it("sorts active states alphabetically", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -422,19 +422,19 @@ describe("stateAt", () => {
 	it("sorts result by nodeId", () => {
 		const nodes: Node[] = [
 			{
-				id: "Z1",
+				id: "DEC3",
 				type: "decision",
 				name: "Z Decision",
 				lifecycle: { proposed: true },
 			},
 			{
-				id: "A1",
+				id: "DEC1",
 				type: "decision",
 				name: "A Decision",
 				lifecycle: { proposed: true },
 			},
 			{
-				id: "M1",
+				id: "DEC2",
 				type: "decision",
 				name: "M Decision",
 				lifecycle: { proposed: true },
@@ -444,21 +444,21 @@ describe("stateAt", () => {
 		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 3);
-		assert.equal(states[0].nodeId, "A1");
-		assert.equal(states[1].nodeId, "M1");
-		assert.equal(states[2].nodeId, "Z1");
+		assert.equal(states[0].nodeId, "DEC1");
+		assert.equal(states[1].nodeId, "DEC2");
+		assert.equal(states[2].nodeId, "DEC3");
 	});
 
 	it("includes states from subsystems", () => {
 		const nodes: Node[] = [
 			{
-				id: "E1",
+				id: "ELEM1",
 				type: "element",
 				name: "Parent Element",
 				subsystem: {
 					nodes: [
 						{
-							id: "D1",
+							id: "DEC1",
 							type: "decision",
 							name: "Nested Decision",
 							lifecycle: {
@@ -473,14 +473,14 @@ describe("stateAt", () => {
 		const states = stateAtOp({ doc, timestamp: "2025-07-01" });
 
 		assert.equal(states.length, 1);
-		assert.equal(states[0].nodeId, "D1");
+		assert.equal(states[0].nodeId, "DEC1");
 		assert.equal(states[0].activeStates[0], "proposed");
 	});
 
 	it("handles exact date match as inclusive", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Test Decision",
 				lifecycle: {
@@ -505,7 +505,7 @@ describe("full ISO timestamps", () => {
 	it("timeline sorts full ISO timestamps correctly", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "First",
 				lifecycle: {
@@ -527,13 +527,13 @@ describe("full ISO timestamps", () => {
 	it("timeline interleaves date-only and full timestamps", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "First",
 				lifecycle: { proposed: "2025-06-10" },
 			},
 			{
-				id: "D2",
+				id: "DEC2",
 				type: "decision",
 				name: "Second",
 				lifecycle: { proposed: "2025-06-10T08:00:00Z" },
@@ -544,14 +544,14 @@ describe("full ISO timestamps", () => {
 
 		assert.equal(events.length, 2);
 		// Date-only "2025-06-10" sorts before "2025-06-10T08:00:00Z" lexicographically
-		assert.equal(events[0].nodeId, "D1");
-		assert.equal(events[1].nodeId, "D2");
+		assert.equal(events[0].nodeId, "DEC1");
+		assert.equal(events[1].nodeId, "DEC2");
 	});
 
 	it("stateAt works with full ISO timestamps", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "First",
 				lifecycle: {
@@ -572,7 +572,7 @@ describe("full ISO timestamps", () => {
 	it("nodeHistory preserves full ISO timestamps", () => {
 		const nodes: Node[] = [
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "First",
 				lifecycle: {
@@ -582,7 +582,7 @@ describe("full ISO timestamps", () => {
 			},
 		];
 		const doc = makeDoc(nodes);
-		const events = nodeHistoryOp({ doc, nodeId: "D1" });
+		const events = nodeHistoryOp({ doc, nodeId: "DEC1" });
 
 		assert.equal(events.length, 2);
 		assert.equal(events[0].timestamp, "2025-06-10T09:15:30Z");

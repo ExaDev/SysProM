@@ -12,20 +12,20 @@ import type { SysProMDocument } from "../src/schema.js";
 function makeDoc(): SysProMDocument {
 	return {
 		nodes: [
-			{ id: "I1", type: "intent", name: "Root Intent", status: "accepted" },
-			{ id: "C1", type: "concept", name: "Concept", status: "proposed" },
+			{ id: "INT1", type: "intent", name: "Root Intent", status: "accepted" },
+			{ id: "CON1", type: "concept", name: "Concept", status: "proposed" },
 			{
-				id: "C2",
+				id: "CON2",
 				type: "concept",
 				name: "Refined Concept",
 				status: "accepted",
 			},
-			{ id: "E1", type: "element", name: "Element" },
+			{ id: "ELEM1", type: "element", name: "Element" },
 		],
 		relationships: [
-			{ from: "C1", to: "I1", type: "refines" },
-			{ from: "C2", to: "C1", type: "refines" },
-			{ from: "E1", to: "C1", type: "implements" },
+			{ from: "CON1", to: "INT1", type: "refines" },
+			{ from: "CON2", to: "CON1", type: "refines" },
+			{ from: "ELEM1", to: "CON1", type: "implements" },
 		],
 	};
 }
@@ -55,17 +55,17 @@ describe("queryNodes", () => {
 		const doc = makeDoc();
 		const nodes = queryNodesOp({ doc, type: "concept", status: "accepted" });
 		assert.equal(nodes.length, 1);
-		assert.equal(nodes[0].id, "C2");
+		assert.equal(nodes[0].id, "CON2");
 	});
 });
 
 describe("queryNode", () => {
 	it("returns node with relationships", () => {
 		const doc = makeDoc();
-		const result = queryNodeOp({ doc, id: "C1" });
+		const result = queryNodeOp({ doc, id: "CON1" });
 		assert.ok(result);
-		assert.equal(result.node.id, "C1");
-		// C1 has 3 relationships: 1 outgoing (to I1), 2 incoming (from C2 and E1)
+		assert.equal(result.node.id, "CON1");
+		// CON1 has 3 relationships: 1 outgoing (to INT1), 2 incoming (from CON2 and ELEM1)
 		assert.equal(result.outgoing.length, 1);
 		assert.equal(result.incoming.length, 2);
 	});
@@ -86,16 +86,16 @@ describe("queryRelationships", () => {
 
 	it("filters by from", () => {
 		const doc = makeDoc();
-		const rels = queryRelationshipsOp({ doc, from: "C1" });
+		const rels = queryRelationshipsOp({ doc, from: "CON1" });
 		assert.equal(rels.length, 1);
-		assert.equal(rels[0].to, "I1");
+		assert.equal(rels[0].to, "INT1");
 	});
 
 	it("filters by to", () => {
 		const doc = makeDoc();
-		const rels = queryRelationshipsOp({ doc, to: "C1" });
+		const rels = queryRelationshipsOp({ doc, to: "CON1" });
 		assert.equal(rels.length, 2);
-		assert.ok(rels.every((r) => r.to === "C1"));
+		assert.ok(rels.every((r) => r.to === "CON1"));
 	});
 
 	it("filters by type", () => {
@@ -109,27 +109,27 @@ describe("queryRelationships", () => {
 describe("traceFromNode", () => {
 	it("traces refinement chain correctly", () => {
 		const doc = makeDoc();
-		// I1 <- C1 <- C2 (refines chain)
-		// I1 <- C1 <- E1 (implements)
-		const trace = traceFromNodeOp({ doc, startId: "I1" });
+		// INT1 <- CON1 <- CON2 (refines chain)
+		// INT1 <- CON1 <- ELEM1 (implements)
+		const trace = traceFromNodeOp({ doc, startId: "INT1" });
 
-		assert.equal(trace.id, "I1");
+		assert.equal(trace.id, "INT1");
 		assert.equal(trace.node?.name, "Root Intent");
-		assert.equal(trace.children.length, 1); // Only C1 refines I1
+		assert.equal(trace.children.length, 1); // Only CON1 refines INT1
 
 		const c1Trace = trace.children[0];
-		assert.equal(c1Trace.id, "C1");
-		assert.equal(c1Trace.children.length, 2); // C2 and E1 both point to C1
+		assert.equal(c1Trace.id, "CON1");
+		assert.equal(c1Trace.children.length, 2); // CON2 and ELEM1 both point to CON1
 
 		const childIds = c1Trace.children.map((c) => c.id);
-		assert.ok(childIds.includes("C2"));
-		assert.ok(childIds.includes("E1"));
+		assert.ok(childIds.includes("CON2"));
+		assert.ok(childIds.includes("ELEM1"));
 	});
 
 	it("returns empty children for leaf node", () => {
 		const doc = makeDoc();
-		const trace = traceFromNodeOp({ doc, startId: "E1" });
-		assert.equal(trace.id, "E1");
+		const trace = traceFromNodeOp({ doc, startId: "ELEM1" });
+		assert.equal(trace.id, "ELEM1");
 		assert.equal(trace.children.length, 0);
 	});
 

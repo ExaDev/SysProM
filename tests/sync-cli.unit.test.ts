@@ -26,7 +26,7 @@ function createTestDoc(): SysProMDocument {
 		},
 		nodes: [
 			{
-				id: "I1",
+				id: "INT1",
 				type: "intent",
 				name: "Test Intent",
 				description: "A test intent.",
@@ -63,7 +63,7 @@ describe("spm sync command", () => {
 
 		// Modify JSON by adding a node
 		const newNode: Node = {
-			id: "I2",
+			id: "INT2",
 			type: "intent",
 			name: "New Intent",
 			description: "Added after MD was created.",
@@ -86,7 +86,7 @@ describe("spm sync command", () => {
 		// Verify MD was updated with new node
 		const updatedMd = markdownToJson(mdPath);
 		assert.equal(updatedMd.nodes.length, 2);
-		assert.equal(updatedMd.nodes[1].id, "I2");
+		assert.equal(updatedMd.nodes[1].id, "INT2");
 	});
 
 	it("performs bidirectional sync when Markdown has changed", () => {
@@ -106,7 +106,7 @@ describe("spm sync command", () => {
 
 		// Modify MD by adding a new node
 		const newNode: Node = {
-			id: "I2",
+			id: "INT2",
 			type: "intent",
 			name: "New Intent from MD",
 			description: "Added after JSON was created.",
@@ -129,7 +129,7 @@ describe("spm sync command", () => {
 		// Verify JSON was updated with new node
 		const updatedJson = JSON.parse(readFileSync(jsonPath, "utf8"));
 		assert.equal(updatedJson.nodes.length, 2);
-		assert.equal(updatedJson.nodes[1].id, "I2");
+		assert.equal(updatedJson.nodes[1].id, "INT2");
 	});
 
 	it("respects --prefer-json flag for conflicts", () => {
@@ -147,7 +147,7 @@ describe("spm sync command", () => {
 
 		// Create MD with different change (new node added)
 		const newNode: Node = {
-			id: "I2",
+			id: "INT2",
 			type: "intent",
 			name: "Updated in MD",
 			description: "A new node.",
@@ -188,7 +188,7 @@ describe("spm sync command", () => {
 
 		// Create MD with different change (new node added)
 		const newNode: Node = {
-			id: "I2",
+			id: "INT2",
 			type: "intent",
 			name: "Updated in MD",
 			description: "A new node.",
@@ -211,7 +211,7 @@ describe("spm sync command", () => {
 		const resolvedJson = JSON.parse(readFileSync(jsonPath, "utf8"));
 		assert.equal(resolvedJson.metadata.title, "Test Doc"); // Original title, not the JSON change
 		assert.equal(resolvedJson.nodes.length, 2); // Original node plus the one from MD
-		assert.equal(resolvedJson.nodes[1].id, "I2");
+		assert.equal(resolvedJson.nodes[1].id, "INT2");
 	});
 
 	it("rejects conflicts with neither --prefer-json nor --prefer-md", () => {
@@ -229,7 +229,7 @@ describe("spm sync command", () => {
 
 		// Create MD with different change (new node added)
 		const newNode: Node = {
-			id: "I2",
+			id: "INT2",
 			type: "intent",
 			name: "Updated in MD",
 			description: "A new node.",
@@ -269,7 +269,7 @@ describe("spm sync command", () => {
 			nodes: [
 				...baseDoc.nodes,
 				{
-					id: "I2",
+					id: "INT2",
 					type: "intent",
 					name: "New Intent",
 					description: "Added node.",

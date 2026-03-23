@@ -6,9 +6,9 @@ import type { SysProMDocument } from "../src/schema.js";
 function makeDoc(): SysProMDocument {
 	return {
 		nodes: [
-			{ id: "D1", type: "decision", name: "Existing Decision" },
-			{ id: "I1", type: "intent", name: "Some Intent" },
-			{ id: "EL1", type: "element", name: "Some Element" },
+			{ id: "DEC1", type: "decision", name: "Existing Decision" },
+			{ id: "INT1", type: "intent", name: "Some Intent" },
+			{ id: "ELEM1", type: "element", name: "Some Element" },
 			{ id: "INV1", type: "invariant", name: "Some Invariant" },
 			{ id: "POL1", type: "policy", name: "Some Policy" },
 		],
@@ -21,13 +21,13 @@ describe("addNode change-decision guard (INV2)", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "CH1", type: "change", name: "My Change" },
-			decisionId: "D1",
+			node: { id: "CHG1", type: "change", name: "My Change" },
+			decisionId: "DEC1",
 		});
 		assert.equal(result.nodes.length, 6);
-		assert.ok(result.nodes.find((n) => n.id === "CH1"));
+		assert.ok(result.nodes.find((n) => n.id === "CHG1"));
 		const rel = result.relationships?.find(
-			(r) => r.from === "CH1" && r.to === "D1" && r.type === "implements",
+			(r) => r.from === "CHG1" && r.to === "DEC1" && r.type === "implements",
 		);
 		assert.ok(rel, "implements relationship should be created");
 	});
@@ -38,7 +38,7 @@ describe("addNode change-decision guard (INV2)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "CH1", type: "change", name: "My Change" },
+					node: { id: "CHG1", type: "change", name: "My Change" },
 				}),
 			/change.*requires.*decisionId/i,
 		);
@@ -50,10 +50,10 @@ describe("addNode change-decision guard (INV2)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "CH1", type: "change", name: "My Change" },
-					decisionId: "D999",
+					node: { id: "CHG1", type: "change", name: "My Change" },
+					decisionId: "DEC999",
 				}),
-			/not found.*D999/i,
+			/not found.*DEC999/i,
 		);
 	});
 
@@ -63,8 +63,8 @@ describe("addNode change-decision guard (INV2)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "CH1", type: "change", name: "My Change" },
-					decisionId: "I1",
+					node: { id: "CHG1", type: "change", name: "My Change" },
+					decisionId: "INT1",
 				}),
 			/not a decision/i,
 		);
@@ -74,22 +74,22 @@ describe("addNode change-decision guard (INV2)", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "CN1", type: "concept", name: "My Concept" },
+			node: { id: "CON1", type: "concept", name: "My Concept" },
 		});
 		assert.equal(result.nodes.length, 6);
-		assert.ok(result.nodes.find((n) => n.id === "CN1"));
+		assert.ok(result.nodes.find((n) => n.id === "CON1"));
 	});
 
 	it("ignores decisionId for non-change nodes", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "CN1", type: "concept", name: "My Concept" },
-			decisionId: "D1",
+			node: { id: "CON1", type: "concept", name: "My Concept" },
+			decisionId: "DEC1",
 		});
 		assert.equal(result.nodes.length, 6);
 		assert.equal(
-			result.relationships?.filter((r) => r.from === "CN1").length ?? 0,
+			result.relationships?.filter((r) => r.from === "CON1").length ?? 0,
 			0,
 		);
 	});
@@ -100,13 +100,13 @@ describe("addNode realisation-element guard (INV10)", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "R1", type: "realisation", name: "My Realisation" },
-			elementId: "EL1",
+			node: { id: "REAL1", type: "realisation", name: "My Realisation" },
+			elementId: "ELEM1",
 		});
 		assert.equal(result.nodes.length, 6);
-		assert.ok(result.nodes.find((n) => n.id === "R1"));
+		assert.ok(result.nodes.find((n) => n.id === "REAL1"));
 		const rel = result.relationships?.find(
-			(r) => r.from === "R1" && r.to === "EL1" && r.type === "implements",
+			(r) => r.from === "REAL1" && r.to === "ELEM1" && r.type === "implements",
 		);
 		assert.ok(rel, "implements relationship should be created");
 	});
@@ -117,7 +117,7 @@ describe("addNode realisation-element guard (INV10)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "R1", type: "realisation", name: "My Realisation" },
+					node: { id: "REAL1", type: "realisation", name: "My Realisation" },
 				}),
 			/realisation.*requires.*elementId/i,
 		);
@@ -129,10 +129,10 @@ describe("addNode realisation-element guard (INV10)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "R1", type: "realisation", name: "My Realisation" },
-					elementId: "EL999",
+					node: { id: "REAL1", type: "realisation", name: "My Realisation" },
+					elementId: "ELEM999",
 				}),
-			/not found.*EL999/i,
+			/not found.*ELEM999/i,
 		);
 	});
 
@@ -142,8 +142,8 @@ describe("addNode realisation-element guard (INV10)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "R1", type: "realisation", name: "My Realisation" },
-					elementId: "D1",
+					node: { id: "REAL1", type: "realisation", name: "My Realisation" },
+					elementId: "DEC1",
 				}),
 			/not an element/i,
 		);
@@ -155,14 +155,14 @@ describe("addNode gate-invariant guard (INV8)", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "G1", type: "gate", name: "My Gate" },
+			node: { id: "GATE1", type: "gate", name: "My Gate" },
 			governedById: "INV1",
 		});
 		assert.equal(result.nodes.length, 6);
-		assert.ok(result.nodes.find((n) => n.id === "G1"));
+		assert.ok(result.nodes.find((n) => n.id === "GATE1"));
 		const rel = result.relationships?.find(
 			(r) =>
-				r.from === "G1" && r.to === "INV1" && r.type === "governed_by",
+				r.from === "GATE1" && r.to === "INV1" && r.type === "governed_by",
 		);
 		assert.ok(rel, "governed_by relationship should be created");
 	});
@@ -171,12 +171,12 @@ describe("addNode gate-invariant guard (INV8)", () => {
 		const doc = makeDoc();
 		const result = addNodeOp({
 			doc,
-			node: { id: "G1", type: "gate", name: "My Gate" },
+			node: { id: "GATE1", type: "gate", name: "My Gate" },
 			governedById: "POL1",
 		});
 		const rel = result.relationships?.find(
 			(r) =>
-				r.from === "G1" && r.to === "POL1" && r.type === "governed_by",
+				r.from === "GATE1" && r.to === "POL1" && r.type === "governed_by",
 		);
 		assert.ok(rel, "governed_by relationship should be created for policy");
 	});
@@ -187,7 +187,7 @@ describe("addNode gate-invariant guard (INV8)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "G1", type: "gate", name: "My Gate" },
+					node: { id: "GATE1", type: "gate", name: "My Gate" },
 				}),
 			/gate.*requires.*governedById/i,
 		);
@@ -199,7 +199,7 @@ describe("addNode gate-invariant guard (INV8)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "G1", type: "gate", name: "My Gate" },
+					node: { id: "GATE1", type: "gate", name: "My Gate" },
 					governedById: "INV999",
 				}),
 			/not found.*INV999/i,
@@ -212,8 +212,8 @@ describe("addNode gate-invariant guard (INV8)", () => {
 			() =>
 				addNodeOp({
 					doc,
-					node: { id: "G1", type: "gate", name: "My Gate" },
-					governedById: "D1",
+					node: { id: "GATE1", type: "gate", name: "My Gate" },
+					governedById: "DEC1",
 				}),
 			/not an invariant or policy/i,
 		);

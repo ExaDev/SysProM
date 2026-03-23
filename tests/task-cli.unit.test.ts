@@ -7,7 +7,7 @@ function makeChangeDoc(
 	plan?: { description: string; done?: boolean }[],
 ): SysProMDocument {
 	const node: Node = {
-		id: "CH1",
+		id: "CHG1",
 		type: "change",
 		name: "Test Change",
 		...(plan !== undefined ? { plan } : {}),
@@ -20,7 +20,7 @@ describe("addPlanTask", () => {
 		const doc = makeChangeDoc([{ description: "existing task", done: false }]);
 		const newDoc = addPlanTaskOp({
 			doc,
-			changeId: "CH1",
+			changeId: "CHG1",
 			description: "new task",
 		});
 		assert.equal(newDoc.nodes[0].plan?.length, 2);
@@ -32,7 +32,7 @@ describe("addPlanTask", () => {
 		const doc = makeChangeDoc();
 		const newDoc = addPlanTaskOp({
 			doc,
-			changeId: "CH1",
+			changeId: "CHG1",
 			description: "first task",
 		});
 		assert.equal(newDoc.nodes[0].plan?.length, 1);
@@ -42,7 +42,7 @@ describe("addPlanTask", () => {
 
 	it("does not mutate the original doc", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
-		addPlanTaskOp({ doc, changeId: "CH1", description: "task B" });
+		addPlanTaskOp({ doc, changeId: "CHG1", description: "task B" });
 		assert.equal(doc.nodes[0].plan?.length, 1);
 	});
 
@@ -60,7 +60,7 @@ describe("updatePlanTask", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		const newDoc = updatePlanTaskOp({
 			doc,
-			changeId: "CH1",
+			changeId: "CHG1",
 			taskIndex: 0,
 			done: true,
 		});
@@ -71,7 +71,7 @@ describe("updatePlanTask", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: true }]);
 		const newDoc = updatePlanTaskOp({
 			doc,
-			changeId: "CH1",
+			changeId: "CHG1",
 			taskIndex: 0,
 			done: false,
 		});
@@ -82,7 +82,7 @@ describe("updatePlanTask", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		assert.throws(
 			() =>
-				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 1, done: true }),
+				updatePlanTaskOp({ doc, changeId: "CHG1", taskIndex: 1, done: true }),
 			/Task index 1 out of range/,
 		);
 	});
@@ -91,7 +91,7 @@ describe("updatePlanTask", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
 		assert.throws(
 			() =>
-				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: -1, done: true }),
+				updatePlanTaskOp({ doc, changeId: "CHG1", taskIndex: -1, done: true }),
 			/Task index -1 out of range/,
 		);
 	});
@@ -100,7 +100,7 @@ describe("updatePlanTask", () => {
 		const doc = makeChangeDoc();
 		assert.throws(
 			() =>
-				updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true }),
+				updatePlanTaskOp({ doc, changeId: "CHG1", taskIndex: 0, done: true }),
 			/out of range/,
 		);
 	});
@@ -121,7 +121,7 @@ describe("updatePlanTask", () => {
 
 	it("does not mutate the original doc", () => {
 		const doc = makeChangeDoc([{ description: "task A", done: false }]);
-		updatePlanTaskOp({ doc, changeId: "CH1", taskIndex: 0, done: true });
+		updatePlanTaskOp({ doc, changeId: "CHG1", taskIndex: 0, done: true });
 		assert.equal(doc.nodes[0].plan?.[0].done, false);
 	});
 
@@ -132,7 +132,7 @@ describe("updatePlanTask", () => {
 		]);
 		const newDoc = updatePlanTaskOp({
 			doc,
-			changeId: "CH1",
+			changeId: "CHG1",
 			taskIndex: 0,
 			done: true,
 		});

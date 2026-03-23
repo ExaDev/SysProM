@@ -19,19 +19,19 @@ describe("addNode", () => {
 		const doc = makeDoc();
 		const newDoc = addNodeOp({
 			doc,
-			node: { id: "I1", type: "intent", name: "Test" },
+			node: { id: "INT1", type: "intent", name: "Test" },
 		});
 		assert.equal(newDoc.nodes.length, 1);
-		assert.equal(newDoc.nodes[0].id, "I1");
+		assert.equal(newDoc.nodes[0].id, "INT1");
 		// Original should be unchanged
 		assert.equal(doc.nodes.length, 0);
 	});
 
 	it("rejects duplicate ID", () => {
-		const doc = makeDoc([{ id: "I1", type: "intent", name: "Existing" }]);
+		const doc = makeDoc([{ id: "INT1", type: "intent", name: "Existing" }]);
 		assert.throws(
 			() =>
-				addNodeOp({ doc, node: { id: "I1", type: "concept", name: "New" } }),
+				addNodeOp({ doc, node: { id: "INT1", type: "intent", name: "New" } }),
 			/already exists/,
 		);
 	});
@@ -41,14 +41,14 @@ describe("removeNode", () => {
 	it("hard deletes node and relationships when hard: true", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "I1", type: "intent", name: "A" },
-				{ id: "I2", type: "intent", name: "B" },
+				{ id: "INT1", type: "intent", name: "A" },
+				{ id: "INT2", type: "intent", name: "B" },
 			],
-			relationships: [{ from: "I1", to: "I2", type: "refines" }],
+			relationships: [{ from: "INT1", to: "INT2", type: "refines" }],
 		};
-		const result = removeNodeOp({ doc, id: "I1", hard: true });
+		const result = removeNodeOp({ doc, id: "INT1", hard: true });
 		assert.equal(result.doc.nodes.length, 1);
-		assert.equal(result.doc.nodes[0].id, "I2");
+		assert.equal(result.doc.nodes[0].id, "INT2");
 		// relationships array is removed entirely when empty
 		assert.equal(result.doc.relationships, undefined);
 	});
@@ -56,24 +56,24 @@ describe("removeNode", () => {
 	it("removes from view includes", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "V1", type: "view", name: "View", includes: ["I1", "I2"] },
-				{ id: "I1", type: "intent", name: "A" },
-				{ id: "I2", type: "intent", name: "B" },
+				{ id: "VIEW1", type: "view", name: "View", includes: ["INT1", "INT2"] },
+				{ id: "INT1", type: "intent", name: "A" },
+				{ id: "INT2", type: "intent", name: "B" },
 			],
 		};
-		const result = removeNodeOp({ doc, id: "I1" });
-		const view = result.doc.nodes.find((n) => n.id === "V1");
-		assert.deepEqual(view?.includes, ["I2"]);
+		const result = removeNodeOp({ doc, id: "INT1" });
+		const view = result.doc.nodes.find((n) => n.id === "VIEW1");
+		assert.deepEqual(view?.includes, ["INT2"]);
 	});
 
 	it("warns about scope references", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "C1", type: "change", name: "Change", scope: ["I1"] },
-				{ id: "I1", type: "intent", name: "Intent" },
+				{ id: "CHG1", type: "change", name: "Change", scope: ["INT1"] },
+				{ id: "INT1", type: "intent", name: "Intent" },
 			],
 		};
-		const result = removeNodeOp({ doc, id: "I1" });
+		const result = removeNodeOp({ doc, id: "INT1" });
 		assert.ok(result.warnings.some((w) => w.includes("scope")));
 	});
 
@@ -81,30 +81,30 @@ describe("removeNode", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
-					id: "C1",
+					id: "CHG1",
 					type: "change",
 					name: "Change",
-					operations: [{ type: "update", target: "I1" }],
+					operations: [{ type: "update", target: "INT1" }],
 				},
-				{ id: "I1", type: "intent", name: "Intent" },
+				{ id: "INT1", type: "intent", name: "Intent" },
 			],
 		};
-		const result = removeNodeOp({ doc, id: "I1" });
+		const result = removeNodeOp({ doc, id: "INT1" });
 		assert.ok(result.warnings.some((w) => w.includes("operations")));
 	});
 
 	it("throws for missing node", () => {
-		const doc = makeDoc([{ id: "I1", type: "intent", name: "A" }]);
+		const doc = makeDoc([{ id: "INT1", type: "intent", name: "A" }]);
 		assert.throws(() => removeNodeOp({ doc, id: "NONEXISTENT" }), /not found/);
 	});
 });
 
 describe("updateNode", () => {
 	it("updates specified fields", () => {
-		const doc = makeDoc([{ id: "I1", type: "intent", name: "Old" }]);
+		const doc = makeDoc([{ id: "INT1", type: "intent", name: "Old" }]);
 		const newDoc = updateNodeOp({
 			doc,
-			id: "I1",
+			id: "INT1",
 			fields: {
 				name: "New",
 				description: "Updated",
@@ -124,10 +124,10 @@ describe("updateNode", () => {
 
 	it("preserves other nodes", () => {
 		const doc = makeDoc([
-			{ id: "I1", type: "intent", name: "A" },
-			{ id: "I2", type: "intent", name: "B" },
+			{ id: "INT1", type: "intent", name: "A" },
+			{ id: "INT2", type: "intent", name: "B" },
 		]);
-		const newDoc = updateNodeOp({ doc, id: "I1", fields: { name: "Updated" } });
+		const newDoc = updateNodeOp({ doc, id: "INT1", fields: { name: "Updated" } });
 		assert.equal(newDoc.nodes[1].name, "B");
 	});
 });
@@ -135,14 +135,14 @@ describe("updateNode", () => {
 describe("addRelationship", () => {
 	it("adds to relationships array", () => {
 		const doc = makeDoc([
-			{ id: "I1", type: "intent", name: "A" },
-			{ id: "I2", type: "intent", name: "B" },
+			{ id: "INT1", type: "intent", name: "A" },
+			{ id: "INT2", type: "intent", name: "B" },
 		]);
 		const newDoc = addRelationshipOp({
 			doc,
 			rel: {
-				from: "I1",
-				to: "I2",
+				from: "INT1",
+				to: "INT2",
 				type: "refines",
 			},
 		});
@@ -151,26 +151,26 @@ describe("addRelationship", () => {
 	});
 
 	it("throws for missing from node", () => {
-		const doc = makeDoc([{ id: "I2", type: "intent", name: "B" }]);
+		const doc = makeDoc([{ id: "INT2", type: "intent", name: "B" }]);
 		assert.throws(
 			() =>
 				addRelationshipOp({
 					doc,
-					rel: { from: "I1", to: "I2", type: "refines" },
+					rel: { from: "INT1", to: "INT2", type: "refines" },
 				}),
-			/Node not found.*I1/,
+			/Node not found.*INT1/,
 		);
 	});
 
 	it("throws for missing to node", () => {
-		const doc = makeDoc([{ id: "I1", type: "intent", name: "A" }]);
+		const doc = makeDoc([{ id: "INT1", type: "intent", name: "A" }]);
 		assert.throws(
 			() =>
 				addRelationshipOp({
 					doc,
-					rel: { from: "I1", to: "I2", type: "refines" },
+					rel: { from: "INT1", to: "INT2", type: "refines" },
 				}),
-			/Node not found.*I2/,
+			/Node not found.*INT2/,
 		);
 	});
 });
@@ -179,16 +179,16 @@ describe("removeRelationship", () => {
 	it("removes matching relationship", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "I1", type: "intent", name: "A" },
-				{ id: "I2", type: "intent", name: "B" },
+				{ id: "INT1", type: "intent", name: "A" },
+				{ id: "INT2", type: "intent", name: "B" },
 			],
-			relationships: [{ from: "I1", to: "I2", type: "refines" }],
+			relationships: [{ from: "INT1", to: "INT2", type: "refines" }],
 		};
 		const result = removeRelationshipOp({
 			doc,
-			from: "I1",
+			from: "INT1",
 			type: "refines",
-			to: "I2",
+			to: "INT2",
 		});
 		assert.equal(result.doc.relationships?.length ?? 0, 0);
 	});
@@ -196,14 +196,14 @@ describe("removeRelationship", () => {
 	it("throws if relationship not found", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "I1", type: "intent", name: "A" },
-				{ id: "I2", type: "intent", name: "B" },
+				{ id: "INT1", type: "intent", name: "A" },
+				{ id: "INT2", type: "intent", name: "B" },
 			],
 			relationships: [],
 		};
 		assert.throws(
 			() =>
-				removeRelationshipOp({ doc, from: "I1", type: "refines", to: "I2" }),
+				removeRelationshipOp({ doc, from: "INT1", type: "refines", to: "INT2" }),
 			/not found/,
 		);
 	});

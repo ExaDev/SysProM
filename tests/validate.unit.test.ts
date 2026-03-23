@@ -12,7 +12,7 @@ function makeDoc(
 
 describe("validate", () => {
 	it("valid document returns { valid: true, issues: [] }", () => {
-		const doc = makeDoc([{ id: "I1", type: "intent", name: "Test" }]);
+		const doc = makeDoc([{ id: "INT1", type: "intent", name: "Test" }]);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
@@ -20,8 +20,8 @@ describe("validate", () => {
 
 	it("duplicate node IDs detected", () => {
 		const doc = makeDoc([
-			{ id: "I1", type: "intent", name: "First" },
-			{ id: "I1", type: "intent", name: "Duplicate" },
+			{ id: "INT1", type: "intent", name: "First" },
+			{ id: "INT1", type: "intent", name: "Duplicate" },
 		]);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
@@ -30,8 +30,8 @@ describe("validate", () => {
 
 	it("missing relationship targets detected", () => {
 		const doc = makeDoc(
-			[{ id: "I1", type: "intent", name: "A" }],
-			[{ from: "I1", to: "I2", type: "refines" }],
+			[{ id: "INT1", type: "intent", name: "A" }],
+			[{ from: "INT1", to: "INT2", type: "refines" }],
 		);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
@@ -42,15 +42,15 @@ describe("validate", () => {
 		const doc = makeDoc(
 			[
 				{
-					id: "D1",
+					id: "DEC1",
 					type: "decision",
 					name: "Dec",
 					options: [{ id: "a", description: "A" }],
 					selected: "a",
 				},
-				{ id: "I1", type: "intent", name: "Intent" },
+				{ id: "INT1", type: "intent", name: "Intent" },
 			],
-			[{ from: "D1", to: "I1", type: "affects" }],
+			[{ from: "DEC1", to: "INT1", type: "affects" }],
 		);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
@@ -59,8 +59,8 @@ describe("validate", () => {
 
 	it("changes without decision references detected", () => {
 		const doc = makeDoc([
-			{ id: "C1", type: "change", name: "Change", scope: ["I1"] },
-			{ id: "I1", type: "intent", name: "Intent" },
+			{ id: "CHG1", type: "change", name: "Change", scope: ["INT1"] },
+			{ id: "INT1", type: "intent", name: "Intent" },
 		]);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
@@ -71,7 +71,7 @@ describe("validate", () => {
 
 	it("decisions without options detected", () => {
 		const doc = makeDoc([
-			{ id: "D1", type: "decision", name: "Dec", selected: "a" },
+			{ id: "DEC1", type: "decision", name: "Dec", selected: "a" },
 		]);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
@@ -81,7 +81,7 @@ describe("validate", () => {
 	it("decisions without selected detected", () => {
 		const doc = makeDoc([
 			{
-				id: "D1",
+				id: "DEC1",
 				type: "decision",
 				name: "Dec",
 				options: [{ id: "a", description: "A" }],
