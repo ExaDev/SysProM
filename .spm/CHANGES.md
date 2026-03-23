@@ -819,6 +819,8 @@ Add four inference operations (impact, completeness, lifecycle, derived) exposed
 
 - Implements: [DEC41](./DECISIONS.md#dec41--add-deterministic-graph-inference)
 
+- Status: introduced
+
 Scope:
 - src/operations/infer-impact.ts
 - src/operations/infer-completeness.ts
@@ -829,12 +831,12 @@ Scope:
 
 #### Plan
 
-- [ ] Implement inferCompletenessOp with tests
-- [ ] Implement inferLifecycleOp with tests
-- [ ] Implement inferImpactOp with tests
-- [ ] Implement inferDerivedOp with tests
-- [ ] Export operations from index and public API
-- [ ] Create CLI infer command with subcommands
-- [ ] Register MCP tools for inference
-- [ ] Add infer all subcommand
+- [x] Implement inferCompletenessOp with tests
+- [x] Implement inferLifecycleOp with tests
+- [x] Implement inferImpactOp with tests
+- [x] Implement inferDerivedOp with tests
+- [x] Export operations from index and public API
+- [x] Create CLI infer command with subcommands
+- [x] Register MCP tools for inference
+- [x] Add infer all subcommand
 
