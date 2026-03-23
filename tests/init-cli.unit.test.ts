@@ -29,15 +29,15 @@ describe("init command path resolution", () => {
 		rmSync(tempDir, { recursive: true, force: true });
 	});
 
-	it("should not double .spm.json suffix when path already includes it", () => {
+	it("should not double .SysProM.json suffix when path already includes it", () => {
 		const subDir = join(tempDir, "test1");
 		mkdirSync(subDir);
-		const outputPath = join(subDir, ".spm.json");
-		const doubledPath = `${outputPath}.spm.json`;
+		const outputPath = join(subDir, ".SysProM.json");
+		const doubledPath = `${outputPath}.SysProM.json`;
 
 		runInit(outputPath, "json");
 
-		// Should create .spm.json, not .spm.json.spm.json
+		// Should create .SysProM.json, not .SysProM.json.SysProM.json
 		assert.ok(existsSync(outputPath), `Expected ${outputPath} to exist`);
 		assert.ok(!existsSync(doubledPath), `Should not create doubled path ${doubledPath}`);
 
@@ -47,34 +47,34 @@ describe("init command path resolution", () => {
 		assert.equal(doc.metadata?.doc_type, "sysprom");
 	});
 
-	it("should append .spm.json suffix when path is a directory", () => {
+	it("should append .SysProM.json suffix when path is a directory", () => {
 		const subDir = join(tempDir, "subdir1");
 		mkdirSync(subDir);
-		const expectedPath = join(subDir, ".spm.json");
+		const expectedPath = join(subDir, ".SysProM.json");
 
 		runInit(subDir, "json");
 
 		assert.ok(existsSync(expectedPath), `Expected ${expectedPath} to exist`);
 	});
 
-	it("should append .spm.json suffix when path has no extension", () => {
+	it("should append .SysProM.json suffix when path has no extension", () => {
 		const baseName = join(tempDir, "mydoc");
-		const expectedPath = `${baseName}.spm.json`;
+		const expectedPath = `${baseName}.SysProM.json`;
 		runInit(baseName, "json");
 
 		assert.ok(existsSync(expectedPath), `Expected ${expectedPath} to exist`);
 	});
 
-	it("should handle explicit .spm.md path without doubling", () => {
-		const outputPath = join(tempDir, ".spm.md");
+	it("should handle explicit .SysProM.md path without doubling", () => {
+		const outputPath = join(tempDir, ".SysProM.md");
 		runInit(outputPath, "md");
 
 		assert.ok(existsSync(outputPath), `Expected ${outputPath} to exist`);
-		assert.ok(!existsSync(`${outputPath}.spm.md`), `Should not create ${outputPath}.spm.md`);
+		assert.ok(!existsSync(`${outputPath}.SysProM.md`), `Should not create ${outputPath}.SysProM.md`);
 	});
 
-	it("should handle explicit .spm directory path without doubling", () => {
-		const outputPath = join(tempDir, ".spm");
+	it("should handle explicit .SysProM directory path without doubling", () => {
+		const outputPath = join(tempDir, ".SysProM");
 		runInit(outputPath, "dir");
 
 		// For dir format, it should create the directory

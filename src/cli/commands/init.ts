@@ -20,9 +20,9 @@ function formatToIoFormat(fmt: InitFormat): Format {
 }
 
 const suffixMap = {
-	json: ".spm.json",
-	md: ".spm.md",
-	dir: ".spm",
+	json: ".SysProM.json",
+	md: ".SysProM.md",
+	dir: ".SysProM",
 } as const;
 
 function resolveInitTarget(

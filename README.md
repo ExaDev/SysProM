@@ -23,10 +23,10 @@ Both `sysprom` and `spm` are available as commands — use `sysprom` for new pro
 
 ```sh
 # Convert between formats
-sysprom json2md --input .spm.json --output ./.spm
-sysprom md2json --input ./.spm --output output.spm.json
+sysprom json2md --input .SysProM.json --output ./.SysProM
+sysprom md2json --input ./.SysProM --output output.SysProM.json
 
-# Validate and summarise (auto-detects .spm.json in current directory)
+# Validate and summarise (auto-detects .SysProM.json in current directory)
 sysprom validate
 sysprom stats
 
@@ -54,7 +54,7 @@ sysprom update remove-rel D1 affects EL5
 sysprom update meta --fields version=2
 ```
 
-All commands auto-detect the document — they search the current directory for `.spm.json`, `.spm.md`, or `.spm/` (in that priority order), then fall back to `*.spm.json`, `*.spm.md`, or `*.spm/`. Use `--path` to specify an explicit path. Note: `spm` is an alias for `sysprom` for backwards compatibility.
+All commands auto-detect the document — they search the current directory for `.SysProM.json`, `.SysProM.md`, or `.SysProM/` (in that priority order), then fall back to `.spm.json`, `.spm.md`, or `.spm/`. Use `--path` to specify an explicit path. Note: `spm` is an alias for `sysprom` for backwards compatibility.
 
 ## MCP Server
 
@@ -144,7 +144,7 @@ import {
 } from "sysprom";
 
 // Validate
-const doc = JSON.parse(fs.readFileSync(".spm.json", "utf8"));
+const doc = JSON.parse(fs.readFileSync(".SysProM.json", "utf8"));
 const result = validate(doc);
 console.log(result.valid, result.issues);
 
@@ -237,7 +237,7 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 SysProM is format-agnostic. This repository includes:
 
 - **JSON** — validated against `schema.json`, supports recursive subsystems
-- **Markdown** — single file (`.spm.md`), multi-document folder, or recursive nested folders with automatic grouping by type
+- **Markdown** — single file (`.SysProM.md`), multi-document folder, or recursive nested folders with automatic grouping by type
 
 Round-trip conversion between JSON and Markdown is supported with zero information loss.
 
@@ -257,29 +257,29 @@ pnpm spm <command>    # Run the CLI from source (e.g. pnpm spm validate ...)
 
 ## Self-Description
 
-`.spm.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document. The `./.spm/` folder contains the same content as human-readable Markdown.
+`.SysProM.json` is SysProM describing itself — the specification, its decisions, invariants, changes, and worked examples are all encoded as a SysProM document. The `./.SysProM/` folder contains the same content as human-readable Markdown.
 
-All significant activity — decisions, changes, new capabilities, and invariants — should be recorded in the self-describing document. Updates can be made either by editing the Markdown files in `./.spm/` directly or by using the CLI:
+All significant activity — decisions, changes, new capabilities, and invariants — should be recorded in the self-describing document. Updates can be made either by editing the Markdown files in `./.SysProM/` directly or by using the CLI:
 
 ```sh
 # Add a decision via the CLI
 sysprom add decision --id D23 --name "My Decision" --context "Why this was needed"
 
-# Or edit ./.spm/DECISIONS.md directly, then sync
-sysprom md2json --input ./.spm --output .spm.json
+# Or edit ./.SysProM/DECISIONS.md directly, then sync
+sysprom md2json --input ./.SysProM --output .SysProM.json
 ```
 
 Keep both representations in sync after any change:
 
 ```sh
 # JSON → Markdown
-sysprom json2md --input .spm.json --output ./.spm
+sysprom json2md --input .SysProM.json --output ./.SysProM
 
 # Markdown → JSON
-sysprom md2json --input ./.spm --output .spm.json
+sysprom md2json --input ./.SysProM --output .SysProM.json
 ```
 
-> **Important:** Always keep `.spm.json` and `./.spm/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `sysprom validate` before committing.
+> **Important:** Always keep `.SysProM.json` and `./.SysProM/` up to date with current activity and in sync with each other. Record all decisions, changes, and new capabilities as they happen. After any change to either representation, run the appropriate conversion command above. Validate with `sysprom validate` before committing.
 
 ## Claude Code Plugin
 

@@ -25,10 +25,12 @@ const pathOpt = z
 /**
  * Resolve a SysProM document path. If no explicit path is given, search the
  * working directory by priority:
- *   1. .spm.json     2. .spm.md     3. .spm/
- *   4. .sysprom.json  5. .sysprom.md  6. .sysprom/
- *   7. *.spm.json    8. *.spm.md    9. *.spm/
- *  10. *.sysprom.json 11. *.sysprom.md 12. *.sysprom/
+ *   1. .SysProM.json   2. .SysProM.md   3. .SysProM/
+ *   4. .spm.json       5. .spm.md       6. .spm/
+ *   7. .sysprom.json   8. .sysprom.md   9. .sysprom/
+ *  10. *.SysProM.json  11. *.SysProM.md 12. *.SysProM/
+ *  13. *.spm.json     14. *.spm.md     15. *.spm/
+ *  16. *.sysprom.json 17. *.sysprom.md 18. *.sysprom/
  *
  * All matching is case-insensitive. Glob tiers must have exactly one match.
  * @param input - Explicit document path, or undefined for auto-detection.
@@ -36,8 +38,8 @@ const pathOpt = z
  * @returns The resolved document path.
  * @example
  * ```ts
- * resolveInput() // => auto-detects ".spm.json" in cwd
- * resolveInput("my-doc.spm.json") // => "my-doc.spm.json"
+ * resolveInput() // => auto-detects ".SysProM.json" in cwd
+ * resolveInput("my-doc.SysProM.json") // => "my-doc.SysProM.json"
  * ```
  */
 export function resolveInput(input?: string, cwd?: string): string {
@@ -47,6 +49,9 @@ export function resolveInput(input?: string, cwd?: string): string {
 
 	// Exact names to check, in priority order (case-insensitive)
 	const exactNames = [
+		".SysProM.json",
+		".SysProM.md",
+		".SysProM",
 		".spm.json",
 		".spm.md",
 		".spm",
@@ -58,7 +63,10 @@ export function resolveInput(input?: string, cwd?: string): string {
 	const entries = readdirSync(dir);
 
 	for (const name of exactNames) {
-		const isDirSuffix = name.endsWith(".spm") || name.endsWith(".sysprom");
+		const isDirSuffix =
+			name.endsWith(".SysProM") ||
+			name.endsWith(".spm") ||
+			name.endsWith(".sysprom");
 		const found = entries.filter((e) => e.toLowerCase() === name);
 		if (found.length > 1) {
 			throw new Error(
@@ -81,6 +89,9 @@ export function resolveInput(input?: string, cwd?: string): string {
 
 	// Glob suffixes in priority order (case-insensitive)
 	const globSuffixes = [
+		".SysProM.json",
+		".SysProM.md",
+		".SysProM",
 		".spm.json",
 		".spm.md",
 		".spm",
@@ -90,7 +101,8 @@ export function resolveInput(input?: string, cwd?: string): string {
 	] as const;
 
 	for (const suffix of globSuffixes) {
-		const isDirSuffix = suffix === ".spm" || suffix === ".sysprom";
+		const isDirSuffix =
+			suffix === ".SysProM" || suffix === ".spm" || suffix === ".sysprom";
 		const matches = entries
 			.filter((e) => {
 				const lower = e.toLowerCase();
