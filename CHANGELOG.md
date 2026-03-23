@@ -1,3 +1,16 @@
+## [1.10.2](https://github.com/ExaDev/SysProM/compare/v1.10.1...v1.10.2) (2026-03-23)
+
+### Bug Fixes
+
+* **cli:** read version from package.json instead of hardcoded constant ([1380114](https://github.com/ExaDev/SysProM/commit/1380114f203348d1b0973092ba69b59c180ad34d))
+* **plugin:** use strict:true with plugin.json for MCP discovery ([ebe59d9](https://github.com/ExaDev/SysProM/commit/ebe59d9528523892ac9292e65ac0356450068bf2))
+* **skills:** update command syntax to proper markdown bash blocks ([e7a2be2](https://github.com/ExaDev/SysProM/commit/e7a2be21865c83c80950efe8d2d3387d3872079b))
+* **spm:** add decision D37 and implements relationship for CH35 ([263c052](https://github.com/ExaDev/SysProM/commit/263c052904619dbefd5cdaa020a43001cdbbf397))
+
+### Miscellaneous Chores
+
+* **spm:** add CH35 - Add YAML Support and Multi-File JSON Formats ([ae5281f](https://github.com/ExaDev/SysProM/commit/ae5281fa7d968deaa622671a12874274a90cfe4f))
+
 ## [1.10.1](https://github.com/ExaDev/SysProM/compare/v1.10.0...v1.10.1) (2026-03-22)
 
 ### Bug Fixes
