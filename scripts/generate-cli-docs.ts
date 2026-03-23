@@ -34,7 +34,16 @@ function renderChoicesAlert(label: string, choices: string[]): string {
 
 function renderApiLink(apiLink: string | undefined): string {
 	if (!apiLink) return "";
-	return `> [!NOTE]\n> Library function: {@link ${apiLink}}\n\n`;
+	// Convert operation name to exported operation constant name
+	// e.g. "validate" -> "validateOp", "query-nodes" -> "queryNodesOp"
+	const operationName = apiLink
+		.split("-")
+		.map((part, i) => (i === 0 ? part : part[0]?.toUpperCase() + part.slice(1)))
+		.join("");
+	const exportedName = operationName + "Op";
+	// Use TypeDoc module export syntax: src/operations/file!exportedName
+	// This works after TypeDoc finishes parsing modules
+	return `> [!NOTE]\n> Library function: {@link src/operations/${apiLink}!${exportedName}}\n\n`;
 }
 
 function renderInputNote(): string {

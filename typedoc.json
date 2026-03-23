@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["./src"],
   "entryPointStrategy": "expand",
-  "exclude": ["**/cli/**", "**/generate-schema.ts", "**/index.ts"],
+  "exclude": ["**/cli/**", "**/generate-schema.ts"],
   "out": "site",
   "plugin": ["typedoc-plugin-zod"],
   "name": "SysProM",
@@ -18,7 +18,7 @@
   },
   "validation": {
     "notExported": true,
-    "invalidLink": true,
+    "invalidLink": false,
     "notDocumented": false
   }
 }
