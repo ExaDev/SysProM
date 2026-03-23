@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
-import { SysProMDocument, Node } from "../schema.js";
+import { SysProMDocument, NodeBase } from "../schema.js";
 
 /**
  * Update specified fields on a node, merging the provided fields into the existing node.
@@ -13,7 +13,7 @@ export const updateNodeOp = defineOperation({
 	input: z.object({
 		doc: SysProMDocument,
 		id: z.string(),
-		fields: Node.partial(),
+		fields: NodeBase.partial(),
 	}),
 	output: SysProMDocument,
 	fn({ doc, id, fields }) {
