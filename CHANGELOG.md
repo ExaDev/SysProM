@@ -1,3 +1,13 @@
+## [1.13.2](https://github.com/ExaDev/SysProM/compare/v1.13.1...v1.13.2) (2026-03-23)
+
+### Code Refactoring
+
+* **cli:** convert file-path positional args to flags (DEC38/CHG36) ([34575c4](https://github.com/ExaDev/SysProM/commit/34575c4665527e5a2edcfe5d64ce7c5376b512fc))
+
+### Documentation
+
+* **CHG36:** update skills and CLAUDE.md for flag-based CLI ([8c9f225](https://github.com/ExaDev/SysProM/commit/8c9f22546f9c3df280ae72406614feeb9fb50388))
+
 ## [1.13.1](https://github.com/ExaDev/SysProM/compare/v1.13.0...v1.13.1) (2026-03-23)
 
 ### Bug Fixes
