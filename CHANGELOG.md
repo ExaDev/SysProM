@@ -1,3 +1,10 @@
+## [1.12.0](https://github.com/ExaDev/SysProM/compare/v1.11.0...v1.12.0) (2026-03-23)
+
+### Features
+
+* **plugin:** register commands directory in plugin manifest ([e5edbfe](https://github.com/ExaDev/SysProM/commit/e5edbfe8d462c98d334555a2a9dc8c2aa1c73bab))
+* **skills:** add discover-system and audit-system skills and commands ([7515f04](https://github.com/ExaDev/SysProM/commit/7515f04f6f7562824797c61c2b3b20325fc7af02))
+
 ## [1.11.0](https://github.com/ExaDev/SysProM/compare/v1.10.2...v1.11.0) (2026-03-23)
 
 ### Features
