@@ -61,3 +61,25 @@ export { speckitImportOp } from "./speckit-import.js";
 export { speckitExportOp } from "./speckit-export.js";
 export { speckitSyncOp, type SyncResult } from "./speckit-sync.js";
 export { speckitDiffOp, type DiffResult } from "./speckit-diff.js";
+
+// Inference operations
+export {
+	inferCompletenessOp,
+	type CompletenessResult,
+	type CompletenessOutput,
+} from "./infer-completeness.js";
+export {
+	inferLifecycleOp,
+	type LifecycleResult,
+	type LifecycleOutput,
+} from "./infer-lifecycle.js";
+export {
+	inferImpactOp,
+	type ImpactNode,
+	type ImpactOutput,
+} from "./infer-impact.js";
+export {
+	inferDerivedOp,
+	type DerivedRelationship,
+	type DerivedOutput,
+} from "./infer-derived.js";
