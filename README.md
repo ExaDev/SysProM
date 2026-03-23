@@ -56,6 +56,49 @@ spm update meta --fields version=2
 
 All commands auto-detect the document — they search the current directory for `.spm.json`, `.spm.md`, or `.spm/` (in that priority order), then fall back to `*.spm.json`, `*.spm.md`, or `*.spm/`. Use `--path` to specify an explicit path.
 
+## MCP Server
+
+SysProM includes an MCP (Model Context Protocol) server exposing 11 tools over stdio transport. Any MCP-compatible agent — Cursor, Windsurf, VS Code Copilot, Cline, or custom clients — can use it.
+
+### Configuration
+
+Add the following to your MCP client's configuration (e.g. `.cursor/mcp.json`, `.vscode/mcp.json`, `cline_mcp_settings.json`, or equivalent):
+
+```json
+{
+  "mcpServers": {
+    "sysprom": {
+      "command": "npx",
+      "args": ["-y", "sysprom", "mcp"]
+    }
+  }
+}
+```
+
+Or via the CLI subcommand (equivalent):
+
+```sh
+spm mcp   # starts the MCP server on stdio
+```
+
+### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `validate` | Validate a SysProM document and return issues |
+| `stats` | Return document statistics |
+| `query-nodes` | Query nodes by type, status, or text |
+| `query-node` | Retrieve a single node by ID |
+| `query-relationships` | Query relationships by source, target, or type |
+| `trace` | Trace refinement chains from a node |
+| `add-node` | Add a new node to the document |
+| `remove-node` | Remove a node by ID |
+| `update-node` | Update fields on an existing node |
+| `add-relationship` | Add a relationship between nodes |
+| `remove-relationship` | Remove a relationship |
+
+All tools accept a `path` parameter to specify the SysProM document location.
+
 ## Programmatic API
 
 ```ts
