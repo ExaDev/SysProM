@@ -42,7 +42,7 @@
 	"nodes": [
 		{
 			"description": "Enable any system — regardless of domain — to record where every part came from, what decisions shaped it, and how it reached its current form.",
-			"id": "I1",
+			"id": "INT1",
 			"name": "System Provenance",
 			"type": "intent"
 		},
@@ -51,7 +51,7 @@
 				"A system is understood through distinct layers of abstraction: intent, concept, capability, structure, and realisation.",
 				"Each layer is valid independently of the layers below it."
 			],
-			"id": "CN1",
+			"id": "CON1",
 			"name": "Layered Abstraction",
 			"type": "concept"
 		},
@@ -61,7 +61,7 @@
 				"Decisions select between alternatives, affect nodes, and must preserve invariants.",
 				"Decisions are never deleted — they are superseded."
 			],
-			"id": "CN2",
+			"id": "CON2",
 			"name": "Decision-Driven Evolution",
 			"type": "concept"
 		},
@@ -70,7 +70,7 @@
 				"The history of a system is additive. Nodes are deprecated or retired, not erased.",
 				"Changes record what happened; they do not overwrite prior state."
 			],
-			"id": "CN3",
+			"id": "CON3",
 			"name": "Append-Only History",
 			"type": "concept"
 		},
@@ -79,7 +79,7 @@
 				"Any node may be treated as a subsystem with its own internal structure.",
 				"The same model applies at every level of nesting."
 			],
-			"id": "CN4",
+			"id": "CON4",
 			"name": "Recursive Composition",
 			"type": "concept"
 		},
@@ -88,7 +88,7 @@
 				"Workflows, roles, stages, gates, and artefacts are modelled with the same rigour as domain concepts.",
 				"Process is not a second-class concern."
 			],
-			"id": "CN5",
+			"id": "CON5",
 			"name": "Process as Structure",
 			"type": "concept"
 		},
@@ -97,7 +97,7 @@
 				"The model defines semantics, not storage.",
 				"It may be represented in Markdown, JSON, a database, or any other structured format."
 			],
-			"id": "CN6",
+			"id": "CON6",
 			"name": "Format Agnosticism",
 			"type": "concept"
 		},
@@ -106,25 +106,25 @@
 				"Nodes may relate to resources outside the graph.",
 				"Content may be internalised for portability or referenced for traceability, or both."
 			],
-			"id": "CN7",
+			"id": "CON7",
 			"name": "External Resource Handling",
 			"type": "concept"
 		},
 		{
 			"description": "A system conforms to SysProM if it meets a defined set of minimum requirements, ensuring interoperability and consistency.",
-			"id": "CN8",
+			"id": "CON8",
 			"name": "Conformance",
 			"type": "concept"
 		},
 		{
 			"description": "Trace any node from intent through concept, capability, and structure to realisation.",
-			"id": "CP1",
+			"id": "CAP1",
 			"name": "Cross-Layer Traceability",
 			"type": "capability"
 		},
 		{
 			"description": "Record choices with alternatives considered, rationale, affected nodes, and preserved invariants.",
-			"id": "CP2",
+			"id": "CAP2",
 			"name": "Decision Recording",
 			"type": "capability"
 		},
@@ -133,67 +133,67 @@
 				"Define rules that must hold across all valid system states.",
 				"Decisions and changes must explicitly identify which invariants they preserve."
 			],
-			"id": "CP3",
+			"id": "CAP3",
 			"name": "Invariant Enforcement",
 			"type": "capability"
 		},
 		{
 			"description": "Record every addition, modification, removal, and transition with scope, decision, and lifecycle state.",
-			"id": "CP4",
+			"id": "CAP4",
 			"name": "Change Tracking",
 			"type": "capability"
 		},
 		{
 			"description": "Represent any node as a subsystem with its own nodes, relationships, decisions, and changes, using the same conventions at every depth.",
-			"id": "CP5",
+			"id": "CAP5",
 			"name": "Recursive Modelling",
 			"type": "capability"
 		},
 		{
 			"description": "Define protocols, stages, roles, gates, modes, artefacts, and artefact flows as first-class graph nodes.",
-			"id": "CP6",
+			"id": "CAP6",
 			"name": "Process Modelling",
 			"type": "capability"
 		},
 		{
 			"description": "Encode the model in a single file, a multi-document folder, nested folders, or a non-file format, with the same underlying semantics.",
-			"id": "CP7",
+			"id": "CAP7",
 			"name": "Flexible Representation",
 			"type": "capability"
 		},
 		{
 			"description": "Reference or internalise resources outside the graph with typed roles (input, output, context, evidence, source, standard, prior_art).",
-			"id": "CP8",
+			"id": "CAP8",
 			"name": "External Resource Referencing",
 			"type": "capability"
 		},
 		{
 			"description": "Intent, decisions, and realisations are distinct concerns and should be recorded separately.",
-			"id": "PR1",
+			"id": "PRIN1",
 			"name": "Separate What From Why From How",
 			"type": "principle"
 		},
 		{
 			"description": "Documents describe state. Decisions explain why state changed.",
-			"id": "PR2",
+			"id": "PRIN2",
 			"name": "Decisions Are More Important Than Documents",
 			"type": "principle"
 		},
 		{
 			"description": "Every node gets an ID. No anonymous ideas.",
-			"id": "PR3",
+			"id": "PRIN3",
 			"name": "Everything Has Identity",
 			"type": "principle"
 		},
 		{
 			"description": "Timelines are one projection of the graph. The graph is the source of truth.",
-			"id": "PR4",
+			"id": "PRIN4",
 			"name": "Think Graph, Not Timeline",
 			"type": "principle"
 		},
 		{
 			"description": "What exists now and how it got there are recorded separately.",
-			"id": "PR5",
+			"id": "PRIN5",
 			"name": "Separate State From History",
 			"type": "principle"
 		},
@@ -383,74 +383,74 @@
 		},
 		{
 			"description": "A conformant system MUST define nodes with types.",
-			"id": "CONF1",
+			"id": "INV28",
 			"name": "Conformance — Typed Nodes",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define relationships between nodes.",
-			"id": "CONF2",
+			"id": "INV29",
 			"name": "Conformance — Relationships",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define lifecycle states for decisions and changes.",
-			"id": "CONF3",
+			"id": "INV30",
 			"name": "Conformance — Lifecycle States",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST define at least one invariant.",
-			"id": "CONF4",
+			"id": "INV31",
 			"name": "Conformance — At Least One Invariant",
 			"type": "invariant"
 		},
 		{
 			"description": "A conformant system MUST support traceability across abstraction layers.",
-			"id": "CONF5",
+			"id": "INV32",
 			"name": "Conformance — Traceability",
 			"type": "invariant"
 		},
 		{
 			"description": "The set of node types that model what the system is.",
-			"id": "EL1",
+			"id": "ELEM1",
 			"name": "Domain Node Family",
 			"status": "active",
 			"subsystem": {
 				"nodes": [
 					{
 						"description": "System purpose or goal. Stable, independent of implementation.",
-						"id": "NT-INTENT",
+						"id": "CON1-INTENT",
 						"name": "intent",
 						"type": "concept"
 					},
 					{
 						"description": "Abstract model or idea. Defines what the system is, independent of structure and realisation.",
-						"id": "NT-CONCEPT",
+						"id": "CON2-CONCEPT",
 						"name": "concept",
 						"type": "concept"
 					},
 					{
 						"description": "Enabled behaviour. Derived from concepts, independent of implementation.",
-						"id": "NT-CAPABILITY",
+						"id": "CON3-CAPABILITY",
 						"name": "capability",
 						"type": "concept"
 					},
 					{
 						"description": "Structural unit (logical part of system). Defines organisation, may depend on other elements.",
-						"id": "NT-ELEMENT",
+						"id": "CON4-ELEMENT",
 						"name": "element",
 						"type": "concept"
 					},
 					{
 						"description": "Concrete implementation of an element. Multiple realisations may coexist (alternative, concurrent, or experimental).",
-						"id": "NT-REALISATION",
+						"id": "CON5-REALISATION",
 						"name": "realisation",
 						"type": "concept"
 					},
 					{
 						"description": "Constraint that must always hold. Independent of decisions and changes. Constrains allowable system states.",
-						"id": "NT-INVARIANT",
+						"id": "CON6-INVARIANT",
 						"name": "invariant",
 						"type": "concept"
 					}
@@ -460,38 +460,38 @@
 		},
 		{
 			"description": "The set of node types that model how work flows through the system.",
-			"id": "EL2",
+			"id": "ELEM2",
 			"name": "Process Node Family",
 			"status": "active",
 			"subsystem": {
 				"nodes": [
 					{
 						"description": "Normative design value. May be overridden with justification, unlike invariants.",
-						"id": "NT-PRINCIPLE",
+						"id": "CON1-PRINCIPLE",
 						"name": "principle",
 						"type": "concept"
 					},
 					{
 						"description": "Operational routing, gating, or selection rule. Implements principles and invariants.",
-						"id": "NT-POLICY",
+						"id": "CON2-POLICY",
 						"name": "policy",
 						"type": "concept"
 					},
 					{
 						"description": "Defined sequence of stages performed by roles. Protocols MAY depend on other protocols.",
-						"id": "NT-PROTOCOL",
+						"id": "CON3-PROTOCOL",
 						"name": "protocol",
 						"type": "concept"
 					},
 					{
 						"description": "A step within a protocol. MUST have defined ordering. MAY produce or consume artefacts.",
-						"id": "NT-STAGE",
+						"id": "CON4-STAGE",
 						"name": "stage",
 						"type": "concept"
 					},
 					{
 						"description": "A participant that performs stages. MAY be human, automated, or agent-based.",
-						"id": "NT-ROLE",
+						"id": "CON5-ROLE",
 						"name": "role",
 						"type": "concept"
 					},
@@ -500,7 +500,7 @@
 							"Conditional blocker or redirector. MUST reference the invariant or policy it enforces.",
 							"MAY block a stage or route to an alternative."
 						],
-						"id": "NT-GATE",
+						"id": "CON6-GATE",
 						"name": "gate",
 						"type": "concept"
 					},
@@ -509,7 +509,7 @@
 							"Named behavioural configuration that modifies a protocol or stage without redefining the system.",
 							"MAY be triggered by gates, selected by policies, or chosen explicitly."
 						],
-						"id": "NT-MODE",
+						"id": "CON7-MODE",
 						"name": "mode",
 						"type": "concept"
 					}
@@ -519,14 +519,14 @@
 		},
 		{
 			"description": "The set of node types that model what is produced and consumed.",
-			"id": "EL3",
+			"id": "ELEM3",
 			"name": "Artefact Node Family",
 			"status": "active",
 			"subsystem": {
 				"nodes": [
 					{
 						"description": "A document, record, or output produced or consumed during system evolution.",
-						"id": "NT-ARTEFACT",
+						"id": "CON1-ARTEFACT",
 						"name": "artefact",
 						"type": "concept"
 					},
@@ -535,7 +535,7 @@
 							"A transformation of one artefact into another within a stage.",
 							"Provides traceability of how documents and records evolve through a process."
 						],
-						"id": "NT-ARTEFACT_FLOW",
+						"id": "CON2-ARTEFACT_FLOW",
 						"name": "artefact_flow",
 						"type": "concept"
 					}
@@ -545,7 +545,7 @@
 		},
 		{
 			"description": "The set of node types that model how the system changes over time.",
-			"id": "EL4",
+			"id": "ELEM4",
 			"name": "Evolution Node Family",
 			"status": "active",
 			"subsystem": {
@@ -556,7 +556,7 @@
 							"MUST define selected option, list alternatives, identify affected nodes, and identify preserved invariants.",
 							"MAY supersede prior decisions. Superseded decisions remain in history."
 						],
-						"id": "NT-DECISION",
+						"id": "CON1-DECISION",
 						"name": "decision",
 						"type": "concept"
 					},
@@ -566,7 +566,7 @@
 							"MUST define scope, reference decisions, define operations (add/update/remove/link), and define lifecycle state.",
 							"MAY include execution plan. MAY overlap, depend on other changes, and be partially completed."
 						],
-						"id": "NT-CHANGE",
+						"id": "CON2-CHANGE",
 						"name": "change",
 						"type": "concept"
 					}
@@ -576,26 +576,26 @@
 		},
 		{
 			"description": "Optional node types for views and snapshots.",
-			"id": "EL5",
+			"id": "ELEM5",
 			"name": "Projection Node Family",
 			"status": "active",
 			"subsystem": {
 				"nodes": [
 					{
 						"description": "A named projection of a subset of the graph.",
-						"id": "NT-VIEW",
+						"id": "CON1-VIEW",
 						"name": "view",
 						"type": "concept"
 					},
 					{
 						"description": "A named point in evolution.",
-						"id": "NT-MILESTONE",
+						"id": "CON2-MILESTONE",
 						"name": "milestone",
 						"type": "concept"
 					},
 					{
 						"description": "A frozen snapshot of the system.",
-						"id": "NT-VERSION",
+						"id": "CON3-VERSION",
 						"name": "version",
 						"type": "concept"
 					}
@@ -605,152 +605,152 @@
 		},
 		{
 			"description": "The set of typed, directed connections available between nodes.",
-			"id": "EL6",
+			"id": "ELEM6",
 			"name": "Relationship Type Registry",
 			"status": "active",
 			"subsystem": {
 				"nodes": [
 					{
 						"description": "Abstraction refinement (e.g. capability refines concept).",
-						"id": "RT-REFINES",
+						"id": "CON1-REFINES",
 						"name": "refines",
 						"type": "concept"
 					},
 					{
 						"description": "Fulfils a capability.",
-						"id": "RT-REALISES",
+						"id": "CON2-REALISES",
 						"name": "realises",
 						"type": "concept"
 					},
 					{
 						"description": "Fulfils an element.",
-						"id": "RT-IMPLEMENTS",
+						"id": "CON3-IMPLEMENTS",
 						"name": "implements",
 						"type": "concept"
 					},
 					{
 						"description": "Dependency between nodes.",
-						"id": "RT-DEPENDS_ON",
+						"id": "CON4-DEPENDS_ON",
 						"name": "depends_on",
 						"type": "concept"
 					},
 					{
 						"description": "Governed by an invariant.",
-						"id": "RT-CONSTRAINED_BY",
+						"id": "CON5-CONSTRAINED_BY",
 						"name": "constrained_by",
 						"type": "concept"
 					},
 					{
 						"description": "Impact of a decision or change on a node.",
-						"id": "RT-AFFECTS",
+						"id": "CON6-AFFECTS",
 						"name": "affects",
 						"type": "concept"
 					},
 					{
 						"description": "Replacement of one node by another.",
-						"id": "RT-SUPERSEDES",
+						"id": "CON7-SUPERSEDES",
 						"name": "supersedes",
 						"type": "concept"
 					},
 					{
 						"description": "Preservation of an invariant by a decision or change.",
-						"id": "RT-MUST_PRESERVE",
+						"id": "CON8-MUST_PRESERVE",
 						"name": "must_preserve",
 						"type": "concept"
 					},
 					{
 						"description": "A role performs a stage.",
-						"id": "RT-PERFORMS",
+						"id": "CON9-PERFORMS",
 						"name": "performs",
 						"type": "concept"
 					},
 					{
 						"description": "A stage belongs to a protocol.",
-						"id": "RT-PART_OF",
+						"id": "CON10-PART_OF",
 						"name": "part_of",
 						"type": "concept"
 					},
 					{
 						"description": "Ordering between stages.",
-						"id": "RT-PRECEDES",
+						"id": "CON11-PRECEDES",
 						"name": "precedes",
 						"type": "concept"
 					},
 					{
 						"description": "Strict ordering constraint between stages.",
-						"id": "RT-MUST_FOLLOW",
+						"id": "CON12-MUST_FOLLOW",
 						"name": "must_follow",
 						"type": "concept"
 					},
 					{
 						"description": "A gate blocks a stage.",
-						"id": "RT-BLOCKS",
+						"id": "CON13-BLOCKS",
 						"name": "blocks",
 						"type": "concept"
 					},
 					{
 						"description": "A gate redirects to a stage.",
-						"id": "RT-ROUTES_TO",
+						"id": "CON14-ROUTES_TO",
 						"name": "routes_to",
 						"type": "concept"
 					},
 					{
 						"description": "A gate or policy is governed by a principle or invariant.",
-						"id": "RT-GOVERNED_BY",
+						"id": "CON15-GOVERNED_BY",
 						"name": "governed_by",
 						"type": "concept"
 					},
 					{
 						"description": "A mode modifies a protocol or stage.",
-						"id": "RT-MODIFIES",
+						"id": "CON16-MODIFIES",
 						"name": "modifies",
 						"type": "concept"
 					},
 					{
 						"description": "A mode is triggered by a gate.",
-						"id": "RT-TRIGGERED_BY",
+						"id": "CON17-TRIGGERED_BY",
 						"name": "triggered_by",
 						"type": "concept"
 					},
 					{
 						"description": "A mode applies to a protocol.",
-						"id": "RT-APPLIES_TO",
+						"id": "CON18-APPLIES_TO",
 						"name": "applies_to",
 						"type": "concept"
 					},
 					{
 						"description": "A stage produces an artefact.",
-						"id": "RT-PRODUCES",
+						"id": "CON19-PRODUCES",
 						"name": "produces",
 						"type": "concept"
 					},
 					{
 						"description": "A stage consumes an artefact.",
-						"id": "RT-CONSUMES",
+						"id": "CON20-CONSUMES",
 						"name": "consumes",
 						"type": "concept"
 					},
 					{
 						"description": "An artefact flow transforms input to output.",
-						"id": "RT-TRANSFORMS_INTO",
+						"id": "CON21-TRANSFORMS_INTO",
 						"name": "transforms_into",
 						"type": "concept"
 					},
 					{
 						"description": "A decision selects a realisation.",
-						"id": "RT-SELECTS",
+						"id": "CON22-SELECTS",
 						"name": "selects",
 						"type": "concept"
 					},
 					{
 						"description": "A gate or mode requires a condition.",
-						"id": "RT-REQUIRES",
+						"id": "CON23-REQUIRES",
 						"name": "requires",
 						"type": "concept"
 					},
 					{
 						"description": "A mode disables a capability.",
-						"id": "RT-DISABLES",
+						"id": "CON24-DISABLES",
 						"name": "disables",
 						"type": "concept"
 					}
@@ -760,7 +760,7 @@
 		},
 		{
 			"description": "The mechanism for relating nodes to resources outside the graph.",
-			"id": "EL7",
+			"id": "ELEM7",
 			"name": "External Reference Model",
 			"status": "active",
 			"subsystem": {
@@ -770,55 +770,55 @@
 							"Content from an external resource captured directly within a node.",
 							"The node becomes self-contained and does not depend on the external source."
 						],
-						"id": "ER-INTERNALISE",
+						"id": "CON1-INTERNALISE",
 						"name": "Internalisation",
 						"type": "concept"
 					},
 					{
 						"description": "A declared relationship to a resource outside the graph, identified by a serialisation-specific identifier with a typed role.",
-						"id": "ER-REFERENCE",
+						"id": "CON2-REFERENCE",
 						"name": "External Reference",
 						"type": "concept"
 					},
 					{
 						"description": "Resource that informed the creation of this node.",
-						"id": "ER-ROLE-INPUT",
+						"id": "CON3-ROLE-INPUT",
 						"name": "input",
 						"type": "concept"
 					},
 					{
 						"description": "Resource produced as a result of this node.",
-						"id": "ER-ROLE-OUTPUT",
+						"id": "CON4-ROLE-OUTPUT",
 						"name": "output",
 						"type": "concept"
 					},
 					{
 						"description": "Background material relevant to understanding this node.",
-						"id": "ER-ROLE-CONTEXT",
+						"id": "CON5-ROLE-CONTEXT",
 						"name": "context",
 						"type": "concept"
 					},
 					{
 						"description": "Material that supports or justifies this node.",
-						"id": "ER-ROLE-EVIDENCE",
+						"id": "CON6-ROLE-EVIDENCE",
 						"name": "evidence",
 						"type": "concept"
 					},
 					{
 						"description": "Original material from which this node was derived.",
-						"id": "ER-ROLE-SOURCE",
+						"id": "CON7-ROLE-SOURCE",
 						"name": "source",
 						"type": "concept"
 					},
 					{
 						"description": "External standard or specification that this node conforms to or enforces.",
-						"id": "ER-ROLE-STANDARD",
+						"id": "CON8-ROLE-STANDARD",
 						"name": "standard",
 						"type": "concept"
 					},
 					{
 						"description": "Existing work that this node relates to or was influenced by.",
-						"id": "ER-ROLE-PRIOR_ART",
+						"id": "CON9-ROLE-PRIOR_ART",
 						"name": "prior_art",
 						"type": "concept"
 					}
@@ -834,43 +834,43 @@
 		},
 		{
 			"description": "Decision has been proposed but not yet evaluated.",
-			"id": "ST-DEC-PROPOSED",
+			"id": "STG1-DEC-PROPOSED",
 			"name": "proposed",
 			"type": "stage"
 		},
 		{
 			"description": "Decision has been accepted as the chosen path.",
-			"id": "ST-DEC-ACCEPTED",
+			"id": "STG2-DEC-ACCEPTED",
 			"name": "accepted",
 			"type": "stage"
 		},
 		{
 			"description": "Decision has been implemented in the system.",
-			"id": "ST-DEC-IMPLEMENTED",
+			"id": "STG3-DEC-IMPLEMENTED",
 			"name": "implemented",
 			"type": "stage"
 		},
 		{
 			"description": "Decision has been fully adopted across the system.",
-			"id": "ST-DEC-ADOPTED",
+			"id": "STG4-DEC-ADOPTED",
 			"name": "adopted",
 			"type": "stage"
 		},
 		{
 			"description": "Decision has been replaced by a newer decision.",
-			"id": "ST-DEC-SUPERSEDED",
+			"id": "STG5-DEC-SUPERSEDED",
 			"name": "superseded",
 			"type": "stage"
 		},
 		{
 			"description": "Decision was accepted but later abandoned without implementation.",
-			"id": "ST-DEC-ABANDONED",
+			"id": "STG6-DEC-ABANDONED",
 			"name": "abandoned",
 			"type": "stage"
 		},
 		{
 			"description": "Decision was accepted but deferred for later implementation.",
-			"id": "ST-DEC-DEFERRED",
+			"id": "STG7-DEC-DEFERRED",
 			"name": "deferred",
 			"type": "stage"
 		},
@@ -882,31 +882,31 @@
 		},
 		{
 			"description": "Change has been defined with scope and operations.",
-			"id": "ST-CHG-DEFINED",
+			"id": "STG8-CHG-DEFINED",
 			"name": "defined",
 			"type": "stage"
 		},
 		{
 			"description": "Change has been introduced into the system.",
-			"id": "ST-CHG-INTRODUCED",
+			"id": "STG9-CHG-INTRODUCED",
 			"name": "introduced",
 			"type": "stage"
 		},
 		{
 			"description": "Change is being actively worked on.",
-			"id": "ST-CHG-IN_PROGRESS",
+			"id": "STG10-CHG-IN_PROGRESS",
 			"name": "in_progress",
 			"type": "stage"
 		},
 		{
 			"description": "Change has been fully applied.",
-			"id": "ST-CHG-COMPLETE",
+			"id": "STG11-CHG-COMPLETE",
 			"name": "complete",
 			"type": "stage"
 		},
 		{
 			"description": "Change has been consolidated and cleaned up.",
-			"id": "ST-CHG-CONSOLIDATED",
+			"id": "STG12-CHG-CONSOLIDATED",
 			"name": "consolidated",
 			"type": "stage"
 		},
@@ -918,31 +918,31 @@
 		},
 		{
 			"description": "Node has been proposed but is not yet active.",
-			"id": "ST-NODE-PROPOSED",
+			"id": "STG13-NODE-PROPOSED",
 			"name": "proposed",
 			"type": "stage"
 		},
 		{
 			"description": "Node is currently active in the system.",
-			"id": "ST-NODE-ACTIVE",
+			"id": "STG14-NODE-ACTIVE",
 			"name": "active",
 			"type": "stage"
 		},
 		{
 			"description": "Node is deprecated but still present in the system.",
-			"id": "ST-NODE-DEPRECATED",
+			"id": "STG15-NODE-DEPRECATED",
 			"name": "deprecated",
 			"type": "stage"
 		},
 		{
 			"description": "Node has been retired from active use.",
-			"id": "ST-NODE-RETIRED",
+			"id": "STG16-NODE-RETIRED",
 			"name": "retired",
 			"type": "stage"
 		},
 		{
 			"description": "Conventions for encoding SysProM in file-based formats.",
-			"id": "EL8",
+			"id": "ELEM8",
 			"name": "File Representation",
 			"status": "active",
 			"type": "element"
@@ -1032,67 +1032,67 @@
 		},
 		{
 			"description": "The model supports branching, merging, and revival of nodes.",
-			"id": "EL9",
+			"id": "ELEM9",
 			"name": "Non-Linear Evolution",
 			"status": "active",
 			"type": "element"
 		},
 		{
 			"description": "The model MUST support multiple concurrent evolution paths (e.g. experimental branches).",
-			"id": "CP9",
+			"id": "CAP9",
 			"name": "Branching",
 			"type": "capability"
 		},
 		{
 			"description": "Branches MAY be merged.",
-			"id": "CP10",
+			"id": "CAP10",
 			"name": "Merging",
 			"type": "capability"
 		},
 		{
 			"description": "Previously deprecated or retired nodes MAY be reintroduced.",
-			"id": "CP11",
+			"id": "CAP11",
 			"name": "Revival",
 			"type": "capability"
 		},
 		{
 			"description": "The mechanism for extending SysProM beyond its core types.",
-			"id": "EL10",
+			"id": "ELEM10",
 			"name": "Extensibility",
 			"status": "active",
 			"type": "element"
 		},
 		{
 			"description": "Primary representation using headings as nodes, lists as relationships, checkboxes as lifecycle, front matter as document metadata.",
-			"id": "R1",
+			"id": "REAL1",
 			"name": "Markdown Representation",
 			"status": "active",
 			"type": "realisation"
 		},
 		{
 			"description": "All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).",
-			"id": "R2",
+			"id": "REAL2",
 			"name": "Single-File Form",
 			"status": "active",
 			"type": "realisation"
 		},
 		{
 			"description": "Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGES).",
-			"id": "R3",
+			"id": "REAL3",
 			"name": "Multi-Document Form",
 			"status": "active",
 			"type": "realisation"
 		},
 		{
 			"description": "Node folders with their own document sets. Nodes may also be single files using .spm.md extension.",
-			"id": "R4",
+			"id": "REAL4",
 			"name": "Recursive Folder Form",
 			"status": "active",
 			"type": "realisation"
 		},
 		{
 			"description": "JSON representation validated against schema.json. Supports recursive composition via the subsystem property.",
-			"id": "R5",
+			"id": "REAL5",
 			"name": "JSON Serialisation",
 			"status": "active",
 			"type": "realisation"
@@ -1102,7 +1102,7 @@
 				"The model needs to represent systems, workflows, and history.",
 				"Mixing these concerns makes the graph hard to query and reason about."
 			],
-			"id": "D1",
+			"id": "DEC1",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"implemented": true,
@@ -1133,7 +1133,7 @@
 		},
 		{
 			"context": "Systems evolve through choices, but most models bury decisions in prose or lose them entirely.",
-			"id": "D2",
+			"id": "DEC2",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"implemented": true,
@@ -1164,7 +1164,7 @@
 		},
 		{
 			"context": "Systems have rules at different levels of rigidity. Collapsing all rules into one type loses critical information.",
-			"id": "D3",
+			"id": "DEC3",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"implemented": true,
@@ -1192,7 +1192,7 @@
 		},
 		{
 			"context": "Workflow-heavy systems (planning tools, spec-driven workflows, runtime orchestration) cannot be adequately modelled with decisions and changes alone.",
-			"id": "D4",
+			"id": "DEC4",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1223,7 +1223,7 @@
 		},
 		{
 			"context": "The model needs a practical encoding but should not be locked to one format.",
-			"id": "D5",
+			"id": "DEC5",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1254,7 +1254,7 @@
 		},
 		{
 			"context": "Systems contain subsystems. If subsystems use different conventions, the model fractures.",
-			"id": "D6",
+			"id": "DEC6",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1282,7 +1282,7 @@
 		},
 		{
 			"context": "Deleting history destroys traceability. If a decision is removed, it becomes impossible to answer why a node exists.",
-			"id": "D7",
+			"id": "DEC7",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1313,7 +1313,7 @@
 				"Nodes often relate to resources outside the graph.",
 				"The model must handle this without coupling to a specific serialisation format."
 			],
-			"id": "D8",
+			"id": "DEC8",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1344,7 +1344,7 @@
 		},
 		{
 			"description": "Establishes the core domain model with layered abstraction, decisions, changes, and invariants.",
-			"id": "CH1",
+			"id": "CHG1",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1353,35 +1353,35 @@
 			"name": "Initial Model",
 			"operations": [
 				{
-					"target": "I1",
+					"target": "INT1",
 					"type": "add"
 				},
 				{
-					"target": "EL1",
+					"target": "ELEM1",
 					"type": "add"
 				},
 				{
-					"target": "EL4",
+					"target": "ELEM4",
 					"type": "add"
 				},
 				{
-					"target": "EL6",
+					"target": "ELEM6",
 					"type": "add"
 				}
 			],
 			"scope": [
-				"I1",
-				"CN1",
-				"CN2",
-				"CN3",
-				"CN4",
-				"CP1",
-				"CP2",
-				"CP3",
-				"CP4",
-				"CP5",
-				"EL1",
-				"EL4",
+				"INT1",
+				"CON1",
+				"CON2",
+				"CON3",
+				"CON4",
+				"CAP1",
+				"CAP2",
+				"CAP3",
+				"CAP4",
+				"CAP5",
+				"ELEM1",
+				"ELEM4",
 				"INV1",
 				"INV2",
 				"INV3",
@@ -1389,17 +1389,17 @@
 				"INV5",
 				"INV6",
 				"INV7",
-				"PR1",
-				"PR2",
-				"PR3",
-				"PR4",
-				"PR5"
+				"PRIN1",
+				"PRIN2",
+				"PRIN3",
+				"PRIN4",
+				"PRIN5"
 			],
 			"type": "change"
 		},
 		{
 			"description": "Extends the model with process, artefact, and projection node families.",
-			"id": "CH2",
+			"id": "CHG2",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1408,24 +1408,24 @@
 			"name": "Add Process Modelling",
 			"operations": [
 				{
-					"target": "EL2",
+					"target": "ELEM2",
 					"type": "add"
 				},
 				{
-					"target": "EL3",
+					"target": "ELEM3",
 					"type": "add"
 				},
 				{
-					"target": "EL5",
+					"target": "ELEM5",
 					"type": "add"
 				}
 			],
 			"scope": [
-				"CN5",
-				"CP6",
-				"EL2",
-				"EL3",
-				"EL5",
+				"CON5",
+				"CAP6",
+				"ELEM2",
+				"ELEM3",
+				"ELEM5",
 				"INV8",
 				"INV9",
 				"INV10",
@@ -1435,7 +1435,7 @@
 		},
 		{
 			"description": "Defines how SysProM may be encoded in files, including single-document, multi-document, and recursive folder forms.",
-			"id": "CH3",
+			"id": "CHG3",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1444,39 +1444,39 @@
 			"name": "Add File Representation Conventions",
 			"operations": [
 				{
-					"target": "EL8",
+					"target": "ELEM8",
 					"type": "add"
 				},
 				{
-					"target": "R1",
+					"target": "REAL1",
 					"type": "add"
 				},
 				{
-					"target": "R2",
+					"target": "REAL2",
 					"type": "add"
 				},
 				{
-					"target": "R3",
+					"target": "REAL3",
 					"type": "add"
 				},
 				{
-					"target": "R4",
+					"target": "REAL4",
 					"type": "add"
 				},
 				{
-					"target": "R5",
+					"target": "REAL5",
 					"type": "add"
 				}
 			],
 			"scope": [
-				"CN6",
-				"CP7",
-				"R1",
-				"R2",
-				"R3",
-				"R4",
-				"R5",
-				"EL8",
+				"CON6",
+				"CAP7",
+				"REAL1",
+				"REAL2",
+				"REAL3",
+				"REAL4",
+				"REAL5",
+				"ELEM8",
 				"POL1",
 				"POL2",
 				"POL3",
@@ -1494,7 +1494,7 @@
 		},
 		{
 			"description": "Adds the external reference and internalisation mechanism with typed roles.",
-			"id": "CH4",
+			"id": "CHG4",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1503,22 +1503,22 @@
 			"name": "Add External Resources Model",
 			"operations": [
 				{
-					"target": "CN7",
+					"target": "CON7",
 					"type": "add"
 				},
 				{
-					"target": "CP8",
+					"target": "CAP8",
 					"type": "add"
 				},
 				{
-					"target": "EL7",
+					"target": "ELEM7",
 					"type": "add"
 				}
 			],
 			"scope": [
-				"CN7",
-				"CP8",
-				"EL7",
+				"CON7",
+				"CAP8",
+				"ELEM7",
 				"INV19",
 				"INV20",
 				"POL6"
@@ -1527,7 +1527,7 @@
 		},
 		{
 			"description": "Adds the decision, change, and node lifecycle state machines as protocols with stages and ordering.",
-			"id": "CH5",
+			"id": "CHG5",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1557,7 +1557,7 @@
 		},
 		{
 			"description": "Adds conformance requirements, missing invariants, security and extensibility policies, non-linear evolution capabilities, and complete node/relationship type vocabularies to make the JSON self-contained.",
-			"id": "CH6",
+			"id": "CHG6",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1566,24 +1566,24 @@
 			"name": "Encode Full Normative Specification",
 			"operations": [
 				{
-					"target": "CN8",
+					"target": "CON8",
 					"type": "add"
 				},
 				{
-					"target": "EL9",
+					"target": "ELEM9",
 					"type": "add"
 				},
 				{
-					"target": "EL10",
+					"target": "ELEM10",
 					"type": "add"
 				}
 			],
 			"scope": [
-				"CONF1",
-				"CONF2",
-				"CONF3",
-				"CONF4",
-				"CONF5",
+				"INV28",
+				"INV29",
+				"INV30",
+				"INV31",
+				"INV32",
 				"INV12",
 				"INV13",
 				"INV14",
@@ -1597,12 +1597,12 @@
 				"POL7",
 				"POL8",
 				"POL9",
-				"EL9",
-				"EL10",
-				"CP9",
-				"CP10",
-				"CP11",
-				"CN8"
+				"ELEM9",
+				"ELEM10",
+				"CAP9",
+				"CAP10",
+				"CAP11",
+				"CON8"
 			],
 			"type": "change"
 		},
@@ -1622,7 +1622,7 @@
 				"Long descriptions serialised as single strings with embedded \\n are hard to read and produce poor diffs.",
 				"An array of lines preserves readability in serialised form."
 			],
-			"id": "D9",
+			"id": "DEC9",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1657,7 +1657,7 @@
 				"Adds support for text fields (description, context, rationale, internalised) to accept either a string or an array of strings.",
 				"Updates the JSON schema, Zod definitions, and specification."
 			],
-			"id": "CH7",
+			"id": "CHG7",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1670,23 +1670,23 @@
 					"type": "add"
 				},
 				{
-					"target": "D8",
+					"target": "DEC8",
 					"type": "add"
 				},
 				{
 					"description": "JSON schema updated to accept string | string[] for text fields",
-					"target": "R5",
+					"target": "REAL5",
 					"type": "update"
 				},
 				{
 					"description": "Specification updated with §6.2 Text Fields",
-					"target": "R1",
+					"target": "REAL1",
 					"type": "update"
 				}
 			],
 			"scope": [
 				"INV21",
-				"D8"
+				"DEC8"
 			],
 			"type": "change"
 		},
@@ -1706,7 +1706,7 @@
 				"If relationship types, node types, and statuses are arbitrary strings, layer constraints cannot be enforced, labels cannot be derived for rendering, and semantic validation is impossible.",
 				"The extensibility section says extensions MUST NOT violate core constraints, but an open string type makes that unenforceable."
 			],
-			"id": "D10",
+			"id": "DEC10",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1737,7 +1737,7 @@
 				"Introduces labelledEnum() helper that defines values and labels in one place.",
 				"Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label maps."
 			],
-			"id": "CH8",
+			"id": "CHG8",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1750,19 +1750,19 @@
 					"type": "add"
 				},
 				{
-					"target": "D8",
+					"target": "DEC8",
 					"type": "add"
 				},
 				{
 					"description": "JSON schema now uses enum instead of string with examples",
-					"target": "R5",
+					"target": "REAL5",
 					"type": "update"
 				}
 			],
 			"scope": [
 				"INV22",
-				"D8",
-				"R5"
+				"DEC8",
+				"REAL5"
 			],
 			"type": "change"
 		},
@@ -1777,7 +1777,7 @@
 				"The README generator was producing navigation links and document role entries for all possible files (INTENT, INVARIANTS, STATE, DECISIONS, CHANGES) regardless of whether the subsystem had nodes of those types.",
 				"This created dead links in subsystem READMEs."
 			],
-			"id": "D11",
+			"id": "DEC11",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1804,7 +1804,7 @@
 				"The README contained a Navigation section and a Document Roles table that restated what the filenames already communicate.",
 				"Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain."
 			],
-			"id": "D12",
+			"id": "DEC12",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": false,
@@ -1832,7 +1832,7 @@
 		},
 		{
 			"description": "README generator now only links to files that contain nodes for the given subsystem.",
-			"id": "CH9",
+			"id": "CHG9",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1845,25 +1845,25 @@
 					"type": "add"
 				},
 				{
-					"target": "D8",
+					"target": "DEC8",
 					"type": "add"
 				},
 				{
 					"description": "json-to-md updated to check present node types before generating links",
-					"target": "R1",
+					"target": "REAL1",
 					"type": "update"
 				}
 			],
 			"scope": [
 				"POL19",
-				"D8",
-				"R1"
+				"DEC8",
+				"REAL1"
 			],
 			"type": "change"
 		},
 		{
 			"description": "Removes the Navigation section and Document Roles table from generated READMEs. The file naming convention is self-documenting.",
-			"id": "CH10",
+			"id": "CHG10",
 			"lifecycle": {
 				"complete": false,
 				"defined": true,
@@ -1873,13 +1873,13 @@
 			"operations": [
 				{
 					"description": "README generation simplified to omit navigation and document roles",
-					"target": "R1",
+					"target": "REAL1",
 					"type": "update"
 				}
 			],
 			"scope": [
-				"D8",
-				"R1"
+				"DEC8",
+				"REAL1"
 			],
 			"type": "change"
 		},
@@ -1890,7 +1890,7 @@
 				"Forcing must_preserve on these creates friction that discourages recording decisions, which defeats SysProM's provenance purpose.",
 				"SysProM already distinguishes domain nodes (intent, concept, capability, element, invariant) from non-domain nodes (realisation, policy, protocol, etc.)."
 			],
-			"id": "D13",
+			"id": "DEC13",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -1930,7 +1930,7 @@
 				"Updates INV3 to require must_preserve only when a decision affects domain nodes.",
 				"Decisions affecting only non-domain nodes (realisations, policies, process nodes) should but are not required to identify preserved invariants."
 			],
-			"id": "CH11",
+			"id": "CHG11",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -1946,7 +1946,7 @@
 			],
 			"scope": [
 				"INV3",
-				"D8"
+				"DEC8"
 			],
 			"type": "change"
 		},
@@ -1961,7 +1961,7 @@
 							"Architecture Decision Records cover decision history only.",
 							"SysProM subsumes ADR and adds structure, evolution, invariants, and graph-native traceability."
 						],
-						"id": "CMP-ADR",
+						"id": "CON1-ADR",
 						"name": "ADR Comparison",
 						"type": "concept"
 					},
@@ -1970,7 +1970,7 @@
 							"C4 covers multi-level structure (Context, Container, Component, Code).",
 							"It is static — no decisions, changes, or time. SysProM adds all three."
 						],
-						"id": "CMP-C4",
+						"id": "CON2",
 						"name": "C4 Comparison",
 						"type": "concept"
 					},
@@ -1979,7 +1979,7 @@
 							"Domain-Driven Design covers intent and concept layers via ubiquitous language and bounded contexts.",
 							"Weak on decisions and evolution. SysProM adds both."
 						],
-						"id": "CMP-DDD",
+						"id": "CON3-DDD",
 						"name": "DDD Comparison",
 						"type": "concept"
 					},
@@ -1988,7 +1988,7 @@
 							"Event sourcing tracks changes as first-class events.",
 							"No abstraction layers, no decisions (why), no semantic structure. SysProM adds all three."
 						],
-						"id": "CMP-ES",
+						"id": "CON4-ES",
 						"name": "Event Sourcing Comparison",
 						"type": "concept"
 					},
@@ -1997,7 +1997,7 @@
 							"Knowledge graphs provide the underlying data model (nodes + typed edges).",
 							"Lack lifecycle, decision semantics, and temporal workflow. SysProM adds these."
 						],
-						"id": "CMP-KG",
+						"id": "CON5-KG",
 						"name": "Knowledge Graph Comparison",
 						"type": "concept"
 					},
@@ -2006,7 +2006,7 @@
 							"Traceability matrices link requirements to design to implementation.",
 							"Very linear, no decisions, no non-linearity. SysProM is graph-native."
 						],
-						"id": "CMP-TRACE",
+						"id": "CON6-TRACE",
 						"name": "Traceability Matrix Comparison",
 						"type": "concept"
 					},
@@ -2015,7 +2015,7 @@
 							"ArchiMate/TOGAF cover capability and structure layers with standardised elements.",
 							"Heavyweight, static, weak on iteration. SysProM is lightweight and decision-driven."
 						],
-						"id": "CMP-EA",
+						"id": "CON7-EA",
 						"name": "Enterprise Architecture Comparison",
 						"type": "concept"
 					},
@@ -2024,7 +2024,7 @@
 							"RFC processes cover decision lifecycle (proposal, discussion, acceptance).",
 							"Not connected to a system model. SysProM integrates decisions with the system graph."
 						],
-						"id": "CMP-RFC",
+						"id": "CON8-RFC",
 						"name": "RFC Process Comparison",
 						"type": "concept"
 					},
@@ -2033,7 +2033,7 @@
 							"Git provides temporal mechanics (append-only history, branching, merging).",
 							"No semantic structure — just file diffs. SysProM adds typed nodes and relationships."
 						],
-						"id": "CMP-GIT",
+						"id": "CON9-GIT",
 						"name": "Git Comparison",
 						"type": "concept"
 					},
@@ -2042,7 +2042,7 @@
 							"MBSE is the closest formal equivalent — requirements, structure, behaviour, constraints.",
 							"SysProM can be understood as a lightweight, human-readable, decision-centric MBSE."
 						],
-						"id": "CMP-MBSE",
+						"id": "CON10-MBSE",
 						"name": "MBSE/SysML Comparison",
 						"type": "concept"
 					},
@@ -2053,7 +2053,7 @@
 							"SysProM adds invariants, decision supersession, and graph-native traceability.",
 							"Bidirectional interoperability: SysProM can import Spec-Kit project files (spec.md, plan.md, tasks.md, constitution.md, checklist.md) into typed nodes and export them back, enabling round-trip editing in either format."
 						],
-						"id": "CMP-SPECKIT",
+						"id": "CON11-SPECKIT",
 						"name": "Spec Kit Comparison",
 						"type": "concept"
 					},
@@ -2063,7 +2063,7 @@
 							"Its process can be modelled as a SysProM protocol with roles, stages, gates, and modes.",
 							"SysProM can store Ralplan's outputs but cannot replace the planning intelligence itself."
 						],
-						"id": "CMP-RALPLAN",
+						"id": "CON12-RALPLAN",
 						"name": "Ralplan Comparison",
 						"type": "concept"
 					},
@@ -2073,7 +2073,7 @@
 							"Can be modelled as a system with multiple runtime realisations governed by a user-surface stability principle.",
 							"SysProM captures the architectural truth: one stable capability surface, multiple interchangeable realisations."
 						],
-						"id": "CMP-GSD",
+						"id": "CON13-GSD",
 						"name": "GSD Comparison",
 						"type": "concept"
 					},
@@ -2083,7 +2083,7 @@
 							"Each optimises one axis. SysProM combines all into a single recursive graph.",
 							"Spec Kit, Ralplan, and GSD compose with SysProM: Ralplan generates plans, Spec Kit stores specs, GSD executes, SysProM tracks provenance."
 						],
-						"id": "CMP-SUMMARY",
+						"id": "CON14-SUMMARY",
 						"name": "Summary",
 						"type": "concept"
 					}
@@ -2099,25 +2099,25 @@
 				"nodes": [
 					{
 						"description": "Enable users to ingest, transform, store, and access documents consistently across contexts.",
-						"id": "I1",
+						"id": "INT1",
 						"name": "Document Workspace",
 						"type": "intent"
 					},
 					{
 						"description": "Documents can be converted between representations.",
-						"id": "CN1",
+						"id": "CON1",
 						"name": "Document Transformation",
 						"type": "concept"
 					},
 					{
 						"description": "Documents can be stored and later retrieved.",
-						"id": "CN2",
+						"id": "CON2",
 						"name": "Document Persistence",
 						"type": "concept"
 					},
 					{
 						"description": "Documents can be kept consistent across multiple contexts.",
-						"id": "CN3",
+						"id": "CON3",
 						"name": "Document Synchronisation",
 						"type": "concept"
 					},
@@ -2146,41 +2146,41 @@
 						"type": "invariant"
 					},
 					{
-						"id": "EL1",
+						"id": "ELEM1",
 						"name": "Transformation Engine",
 						"type": "element"
 					},
 					{
-						"id": "EL2",
+						"id": "ELEM2",
 						"name": "Document Store",
 						"type": "element"
 					},
 					{
-						"id": "R1",
+						"id": "REAL1",
 						"name": "Local Conversion",
 						"status": "active",
 						"type": "realisation"
 					},
 					{
-						"id": "R2",
+						"id": "REAL2",
 						"name": "Remote Conversion",
 						"status": "active",
 						"type": "realisation"
 					},
 					{
-						"id": "R3",
+						"id": "REAL3",
 						"name": "Local Storage",
 						"status": "active",
 						"type": "realisation"
 					},
 					{
-						"id": "R4",
+						"id": "REAL4",
 						"name": "Remote Storage",
 						"status": "active",
 						"type": "realisation"
 					},
 					{
-						"id": "D1",
+						"id": "DEC1",
 						"lifecycle": {
 							"accepted": true,
 							"implemented": true,
@@ -2204,57 +2204,57 @@
 				],
 				"relationships": [
 					{
-						"from": "CN1",
-						"to": "I1",
+						"from": "CON1",
+						"to": "INT1",
 						"type": "refines"
 					},
 					{
-						"from": "CN2",
-						"to": "I1",
+						"from": "CON2",
+						"to": "INT1",
 						"type": "refines"
 					},
 					{
-						"from": "CN3",
-						"to": "I1",
+						"from": "CON3",
+						"to": "INT1",
 						"type": "refines"
 					},
 					{
-						"from": "EL1",
-						"to": "CN1",
+						"from": "ELEM1",
+						"to": "CON1",
 						"type": "realises"
 					},
 					{
-						"from": "EL2",
-						"to": "CN2",
+						"from": "ELEM2",
+						"to": "CON2",
 						"type": "realises"
 					},
 					{
-						"from": "R1",
-						"to": "EL1",
+						"from": "REAL1",
+						"to": "ELEM1",
 						"type": "implements"
 					},
 					{
-						"from": "R2",
-						"to": "EL1",
+						"from": "REAL2",
+						"to": "ELEM1",
 						"type": "implements"
 					},
 					{
-						"from": "R3",
-						"to": "EL2",
+						"from": "REAL3",
+						"to": "ELEM2",
 						"type": "implements"
 					},
 					{
-						"from": "R4",
-						"to": "EL2",
+						"from": "REAL4",
+						"to": "ELEM2",
 						"type": "implements"
 					},
 					{
-						"from": "D1",
-						"to": "EL1",
+						"from": "DEC1",
+						"to": "ELEM1",
 						"type": "affects"
 					},
 					{
-						"from": "D1",
+						"from": "DEC1",
 						"to": "INV2",
 						"type": "must_preserve"
 					}
@@ -2270,7 +2270,7 @@
 				"nodes": [
 					{
 						"description": "Enable work to move from idea to execution in a controlled, reviewable, and traceable way.",
-						"id": "I1",
+						"id": "INT1",
 						"name": "Reliable Change Delivery",
 						"type": "intent"
 					},
@@ -2310,40 +2310,40 @@
 						"type": "protocol"
 					},
 					{
-						"id": "ST1",
+						"id": "STG1",
 						"name": "Draft Plan",
 						"type": "stage"
 					},
 					{
-						"id": "ST2",
+						"id": "STG2",
 						"name": "Architectural Review",
 						"type": "stage"
 					},
 					{
-						"id": "ST3",
+						"id": "STG3",
 						"name": "Critical Evaluation",
 						"type": "stage"
 					},
 					{
 						"description": "Blocks execution when work is vague or underspecified.",
-						"id": "G1",
+						"id": "GATE1",
 						"name": "Scope Gate",
 						"type": "gate"
 					},
 					{
-						"id": "M1",
+						"id": "MODE1",
 						"name": "Standard Mode",
 						"type": "mode"
 					},
 					{
 						"description": "Adds explicit user checkpoints.",
-						"id": "M2",
+						"id": "MODE2",
 						"name": "Interactive Mode",
 						"type": "mode"
 					},
 					{
 						"description": "Adds stronger risk analysis and broader verification.",
-						"id": "M3",
+						"id": "MODE3",
 						"name": "Deliberate Mode",
 						"type": "mode"
 					}
@@ -2351,56 +2351,56 @@
 				"relationships": [
 					{
 						"from": "ROLE1",
-						"to": "ST1",
+						"to": "STG1",
 						"type": "performs"
 					},
 					{
 						"from": "ROLE2",
-						"to": "ST2",
+						"to": "STG2",
 						"type": "performs"
 					},
 					{
 						"from": "ROLE3",
-						"to": "ST3",
+						"to": "STG3",
 						"type": "performs"
 					},
 					{
-						"from": "ST1",
+						"from": "STG1",
 						"to": "PROT1",
 						"type": "part_of"
 					},
 					{
-						"from": "ST2",
+						"from": "STG2",
 						"to": "PROT1",
 						"type": "part_of"
 					},
 					{
-						"from": "ST3",
+						"from": "STG3",
 						"to": "PROT1",
 						"type": "part_of"
 					},
 					{
-						"from": "ST2",
-						"to": "ST1",
+						"from": "STG2",
+						"to": "STG1",
 						"type": "must_follow"
 					},
 					{
-						"from": "ST3",
-						"to": "ST2",
+						"from": "STG3",
+						"to": "STG2",
 						"type": "must_follow"
 					},
 					{
-						"from": "G1",
+						"from": "GATE1",
 						"to": "INV1",
 						"type": "governed_by"
 					},
 					{
-						"from": "M2",
+						"from": "MODE2",
 						"to": "PROT1",
 						"type": "modifies"
 					},
 					{
-						"from": "M3",
+						"from": "MODE3",
 						"to": "PROT1",
 						"type": "modifies"
 					}
@@ -2415,7 +2415,7 @@
 				"The specification is already captured as the JSON itself.",
 				"The comparisons, examples, and naming rationale could be modelled as artefact nodes with subsystems."
 			],
-			"id": "D14",
+			"id": "DEC14",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -2445,7 +2445,7 @@
 				"Naming rationale is already captured in D8.",
 				"Specification is already captured as the JSON itself — distilled/Specification.md is redundant."
 			],
-			"id": "CH12",
+			"id": "CHG12",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -2489,7 +2489,7 @@
 				"Large subsystems (e.g. 24 relationship type definitions at 107 lines) become unwieldy in a single file.",
 				"The file type count heuristic alone doesn't catch single-type subsystems that are too long."
 			],
-			"id": "D15",
+			"id": "DEC15",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -2517,7 +2517,7 @@
 				"Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).",
 				"Both heuristics are automatic — no user configuration needed."
 			],
-			"id": "CH13",
+			"id": "CHG13",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -2530,50 +2530,50 @@
 					"type": "add"
 				},
 				{
-					"target": "D8",
+					"target": "DEC8",
 					"type": "add"
 				},
 				{
 					"description": "json-to-md updated with line count threshold and auto-grouping",
-					"target": "R1",
+					"target": "REAL1",
 					"type": "update"
 				}
 			],
 			"scope": [
 				"POL20",
-				"D8",
-				"R1"
+				"DEC8",
+				"REAL1"
 			],
 			"type": "change"
 		},
 		{
-			"id": "V1",
+			"id": "VIEW1",
 			"includes": [
-				"I1",
-				"CN1",
-				"CN2",
-				"CN3",
-				"CN4",
-				"CN5",
-				"CN6",
-				"CN7",
-				"CN8",
-				"CP1",
-				"CP2",
-				"CP3",
-				"CP4",
-				"CP5",
-				"CP6",
-				"CP7",
-				"CP8",
-				"CP9",
-				"CP10",
-				"CP11",
-				"PR1",
-				"PR2",
-				"PR3",
-				"PR4",
-				"PR5",
+				"INT1",
+				"CON1",
+				"CON2",
+				"CON3",
+				"CON4",
+				"CON5",
+				"CON6",
+				"CON7",
+				"CON8",
+				"CAP1",
+				"CAP2",
+				"CAP3",
+				"CAP4",
+				"CAP5",
+				"CAP6",
+				"CAP7",
+				"CAP8",
+				"CAP9",
+				"CAP10",
+				"CAP11",
+				"PRIN1",
+				"PRIN2",
+				"PRIN3",
+				"PRIN4",
+				"PRIN5",
 				"INV1",
 				"INV2",
 				"INV3",
@@ -2596,11 +2596,11 @@
 				"INV20",
 				"INV21",
 				"INV22",
-				"CONF1",
-				"CONF2",
-				"CONF3",
-				"CONF4",
-				"CONF5",
+				"INV28",
+				"INV29",
+				"INV30",
+				"INV31",
+				"INV32",
 				"POL1",
 				"POL2",
 				"POL3",
@@ -2621,21 +2621,21 @@
 				"POL18",
 				"POL19",
 				"POL20",
-				"EL1",
-				"EL2",
-				"EL3",
-				"EL4",
-				"EL5",
-				"EL6",
-				"EL7",
-				"EL8",
-				"EL9",
-				"EL10",
-				"R1",
-				"R2",
-				"R3",
-				"R4",
-				"R5",
+				"ELEM1",
+				"ELEM2",
+				"ELEM3",
+				"ELEM4",
+				"ELEM5",
+				"ELEM6",
+				"ELEM7",
+				"ELEM8",
+				"ELEM9",
+				"ELEM10",
+				"REAL1",
+				"REAL2",
+				"REAL3",
+				"REAL4",
+				"REAL5",
 				"ART1",
 				"ART2",
 				"ART3"
@@ -2644,62 +2644,62 @@
 			"type": "view"
 		},
 		{
-			"id": "V2",
+			"id": "VIEW2",
 			"includes": [
 				"PROT1",
 				"PROT2",
 				"PROT3",
-				"ST-DEC-PROPOSED",
-				"ST-DEC-ACCEPTED",
-				"ST-DEC-IMPLEMENTED",
-				"ST-DEC-ADOPTED",
-				"ST-DEC-SUPERSEDED",
-				"ST-DEC-ABANDONED",
-				"ST-DEC-DEFERRED",
-				"ST-CHG-DEFINED",
-				"ST-CHG-INTRODUCED",
-				"ST-CHG-IN_PROGRESS",
-				"ST-CHG-COMPLETE",
-				"ST-CHG-CONSOLIDATED",
-				"ST-NODE-PROPOSED",
-				"ST-NODE-ACTIVE",
-				"ST-NODE-DEPRECATED",
-				"ST-NODE-RETIRED"
+				"STG1-DEC-PROPOSED",
+				"STG2-DEC-ACCEPTED",
+				"STG3-DEC-IMPLEMENTED",
+				"STG4-DEC-ADOPTED",
+				"STG5-DEC-SUPERSEDED",
+				"STG6-DEC-ABANDONED",
+				"STG7-DEC-DEFERRED",
+				"STG8-CHG-DEFINED",
+				"STG9-CHG-INTRODUCED",
+				"STG10-CHG-IN_PROGRESS",
+				"STG11-CHG-COMPLETE",
+				"STG12-CHG-CONSOLIDATED",
+				"STG13-NODE-PROPOSED",
+				"STG14-NODE-ACTIVE",
+				"STG15-NODE-DEPRECATED",
+				"STG16-NODE-RETIRED"
 			],
 			"name": "Process View",
 			"type": "view"
 		},
 		{
-			"id": "V3",
+			"id": "VIEW3",
 			"includes": [
-				"D1",
-				"D2",
-				"D3",
-				"D4",
-				"D5",
-				"D6",
-				"D7",
-				"D8",
-				"D9",
-				"D10",
-				"D11",
-				"D12",
-				"D13",
-				"D14",
-				"D15",
-				"CH1",
-				"CH2",
-				"CH3",
-				"CH4",
-				"CH5",
-				"CH6",
-				"CH7",
-				"CH8",
-				"CH9",
-				"CH10",
-				"CH11",
-				"CH12",
-				"CH13"
+				"DEC1",
+				"DEC2",
+				"DEC3",
+				"DEC4",
+				"DEC5",
+				"DEC6",
+				"DEC7",
+				"DEC8",
+				"DEC9",
+				"DEC10",
+				"DEC11",
+				"DEC12",
+				"DEC13",
+				"DEC14",
+				"DEC15",
+				"CHG1",
+				"CHG2",
+				"CHG3",
+				"CHG4",
+				"CHG5",
+				"CHG6",
+				"CHG7",
+				"CHG8",
+				"CHG9",
+				"CHG10",
+				"CHG11",
+				"CHG12",
+				"CHG13"
 			],
 			"name": "Evolution View",
 			"type": "view"
@@ -2710,7 +2710,7 @@
 				"Users working with Spec-Kit (spec.md, plan.md, tasks.md, constitution.md, checklist.md) had no way to import their existing work into SysProM or export SysProM graphs to Spec-Kit format.",
 				"A parser+generator pair enables lossless round-trips between both ecosystems."
 			],
-			"id": "D16",
+			"id": "DEC16",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -2744,7 +2744,7 @@
 				"CLI adds import, export, sync, and diff subcommands under sysprom speckit.",
 				"Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 cases), plus round-trip fidelity."
 			],
-			"id": "CH14",
+			"id": "CHG14",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -2797,8 +2797,8 @@
 				}
 			],
 			"scope": [
-				"D16",
-				"EL3",
+				"DEC16",
+				"ELEM3",
 				"CMP-SPECKIT"
 			],
 			"type": "change"
@@ -2809,7 +2809,7 @@
 				"Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.",
 				"A dedicated task command enables fully CLI-driven subagent workflows against sysprom.spm.json files."
 			],
-			"id": "D17",
+			"id": "DEC17",
 			"lifecycle": {
 				"accepted": true,
 				"implemented": true,
@@ -2838,7 +2838,7 @@
 				"task list supports --pending and --json flags enabling agent scripting via jq.",
 				"AGENTS.md documents the complete subagent workflow: discover, claim, progress, complete."
 			],
-			"id": "CH15",
+			"id": "CHG15",
 			"lifecycle": {
 				"complete": true,
 				"defined": true,
@@ -2870,15 +2870,15 @@
 				}
 			],
 			"scope": [
-				"D17",
-				"CH14"
+				"DEC17",
+				"CHG14"
 			],
 			"type": "change"
 		},
 		{
 			"context": "The spec-kit planning integration initially used stage nodes for phases and change nodes for tasks, with flat plan:Task[] arrays for leaf items. This created three separate mechanisms for what is conceptually the same thing.",
 			"description": "Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.",
-			"id": "D18",
+			"id": "DEC18",
 			"lifecycle": {
 				"options": false
 			},
@@ -2900,7 +2900,7 @@
 		},
 		{
 			"description": "New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.",
-			"id": "CH16",
+			"id": "CHG16",
 			"name": "Implement Plan Command with Recursive Task Model",
 			"scope": [
 				"[\"EL-CLI\",\"EL-SPECKIT\"]"
@@ -2911,7 +2911,7 @@
 		{
 			"context": "SysProM had no temporal support. The lifecycle field tracked state completion but not when states were reached.",
 			"description": "Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.",
-			"id": "D19",
+			"id": "DEC19",
 			"name": "Extend Lifecycle with Temporal Timestamps",
 			"options": [
 				{
@@ -2930,7 +2930,7 @@
 		},
 		{
 			"description": "Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.",
-			"id": "CH17",
+			"id": "CHG17",
 			"name": "Implement Temporal Support",
 			"status": "complete",
 			"type": "change"
@@ -2938,7 +2938,7 @@
 		{
 			"context": "The CLI uses manual process.argv parsing with parseFlag() helpers duplicated across 11 command files. Usage text is embedded in console.error() strings, making automatic documentation generation impossible. A structured CLI framework is needed to enable programmatic access to command metadata for doc generation.",
 			"description": "Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.",
-			"id": "D20",
+			"id": "DEC20",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -2969,7 +2969,7 @@
 		},
 		{
 			"description": "Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.",
-			"id": "CH18",
+			"id": "CHG18",
 			"lifecycle": {
 				"implemented": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -2981,7 +2981,7 @@
 		{
 			"context": "The library has a rich public API (~70 exports) but no automated documentation generation. TypeDoc generates browsable docs from TypeScript source and JSDoc comments. The typedoc-plugin-zod plugin resolves rendering issues with Zod-inferred types.",
 			"description": "Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.",
-			"id": "D21",
+			"id": "DEC21",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -3004,7 +3004,7 @@
 		},
 		{
 			"description": "Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.",
-			"id": "CH19",
+			"id": "CHG19",
 			"lifecycle": {
 				"implemented": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -3025,7 +3025,7 @@
 				}
 			],
 			"scope": [
-				"EL3"
+				"ELEM3"
 			],
 			"status": "complete",
 			"type": "change"
@@ -3033,7 +3033,7 @@
 		{
 			"context": "The build pipeline has multiple tasks with dependencies (typecheck, compile, schema generation, doc generation) managed via chained pnpm scripts. Turborepo provides task dependency graphs, parallel execution, and output caching.",
 			"description": "Choose Turborepo for build task orchestration with dependency management and output caching.",
-			"id": "D22",
+			"id": "DEC22",
 			"lifecycle": {
 				"accepted": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -3056,7 +3056,7 @@
 		},
 		{
 			"description": "Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.",
-			"id": "CH20",
+			"id": "CHG20",
 			"lifecycle": {
 				"implemented": "2026-03-21",
 				"proposed": "2026-03-21"
@@ -3073,7 +3073,7 @@
 				}
 			],
 			"scope": [
-				"EL3"
+				"ELEM3"
 			],
 			"status": "complete",
 			"type": "change"
@@ -3081,7 +3081,7 @@
 		{
 			"context": "The project uses conventional commit messages informally. Enforcing them with tooling enables automated releases, changelogs, and consistent commit history.",
 			"description": "Adopt commitlint for commit message enforcement, semantic-release for automated publishing, and husky for git hook management.",
-			"id": "D23",
+			"id": "DEC23",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3104,7 +3104,7 @@
 		},
 		{
 			"description": "Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub Pages deployment, and npm publishing via OIDC trusted publishers. Add commitlint with husky hooks, semantic-release with all commit types triggering releases, and Dependabot for dependency updates.",
-			"id": "CH21",
+			"id": "CHG21",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3116,7 +3116,7 @@
 		{
 			"context": "The codebase contained numerous as type assertions that bypass the type checker, telling the compiler to trust the developer rather than proving correctness at runtime.",
 			"description": "Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.",
-			"id": "D24",
+			"id": "DEC24",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3139,7 +3139,7 @@
 		},
 		{
 			"description": "Replace all as type coercions across library and CLI code with runtime validation. Use Zod .is() and .safeParse() for domain type narrowing, isRecord() for object checks, instanceof for error handling, and properly typed Commander action handlers.",
-			"id": "CH22",
+			"id": "CHG22",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3151,7 +3151,7 @@
 		{
 			"context": "The package previously shipped TypeScript source and required tsx at runtime. Consumers needed tsx as a dependency to use the CLI or import the library.",
 			"description": "Switch package entry points (main, exports, bin) from TypeScript source to compiled JavaScript in dist/, removing the tsx runtime dependency for consumers.",
-			"id": "D25",
+			"id": "DEC25",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3174,7 +3174,7 @@
 		},
 		{
 			"description": "Update package.json entry points to reference compiled JavaScript in dist/. Move tsx from dependencies to devDependencies. Change CLI shebang to #!/usr/bin/env node.",
-			"id": "CH23",
+			"id": "CHG23",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3186,7 +3186,7 @@
 		{
 			"context": "Adding nodes via the CLI required manually specifying IDs like D26 or CH24. This is tedious and error-prone, especially when the user must check existing IDs to avoid collisions.",
 			"description": "Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.",
-			"id": "D26",
+			"id": "DEC26",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3209,7 +3209,7 @@
 		},
 		{
 			"description": "Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add command — auto-generates from type prefix + next available number.",
-			"id": "CH24",
+			"id": "CHG24",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3221,7 +3221,7 @@
 		{
 			"context": "The CLI covers core CRUD operations but lacks quality-of-life features that reduce friction for frequent use.",
 			"description": "Add auto-generated option IDs, init command, auto-sync, coloured output, JSON output on mutations, full-text search, graph export, rename, stricter validation, shell completions, and dry-run mode.",
-			"id": "D27",
+			"id": "DEC27",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3244,7 +3244,7 @@
 		},
 		{
 			"description": "Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.",
-			"id": "CH25",
+			"id": "CHG25",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3256,7 +3256,7 @@
 		{
 			"context": "The CLI had three layers describing the same information independently: Zod schemas, Commander definitions, and run() functions with manual parseFlag helpers.",
 			"description": "Replace separate Commander definitions, run() functions, and doc generator metadata with a single defineCommand pattern using Zod schemas.",
-			"id": "D28",
+			"id": "DEC28",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3279,14 +3279,14 @@
 		},
 		{
 			"description": "Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.",
-			"id": "CH26",
+			"id": "CHG26",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
 			},
 			"name": "Implement defineCommand Pattern",
 			"scope": [
-				"EL3"
+				"ELEM3"
 			],
 			"status": "complete",
 			"type": "change"
@@ -3294,7 +3294,7 @@
 		{
 			"context": "Library functions have no metadata. CLI commands redeclare descriptions, types, and validation. Adding a feature requires updating 3 places.",
 			"description": "Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.",
-			"id": "D29",
+			"id": "DEC29",
 			"lifecycle": {
 				"accepted": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3317,7 +3317,7 @@
 		},
 		{
 			"description": "Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.",
-			"id": "CH27",
+			"id": "CHG27",
 			"lifecycle": {
 				"implemented": "2026-03-22",
 				"proposed": "2026-03-22"
@@ -3366,14 +3366,14 @@
 				}
 			],
 			"scope": [
-				"EL3"
+				"ELEM3"
 			],
 			"status": "complete",
 			"type": "change"
 		},
 		{
 			"context": "SysProM is a CLI tool and library for tracking system provenance. Claude Code supports plugins that extend its capabilities with skills, commands, hooks, and agents. A plugin would give Claude native awareness of SysProM workflows — recording decisions, tracking changes, checking invariants — directly within coding sessions. The plugin is pure markdown (no compiled code) and delegates to the spm CLI at runtime.",
-			"id": "D30",
+			"id": "DEC30",
 			"name": "Distribute SysProM as a Claude Code Plugin",
 			"options": [
 				{
@@ -3399,7 +3399,7 @@
 		},
 		{
 			"description": "Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).",
-			"id": "CH28",
+			"id": "CHG28",
 			"name": "Implement Claude Code Plugin",
 			"plan": [
 				{
@@ -3428,7 +3428,7 @@
 		},
 		{
 			"context": "Currently json2md and md2json are separate one-directional commands. Users must remember which direction to convert, and there is no conflict detection or resolution when both sides have diverged. A single sync command that is bidirectional by default would reduce friction and prevent data loss.",
-			"id": "D31",
+			"id": "DEC31",
 			"name": "Bidirectional Sync by Default",
 			"options": [
 				{
@@ -3446,7 +3446,7 @@
 		},
 		{
 			"description": "Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.",
-			"id": "CH29",
+			"id": "CHG29",
 			"name": "Implement Bidirectional Sync Command",
 			"plan": [
 				{
@@ -3491,14 +3491,14 @@
 				}
 			],
 			"scope": [
-				"D31"
+				"DEC31"
 			],
 			"status": "complete",
 			"type": "change"
 		},
 		{
 			"context": "The Claude Code plugin (D30) uses CLI skills that shell out to spm. An MCP server wrapping SysProM's programmatic API would provide structured tool access with typed inputs/outputs via Zod schemas, eliminating CLI text parsing. The server uses stdio transport, ships as an extra bin entry in the same npm package, and is referenced from the plugin's .mcp.json. Same npm-publication prerequisite as the CLI.",
-			"id": "D32",
+			"id": "DEC32",
 			"name": "Add MCP Server for Programmatic API Access",
 			"options": [
 				{
@@ -3520,7 +3520,7 @@
 		},
 		{
 			"description": "Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.",
-			"id": "CH30",
+			"id": "CHG30",
 			"name": "Implement MCP Server",
 			"plan": [
 				{
@@ -3569,7 +3569,7 @@
 		},
 		{
 			"context": "SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.",
-			"id": "D33",
+			"id": "DEC33",
 			"name": "Abstract External Format Interop into Keyed Provider Registry",
 			"options": [
 				{
@@ -3590,7 +3590,7 @@
 			"type": "decision"
 		},
 		{
-			"id": "CH31",
+			"id": "CHG31",
 			"name": "Implement Keyed Provider Registry for External Formats",
 			"plan": [
 				{
@@ -3651,7 +3651,7 @@
 		},
 		{
 			"context": "Current removeNode and removeRelationship operations silently break must_follow chains, leave dangling scope/operation references, and can lose nested subsystems without warning. Need safe removal that preserves graph integrity by default.",
-			"id": "D34",
+			"id": "DEC34",
 			"name": "Safe Graph Removal with Soft Delete Default",
 			"options": [
 				{
@@ -3672,7 +3672,7 @@
 			"type": "decision"
 		},
 		{
-			"id": "CH32",
+			"id": "CHG32",
 			"name": "Implement Safe Graph Removal",
 			"plan": [
 				{
@@ -3743,7 +3743,7 @@
 		},
 		{
 			"context": "Several mutation operations (updateNode, addRelationship) lack safety checks. Status transitions to retired have no impact awareness. Duplicate relationships can be added. Type changes can invalidate existing relationships. addRelationship has no semantic validation of endpoint types.",
-			"id": "D35",
+			"id": "DEC35",
 			"name": "Graph Mutation Safety Guards",
 			"options": [
 				{
@@ -3764,7 +3764,7 @@
 			"type": "decision"
 		},
 		{
-			"id": "CH33",
+			"id": "CHG33",
 			"name": "Implement Graph Mutation Safety Guards",
 			"plan": [
 				{
@@ -3843,7 +3843,7 @@
 		},
 		{
 			"context": "CLI commands require explicit file paths. Users want sensible defaults (.spm.json, .spm.md, .spm/) and an init command that creates documents with context-dependent format.",
-			"id": "D36",
+			"id": "DEC36",
 			"name": "Default input resolution and init command",
 			"options": [
 				{
@@ -3857,7 +3857,7 @@
 		},
 		{
 			"description": "Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.",
-			"id": "CH34",
+			"id": "CHG34",
 			"name": "Add default input resolution and init command",
 			"plan": [
 				{
@@ -3900,7 +3900,7 @@
 		},
 		{
 			"context": "SysProM supports JSON and Markdown serialisation but users request YAML for human-readable, diff-friendly documents and multi-file JSON for large projects. Adding these formats broadens adoption without changing the core model.",
-			"id": "D37",
+			"id": "DEC37",
 			"name": "Add YAML and multi-file JSON serialisation formats",
 			"options": [
 				{
@@ -3914,245 +3914,245 @@
 		},
 		{
 			"description": "Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.",
-			"id": "CH35",
+			"id": "CHG35",
 			"name": "Add YAML Support and Multi-File JSON Formats",
 			"type": "change"
 		}
 	],
 	"relationships": [
 		{
-			"from": "CN1",
-			"to": "I1",
+			"from": "CON1",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN2",
-			"to": "I1",
+			"from": "CON2",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN3",
-			"to": "I1",
+			"from": "CON3",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN4",
-			"to": "I1",
+			"from": "CON4",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN5",
-			"to": "I1",
+			"from": "CON5",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN6",
-			"to": "I1",
+			"from": "CON6",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN7",
-			"to": "I1",
+			"from": "CON7",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CN8",
-			"to": "I1",
+			"from": "CON8",
+			"to": "INT1",
 			"type": "refines"
 		},
 		{
-			"from": "CP1",
-			"to": "CN1",
+			"from": "CAP1",
+			"to": "CON1",
 			"type": "refines"
 		},
 		{
-			"from": "CP2",
-			"to": "CN2",
+			"from": "CAP2",
+			"to": "CON2",
 			"type": "refines"
 		},
 		{
-			"from": "CP3",
-			"to": "CN2",
+			"from": "CAP3",
+			"to": "CON2",
 			"type": "refines"
 		},
 		{
-			"from": "CP4",
-			"to": "CN3",
+			"from": "CAP4",
+			"to": "CON3",
 			"type": "refines"
 		},
 		{
-			"from": "CP5",
-			"to": "CN4",
+			"from": "CAP5",
+			"to": "CON4",
 			"type": "refines"
 		},
 		{
-			"from": "CP6",
-			"to": "CN5",
+			"from": "CAP6",
+			"to": "CON5",
 			"type": "refines"
 		},
 		{
-			"from": "CP7",
-			"to": "CN6",
+			"from": "CAP7",
+			"to": "CON6",
 			"type": "refines"
 		},
 		{
-			"from": "CP8",
-			"to": "CN7",
+			"from": "CAP8",
+			"to": "CON7",
 			"type": "refines"
 		},
 		{
-			"from": "CP9",
-			"to": "CN4",
+			"from": "CAP9",
+			"to": "CON4",
 			"type": "refines"
 		},
 		{
-			"from": "CP10",
-			"to": "CN4",
+			"from": "CAP10",
+			"to": "CON4",
 			"type": "refines"
 		},
 		{
-			"from": "CP11",
-			"to": "CN3",
+			"from": "CAP11",
+			"to": "CON3",
 			"type": "refines"
 		},
 		{
-			"from": "EL1",
-			"to": "CP1",
+			"from": "ELEM1",
+			"to": "CAP1",
 			"type": "realises"
 		},
 		{
-			"from": "EL2",
-			"to": "CP6",
+			"from": "ELEM2",
+			"to": "CAP6",
 			"type": "realises"
 		},
 		{
-			"from": "EL3",
-			"to": "CP6",
+			"from": "ELEM3",
+			"to": "CAP6",
 			"type": "realises"
 		},
 		{
-			"from": "EL4",
-			"to": "CP2",
+			"from": "ELEM4",
+			"to": "CAP2",
 			"type": "realises"
 		},
 		{
-			"from": "EL4",
-			"to": "CP4",
+			"from": "ELEM4",
+			"to": "CAP4",
 			"type": "realises"
 		},
 		{
-			"from": "EL6",
-			"to": "CP1",
+			"from": "ELEM6",
+			"to": "CAP1",
 			"type": "realises"
 		},
 		{
-			"from": "EL7",
-			"to": "CP8",
+			"from": "ELEM7",
+			"to": "CAP8",
 			"type": "realises"
 		},
 		{
-			"from": "EL8",
-			"to": "CP7",
+			"from": "ELEM8",
+			"to": "CAP7",
 			"type": "realises"
 		},
 		{
-			"from": "EL9",
-			"to": "CP9",
+			"from": "ELEM9",
+			"to": "CAP9",
 			"type": "realises"
 		},
 		{
-			"from": "EL9",
-			"to": "CP10",
+			"from": "ELEM9",
+			"to": "CAP10",
 			"type": "realises"
 		},
 		{
-			"from": "EL9",
-			"to": "CP11",
+			"from": "ELEM9",
+			"to": "CAP11",
 			"type": "realises"
 		},
 		{
-			"from": "EL10",
-			"to": "CP7",
+			"from": "ELEM10",
+			"to": "CAP7",
 			"type": "realises"
 		},
 		{
-			"from": "R1",
-			"to": "EL1",
+			"from": "REAL1",
+			"to": "ELEM1",
 			"type": "implements"
 		},
 		{
-			"from": "R1",
-			"to": "EL2",
+			"from": "REAL1",
+			"to": "ELEM2",
 			"type": "implements"
 		},
 		{
-			"from": "R1",
-			"to": "EL3",
+			"from": "REAL1",
+			"to": "ELEM3",
 			"type": "implements"
 		},
 		{
-			"from": "R1",
-			"to": "EL4",
+			"from": "REAL1",
+			"to": "ELEM4",
 			"type": "implements"
 		},
 		{
-			"from": "R2",
-			"to": "EL8",
+			"from": "REAL2",
+			"to": "ELEM8",
 			"type": "implements"
 		},
 		{
-			"from": "R3",
-			"to": "EL8",
+			"from": "REAL3",
+			"to": "ELEM8",
 			"type": "implements"
 		},
 		{
-			"from": "R4",
-			"to": "EL8",
+			"from": "REAL4",
+			"to": "ELEM8",
 			"type": "implements"
 		},
 		{
-			"from": "R5",
-			"to": "EL1",
+			"from": "REAL5",
+			"to": "ELEM1",
 			"type": "implements"
 		},
 		{
-			"from": "R5",
-			"to": "EL2",
+			"from": "REAL5",
+			"to": "ELEM2",
 			"type": "implements"
 		},
 		{
-			"from": "R5",
-			"to": "EL3",
+			"from": "REAL5",
+			"to": "ELEM3",
 			"type": "implements"
 		},
 		{
-			"from": "R5",
-			"to": "EL4",
+			"from": "REAL5",
+			"to": "ELEM4",
 			"type": "implements"
 		},
 		{
-			"from": "CONF1",
-			"to": "CN8",
+			"from": "INV28",
+			"to": "CON8",
 			"type": "constrained_by"
 		},
 		{
-			"from": "CONF2",
-			"to": "CN8",
+			"from": "INV29",
+			"to": "CON8",
 			"type": "constrained_by"
 		},
 		{
-			"from": "CONF3",
-			"to": "CN8",
+			"from": "INV30",
+			"to": "CON8",
 			"type": "constrained_by"
 		},
 		{
-			"from": "CONF4",
-			"to": "CN8",
+			"from": "INV31",
+			"to": "CON8",
 			"type": "constrained_by"
 		},
 		{
-			"from": "CONF5",
-			"to": "CN8",
+			"from": "INV32",
+			"to": "CON8",
 			"type": "constrained_by"
 		},
 		{
@@ -4162,7 +4162,7 @@
 		},
 		{
 			"from": "POL2",
-			"to": "PR2",
+			"to": "PRIN2",
 			"type": "governed_by"
 		},
 		{
@@ -4182,793 +4182,793 @@
 		},
 		{
 			"from": "POL6",
-			"to": "CN7",
+			"to": "CON7",
 			"type": "governed_by"
 		},
 		{
 			"from": "POL10",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL11",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL12",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL13",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL14",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL15",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL16",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL17",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
 			"from": "POL18",
-			"to": "EL8",
+			"to": "ELEM8",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-PROPOSED",
+			"from": "STG1-DEC-PROPOSED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-ACCEPTED",
+			"from": "STG2-DEC-ACCEPTED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-IMPLEMENTED",
+			"from": "STG3-DEC-IMPLEMENTED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-ADOPTED",
+			"from": "STG4-DEC-ADOPTED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-SUPERSEDED",
+			"from": "STG5-DEC-SUPERSEDED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-ABANDONED",
+			"from": "STG6-DEC-ABANDONED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-DEFERRED",
+			"from": "STG7-DEC-DEFERRED",
 			"to": "PROT1",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-DEC-ACCEPTED",
-			"to": "ST-DEC-PROPOSED",
+			"from": "STG2-DEC-ACCEPTED",
+			"to": "STG1-DEC-PROPOSED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-DEC-IMPLEMENTED",
-			"to": "ST-DEC-ACCEPTED",
+			"from": "STG3-DEC-IMPLEMENTED",
+			"to": "STG2-DEC-ACCEPTED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-DEC-ADOPTED",
-			"to": "ST-DEC-IMPLEMENTED",
+			"from": "STG4-DEC-ADOPTED",
+			"to": "STG3-DEC-IMPLEMENTED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-DEC-SUPERSEDED",
-			"to": "ST-DEC-ADOPTED",
+			"from": "STG5-DEC-SUPERSEDED",
+			"to": "STG4-DEC-ADOPTED",
 			"type": "precedes"
 		},
 		{
-			"from": "ST-DEC-ABANDONED",
-			"to": "ST-DEC-ACCEPTED",
+			"from": "STG6-DEC-ABANDONED",
+			"to": "STG2-DEC-ACCEPTED",
 			"type": "precedes"
 		},
 		{
-			"from": "ST-DEC-DEFERRED",
-			"to": "ST-DEC-ACCEPTED",
+			"from": "STG7-DEC-DEFERRED",
+			"to": "STG2-DEC-ACCEPTED",
 			"type": "precedes"
 		},
 		{
-			"from": "ST-CHG-DEFINED",
+			"from": "STG8-CHG-DEFINED",
 			"to": "PROT2",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-CHG-INTRODUCED",
+			"from": "STG9-CHG-INTRODUCED",
 			"to": "PROT2",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-CHG-IN_PROGRESS",
+			"from": "STG10-CHG-IN_PROGRESS",
 			"to": "PROT2",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-CHG-COMPLETE",
+			"from": "STG11-CHG-COMPLETE",
 			"to": "PROT2",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-CHG-CONSOLIDATED",
+			"from": "STG12-CHG-CONSOLIDATED",
 			"to": "PROT2",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-CHG-INTRODUCED",
-			"to": "ST-CHG-DEFINED",
+			"from": "STG9-CHG-INTRODUCED",
+			"to": "STG8-CHG-DEFINED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-CHG-IN_PROGRESS",
-			"to": "ST-CHG-INTRODUCED",
+			"from": "STG10-CHG-IN_PROGRESS",
+			"to": "STG9-CHG-INTRODUCED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-CHG-COMPLETE",
-			"to": "ST-CHG-IN_PROGRESS",
+			"from": "STG11-CHG-COMPLETE",
+			"to": "STG10-CHG-IN_PROGRESS",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-CHG-CONSOLIDATED",
-			"to": "ST-CHG-COMPLETE",
+			"from": "STG12-CHG-CONSOLIDATED",
+			"to": "STG11-CHG-COMPLETE",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-NODE-PROPOSED",
+			"from": "STG13-NODE-PROPOSED",
 			"to": "PROT3",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-NODE-ACTIVE",
+			"from": "STG14-NODE-ACTIVE",
 			"to": "PROT3",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-NODE-DEPRECATED",
+			"from": "STG15-NODE-DEPRECATED",
 			"to": "PROT3",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-NODE-RETIRED",
+			"from": "STG16-NODE-RETIRED",
 			"to": "PROT3",
 			"type": "part_of"
 		},
 		{
-			"from": "ST-NODE-ACTIVE",
-			"to": "ST-NODE-PROPOSED",
+			"from": "STG14-NODE-ACTIVE",
+			"to": "STG13-NODE-PROPOSED",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-NODE-DEPRECATED",
-			"to": "ST-NODE-ACTIVE",
+			"from": "STG15-NODE-DEPRECATED",
+			"to": "STG14-NODE-ACTIVE",
 			"type": "must_follow"
 		},
 		{
-			"from": "ST-NODE-RETIRED",
-			"to": "ST-NODE-DEPRECATED",
+			"from": "STG16-NODE-RETIRED",
+			"to": "STG15-NODE-DEPRECATED",
 			"type": "must_follow"
 		},
 		{
-			"from": "EL10",
+			"from": "ELEM10",
 			"to": "INV18",
 			"type": "constrained_by"
 		},
 		{
-			"from": "D1",
-			"to": "EL1",
+			"from": "DEC1",
+			"to": "ELEM1",
 			"type": "affects"
 		},
 		{
-			"from": "D1",
-			"to": "EL2",
+			"from": "DEC1",
+			"to": "ELEM2",
 			"type": "affects"
 		},
 		{
-			"from": "D1",
-			"to": "EL4",
+			"from": "DEC1",
+			"to": "ELEM4",
 			"type": "affects"
 		},
 		{
-			"from": "D1",
+			"from": "DEC1",
 			"to": "INV1",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D2",
-			"to": "EL4",
+			"from": "DEC2",
+			"to": "ELEM4",
 			"type": "affects"
 		},
 		{
-			"from": "D2",
+			"from": "DEC2",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D2",
+			"from": "DEC2",
 			"to": "INV3",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D3",
+			"from": "DEC3",
 			"to": "INV1",
 			"type": "affects"
 		},
 		{
-			"from": "D3",
-			"to": "PR1",
+			"from": "DEC3",
+			"to": "PRIN1",
 			"type": "affects"
 		},
 		{
-			"from": "D3",
+			"from": "DEC3",
 			"to": "POL1",
 			"type": "affects"
 		},
 		{
-			"from": "D3",
+			"from": "DEC3",
 			"to": "INV3",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D4",
-			"to": "EL2",
+			"from": "DEC4",
+			"to": "ELEM2",
 			"type": "affects"
 		},
 		{
-			"from": "D4",
-			"to": "EL3",
+			"from": "DEC4",
+			"to": "ELEM3",
 			"type": "affects"
 		},
 		{
-			"from": "D4",
+			"from": "DEC4",
 			"to": "INV4",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D5",
-			"to": "R1",
+			"from": "DEC5",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D5",
+			"from": "DEC5",
 			"to": "INV4",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D6",
-			"to": "R4",
+			"from": "DEC6",
+			"to": "REAL4",
 			"type": "affects"
 		},
 		{
-			"from": "D6",
+			"from": "DEC6",
 			"to": "INV4",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D7",
+			"from": "DEC7",
 			"to": "INV5",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
-			"to": "EL7",
+			"from": "DEC8",
+			"to": "ELEM7",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV19",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV20",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
-			"to": "R5",
+			"from": "DEC8",
+			"to": "REAL5",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
-			"to": "R1",
+			"from": "DEC8",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV21",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH4",
-			"to": "D8",
+			"from": "CHG4",
+			"to": "DEC8",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV22",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV18",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "POL19",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV3",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "INV3",
 			"type": "must_preserve"
 		},
 		{
 			"description": "Comparisons informed the decision to add process modelling",
 			"from": "ART1",
-			"to": "D4",
+			"to": "DEC4",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "ART1",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "ART2",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "ART3",
 			"type": "affects"
 		},
 		{
-			"from": "D8",
+			"from": "DEC8",
 			"to": "POL20",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH1",
-			"to": "D1",
+			"from": "CHG1",
+			"to": "DEC1",
 			"type": "affects"
 		},
 		{
-			"from": "CH1",
-			"to": "D2",
+			"from": "CHG1",
+			"to": "DEC2",
 			"type": "affects"
 		},
 		{
-			"from": "CH1",
-			"to": "D7",
+			"from": "CHG1",
+			"to": "DEC7",
 			"type": "affects"
 		},
 		{
-			"from": "CH2",
-			"to": "D3",
+			"from": "CHG2",
+			"to": "DEC3",
 			"type": "affects"
 		},
 		{
-			"from": "CH2",
-			"to": "D4",
+			"from": "CHG2",
+			"to": "DEC4",
 			"type": "affects"
 		},
 		{
-			"from": "CH3",
-			"to": "D5",
+			"from": "CHG3",
+			"to": "DEC5",
 			"type": "affects"
 		},
 		{
-			"from": "CH3",
-			"to": "D6",
+			"from": "CHG3",
+			"to": "DEC6",
 			"type": "affects"
 		},
 		{
-			"from": "CH4",
-			"to": "D4",
+			"from": "CHG4",
+			"to": "DEC4",
 			"type": "affects"
 		},
 		{
-			"from": "CH4",
-			"to": "D2",
+			"from": "CHG4",
+			"to": "DEC2",
 			"type": "affects"
 		},
 		{
-			"from": "CH5",
-			"to": "D4",
+			"from": "CHG5",
+			"to": "DEC4",
 			"type": "affects"
 		},
 		{
-			"from": "CH6",
-			"to": "D2",
+			"from": "CHG6",
+			"to": "DEC2",
 			"type": "affects"
 		},
 		{
-			"from": "CH7",
-			"to": "D9",
+			"from": "CHG7",
+			"to": "DEC9",
 			"type": "affects"
 		},
 		{
-			"from": "CH8",
-			"to": "D10",
+			"from": "CHG8",
+			"to": "DEC10",
 			"type": "affects"
 		},
 		{
-			"from": "CH9",
-			"to": "D11",
+			"from": "CHG9",
+			"to": "DEC11",
 			"type": "affects"
 		},
 		{
-			"from": "CH10",
-			"to": "D12",
+			"from": "CHG10",
+			"to": "DEC12",
 			"type": "affects"
 		},
 		{
-			"from": "CH11",
-			"to": "D13",
+			"from": "CHG11",
+			"to": "DEC13",
 			"type": "affects"
 		},
 		{
-			"from": "CH12",
-			"to": "D14",
+			"from": "CHG12",
+			"to": "DEC14",
 			"type": "affects"
 		},
 		{
-			"from": "CH13",
-			"to": "D15",
+			"from": "CHG13",
+			"to": "DEC15",
 			"type": "affects"
 		},
 		{
-			"from": "D9",
-			"to": "R5",
+			"from": "DEC9",
+			"to": "REAL5",
 			"type": "affects"
 		},
 		{
-			"from": "D9",
-			"to": "R1",
+			"from": "DEC9",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D9",
+			"from": "DEC9",
 			"to": "INV21",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D10",
-			"to": "R5",
+			"from": "DEC10",
+			"to": "REAL5",
 			"type": "affects"
 		},
 		{
-			"from": "D10",
+			"from": "DEC10",
 			"to": "INV22",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D10",
+			"from": "DEC10",
 			"to": "INV18",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D11",
-			"to": "R1",
+			"from": "DEC11",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D11",
+			"from": "DEC11",
 			"to": "POL19",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D12",
-			"to": "R1",
+			"from": "DEC12",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D13",
+			"from": "DEC13",
 			"to": "INV3",
 			"type": "affects"
 		},
 		{
-			"from": "D13",
+			"from": "DEC13",
 			"to": "INV3",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D14",
+			"from": "DEC14",
 			"to": "ART1",
 			"type": "affects"
 		},
 		{
-			"from": "D14",
+			"from": "DEC14",
 			"to": "ART2",
 			"type": "affects"
 		},
 		{
-			"from": "D14",
+			"from": "DEC14",
 			"to": "ART3",
 			"type": "affects"
 		},
 		{
-			"from": "D15",
-			"to": "R1",
+			"from": "DEC15",
+			"to": "REAL1",
 			"type": "affects"
 		},
 		{
-			"from": "D15",
+			"from": "DEC15",
 			"to": "POL20",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH14",
-			"to": "D16",
+			"from": "CHG14",
+			"to": "DEC16",
 			"type": "affects"
 		},
 		{
-			"from": "D16",
-			"to": "EL3",
+			"from": "DEC16",
+			"to": "ELEM3",
 			"type": "affects"
 		},
 		{
-			"from": "D16",
+			"from": "DEC16",
 			"to": "INV4",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D16",
+			"from": "DEC16",
 			"to": "INV5",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D16",
+			"from": "DEC16",
 			"to": "INV6",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D16",
+			"from": "DEC16",
 			"to": "INV21",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D16",
+			"from": "DEC16",
 			"to": "INV22",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH15",
-			"to": "D17",
+			"from": "CHG15",
+			"to": "DEC17",
 			"type": "affects"
 		},
 		{
-			"from": "D17",
-			"to": "CH14",
+			"from": "DEC17",
+			"to": "CHG14",
 			"type": "affects"
 		},
 		{
-			"from": "CH16",
-			"to": "D18",
+			"from": "CHG16",
+			"to": "DEC18",
 			"type": "implements"
 		},
 		{
-			"from": "D18",
+			"from": "DEC18",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH17",
-			"to": "D19",
+			"from": "CHG17",
+			"to": "DEC19",
 			"type": "implements"
 		},
 		{
-			"from": "D19",
+			"from": "DEC19",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH18",
-			"to": "D20",
+			"from": "CHG18",
+			"to": "DEC20",
 			"type": "implements"
 		},
 		{
-			"from": "D20",
+			"from": "DEC20",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH19",
-			"to": "D21",
+			"from": "CHG19",
+			"to": "DEC21",
 			"type": "implements"
 		},
 		{
-			"from": "D21",
+			"from": "DEC21",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH20",
-			"to": "D22",
+			"from": "CHG20",
+			"to": "DEC22",
 			"type": "implements"
 		},
 		{
-			"from": "D22",
+			"from": "DEC22",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH21",
-			"to": "D23",
+			"from": "CHG21",
+			"to": "DEC23",
 			"type": "implements"
 		},
 		{
-			"from": "D23",
+			"from": "DEC23",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH22",
-			"to": "D24",
+			"from": "CHG22",
+			"to": "DEC24",
 			"type": "implements"
 		},
 		{
-			"from": "D24",
+			"from": "DEC24",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH23",
-			"to": "D25",
+			"from": "CHG23",
+			"to": "DEC25",
 			"type": "implements"
 		},
 		{
-			"from": "D25",
+			"from": "DEC25",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH24",
-			"to": "D26",
+			"from": "CHG24",
+			"to": "DEC26",
 			"type": "implements"
 		},
 		{
-			"from": "D26",
+			"from": "DEC26",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH25",
-			"to": "D27",
+			"from": "CHG25",
+			"to": "DEC27",
 			"type": "implements"
 		},
 		{
-			"from": "D27",
+			"from": "DEC27",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH26",
-			"to": "D28",
+			"from": "CHG26",
+			"to": "DEC28",
 			"type": "implements"
 		},
 		{
-			"from": "D28",
+			"from": "DEC28",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH27",
-			"to": "D29",
+			"from": "CHG27",
+			"to": "DEC29",
 			"type": "implements"
 		},
 		{
-			"from": "D29",
+			"from": "DEC29",
 			"to": "INV2",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH28",
-			"to": "D30",
+			"from": "CHG28",
+			"to": "DEC30",
 			"type": "implements"
 		},
 		{
-			"from": "CH29",
-			"to": "D31",
+			"from": "CHG29",
+			"to": "DEC31",
 			"type": "implements"
 		},
 		{
-			"from": "CH30",
-			"to": "D32",
+			"from": "CHG30",
+			"to": "DEC32",
 			"type": "implements"
 		},
 		{
-			"from": "D33",
-			"to": "CN6",
+			"from": "DEC33",
+			"to": "CON6",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D33",
-			"to": "CH14",
+			"from": "DEC33",
+			"to": "CHG14",
 			"type": "supersedes"
 		},
 		{
-			"from": "CH31",
-			"to": "D33",
+			"from": "CHG31",
+			"to": "DEC33",
 			"type": "implements"
 		},
 		{
-			"from": "CH32",
-			"to": "D34",
+			"from": "CHG32",
+			"to": "DEC34",
 			"type": "implements"
 		},
 		{
-			"from": "D34",
+			"from": "DEC34",
 			"to": "INV23",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH33",
-			"to": "D35",
+			"from": "CHG33",
+			"to": "DEC35",
 			"type": "implements"
 		},
 		{
-			"from": "CH33",
-			"to": "CH32",
+			"from": "CHG33",
+			"to": "CHG32",
 			"type": "depends_on"
 		},
 		{
-			"from": "D35",
+			"from": "DEC35",
 			"to": "INV24",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D35",
+			"from": "DEC35",
 			"to": "INV25",
 			"type": "must_preserve"
 		},
 		{
-			"from": "D35",
+			"from": "DEC35",
 			"to": "INV26",
 			"type": "must_preserve"
 		},
 		{
-			"from": "CH34",
-			"to": "D36",
+			"from": "CHG34",
+			"to": "DEC36",
 			"type": "implements"
 		},
 		{
-			"from": "CH35",
-			"to": "D37",
+			"from": "CHG35",
+			"to": "DEC37",
 			"type": "implements"
 		}
 	]
