@@ -2,7 +2,7 @@
 name: audit-system
 description: Use when checking whether a live codebase still matches its SysProM document — detects drift, missing nodes, orphaned references, undocumented decisions, and constraint violations
 user-invocable: true
-allowed-tools: Bash(spm *), Read, Glob, Grep, Agent
+allowed-tools: Bash(sysprom *), Read, Glob, Grep, Agent
 ---
 
 # Audit System
@@ -37,8 +37,8 @@ digraph audit {
 ### Step 1: Load existing document
 
 ```bash
-spm validate
-spm stats
+sysprom validate
+sysprom stats
 ```
 
 Review the current state — how many nodes, which types, any existing validation issues.
@@ -64,8 +64,8 @@ Dispatch subagents to check each audit dimension. Each subagent reads the SysPro
 >
 > First, read the SysProM document:
 > ```bash
-> spm query nodes
-> spm query rels
+> sysprom query nodes
+> sysprom query rels
 > ```
 >
 > Then explore the codebase to check for [AUDIT DIMENSION].
@@ -109,18 +109,18 @@ For each approved fix, use the appropriate CLI command:
 
 | Drift type | Fix |
 |-----------|-----|
-| Ghost node | `spm remove <id>` or `spm update node <id> --status retired` |
-| Undocumented code | `spm add <type> --name "<name>" --description "<desc>"` |
-| Decision drift | `spm update node <id> --description "<updated>"` or add new decision |
+| Ghost node | `sysprom remove <id>` or `sysprom update node <id> --status retired` |
+| Undocumented code | `sysprom add <type> --name "<name>" --description "<desc>"` |
+| Decision drift | `sysprom update node <id> --description "<updated>"` or add new decision |
 | Broken invariant | Update invariant description, or add enforcement, or retire |
-| Wrong relationship | `spm update remove-rel <from> <type> <to>` then `spm update add-rel <from> <type> <to>` |
-| Stale status | `spm update node <id> --status <new-status>` |
+| Wrong relationship | `sysprom update remove-rel <from> <type> <to>` then `sysprom update add-rel <from> <type> <to>` |
+| Stale status | `sysprom update node <id> --status <new-status>` |
 
 ### Step 6: Validate and sync
 
 ```bash
-spm validate
-spm json2md .spm.json .spm
+sysprom validate
+sysprom json2md --input .spm.json --output .spm
 ```
 
 Confirm zero validation errors after fixes.

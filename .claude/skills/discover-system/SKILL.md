@@ -2,7 +2,7 @@
 name: discover-system
 description: Use when onboarding an existing codebase or project into SysProM for the first time — bootstraps a new document by exploring the system and populating it with discovered intent, concepts, capabilities, elements, decisions, invariants, and relationships
 user-invocable: true
-allowed-tools: Bash(spm *), Read, Glob, Grep, Agent
+allowed-tools: Bash(sysprom *), Read, Glob, Grep, Agent
 ---
 
 # Discover System
@@ -23,7 +23,7 @@ digraph discover {
   init [label="1. Init empty document" shape=box];
   explore [label="2. Explore system\n(parallel subagents)" shape=box];
   review [label="3. Review discoveries\nwith user" shape=diamond];
-  populate [label="4. Populate nodes\nvia spm CLI" shape=box];
+  populate [label="4. Populate nodes\nvia syspromCLI" shape=box];
   relate [label="5. Add relationships" shape=box];
   validate [label="6. Validate & sync" shape=box];
 
@@ -39,7 +39,7 @@ digraph discover {
 Create an empty SysProM document in the project root.
 
 ```bash
-spm init --path .spm.json --format json --title "<Project Name>" --author "<Author>"
+sysprom init --path .spm.json --format json --title "<Project Name>" --author "<Author>"
 ```
 
 ### Step 2: Explore (dispatch parallel subagents)
@@ -87,24 +87,24 @@ For each approved discovery, create the node via the CLI:
 
 ```bash
 # Intent
-spm add intent --name "<name>" --description "<description>"
+sysprom add intent --name "<name>" --description "<description>"
 
 # Concepts
-spm add concept --name "<name>" --description "<description>"
+sysprom add concept --name "<name>" --description "<description>"
 
 # Capabilities
-spm add capability --name "<name>" --description "<description>"
+sysprom add capability --name "<name>" --description "<description>"
 
 # Elements
-spm add element --name "<name>" --description "<description>"
+sysprom add element --name "<name>" --description "<description>"
 
 # Decisions (with options and rationale)
-spm add decision --name "<name>" --context "<context>" \
+sysprom add decision --name "<name>" --context "<context>" \
   --option "OPT-A:<description>" --option "OPT-B:<description>" \
   --selected OPT-A --rationale "<rationale>"
 
 # Invariants
-spm add invariant --name "<name>" --description "<description>"
+sysprom add invariant --name "<name>" --description "<description>"
 ```
 
 ### Step 5: Add relationships
@@ -112,7 +112,7 @@ spm add invariant --name "<name>" --description "<description>"
 Connect nodes with typed relationships based on what the exploration revealed:
 
 ```bash
-spm update add-rel <from> <type> <to>
+sysprom update add-rel <from> <type> <to>
 ```
 
 Common relationship types to look for:
@@ -130,8 +130,8 @@ Common relationship types to look for:
 ### Step 6: Validate and sync
 
 ```bash
-spm validate
-spm json2md .spm.json .spm
+sysprom validate
+sysprom json2md --input .spm.json --output .spm
 ```
 
 Review any validation warnings and fix before finishing.
