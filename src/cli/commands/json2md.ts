@@ -6,45 +6,28 @@ import { SysProMDocument } from "../../schema.js";
 import { jsonToMarkdown } from "../../json-to-md.js";
 import { jsonToMarkdownOp } from "../../operations/index.js";
 
-interface Args {
-	input: string;
-	output: string;
-}
-interface Opts {
-	singleFile?: boolean;
-}
+const optsSchema = z
+	.object({
+		input: z.string().describe("Path to SysProM JSON file"),
+		output: z.string().describe("Output path (file or directory)"),
+		singleFile: z
+			.boolean()
+			.optional()
+			.describe("Force single-file output format"),
+	})
+	.strict();
 
-function isArgs(arg: unknown): arg is Args {
-	return (
-		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
-	);
-}
-
-function isOpts(opt: unknown): opt is Opts {
-	return typeof opt === "object" && opt !== null;
-}
-
-export const json2mdCommand: CommandDef = {
+export const json2mdCommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof optsSchema
+> = {
 	name: "json2md",
 	description: jsonToMarkdownOp.def.description,
 	apiLink: jsonToMarkdownOp.def.name,
-	args: z.object({
-		input: z.string().describe("Path to SysProM JSON file"),
-		output: z.string().describe("Output path (file or directory)"),
-	}),
-	opts: z
-		.object({
-			singleFile: z
-				.boolean()
-				.optional()
-				.describe("Force single-file output format"),
-		})
-		.strict(),
-	action(args: unknown, opts: unknown) {
-		if (!isArgs(args)) throw new Error("Invalid args");
-		if (!isOpts(opts)) throw new Error("Invalid opts");
-		const inputPath = resolve(args.input);
-		const outputPath = resolve(args.output);
+	opts: optsSchema,
+	action(_args, opts) {
+		const inputPath = resolve(opts.input);
+		const outputPath = resolve(opts.output);
 
 		const raw: unknown = JSON.parse(readFileSync(inputPath, "utf8"));
 

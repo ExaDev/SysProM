@@ -28,7 +28,7 @@ describe("spm init", () => {
 	});
 
 	it("creates .spm.json in existing directory (default format)", () => {
-		spm(`init ${TMP}`);
+		spm(`init --path ${TMP}`);
 		const target = join(TMP, ".spm.json");
 		assert.ok(existsSync(target), ".spm.json should exist");
 		const doc = JSON.parse(readFileSync(target, "utf8"));
@@ -49,7 +49,7 @@ describe("spm init", () => {
 
 	it("creates named .spm/ for non-existent path (default format)", () => {
 		const target = join(TMP, "myproject");
-		spm(`init ${target}`);
+		spm(`init --path ${target}`);
 		const dir = `${target}.spm`;
 		assert.ok(existsSync(dir), "myproject.spm/ should exist");
 		assert.ok(readdirSync(dir).length > 0, "directory should have content");
@@ -57,37 +57,37 @@ describe("spm init", () => {
 
 	it("creates named .spm.json with --format json for non-existent path", () => {
 		const target = join(TMP, "myproject");
-		spm(`init ${target} --format json`);
+		spm(`init --path ${target} --format json`);
 		assert.ok(existsSync(`${target}.spm.json`));
 	});
 
 	it("creates named .spm.md with --format md for non-existent path", () => {
 		const target = join(TMP, "myproject");
-		spm(`init ${target} --format md`);
+		spm(`init --path ${target} --format md`);
 		assert.ok(existsSync(`${target}.spm.md`));
 	});
 
 	it("creates .spm/ inside existing dir with --format dir", () => {
 		const sub = join(TMP, "existing");
 		mkdirSync(sub);
-		spm(`init ${sub} --format dir`);
+		spm(`init --path ${sub} --format dir`);
 		assert.ok(existsSync(join(sub, ".spm")));
 	});
 
 	it("creates .spm.md inside existing dir with --format md", () => {
 		const sub = join(TMP, "existing");
 		mkdirSync(sub);
-		spm(`init ${sub} --format md`);
+		spm(`init --path ${sub} --format md`);
 		assert.ok(existsSync(join(sub, ".spm.md")));
 	});
 
 	it("errors if target already exists", () => {
-		spm(`init ${TMP}`);
-		assert.throws(() => spm(`init ${TMP}`), /already exists/i);
+		spm(`init --path ${TMP}`);
+		assert.throws(() => spm(`init --path ${TMP}`), /already exists/i);
 	});
 
 	it("respects --title and --scope", () => {
-		spm(`init ${TMP} --title "My Project" --scope application`);
+		spm(`init --path ${TMP} --title "My Project" --scope application`);
 		const doc = JSON.parse(readFileSync(join(TMP, ".spm.json"), "utf8"));
 		assert.equal(doc.metadata.title, "My Project");
 		assert.equal(doc.metadata.scope, "application");

@@ -6,30 +6,24 @@ import { markdownToJson } from "../../md-to-json.js";
 import { canonicalise } from "../../canonical-json.js";
 import { markdownToJsonOp } from "../../operations/index.js";
 
-interface Args {
-	input: string;
-	output: string;
-}
+const optsSchema = z
+	.object({
+		input: z.string().describe("Path to SysProM Markdown (file or directory)"),
+		output: z.string().describe("Output JSON file path"),
+	})
+	.strict();
 
-function isArgs(arg: unknown): arg is Args {
-	return (
-		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
-	);
-}
-
-export const md2jsonCommand: CommandDef = {
+export const md2jsonCommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof optsSchema
+> = {
 	name: "md2json",
 	description: markdownToJsonOp.def.description,
 	apiLink: markdownToJsonOp.def.name,
-	args: z.object({
-		input: z.string().describe("Path to SysProM Markdown (file or directory)"),
-		output: z.string().describe("Output JSON file path"),
-	}),
-	opts: z.object({}).strict(),
-	action(args: unknown) {
-		if (!isArgs(args)) throw new Error("Invalid args");
-		const inputPath = resolve(args.input);
-		const outputPath = resolve(args.output);
+	opts: optsSchema,
+	action(_args, opts) {
+		const inputPath = resolve(opts.input);
+		const outputPath = resolve(opts.output);
 
 		const doc = markdownToJson(inputPath);
 		writeFileSync(outputPath, canonicalise(doc, { indent: "\t" }) + "\n");

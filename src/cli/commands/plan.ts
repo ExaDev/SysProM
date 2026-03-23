@@ -15,23 +15,22 @@ import {
 // Subcommands
 // ============================================================================
 
-const initArgs = z.object({
-	output: z.string().describe("Path to output SysProM file"),
-});
-
 const initOpts = z.object({
+	output: z.string().describe("Path to output SysProM file"),
 	prefix: z.string().describe("Plan prefix (e.g. PLAN)"),
 	name: z.string().optional().describe("Plan name (defaults to prefix)"),
 });
 
-const initSubcommand: CommandDef<typeof initArgs, typeof initOpts> = {
+const initSubcommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof initOpts
+> = {
 	name: "init",
 	description: planInitOp.def.description,
 	apiLink: planInitOp.def.name,
-	args: initArgs,
 	opts: initOpts,
-	action(args, opts) {
-		const outputPath = args.output;
+	action(_args, opts) {
+		const outputPath = opts.output;
 		const prefix = opts.prefix;
 		const name = opts.name ?? prefix;
 

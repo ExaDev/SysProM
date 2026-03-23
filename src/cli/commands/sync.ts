@@ -72,63 +72,41 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 	return result;
 }
 
-interface Args {
-	input: string;
-	output: string;
-}
+const syncOpts = z
+	.object({
+		input: z.string().describe("Path to JSON file"),
+		output: z.string().describe("Path to Markdown file"),
+		preferJson: z
+			.boolean()
+			.optional()
+			.describe("Prefer JSON as source of truth in conflicts"),
+		preferMd: z
+			.boolean()
+			.optional()
+			.describe("Prefer Markdown as source of truth in conflicts"),
+		dryRun: z
+			.boolean()
+			.optional()
+			.describe("Preview changes without writing files"),
+		report: z
+			.boolean()
+			.optional()
+			.describe("Report conflicts without resolving"),
+	})
+	.strict();
 
-interface Opts {
-	preferJson?: boolean;
-	preferMd?: boolean;
-	dryRun?: boolean;
-	report?: boolean;
-}
-
-function isArgs(arg: unknown): arg is Args {
-	return (
-		typeof arg === "object" && arg !== null && "input" in arg && "output" in arg
-	);
-}
-
-function isOpts(opt: unknown): opt is Opts {
-	return typeof opt === "object" && opt !== null;
-}
-
-export const syncCommandDef: CommandDef = {
+export const syncCommandDef: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof syncOpts
+> = {
 	name: "sync",
 	description:
 		"Synchronise JSON and Markdown representations with conflict resolution",
 	apiLink: "syncDocuments",
-	args: z.object({
-		input: z.string().describe("Path to JSON file"),
-		output: z.string().describe("Path to Markdown file"),
-	}),
-	opts: z
-		.object({
-			preferJson: z
-				.boolean()
-				.optional()
-				.describe("Prefer JSON as source of truth in conflicts"),
-			preferMd: z
-				.boolean()
-				.optional()
-				.describe("Prefer Markdown as source of truth in conflicts"),
-			dryRun: z
-				.boolean()
-				.optional()
-				.describe("Preview changes without writing files"),
-			report: z
-				.boolean()
-				.optional()
-				.describe("Report conflicts without resolving"),
-		})
-		.strict(),
-	action(args: unknown, opts: unknown) {
-		if (!isArgs(args)) throw new Error("Invalid args");
-		if (!isOpts(opts)) throw new Error("Invalid opts");
-
-		const jsonPath = resolve(args.input);
-		const mdPath = resolve(args.output);
+	opts: syncOpts,
+	action(_args, opts) {
+		const jsonPath = resolve(opts.input);
+		const mdPath = resolve(opts.output);
 
 		// Determine conflict strategy
 		let strategy: ConflictStrategy = "json";

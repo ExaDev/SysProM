@@ -48,16 +48,13 @@ function resolveInitTarget(
 	};
 }
 
-const argsSchema = z.object({
-	path: z
-		.string()
-		.optional()
-		.default(".")
-		.describe("Target path (default: current directory)"),
-});
-
 const optsSchema = z
 	.object({
+		path: z
+			.string()
+			.optional()
+			.default(".")
+			.describe("Target path (default: current directory)"),
 		title: z.string().optional().describe("Document title"),
 		scope: z.string().optional().describe("Document scope"),
 		format: z
@@ -67,14 +64,16 @@ const optsSchema = z
 	})
 	.strict();
 
-export const initCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
+export const initCommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof optsSchema
+> = {
 	name: "init",
 	description: initDocumentOp.def.description,
 	apiLink: initDocumentOp.def.name,
-	args: argsSchema,
 	opts: optsSchema,
-	action(args, opts) {
-		const { outputPath, ioFormat } = resolveInitTarget(args.path, opts.format);
+	action(_args, opts) {
+		const { outputPath, ioFormat } = resolveInitTarget(opts.path, opts.format);
 
 		if (existsSync(outputPath)) {
 			console.error(`Already exists: ${outputPath}`);

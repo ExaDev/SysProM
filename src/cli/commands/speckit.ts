@@ -73,26 +73,25 @@ function compareDocuments(
 // Subcommands
 // ============================================================================
 
-const importArgs = z.object({
+const importOpts = z.object({
 	speckitDir: z.string().describe("Path to Spec-Kit feature directory"),
 	output: z.string().describe("Path to output SysProM file"),
-});
-
-const importOpts = z.object({
 	prefix: z
 		.string()
 		.optional()
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const importSubcommand: CommandDef<typeof importArgs, typeof importOpts> = {
+const importSubcommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof importOpts
+> = {
 	name: "import",
 	description: speckitImportOp.def.description,
-	args: importArgs,
 	opts: importOpts,
-	action(args, opts) {
-		const specKitDir = resolve(args.speckitDir);
-		const outputPath = resolve(args.output);
+	action(_args, opts) {
+		const specKitDir = resolve(opts.speckitDir);
+		const outputPath = resolve(opts.output);
 
 		if (!existsSync(specKitDir)) {
 			console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
@@ -136,23 +135,22 @@ const importSubcommand: CommandDef<typeof importArgs, typeof importOpts> = {
 	},
 };
 
-const exportArgs = z.object({
+const exportOpts = z.object({
 	input: z.string().describe("Path to SysProM document"),
 	speckitDir: z.string().describe("Path to Spec-Kit output directory"),
-});
-
-const exportOpts = z.object({
 	prefix: z.string().describe("ID prefix identifying nodes to export"),
 });
 
-const exportSubcommand: CommandDef<typeof exportArgs, typeof exportOpts> = {
+const exportSubcommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof exportOpts
+> = {
 	name: "export",
 	description: speckitExportOp.def.description,
-	args: exportArgs,
 	opts: exportOpts,
-	action(args, opts) {
-		const inputPath = resolve(args.input);
-		const specKitDir = resolve(args.speckitDir);
+	action(_args, opts) {
+		const inputPath = resolve(opts.input);
+		const specKitDir = resolve(opts.speckitDir);
 
 		if (!opts.prefix) {
 			console.error(
@@ -173,26 +171,25 @@ const exportSubcommand: CommandDef<typeof exportArgs, typeof exportOpts> = {
 	},
 };
 
-const syncArgs = z.object({
+const syncSubOpts = z.object({
 	input: z.string().describe("Path to SysProM document"),
 	speckitDir: z.string().describe("Path to Spec-Kit directory"),
-});
-
-const syncOpts = z.object({
 	prefix: z
 		.string()
 		.optional()
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
+const syncSubcommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof syncSubOpts
+> = {
 	name: "sync",
 	description: speckitSyncOp.def.description,
-	args: syncArgs,
-	opts: syncOpts,
-	action(args, opts) {
-		const inputPath = resolve(args.input);
-		const specKitDir = resolve(args.speckitDir);
+	opts: syncSubOpts,
+	action(_args, opts) {
+		const inputPath = resolve(opts.input);
+		const specKitDir = resolve(opts.speckitDir);
 
 		if (!existsSync(inputPath)) {
 			console.error(`Error: Input file does not exist: ${inputPath}`);
@@ -293,26 +290,25 @@ const syncSubcommand: CommandDef<typeof syncArgs, typeof syncOpts> = {
 	},
 };
 
-const diffArgs = z.object({
+const diffSubOpts = z.object({
 	input: z.string().describe("Path to SysProM document"),
 	speckitDir: z.string().describe("Path to Spec-Kit directory"),
-});
-
-const diffOpts = z.object({
 	prefix: z
 		.string()
 		.optional()
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const diffSubcommand: CommandDef<typeof diffArgs, typeof diffOpts> = {
+const diffSubcommand: CommandDef<
+	z.ZodObject<z.ZodRawShape>,
+	typeof diffSubOpts
+> = {
 	name: "diff",
 	description: speckitDiffOp.def.description,
-	args: diffArgs,
-	opts: diffOpts,
-	action(args, opts) {
-		const inputPath = resolve(args.input);
-		const specKitDir = resolve(args.speckitDir);
+	opts: diffSubOpts,
+	action(_args, opts) {
+		const inputPath = resolve(opts.input);
+		const specKitDir = resolve(opts.speckitDir);
 
 		if (!existsSync(inputPath)) {
 			console.error(`Error: Input file does not exist: ${inputPath}`);

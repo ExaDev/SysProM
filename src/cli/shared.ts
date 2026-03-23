@@ -9,11 +9,6 @@ import type { SysProMDocument } from "../schema.js";
 // Reusable CLI schemas — shared across all commands
 // ---------------------------------------------------------------------------
 
-/** @deprecated Use --path option in readOpts/mutationOpts instead. */
-export const inputArg = z
-	.string()
-	.describe("SysProM document path (JSON, .md, or directory)");
-
 /** Empty args schema for commands that take no positional arguments. */
 export const noArgs = z.object({}).strict();
 
