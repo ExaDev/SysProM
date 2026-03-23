@@ -7,28 +7,28 @@ doc_type: "changes"
 
 ## Changes
 
-### CH1 — Initial Model
+### CHG1 — Initial Model
 
 Establishes the core domain model with layered abstraction, decisions, changes, and invariants.
 
 - Affects:
-  - D1
-  - D2
-  - D7
+  - DEC1
+  - DEC2
+  - DEC7
 
 Scope:
-- I1
-- CN1
-- CN2
-- CN3
-- CN4
-- CP1
-- CP2
-- CP3
-- CP4
-- CP5
-- EL1
-- EL4
+- INT1
+- CON1
+- CON2
+- CON3
+- CON4
+- CAP1
+- CAP2
+- CAP3
+- CAP4
+- CAP5
+- ELEM1
+- ELEM4
 - INV1
 - INV2
 - INV3
@@ -36,17 +36,17 @@ Scope:
 - INV5
 - INV6
 - INV7
-- PR1
-- PR2
-- PR3
-- PR4
-- PR5
+- PRIN1
+- PRIN2
+- PRIN3
+- PRIN4
+- PRIN5
 
 Operations:
-- add I1
-- add EL1
-- add EL4
-- add EL6
+- add INT1
+- add ELEM1
+- add ELEM4
+- add ELEM6
 
 #### Lifecycle
 
@@ -54,29 +54,29 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH2 — Add Process Modelling
+### CHG2 — Add Process Modelling
 
 Extends the model with process, artefact, and projection node families.
 
 - Affects:
-  - D3
-  - D4
+  - DEC3
+  - DEC4
 
 Scope:
-- CN5
-- CP6
-- EL2
-- EL3
-- EL5
+- CON5
+- CAP6
+- ELEM2
+- ELEM3
+- ELEM5
 - INV8
 - INV9
 - INV10
 - INV11
 
 Operations:
-- add EL2
-- add EL3
-- add EL5
+- add ELEM2
+- add ELEM3
+- add ELEM5
 
 #### Lifecycle
 
@@ -84,23 +84,23 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH3 — Add File Representation Conventions
+### CHG3 — Add File Representation Conventions
 
 Defines how SysProM may be encoded in files, including single-document, multi-document, and recursive folder forms.
 
 - Affects:
-  - D5
-  - D6
+  - DEC5
+  - DEC6
 
 Scope:
-- CN6
-- CP7
-- R1
-- R2
-- R3
-- R4
-- R5
-- EL8
+- CON6
+- CAP7
+- REAL1
+- REAL2
+- REAL3
+- REAL4
+- REAL5
+- ELEM8
 - POL1
 - POL2
 - POL3
@@ -115,12 +115,12 @@ Scope:
 - POL18
 
 Operations:
-- add EL8
-- add R1
-- add R2
-- add R3
-- add R4
-- add R5
+- add ELEM8
+- add REAL1
+- add REAL2
+- add REAL3
+- add REAL4
+- add REAL5
 
 #### Lifecycle
 
@@ -128,27 +128,27 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH4 — Add External Resources Model
+### CHG4 — Add External Resources Model
 
 Adds the external reference and internalisation mechanism with typed roles.
 
 - Affects:
-  - D8
-  - D4
-  - D2
+  - DEC8
+  - DEC4
+  - DEC2
 
 Scope:
-- CN7
-- CP8
-- EL7
+- CON7
+- CAP8
+- ELEM7
 - INV19
 - INV20
 - POL6
 
 Operations:
-- add CN7
-- add CP8
-- add EL7
+- add CON7
+- add CAP8
+- add ELEM7
 
 #### Lifecycle
 
@@ -156,11 +156,11 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH5 — Add Lifecycle Protocols
+### CHG5 — Add Lifecycle Protocols
 
 Adds the decision, change, and node lifecycle state machines as protocols with stages and ordering.
 
-- Affects: D4
+- Affects: DEC4
 
 Scope:
 - PROT1
@@ -178,18 +178,18 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH6 — Encode Full Normative Specification
+### CHG6 — Encode Full Normative Specification
 
 Adds conformance requirements, missing invariants, security and extensibility policies, non-linear evolution capabilities, and complete node/relationship type vocabularies to make the JSON self-contained.
 
-- Affects: D2
+- Affects: DEC2
 
 Scope:
-- CONF1
-- CONF2
-- CONF3
-- CONF4
-- CONF5
+- INV28
+- INV29
+- INV30
+- INV31
+- INV32
 - INV12
 - INV13
 - INV14
@@ -203,17 +203,17 @@ Scope:
 - POL7
 - POL8
 - POL9
-- EL9
-- EL10
-- CP9
-- CP10
-- CP11
-- CN8
+- ELEM9
+- ELEM10
+- CAP9
+- CAP10
+- CAP11
+- CON8
 
 Operations:
-- add CN8
-- add EL9
-- add EL10
+- add CON8
+- add ELEM9
+- add ELEM10
 
 #### Lifecycle
 
@@ -221,22 +221,22 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH7 — Add Text Field Duality
+### CHG7 — Add Text Field Duality
 
 Adds support for text fields (description, context, rationale, internalised) to accept either a string or an array of strings.
 Updates the JSON schema, Zod definitions, and specification.
 
-- Affects: D9
+- Affects: DEC9
 
 Scope:
 - INV21
-- D8
+- DEC8
 
 Operations:
 - add INV21
-- add D8
-- update R5 — JSON schema updated to accept string | string[] for text fields
-- update R1 — Specification updated with §6.2 Text Fields
+- add DEC8
+- update REAL5 — JSON schema updated to accept string | string[] for text fields
+- update REAL1 — Specification updated with §6.2 Text Fields
 
 #### Lifecycle
 
@@ -244,23 +244,23 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH8 — Switch to Strict Enums with Labelled Definitions
+### CHG8 — Switch to Strict Enums with Labelled Definitions
 
 Replaces open z.string() types with z.enum() for node types, statuses, relationship types, and external reference roles.
 Introduces labelledEnum() helper that defines values and labels in one place.
 Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label maps.
 
-- Affects: D10
+- Affects: DEC10
 
 Scope:
 - INV22
-- D8
-- R5
+- DEC8
+- REAL5
 
 Operations:
 - add INV22
-- add D8
-- update R5 — JSON schema now uses enum instead of string with examples
+- add DEC8
+- update REAL5 — JSON schema now uses enum instead of string with examples
 
 #### Lifecycle
 
@@ -268,21 +268,21 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH9 — Fix Dead Links in Subsystem READMEs
+### CHG9 — Fix Dead Links in Subsystem READMEs
 
 README generator now only links to files that contain nodes for the given subsystem.
 
-- Affects: D11
+- Affects: DEC11
 
 Scope:
 - POL19
-- D8
-- R1
+- DEC8
+- REAL1
 
 Operations:
 - add POL19
-- add D8
-- update R1 — json-to-md updated to check present node types before generating links
+- add DEC8
+- update REAL1 — json-to-md updated to check present node types before generating links
 
 #### Lifecycle
 
@@ -290,18 +290,18 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH10 — Remove Navigation and Document Roles from README
+### CHG10 — Remove Navigation and Document Roles from README
 
 Removes the Navigation section and Document Roles table from generated READMEs. The file naming convention is self-documenting.
 
-- Affects: D12
+- Affects: DEC12
 
 Scope:
-- D8
-- R1
+- DEC8
+- REAL1
 
 Operations:
-- update R1 — README generation simplified to omit navigation and document roles
+- update REAL1 — README generation simplified to omit navigation and document roles
 
 #### Lifecycle
 
@@ -309,16 +309,16 @@ Operations:
 - [ ] introduced
 - [ ] complete
 
-### CH11 — Make Invariant Preservation Layer-Dependent
+### CHG11 — Make Invariant Preservation Layer-Dependent
 
 Updates INV3 to require must_preserve only when a decision affects domain nodes.
 Decisions affecting only non-domain nodes (realisations, policies, process nodes) should but are not required to identify preserved invariants.
 
-- Affects: D13
+- Affects: DEC13
 
 Scope:
 - INV3
-- D8
+- DEC8
 
 Operations:
 - update INV3 — Reworded to distinguish domain and non-domain affects
@@ -329,7 +329,7 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH12 — Internalise Design Archive
+### CHG12 — Internalise Design Archive
 
 Internalises content from distilled/ into the SysProM JSON.
 Comparisons become an artefact node (ART1) with comparison summaries as subsystem concepts.
@@ -337,7 +337,7 @@ Worked examples become artefact nodes (ART2, ART3) with example SysProM graphs a
 Naming rationale is already captured in D8.
 Specification is already captured as the JSON itself — distilled/Specification.md is redundant.
 
-- Affects: D14
+- Affects: DEC14
 
 Scope:
 - ART1
@@ -355,23 +355,23 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH13 — Add Size-Based Subsystem Splitting and Auto-Grouping
+### CHG13 — Add Size-Based Subsystem Splitting and Auto-Grouping
 
 Subsystems that would produce a single file over 100 lines are now split into multi-document folders.
 Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).
 Both heuristics are automatic — no user configuration needed.
 
-- Affects: D15
+- Affects: DEC15
 
 Scope:
 - POL20
-- D8
-- R1
+- DEC8
+- REAL1
 
 Operations:
 - add POL20
-- add D8
-- update R1 — json-to-md updated with line count threshold and auto-grouping
+- add DEC8
+- update REAL1 — json-to-md updated with line count threshold and auto-grouping
 
 #### Lifecycle
 
@@ -379,7 +379,7 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH14 — Implement Spec-Kit File Support
+### CHG14 — Implement Spec-Kit File Support
 
 New speckit/ module provides bidirectional conversion between Spec-Kit project files and SysProM nodes.
 Parser maps constitution.md → invariant/protocol nodes, spec.md → artefact/capability/invariant nodes, plan.md → artefact/element/gate nodes, tasks.md → stage/change nodes, checklist.md → gate nodes.
@@ -387,11 +387,11 @@ Generator reverses the mapping to produce valid Spec-Kit markdown from SysProM g
 CLI adds import, export, sync, and diff subcommands under sysprom speckit.
 Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 cases), plus round-trip fidelity.
 
-- Affects: D16
+- Affects: DEC16
 
 Scope:
-- D16
-- EL3
+- DEC16
+- ELEM3
 - CMP-SPECKIT
 
 Operations:
@@ -412,18 +412,18 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH15 — Implement task CLI Command for Subagent Plan Tracking
+### CHG15 — Implement task CLI Command for Subagent Plan Tracking
 
 New task command provides list, add, done, and undone subcommands for manipulating the plan array on change nodes.
 Two new mutate helpers (addPlanTask, updatePlanTask) follow the immutable doc-in/doc-out pattern of the existing mutate module.
 task list supports --pending and --json flags enabling agent scripting via jq.
 AGENTS.md documents the complete subagent workflow: discover, claim, progress, complete.
 
-- Affects: D17
+- Affects: DEC17
 
 Scope:
-- D17
-- CH14
+- DEC17
+- CHG14
 
 Operations:
 - add src/cli/task.ts
@@ -438,30 +438,30 @@ Operations:
 - [x] introduced
 - [x] complete
 
-### CH16 — Implement Plan Command with Recursive Task Model
+### CHG16 — Implement Plan Command with Recursive Task Model
 
 New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.
 
-- Implements: D18
+- Implements: DEC18
 
 - Status: complete
 
 Scope:
 - ["EL-CLI","EL-SPECKIT"]
 
-### CH17 — Implement Temporal Support
+### CHG17 — Implement Temporal Support
 
 Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.
 
-- Implements: D19
+- Implements: DEC19
 
 - Status: complete
 
-### CH18 — Migrate CLI to Commander.js
+### CHG18 — Migrate CLI to Commander.js
 
 Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.
 
-- Implements: D20
+- Implements: DEC20
 
 - Status: complete
 
@@ -470,16 +470,16 @@ Replace manual process.argv parsing across all CLI command files with Commander.
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
 
-### CH19 — Add TypeDoc Documentation Pipeline
+### CHG19 — Add TypeDoc Documentation Pipeline
 
 Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.
 
-- Implements: D21
+- Implements: DEC21
 
 - Status: complete
 
 Scope:
-- EL3
+- ELEM3
 
 Operations:
 - add — Create typedoc.json and typedoc.html.json configuration files
@@ -491,16 +491,16 @@ Operations:
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
 
-### CH20 — Add Turborepo Build Orchestration
+### CHG20 — Add Turborepo Build Orchestration
 
 Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
 
-- Implements: D22
+- Implements: DEC22
 
 - Status: complete
 
 Scope:
-- EL3
+- ELEM3
 
 Operations:
 - add — Create turbo.json with task dependency graph and input/output declarations
@@ -511,11 +511,11 @@ Operations:
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
 
-### CH21 — Add CI/CD Pipeline
+### CHG21 — Add CI/CD Pipeline
 
 Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub Pages deployment, and npm publishing via OIDC trusted publishers. Add commitlint with husky hooks, semantic-release with all commit types triggering releases, and Dependabot for dependency updates.
 
-- Implements: D23
+- Implements: DEC23
 
 - Status: complete
 
@@ -524,11 +524,11 @@ Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub P
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH22 — Remove Type Assertions
+### CHG22 — Remove Type Assertions
 
 Replace all as type coercions across library and CLI code with runtime validation. Use Zod .is() and .safeParse() for domain type narrowing, isRecord() for object checks, instanceof for error handling, and properly typed Commander action handlers.
 
-- Implements: D24
+- Implements: DEC24
 
 - Status: complete
 
@@ -537,11 +537,11 @@ Replace all as type coercions across library and CLI code with runtime validatio
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH23 — Switch to Compiled Distribution
+### CHG23 — Switch to Compiled Distribution
 
 Update package.json entry points to reference compiled JavaScript in dist/. Move tsx from dependencies to devDependencies. Change CLI shebang to #!/usr/bin/env node.
 
-- Implements: D25
+- Implements: DEC25
 
 - Status: complete
 
@@ -550,11 +550,11 @@ Update package.json entry points to reference compiled JavaScript in dist/. Move
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH24 — Add Auto-ID Generation to CLI
+### CHG24 — Add Auto-ID Generation to CLI
 
 Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add command — auto-generates from type prefix + next available number.
 
-- Implements: D26
+- Implements: DEC26
 
 - Status: complete
 
@@ -563,11 +563,11 @@ Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add comm
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH25 — CLI UX Improvements
+### CHG25 — CLI UX Improvements
 
 Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.
 
-- Implements: D27
+- Implements: DEC27
 
 - Status: complete
 
@@ -576,32 +576,32 @@ Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH26 — Implement defineCommand Pattern
+### CHG26 — Implement defineCommand Pattern
 
 Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.
 
-- Implements: D28
+- Implements: DEC28
 
 - Status: complete
 
 Scope:
-- EL3
+- ELEM3
 
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH27 — Implement defineOperation Pattern
+### CHG27 — Implement defineOperation Pattern
 
 Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.
 
-- Implements: D29
+- Implements: DEC29
 
 - Status: complete
 
 Scope:
-- EL3
+- ELEM3
 
 #### Plan
 
@@ -621,11 +621,11 @@ Scope:
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
 
-### CH28 — Implement Claude Code Plugin
+### CHG28 — Implement Claude Code Plugin
 
 Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).
 
-- Implements: D30
+- Implements: DEC30
 
 - Status: introduced
 
@@ -637,16 +637,16 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 - [x] Update CLAUDE.md with plugin documentation
 - [x] Mark CH28 as introduced in SysProM document
 
-### CH29 — Implement Bidirectional Sync Command
+### CHG29 — Implement Bidirectional Sync Command
 
 Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.
 
-- Implements: D31
+- Implements: DEC31
 
 - Status: complete
 
 Scope:
-- D31
+- DEC31
 
 #### Plan
 
@@ -661,11 +661,11 @@ Scope:
 - [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
 - [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
 
-### CH30 — Implement MCP Server
+### CHG30 — Implement MCP Server
 
 Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.
 
-- Implements: D32
+- Implements: DEC32
 
 - Status: complete
 
@@ -682,9 +682,9 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update plugin README with MCP server documentation
 - [ ] Sync JSON to Markdown
 
-### CH31 — Implement Keyed Provider Registry for External Formats
+### CHG31 — Implement Keyed Provider Registry for External Formats
 
-- Implements: D33
+- Implements: DEC33
 
 - Status: proposed
 
@@ -704,9 +704,9 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update CLI commands to expose --format flag, update help text
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
-### CH32 — Implement Safe Graph Removal
+### CHG32 — Implement Safe Graph Removal
 
-- Implements: D34
+- Implements: DEC34
 
 - Status: complete
 
@@ -727,10 +727,10 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Add retired node relationship check to validate operation (report as issue, not just warning)
 - [ ] Add unit tests for retired relationship guard: refused types throw, allowed types succeed, validate flags existing violations
 
-### CH33 — Implement Graph Mutation Safety Guards
+### CHG33 — Implement Graph Mutation Safety Guards
 
-- Implements: D35
-- Depends on: CH32
+- Implements: DEC35
+- Depends on: CHG32
 
 - Status: complete
 
@@ -750,11 +750,11 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
-### CH34 — Add default input resolution and init command
+### CHG34 — Add default input resolution and init command
 
 Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.
 
-- Implements: D36
+- Implements: DEC36
 
 - Status: complete
 
@@ -771,7 +771,45 @@ Scope:
 - [x] Write tests for resolveInput
 - [x] Write tests for init command
 
-### CH35 — Add YAML Support and Multi-File JSON Formats
+### CHG35 — Add YAML Support and Multi-File JSON Formats
 
 Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.
+
+- Implements: DEC37
+
+### CHG36 — Convert file-path positional args to flags
+
+Move path/input/output positional arguments to --flags in init, json2md, md2json, sync, speckit (import/export/sync/diff), and plan init commands.
+
+- Implements: DEC38
+
+#### Plan
+
+- [x] Convert init command: path positional → --path flag
+- [x] Convert json2md command: input/output positionals → --input/--output flags
+- [x] Convert md2json command: input/output positionals → --input/--output flags
+- [x] Convert sync command: input/output positionals → --input/--output flags
+- [x] Convert speckit subcommands: path positionals → flags
+- [x] Convert plan init: output positional → --output flag
+- [x] Update tests for new flag-based CLI
+- [x] Remove deprecated inputArg from shared.ts
+- [x] Update CLAUDE.md CLI examples
+
+### CHG37 — Fix MCP persistence bug
+
+Add saveDocument calls to all MCP write operations
+
+- Implements: DEC39
+
+Scope:
+- src/mcp/server.ts
+
+### CHG38 — Fix init path suffix doubling
+
+Check if path ends with correct suffix before appending
+
+- Implements: DEC40
+
+Scope:
+- src/cli/commands/init.ts
 

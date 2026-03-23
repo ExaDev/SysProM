@@ -7,9 +7,9 @@ doc_type: "decisions"
 
 ## Decisions
 
-### D1 — Abstract Conversion Placement
+### DEC1 — Abstract Conversion Placement
 
-- Affects: EL1
+- Affects: ELEM1
 - Must preserve: INV2
 
 Options:

@@ -11,19 +11,19 @@ doc_type: "state"
 
 ## Stages
 
-### ST1 — Draft Plan
+### STG1 — Draft Plan
 
 - Part of: PROT1
 
-### ST2 — Architectural Review
+### STG2 — Architectural Review
 
 - Part of: PROT1
-- Must follow: ST1
+- Must follow: STG1
 
-### ST3 — Critical Evaluation
+### STG3 — Critical Evaluation
 
 - Part of: PROT1
-- Must follow: ST2
+- Must follow: STG2
 
 ## Roles
 
@@ -31,23 +31,23 @@ doc_type: "state"
 
 Produces an initial scoped plan.
 
-- Performs: ST1
+- Performs: STG1
 
 ### ROLE2 — Architect
 
 Reviews structural and design soundness.
 
-- Performs: ST2
+- Performs: STG2
 
 ### ROLE3 — Critic
 
 Evaluates quality, completeness, and testability.
 
-- Performs: ST3
+- Performs: STG3
 
 ## Gates
 
-### G1 — Scope Gate
+### GATE1 — Scope Gate
 
 Blocks execution when work is vague or underspecified.
 
@@ -55,15 +55,15 @@ Blocks execution when work is vague or underspecified.
 
 ## Modes
 
-### M1 — Standard Mode
+### MODE1 — Standard Mode
 
-### M2 — Interactive Mode
+### MODE2 — Interactive Mode
 
 Adds explicit user checkpoints.
 
 - Modifies: PROT1
 
-### M3 — Deliberate Mode
+### MODE3 — Deliberate Mode
 
 Adds stronger risk analysis and broader verification.
 

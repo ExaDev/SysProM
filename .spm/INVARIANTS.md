@@ -91,35 +91,35 @@ Every external reference MUST include a role describing the relationship to the 
 External references are always from a node in the graph to a resource outside it.
 External resources do not point back into the graph.
 
-### CONF1 — Conformance — Typed Nodes
+### INV28 — Conformance — Typed Nodes
 
 A conformant system MUST define nodes with types.
 
-- Constrained by: CN8
+- Constrained by: CON8
 
-### CONF2 — Conformance — Relationships
+### INV29 — Conformance — Relationships
 
 A conformant system MUST define relationships between nodes.
 
-- Constrained by: CN8
+- Constrained by: CON8
 
-### CONF3 — Conformance — Lifecycle States
+### INV30 — Conformance — Lifecycle States
 
 A conformant system MUST define lifecycle states for decisions and changes.
 
-- Constrained by: CN8
+- Constrained by: CON8
 
-### CONF4 — Conformance — At Least One Invariant
+### INV31 — Conformance — At Least One Invariant
 
 A conformant system MUST define at least one invariant.
 
-- Constrained by: CN8
+- Constrained by: CON8
 
-### CONF5 — Conformance — Traceability
+### INV32 — Conformance — Traceability
 
 A conformant system MUST support traceability across abstraction layers.
 
-- Constrained by: CN8
+- Constrained by: CON8
 
 ### INV21 — Text Field Duality
 
@@ -155,23 +155,23 @@ When both JSON and Markdown representations of a SysProM document exist, mutatio
 
 ## Principles
 
-### PR1 — Separate What From Why From How
+### PRIN1 — Separate What From Why From How
 
 Intent, decisions, and realisations are distinct concerns and should be recorded separately.
 
-### PR2 — Decisions Are More Important Than Documents
+### PRIN2 — Decisions Are More Important Than Documents
 
 Documents describe state. Decisions explain why state changed.
 
-### PR3 — Everything Has Identity
+### PRIN3 — Everything Has Identity
 
 Every node gets an ID. No anonymous ideas.
 
-### PR4 — Think Graph, Not Timeline
+### PRIN4 — Think Graph, Not Timeline
 
 Timelines are one projection of the graph. The graph is the source of truth.
 
-### PR5 — Separate State From History
+### PRIN5 — Separate State From History
 
 What exists now and how it got there are recorded separately.
 
@@ -187,7 +187,7 @@ When removing a node from active use, mark it as deprecated rather than deleting
 
 A decision SHOULD list the alternatives considered, not only the selected option.
 
-- Governed by: PR2
+- Governed by: PRIN2
 
 ### POL3 — Changes Must Define Scope
 
@@ -211,7 +211,7 @@ Element nodes SHOULD realise capability nodes.
 
 When portability matters, the relevant content from an external resource SHOULD be captured directly within a node so the document set is self-contained.
 
-- Governed by: CN7
+- Governed by: CON7
 
 ### POL7 — Security — Node Identity Integrity
 
@@ -231,14 +231,14 @@ The root entry point MUST be identifiable as a SysProM document.
 Valid filenames include SysProM.md, SYSPROM.md, SPM.md, and README.spm.md.
 Alternatively, front matter containing doc_type: sysprom is sufficient.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL11 — Root Entry Point Location
 
 A SysProM document set MAY live at any location.
 Valid locations include: repository root (./SysProM.md), dedicated folder (./SysProM/README.md), docs directory (./docs/SysProM.md), or any other reasonable path.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL12 — Multi-Document Hub
 
@@ -246,49 +246,49 @@ When a system is described across multiple files, a hub document (typically READ
 Separate files per concern: INTENT.md, INVARIANTS.md, STATE.md, DECISIONS.md, CHANGES.md.
 No document is mandatory.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL13 — Single-File Node Extension
 
 A node represented as a single file SHOULD use the .spm.md extension.
 Filename SHOULD include node ID and MAY include name: F1-sync.spm.md (preferred), F1.spm.md, or sync.spm.md.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL14 — Folder Node Naming
 
 A node represented as a folder SHOULD be named using the node ID and name: F1-sync/ (preferred), F1/, or sync/.
 The folder MUST contain at least a README. md.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL15 — Grouping Folders
 
 Node folders MAY be grouped under intermediate directories by type (e. g. features/, components/).
 Grouping folders are organisational and do not represent nodes.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL16 — Parent Linking Implicit
 
 Parent-child relationships between nodes are implicit from the folder hierarchy.
 Explicit parent references in frontmatter are not required.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL17 — Relationship Notation Flexibility
 
 Relationships MAY be expressed as labelled lists, arrow chains, tables, nested lists, or mermaid diagrams.
 Formats may be mixed. The choice is a presentation concern.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL18 — Frontmatter Is Metadata Only
 
 Front matter defines document-level metadata only (title, doc_type, scope, status, version).
 Node-level data belongs in the document body.
 
-- Part of: EL8
+- Part of: ELEM8
 
 ### POL19 — README Links Only to Present Files
 

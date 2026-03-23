@@ -4002,6 +4002,29 @@
 				"src/mcp/server.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "Running spm init .spm.json creates .spm.json.spm.json",
+			"id": "DEC40",
+			"name": "Fix init path suffix doubling",
+			"options": [
+				{
+					"description": "Check if path ends with suffix before appending",
+					"id": "fix"
+				}
+			],
+			"rationale": "Simple suffix check prevents doubling",
+			"selected": "fix",
+			"type": "decision"
+		},
+		{
+			"description": "Check if path ends with correct suffix before appending",
+			"id": "CHG38",
+			"name": "Fix init path suffix doubling",
+			"scope": [
+				"src/cli/commands/init.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5064,6 +5087,11 @@
 		{
 			"from": "CHG37",
 			"to": "DEC39",
+			"type": "implements"
+		},
+		{
+			"from": "CHG38",
+			"to": "DEC40",
 			"type": "implements"
 		}
 	]

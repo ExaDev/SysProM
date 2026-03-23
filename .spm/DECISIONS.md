@@ -7,12 +7,12 @@ doc_type: "decisions"
 
 ## Decisions
 
-### D1 — Separate Domain From Process From Evolution
+### DEC1 — Separate Domain From Process From Evolution
 
 - Affects:
-  - EL1
-  - EL2
-  - EL4
+  - ELEM1
+  - ELEM2
+  - ELEM4
 - Must preserve: INV1
 
 Context: The model needs to represent systems, workflows, and history.
@@ -35,9 +35,9 @@ Domain structure should not be tangled with process mechanics or evolution histo
 - [x] implemented
 - [ ] superseded
 
-### D2 — Make Decisions First-Class Entities
+### DEC2 — Make Decisions First-Class Entities
 
-- Affects: EL4
+- Affects: ELEM4
 - Must preserve:
   - INV2
   - INV3
@@ -61,11 +61,11 @@ Graph nodes with typed relationships make decisions queryable, traceable, and en
 - [x] implemented
 - [ ] superseded
 
-### D3 — Distinguish Invariants From Principles From Policies
+### DEC3 — Distinguish Invariants From Principles From Policies
 
 - Affects:
   - INV1
-  - PR1
+  - PRIN1
   - POL1
 - Must preserve: INV3
 
@@ -87,11 +87,11 @@ Rationale: The three-way split matches how real systems distinguish structural g
 - [x] implemented
 - [ ] superseded
 
-### D4 — Add Process Modelling
+### DEC4 — Add Process Modelling
 
 - Affects:
-  - EL2
-  - EL3
+  - ELEM2
+  - ELEM3
 - Must preserve: INV4
 
 Context: Workflow-heavy systems (planning tools, spec-driven workflows, runtime orchestration) cannot be adequately modelled with decisions and changes alone.
@@ -113,9 +113,9 @@ Full process modelling makes the model capable of encoding systems like Spec Kit
 - [x] implemented
 - [ ] superseded
 
-### D5 — Format-Agnostic With Markdown as Primary Representation
+### DEC5 — Format-Agnostic With Markdown as Primary Representation
 
-- Affects: R1
+- Affects: REAL1
 - Must preserve: INV4
 
 Context: The model needs a practical encoding but should not be locked to one format.
@@ -137,9 +137,9 @@ Other formats remain valid.
 - [x] implemented
 - [ ] superseded
 
-### D6 — Recursive Composition Using Same Conventions
+### DEC6 — Recursive Composition Using Same Conventions
 
-- Affects: R4
+- Affects: REAL4
 - Must preserve: INV4
 
 Context: Systems contain subsystems. If subsystems use different conventions, the model fractures.
@@ -160,7 +160,7 @@ Rationale: Recursive consistency means any node can be understood in isolation u
 - [x] implemented
 - [ ] superseded
 
-### D7 — Append-Only History
+### DEC7 — Append-Only History
 
 - Must preserve: INV5
 
@@ -182,12 +182,12 @@ Rationale: Append-only preserves the full provenance chain.
 - [x] implemented
 - [ ] superseded
 
-### D8 — Support External Resources via Reference and Internalisation
+### DEC8 — Support External Resources via Reference and Internalisation
 
 - Affects:
-  - EL7
-  - R5
-  - R1
+  - ELEM7
+  - REAL5
+  - REAL1
   - INV3
   - ART1
   - ART2
@@ -222,11 +222,11 @@ Supporting both gives implementors flexibility without losing either property.
 - [x] implemented
 - [ ] superseded
 
-### D9 — Allow Array-of-Lines for Text Fields
+### DEC9 — Allow Array-of-Lines for Text Fields
 
 - Affects:
-  - R5
-  - R1
+  - REAL5
+  - REAL1
 - Must preserve: INV21
 
 Context: JSON does not support multiline strings.
@@ -251,9 +251,9 @@ Accepting both avoids forcing a style while enabling better ergonomics where it 
 - [x] implemented
 - [ ] superseded
 
-### D10 — Use Strict Enums for Core Types
+### DEC10 — Use Strict Enums for Core Types
 
-- Affects: R5
+- Affects: REAL5
 - Must preserve:
   - INV22
   - INV18
@@ -278,9 +278,9 @@ The DRY labelledEnum pattern ensures each type is defined once with its label, e
 - [x] implemented
 - [ ] superseded
 
-### D11 — Only Link to Present Files in README
+### DEC11 — Only Link to Present Files in README
 
-- Affects: R1
+- Affects: REAL1
 - Must preserve: POL19
 
 Context: The README generator was producing navigation links and document role entries for all possible files (INTENT, INVARIANTS, STATE, DECISIONS, CHANGES) regardless of whether the subsystem had nodes of those types.
@@ -301,9 +301,9 @@ Rationale: Dead links mislead readers and break tooling. Links should reflect re
 - [x] implemented
 - [ ] superseded
 
-### D12 — Remove Navigation and Document Roles from README
+### DEC12 — Remove Navigation and Document Roles from README
 
-- Affects: R1
+- Affects: REAL1
 
 Context: The README contained a Navigation section and a Document Roles table that restated what the filenames already communicate.
 Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain.
@@ -324,7 +324,7 @@ Rationale: Removing redundant sections reduces noise and maintenance burden. The
 - [ ] implemented
 - [ ] superseded
 
-### D13 — Layer-Dependent Invariant Preservation
+### DEC13 — Layer-Dependent Invariant Preservation
 
 - Affects: INV3
 - Must preserve: INV3
@@ -354,7 +354,7 @@ Leverages the existing layer model rather than adding new concepts.
 - [x] implemented
 - [ ] superseded
 
-### D14 — Internalise Design Archive into SysProM JSON
+### DEC14 — Internalise Design Archive into SysProM JSON
 
 - Affects:
   - ART1
@@ -381,9 +381,9 @@ Rationale: Internalising makes the JSON self-contained. Artefact nodes with subs
 - [x] implemented
 - [ ] superseded
 
-### D15 — Size-Based Subsystem Splitting
+### DEC15 — Size-Based Subsystem Splitting
 
-- Affects: R1
+- Affects: REAL1
 - Must preserve: POL20
 
 Context: Small subsystems (e.g. 6 node type definitions) are cleaner as single .spm.md files.
@@ -405,9 +405,9 @@ Rationale: Combining both heuristics keeps small subsystems compact while splitt
 - [x] implemented
 - [ ] superseded
 
-### D16 — Add Bidirectional Spec-Kit Interoperability
+### DEC16 — Add Bidirectional Spec-Kit Interoperability
 
-- Affects: EL3
+- Affects: ELEM3
 - Must preserve:
   - INV4
   - INV5
@@ -435,9 +435,9 @@ Rationale: Full bidirectional support allows users to start in either ecosystem 
 - [x] implemented
 - [ ] superseded
 
-### D17 — Add Task Subcommand for Change Plan Tracking
+### DEC17 — Add Task Subcommand for Change Plan Tracking
 
-- Affects: CH14
+- Affects: CHG14
 
 Context: Change nodes have a plan field (array of {description, done} tasks) defined in the schema, but no CLI command existed to manipulate it.
 Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.
@@ -458,7 +458,7 @@ Rationale: A dedicated command keeps the update command focused on node fields a
 - [x] implemented
 - [ ] superseded
 
-### D18 — Recursive Change Nodes for Planning
+### DEC18 — Recursive Change Nodes for Planning
 
 Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.
 
@@ -480,7 +480,7 @@ Rationale: A phase is just a task with children. Using change nodes with recursi
 
 - [ ] options
 
-### D19 — Extend Lifecycle with Temporal Timestamps
+### DEC19 — Extend Lifecycle with Temporal Timestamps
 
 Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.
 
@@ -498,7 +498,7 @@ Chosen: D19-OPT-B
 
 Rationale: One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.
 
-### D20 — Adopt Commander.js for CLI
+### DEC20 — Adopt Commander.js for CLI
 
 Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.
 
@@ -523,7 +523,7 @@ Rationale: Commander.js has zero dependencies, the lowest migration effort from 
 - [x] proposed (2026-03-21)
 - [x] accepted (2026-03-21)
 
-### D21 — Adopt TypeDoc for Documentation
+### DEC21 — Adopt TypeDoc for Documentation
 
 Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.
 
@@ -546,7 +546,7 @@ Rationale: TypeDoc directly generates docs from TypeScript source with minimal c
 - [x] proposed (2026-03-21)
 - [x] accepted (2026-03-21)
 
-### D22 — Adopt Turborepo for Build Orchestration
+### DEC22 — Adopt Turborepo for Build Orchestration
 
 Choose Turborepo for build task orchestration with dependency management and output caching.
 
@@ -569,7 +569,7 @@ Rationale: Turborepo provides automatic caching (FULL TURBO on repeat builds), p
 - [x] proposed (2026-03-21)
 - [x] accepted (2026-03-21)
 
-### D23 — Enforce Conventional Commits and Automated Releases
+### DEC23 — Enforce Conventional Commits and Automated Releases
 
 Adopt commitlint for commit message enforcement, semantic-release for automated publishing, and husky for git hook management.
 
@@ -592,7 +592,7 @@ Rationale: Automated enforcement ensures every commit follows conventional forma
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D24 — Eliminate Type Assertions
+### DEC24 — Eliminate Type Assertions
 
 Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.
 
@@ -615,7 +615,7 @@ Rationale: Runtime validation catches type errors that assertions silently mask.
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D25 — Ship Compiled JavaScript
+### DEC25 — Ship Compiled JavaScript
 
 Switch package entry points (main, exports, bin) from TypeScript source to compiled JavaScript in dist/, removing the tsx runtime dependency for consumers.
 
@@ -638,7 +638,7 @@ Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, redu
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D26 — Auto-Generate Node IDs
+### DEC26 — Auto-Generate Node IDs
 
 Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.
 
@@ -661,7 +661,7 @@ Rationale: The existing ID convention (D for decisions, CH for changes, INV for 
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D27 — CLI UX Improvements
+### DEC27 — CLI UX Improvements
 
 Add auto-generated option IDs, init command, auto-sync, coloured output, JSON output on mutations, full-text search, graph export, rename, stricter validation, shell completions, and dry-run mode.
 
@@ -684,7 +684,7 @@ Rationale: Each improvement targets a specific friction point: auto-IDs reduce m
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D28 — Unify CLI with Zod-Driven Command Definitions
+### DEC28 — Unify CLI with Zod-Driven Command Definitions
 
 Replace separate Commander definitions, run() functions, and doc generator metadata with a single defineCommand pattern using Zod schemas.
 
@@ -707,7 +707,7 @@ Rationale: A single defineCommand pattern eliminates duplication. Commander prog
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D29 — Unify Library API and CLI with defineOperation
+### DEC29 — Unify Library API and CLI with defineOperation
 
 Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.
 
@@ -730,7 +730,7 @@ Rationale: Single source of truth eliminates duplication and drift. Operations a
 - [x] proposed (2026-03-22)
 - [x] accepted (2026-03-22)
 
-### D30 — Distribute SysProM as a Claude Code Plugin
+### DEC30 — Distribute SysProM as a Claude Code Plugin
 
 Context: SysProM is a CLI tool and library for tracking system provenance. Claude Code supports plugins that extend its capabilities with skills, commands, hooks, and agents. A plugin would give Claude native awareness of SysProM workflows — recording decisions, tracking changes, checking invariants — directly within coding sessions. The plugin is pure markdown (no compiled code) and delegates to the spm CLI at runtime.
 
@@ -744,7 +744,7 @@ Chosen: D30-OPT-A
 
 Rationale: A pure-markdown plugin requires no compiled code in git and no build step. Skills teach Claude how to use SysProM; the CLI is resolved at runtime via spm or npx. This follows the pattern of other CLI-wrapping plugins (wayback, devops tools) that treat the CLI as a prerequisite. Distribution via GitHub marketplace requires only a marketplace.json in the repo.
 
-### D31 — Bidirectional Sync by Default
+### DEC31 — Bidirectional Sync by Default
 
 Context: Currently json2md and md2json are separate one-directional commands. Users must remember which direction to convert, and there is no conflict detection or resolution when both sides have diverged. A single sync command that is bidirectional by default would reduce friction and prevent data loss.
 
@@ -756,7 +756,7 @@ Chosen: OPT-A
 
 Rationale: A single sync command aligns with the principle of least surprise and reduces cognitive load. Explicit conflict-handling flags give users precise control when needed, while the default bidirectional behaviour covers the common case.
 
-### D32 — Add MCP Server for Programmatic API Access
+### DEC32 — Add MCP Server for Programmatic API Access
 
 Context: The Claude Code plugin (D30) uses CLI skills that shell out to spm. An MCP server wrapping SysProM's programmatic API would provide structured tool access with typed inputs/outputs via Zod schemas, eliminating CLI text parsing. The server uses stdio transport, ships as an extra bin entry in the same npm package, and is referenced from the plugin's .mcp.json. Same npm-publication prerequisite as the CLI.
 
@@ -769,10 +769,10 @@ Chosen: OPT-A
 
 Rationale: Same package avoids monorepo overhead. The MCP server is a thin wrapper around the existing programmatic API — one source file, one new dependency (@modelcontextprotocol/sdk), one extra bin entry. SysProM already has zod which satisfies the SDK peer dependency.
 
-### D33 — Abstract External Format Interop into Keyed Provider Registry
+### DEC33 — Abstract External Format Interop into Keyed Provider Registry
 
-- Must preserve: CN6
-- Supersedes: CH14
+- Must preserve: CON6
+- Supersedes: CHG14
 
 Context: SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.
 
@@ -785,7 +785,7 @@ Chosen: OPT-A
 
 Rationale: Keyed registry gives type-safe lookup, avoids stringly-typed dispatch, and the ProviderKey union auto-updates when new providers are added. satisfies Record<string, ExternalFormatProvider> enforces the interface while preserving concrete types per key. Consistent with the codebase defineOperation pattern.
 
-### D34 — Safe Graph Removal with Soft Delete Default
+### DEC34 — Safe Graph Removal with Soft Delete Default
 
 - Must preserve: INV23
 
@@ -800,7 +800,7 @@ Chosen: OPT-A
 
 Rationale: Soft delete via existing status: retired is zero-cost (no schema change) and never breaks the graph. Hard mode with chain repair handles the common must_follow case deterministically. Requiring --recursive for subsystem loss prevents accidental data destruction.
 
-### D35 — Graph Mutation Safety Guards
+### DEC35 — Graph Mutation Safety Guards
 
 - Must preserve:
   - INV24
@@ -818,7 +818,7 @@ Chosen: OPT-A
 
 Rationale: All four gaps are real and independently discoverable. Validation-only misses the opportunity to prevent bad state. Deferring type/semantic checks leaves a class of silent corruption. A relationship-type-to-endpoint-type map serves both the type-change guard and the semantic validation, so they share implementation cost.
 
-### D36 — Default input resolution and init command
+### DEC36 — Default input resolution and init command
 
 Context: CLI commands require explicit file paths. Users want sensible defaults (.spm.json, .spm.md, .spm/) and an init command that creates documents with context-dependent format.
 
@@ -828,4 +828,49 @@ Options:
 Chosen: OPT-A
 
 Rationale: Priority order matches user expectations; --format flag gives explicit control when defaults are wrong
+
+### DEC37 — Add YAML and multi-file JSON serialisation formats
+
+Context: SysProM supports JSON and Markdown serialisation but users request YAML for human-readable, diff-friendly documents and multi-file JSON for large projects. Adding these formats broadens adoption without changing the core model.
+
+Options:
+- OPT-A: YAML single-file and multi-document plus multi-file JSON with new CLI commands
+
+Chosen: OPT-A
+
+Rationale: YAML is widely expected for configuration-style documents; multi-file JSON mirrors the existing multi-file Markdown pattern for consistency
+
+### DEC38 — Convert file-path positional args to flags
+
+Context: CLI commands for file I/O (init, json2md, md2json, sync, speckit, plan init) use positional arguments for paths. Flags are more consistent with other commands that already use --path, and allow auto-detection when omitted.
+
+Options:
+- OPT-A: Convert all positional args to flags
+- OPT-B: Keep positional args as-is
+
+Chosen: OPT-A
+
+Rationale: Entity IDs and search terms remain positional (natural operands). File paths become flags for consistency with --path used elsewhere, and to enable auto-detection when omitted.
+
+### DEC39 — Fix MCP write operations not persisting
+
+Context: MCP tools returned success but did not write to disk
+
+Options:
+- fix: Add saveDocument calls
+
+Chosen: fix
+
+Rationale: Each write operation was missing the saveDocument call after modifying the document
+
+### DEC40 — Fix init path suffix doubling
+
+Context: Running spm init .spm.json creates .spm.json.spm.json
+
+Options:
+- fix: Check if path ends with suffix before appending
+
+Chosen: fix
+
+Rationale: Simple suffix check prevents doubling
 

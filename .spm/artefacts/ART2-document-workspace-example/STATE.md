@@ -7,37 +7,37 @@ doc_type: "state"
 
 ## Elements
 
-### EL1 — Transformation Engine
+### ELEM1 — Transformation Engine
 
-- Realises: CN1
+- Realises: CON1
 
-### EL2 — Document Store
+### ELEM2 — Document Store
 
-- Realises: CN2
+- Realises: CON2
 
 ## Realisations
 
-### R1 — Local Conversion
+### REAL1 — Local Conversion
 
-- Implements: EL1
-
-- Status: active
-
-### R2 — Remote Conversion
-
-- Implements: EL1
+- Implements: ELEM1
 
 - Status: active
 
-### R3 — Local Storage
+### REAL2 — Remote Conversion
 
-- Implements: EL2
+- Implements: ELEM1
 
 - Status: active
 
-### R4 — Remote Storage
+### REAL3 — Local Storage
 
-- Implements: EL2
+- Implements: ELEM2
+
+- Status: active
+
+### REAL4 — Remote Storage
+
+- Implements: ELEM2
 
 - Status: active
 

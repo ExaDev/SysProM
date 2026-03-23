@@ -42,8 +42,18 @@ function resolveInitTarget(
 	}
 
 	const fmt = format ?? "dir";
+	const suffix = suffixMap[fmt];
+
+	// If path already ends with the correct suffix, use it as-is
+	if (resolved.endsWith(suffix)) {
+		return {
+			outputPath: resolved,
+			ioFormat: formatToIoFormat(fmt),
+		};
+	}
+
 	return {
-		outputPath: `${resolved}${suffixMap[fmt]}`,
+		outputPath: `${resolved}${suffix}`,
 		ioFormat: formatToIoFormat(fmt),
 	};
 }
