@@ -1,3 +1,10 @@
+## [1.11.0](https://github.com/ExaDev/SysProM/compare/v1.10.2...v1.11.0) (2026-03-23)
+
+### Features
+
+* **add-node:** require decisionId when adding change nodes (INV2) ([8bd2cad](https://github.com/ExaDev/SysProM/commit/8bd2cada154ea22f70464471be7789f95b1fc8bb))
+* **add-node:** require elementId for realisations (INV10) and governedById for gates (INV8) ([bec6764](https://github.com/ExaDev/SysProM/commit/bec6764d5b19d45732afd1998fbf67f63bff3cab))
+
 ## [1.10.2](https://github.com/ExaDev/SysProM/compare/v1.10.1...v1.10.2) (2026-03-23)
 
 ### Bug Fixes
