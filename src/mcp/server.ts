@@ -18,6 +18,10 @@ import {
 	addRelationshipOp,
 	removeRelationshipOp,
 	nextIdOp,
+	inferCompletenessOp,
+	inferLifecycleOp,
+	inferImpactOp,
+	inferDerivedOp,
 } from "../operations/index.js";
 
 // Create MCP server instance
@@ -413,6 +417,103 @@ server.registerTool(
 						null,
 						2,
 					),
+				},
+			],
+		};
+	},
+);
+
+// Register infer-completeness tool
+server.registerTool(
+	"infer-completeness",
+	{
+		description:
+			"Infer completeness of nodes based on expected refinement relationships",
+		inputSchema: z.object({
+			path: z.string().describe("Path to SysProM file"),
+		}),
+	},
+	({ path }) => {
+		const { doc } = loadDocument(path);
+		const result = inferCompletenessOp({ doc });
+		return {
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(result, null, 2),
+				},
+			],
+		};
+	},
+);
+
+// Register infer-lifecycle tool
+server.registerTool(
+	"infer-lifecycle",
+	{
+		description:
+			"Infer lifecycle state for nodes based on status and lifecycle fields",
+		inputSchema: z.object({
+			path: z.string().describe("Path to SysProM file"),
+		}),
+	},
+	({ path }) => {
+		const { doc } = loadDocument(path);
+		const result = inferLifecycleOp({ doc });
+		return {
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(result, null, 2),
+				},
+			],
+		};
+	},
+);
+
+// Register infer-impact tool
+server.registerTool(
+	"infer-impact",
+	{
+		description:
+			"Infer impact from a node through the graph following impact relationships",
+		inputSchema: z.object({
+			path: z.string().describe("Path to SysProM file"),
+			startId: z.string().describe("Node ID to start impact analysis from"),
+		}),
+	},
+	({ path, startId }) => {
+		const { doc } = loadDocument(path);
+		const result = inferImpactOp({ doc, startId });
+		return {
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(result, null, 2),
+				},
+			],
+		};
+	},
+);
+
+// Register infer-derived tool
+server.registerTool(
+	"infer-derived",
+	{
+		description:
+			"Infer derived relationships from transitive closure, inverses, and composites",
+		inputSchema: z.object({
+			path: z.string().describe("Path to SysProM file"),
+		}),
+	},
+	({ path }) => {
+		const { doc } = loadDocument(path);
+		const result = inferDerivedOp({ doc });
+		return {
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(result, null, 2),
 				},
 			],
 		};
