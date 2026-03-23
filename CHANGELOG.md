@@ -1,3 +1,25 @@
+## [1.16.0](https://github.com/ExaDev/SysProM/compare/v1.15.0...v1.16.0) (2026-03-23)
+
+### Features
+
+* **api,tests:** export CHG40 operations and add bidirectional impact tests ([734a7af](https://github.com/ExaDev/SysProM/commit/734a7afda254c20f05b14f45dff59d4a9202236e))
+* **ops:** implement bidirectional impact analysis and hotspot detection (CHG40) ([dc23e3d](https://github.com/ExaDev/SysProM/commit/dc23e3d31b9269f594e997ec9eff71e41a1e2252))
+* **schema:** add ImpactPolarity enum and polarity/strength/influence for CHG40 ([b63bb32](https://github.com/ExaDev/SysProM/commit/b63bb32e117da3d23a483a3b89d243472c72450e))
+
+### Code Refactoring
+
+* **CHG40:** add CLI flags and MCP support for bidirectional impact analysis ([7788d3e](https://github.com/ExaDev/SysProM/commit/7788d3e035dbece39aa0b2a83b0a84749fc6b405))
+
+### Documentation
+
+* resolve TypeDoc warnings with module-qualified link references ([ce8ca98](https://github.com/ExaDev/SysProM/commit/ce8ca98fa5db2360cfb2a78edd14bef4a75d82ff))
+* **spm:** assign lifecycle status to changes CHG1-CHG15, CHG35-CHG38 ([f8e52f8](https://github.com/ExaDev/SysProM/commit/f8e52f8749bbbaf8582e727fcb15ef8c955e01a6))
+* **spm:** rename .spm to .SysProM, add DEC42 and CHG40 for enhanced impact analysis ([0439e39](https://github.com/ExaDev/SysProM/commit/0439e394ca0407cf25582eb0db4592e579b56013))
+
+### Tests
+
+* fix json-to-md tests to reference .SysProM.json instead of .spm.json ([6bbc561](https://github.com/ExaDev/SysProM/commit/6bbc561203de3e9f47316ee995e6a31ff4f97af9))
+
 ## [1.15.0](https://github.com/ExaDev/SysProM/compare/v1.14.0...v1.15.0) (2026-03-23)
 
 ### Features
