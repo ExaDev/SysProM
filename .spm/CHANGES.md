@@ -813,3 +813,28 @@ Check if path ends with correct suffix before appending
 Scope:
 - src/cli/commands/init.ts
 
+### CHG39 — Implement deterministic graph inference
+
+Add four inference operations (impact, completeness, lifecycle, derived) exposed via CLI subcommands, MCP tools, and programmatic API. Pure graph traversal — no LLM dependency.
+
+- Implements: [DEC41](./DECISIONS.md#dec41--add-deterministic-graph-inference)
+
+Scope:
+- src/operations/infer-impact.ts
+- src/operations/infer-completeness.ts
+- src/operations/infer-lifecycle.ts
+- src/operations/infer-derived.ts
+- src/cli/commands/infer.ts
+- src/mcp/server.ts
+
+#### Plan
+
+- [ ] Implement inferCompletenessOp with tests
+- [ ] Implement inferLifecycleOp with tests
+- [ ] Implement inferImpactOp with tests
+- [ ] Implement inferDerivedOp with tests
+- [ ] Export operations from index and public API
+- [ ] Create CLI infer command with subcommands
+- [ ] Register MCP tools for inference
+- [ ] Add infer all subcommand
+

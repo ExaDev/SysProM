@@ -874,3 +874,20 @@ Chosen: fix
 
 Rationale: Simple suffix check prevents doubling
 
+### DEC41 — Add deterministic graph inference
+
+- Must preserve:
+  - [INV1](./INVARIANTS.md#inv1--concept-independence)
+  - [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
+
+Context: SysProM has typed directed graphs but no facility to derive new knowledge from graph structure. Ouroboros provides inference via LLM-scored ambiguity and convergence metrics. We want equivalent capability without LLM dependency — pure graph traversal and structural analysis.
+
+Options:
+- OPT-A: Single inferOp with type discriminator — one operation with a type parameter selecting the analysis category
+- OPT-B: Separate operations per category — four independent operations (impact, completeness, lifecycle, derived) with distinct input/output schemas
+- OPT-C: Extend validate with inference rules — add inference findings to the existing validate operation
+
+Chosen: OPT-B
+
+Rationale: Each inference category has fundamentally different inputs (impact needs a startId; others do not) and output shapes. A union return type forces consumers to narrow on every call. Separate operations follow the existing pattern where validate, stats, trace, and query are all independent. Option C would bloat validate with unrelated concerns.
+

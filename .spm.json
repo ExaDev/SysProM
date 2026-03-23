@@ -4025,6 +4025,76 @@
 				"src/cli/commands/init.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "SysProM has typed directed graphs but no facility to derive new knowledge from graph structure. Ouroboros provides inference via LLM-scored ambiguity and convergence metrics. We want equivalent capability without LLM dependency — pure graph traversal and structural analysis.",
+			"id": "DEC41",
+			"name": "Add deterministic graph inference",
+			"options": [
+				{
+					"description": "Single inferOp with type discriminator — one operation with a type parameter selecting the analysis category",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Separate operations per category — four independent operations (impact, completeness, lifecycle, derived) with distinct input/output schemas",
+					"id": "OPT-B"
+				},
+				{
+					"description": "Extend validate with inference rules — add inference findings to the existing validate operation",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "Each inference category has fundamentally different inputs (impact needs a startId; others do not) and output shapes. A union return type forces consumers to narrow on every call. Separate operations follow the existing pattern where validate, stats, trace, and query are all independent. Option C would bloat validate with unrelated concerns.",
+			"selected": "OPT-B",
+			"type": "decision"
+		},
+		{
+			"description": "Add four inference operations (impact, completeness, lifecycle, derived) exposed via CLI subcommands, MCP tools, and programmatic API. Pure graph traversal — no LLM dependency.",
+			"id": "CHG39",
+			"name": "Implement deterministic graph inference",
+			"plan": [
+				{
+					"description": "Implement inferCompletenessOp with tests",
+					"done": false
+				},
+				{
+					"description": "Implement inferLifecycleOp with tests",
+					"done": false
+				},
+				{
+					"description": "Implement inferImpactOp with tests",
+					"done": false
+				},
+				{
+					"description": "Implement inferDerivedOp with tests",
+					"done": false
+				},
+				{
+					"description": "Export operations from index and public API",
+					"done": false
+				},
+				{
+					"description": "Create CLI infer command with subcommands",
+					"done": false
+				},
+				{
+					"description": "Register MCP tools for inference",
+					"done": false
+				},
+				{
+					"description": "Add infer all subcommand",
+					"done": false
+				}
+			],
+			"scope": [
+				"src/operations/infer-impact.ts",
+				"src/operations/infer-completeness.ts",
+				"src/operations/infer-lifecycle.ts",
+				"src/operations/infer-derived.ts",
+				"src/cli/commands/infer.ts",
+				"src/mcp/server.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5093,6 +5163,21 @@
 			"from": "CHG38",
 			"to": "DEC40",
 			"type": "implements"
+		},
+		{
+			"from": "CHG39",
+			"to": "DEC41",
+			"type": "implements"
+		},
+		{
+			"from": "DEC41",
+			"to": "INV1",
+			"type": "must_preserve"
+		},
+		{
+			"from": "DEC41",
+			"to": "INV2",
+			"type": "must_preserve"
 		}
 	]
 }
