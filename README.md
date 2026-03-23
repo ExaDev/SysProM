@@ -52,13 +52,20 @@ sysprom update node D1 --status deprecated
 sysprom update add-rel D1 affects EL5
 sysprom update remove-rel D1 affects EL5
 sysprom update meta --fields version=2
+
+# Inference operations (deterministic graph analysis)
+sysprom infer completeness              # Score node completeness (0-1)
+sysprom infer lifecycle                 # Infer lifecycle phases
+sysprom infer impact I1                 # Trace impact from node
+sysprom infer derived                   # Compute transitive closure
+sysprom infer all                       # Run all analyses
 ```
 
 All commands auto-detect the document — they search the current directory for `.SysProM.json`, `.SysProM.md`, or `.SysProM/` (in that priority order), then fall back to `.spm.json`, `.spm.md`, or `.spm/`. Use `--path` to specify an explicit path. Note: `spm` is an alias for `sysprom` for backwards compatibility.
 
 ## MCP Server
 
-SysProM includes an MCP (Model Context Protocol) server exposing 11 tools over stdio transport. Any MCP-compatible agent — Cursor, Windsurf, VS Code Copilot, Cline, or custom clients — can use it.
+SysProM includes an MCP (Model Context Protocol) server exposing 15 tools over stdio transport. Any MCP-compatible agent — Cursor, Windsurf, VS Code Copilot, Cline, or custom clients — can use it.
 
 ### Configuration
 
@@ -96,6 +103,10 @@ sysprom mcp   # starts the MCP server on stdio
 | `update-node` | Update fields on an existing node |
 | `add-relationship` | Add a relationship between nodes |
 | `remove-relationship` | Remove a relationship |
+| `infer-completeness` | Score node completeness (0-1) based on refinement relationships |
+| `infer-lifecycle` | Infer lifecycle phase from status and lifecycle fields |
+| `infer-impact` | Trace impact propagation from a starting node |
+| `infer-derived` | Compute transitive closure and inverse relationships |
 
 All tools accept a `path` parameter to specify the SysProM document location.
 
@@ -133,6 +144,12 @@ import {
   addRelationship,
   removeRelationship,
   updateMetadata,
+
+  // Inference
+  inferCompletenessOp,
+  inferLifecycleOp,
+  inferImpactOp,
+  inferDerivedOp,
 
   // File I/O
   loadDocument,
@@ -212,7 +229,7 @@ SysProM models systems as directed graphs across abstraction layers — intent, 
 <tr><td><a href="https://github.com/Priivacy-ai/spec-kitty">Spec Kitty</a></td><td>✅</td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
 <tr><td><a href="https://github.com/shotgun-sh/shotgun">Shotgun</a></td><td>✅</td><td>🔶</td><td>🔶</td><td></td><td></td><td>🔶</td><td></td><td>🔶</td><td></td><td></td><td>🔶</td><td>🔶</td><td>✅</td><td>🔶</td></tr>
 <tr><td><a href="https://github.com/obra/superpowers">Superpowers</a></td><td>✅</td><td>🔶</td><td>🔶</td><td>🔶</td><td></td><td>🔶</td><td>✅</td><td>🔶</td><td></td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
-<tr><td><strong>SysProM</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td></td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td><strong>SysProM</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>🔶</td><td>✅</td><td>✅</td><td>✅</td></tr>
 </tbody>
 </table>
 

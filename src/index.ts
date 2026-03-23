@@ -75,6 +75,10 @@ export {
 	speckitExportOp,
 	speckitSyncOp,
 	speckitDiffOp,
+	inferCompletenessOp,
+	inferLifecycleOp,
+	inferImpactOp,
+	inferDerivedOp,
 	type RemoveResult,
 	type ValidationResult,
 	type DocumentStats,
@@ -87,6 +91,10 @@ export {
 	type GateResultOutput,
 	type SyncResult,
 	type DiffResult,
+	type CompletenessOutput,
+	type LifecycleOutput,
+	type ImpactOutput,
+	type DerivedOutput,
 } from "./operations/index.js";
 
 // Conversion
