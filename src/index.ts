@@ -14,6 +14,7 @@ export {
 	NodeType,
 	NodeStatus,
 	RelationshipType,
+	ImpactPolarity,
 	Text,
 	Option,
 	Operation,
@@ -25,6 +26,7 @@ export {
 	NODE_LABEL_TO_TYPE,
 	RELATIONSHIP_TYPE_LABELS,
 	RELATIONSHIP_LABEL_TO_TYPE,
+	IMPACT_POLARITY_LABELS,
 	EXTERNAL_REFERENCE_ROLE_LABELS,
 	EXTERNAL_REFERENCE_LABEL_TO_ROLE,
 	NODE_STATUSES,
@@ -78,6 +80,7 @@ export {
 	inferCompletenessOp,
 	inferLifecycleOp,
 	inferImpactOp,
+	impactSummaryOp,
 	inferDerivedOp,
 	type RemoveResult,
 	type ValidationResult,
@@ -94,6 +97,7 @@ export {
 	type CompletenessOutput,
 	type LifecycleOutput,
 	type ImpactOutput,
+	type ImpactSummaryOutput,
 	type DerivedOutput,
 } from "./operations/index.js";
 

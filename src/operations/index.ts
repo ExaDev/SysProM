@@ -75,8 +75,10 @@ export {
 } from "./infer-lifecycle.js";
 export {
 	inferImpactOp,
+	impactSummaryOp,
 	type ImpactNode,
 	type ImpactOutput,
+	type ImpactSummaryOutput,
 } from "./infer-impact.js";
 export {
 	inferDerivedOp,

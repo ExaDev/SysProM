@@ -314,6 +314,30 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		from: ["decision", "mode"],
 		to: ["capability", "stage"],
 	},
+
+	// Influence — soft dependency between decisions and across nodes (CHG40)
+	influence: {
+		from: [
+			"intent",
+			"concept",
+			"capability",
+			"element",
+			"realisation",
+			"decision",
+			"change",
+			"stage",
+		],
+		to: [
+			"intent",
+			"concept",
+			"capability",
+			"element",
+			"realisation",
+			"decision",
+			"change",
+			"stage",
+		],
+	},
 };
 
 /**

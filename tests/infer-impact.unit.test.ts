@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { inferImpactOp } from "../src/operations/infer-impact.js";
+import { inferImpactOp, impactSummaryOp } from "../src/operations/infer-impact.js";
 import type { SysProMDocument } from "../src/schema.js";
 
 describe("inferImpactOp", () => {
@@ -152,5 +152,162 @@ describe("inferImpactOp", () => {
 		assert.strictEqual(result.impactedNodes[1].distance, 1);
 		assert.strictEqual(result.impactedNodes[2].id, "ELEM3");
 		assert.strictEqual(result.impactedNodes[2].distance, 2);
+	});
+
+	// CHG40: Bidirectional traversal and polarity support
+	describe("bidirectional traversal (CHG40)", () => {
+		it("finds incoming impacts with direction=incoming", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "DEC1", type: "decision", name: "Decision" },
+					{ id: "ELEM1", type: "element", name: "Element" },
+				],
+				relationships: [{ from: "ELEM1", to: "DEC1", type: "depends_on" }],
+			};
+
+			const result = inferImpactOp({
+				doc,
+				startId: "DEC1",
+				direction: "incoming",
+			});
+
+			assert.strictEqual(result.impactedNodes.length, 1);
+			assert.strictEqual(result.impactedNodes[0].id, "ELEM1");
+		});
+
+		it("finds both incoming and outgoing with direction=bidirectional", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "ELEM1", type: "element", name: "Element 1" },
+					{ id: "ELEM2", type: "element", name: "Element 2" },
+					{ id: "ELEM3", type: "element", name: "Element 3" },
+				],
+				relationships: [
+					{ from: "ELEM1", to: "ELEM2", type: "affects" },
+					{ from: "ELEM3", to: "ELEM2", type: "depends_on" },
+				],
+			};
+
+			const result = inferImpactOp({
+				doc,
+				startId: "ELEM2",
+				direction: "bidirectional",
+			});
+
+			const ids = result.impactedNodes.map((n) => n.id).sort();
+			assert.deepStrictEqual(ids, ["ELEM1", "ELEM3"]);
+		});
+
+		it("respects maxDepth limit with outgoing impacts", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "ELEM1", type: "element", name: "Element 1" },
+					{ id: "ELEM2", type: "element", name: "Element 2" },
+					{ id: "ELEM3", type: "element", name: "Element 3" },
+					{ id: "ELEM4", type: "element", name: "Element 4" },
+				],
+				relationships: [
+					{ from: "ELEM1", to: "ELEM2", type: "affects" },
+					{ from: "ELEM2", to: "ELEM3", type: "affects" },
+					{ from: "ELEM3", to: "ELEM4", type: "affects" },
+				],
+			};
+
+			const result = inferImpactOp({
+				doc,
+				startId: "ELEM1",
+				maxDepth: 2,
+			});
+
+			const ids = result.impactedNodes.map((n) => n.id);
+			assert.ok(ids.includes("ELEM2"));
+			assert.ok(ids.includes("ELEM3"));
+			assert.ok(!ids.includes("ELEM4"));
+		});
+
+		it("handles polarity on relationships (positive/negative)", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "DEC1", type: "decision", name: "Decision" },
+					{ id: "ELEM1", type: "element", name: "Element" },
+				],
+				relationships: [
+					{
+						from: "DEC1",
+						to: "ELEM1",
+						type: "affects",
+						polarity: "negative",
+					},
+				],
+			};
+
+			const result = inferImpactOp({ doc, startId: "DEC1" });
+
+			assert.strictEqual(result.impactedNodes.length, 1);
+			assert.strictEqual(result.impactedNodes[0].polarity, "negative");
+		});
+
+		it("recognises influence relationship type", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "DEC1", type: "decision", name: "Decision 1" },
+					{ id: "DEC2", type: "decision", name: "Decision 2" },
+				],
+				relationships: [{ from: "DEC1", to: "DEC2", type: "influence" }],
+			};
+
+			const result = inferImpactOp({ doc, startId: "DEC1" });
+
+			assert.strictEqual(result.impactedNodes.length, 1);
+			assert.strictEqual(result.impactedNodes[0].id, "DEC2");
+		});
+	});
+
+	describe("impactSummaryOp (CHG40 hotspot analysis)", () => {
+		it("identifies hotspots — nodes with high impact", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "ELEM1", type: "element", name: "Element 1" },
+					{ id: "ELEM2", type: "element", name: "Element 2" },
+					{ id: "ELEM3", type: "element", name: "Element 3" },
+					{ id: "ELEM4", type: "element", name: "Element 4" },
+				],
+				relationships: [
+					{ from: "ELEM1", to: "ELEM2", type: "affects" },
+					{ from: "ELEM1", to: "ELEM3", type: "affects" },
+					{ from: "ELEM2", to: "ELEM4", type: "affects" },
+					{ from: "ELEM3", to: "ELEM4", type: "affects" },
+				],
+			};
+
+			const result = impactSummaryOp({ doc });
+
+			// ELEM4 should be top hotspot (affected by ELEM2 and ELEM3)
+			// ELEM2 and ELEM3 should be secondary (affected by ELEM1)
+			assert.ok(result.hotspots.length > 0);
+			const hotspotIds = result.hotspots.map((h: any) => h.nodeId);
+			assert.ok(hotspotIds.includes("ELEM4"));
+		});
+
+		it("returns summary across entire document", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "ELEM1", type: "element", name: "Element 1" },
+					{ id: "ELEM2", type: "element", name: "Element 2" },
+					{ id: "ELEM3", type: "element", name: "Element 3" },
+				],
+				relationships: [
+					{ from: "ELEM1", to: "ELEM2", type: "affects" },
+					{ from: "ELEM1", to: "ELEM3", type: "affects" },
+				],
+			};
+
+			const result = impactSummaryOp({ doc });
+
+			assert.ok(result.summary);
+			assert.ok(result.summary.totalNodes >= 0);
+			assert.ok(result.summary.totalImpactedNodes >= 0);
+			assert.ok(result.summary.averageDegree >= 0);
+		});
 	});
 });
