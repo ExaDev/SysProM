@@ -17,5 +17,6 @@
     "traceability"
   ],
   "skills": "./.claude/skills/",
+  "commands": "./.claude/commands/",
   "mcpServers": "./.mcp.json"
 }
