@@ -20,10 +20,14 @@ Show all tasks in a change node, including their status, description, and comple
    - This change must have tasks defined
 
 2. List tasks in the change:
-   !`spm task list $0`
+   ```bash
+   spm task list <arg1>
+   ```
 
 3. Or show with progress:
-   !`spm task list $0 --progress`
+   ```bash
+   spm task list <arg1> --progress
+   ```
 
 ## Output
 

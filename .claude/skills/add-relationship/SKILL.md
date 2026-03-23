@@ -23,7 +23,9 @@ Create a directed relationship between two nodes in the SysProM document. Relati
    - Relationship type (what is the connection?)
 
 2. Create the relationship:
-   !`spm add-relationship $0 $1 $2`
+   ```bash
+   spm add-relationship <arg1> <arg2> <arg3>
+   ```
 
 ## Common Relationship Types
 

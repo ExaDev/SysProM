@@ -16,7 +16,9 @@ None — operates on the current document.
 ## Steps
 
 1. Validate the document:
-   !`spm validate`
+   ```bash
+   spm validate
+   ```
 
 2. Review any issues reported:
    - Missing or broken relationships

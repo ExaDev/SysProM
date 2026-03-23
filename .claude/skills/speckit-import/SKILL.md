@@ -21,10 +21,14 @@ Import features from Spec-Kit format (GitHub Spec-Kit directories) into SysProM 
    - Parent SysProM node (optional capability or concept)
 
 2. Import Spec-Kit features:
-   !`spm speckit-import $0`
+   ```bash
+   spm speckit-import <arg1>
+   ```
 
 3. Or import with parent node:
-   !`spm speckit-import $0 --parent $1`
+   ```bash
+   spm speckit-import <arg1> --parent <arg2>
+   ```
 
 ## Mapping
 

@@ -21,10 +21,14 @@ Export SysProM capability or concept nodes to Spec-Kit format for use with GitHu
    - All related nodes will be included
 
 2. Export to Spec-Kit format:
-   !`spm speckit-export $0 --output spec-kit/`
+   ```bash
+   spm speckit-export <arg1> --output spec-kit/
+   ```
 
 3. Or export single node:
-   !`spm speckit-export C1 --output spec-kit/features/`
+   ```bash
+   spm speckit-export C1 --output spec-kit/features/
+   ```
 
 ## Mapping
 

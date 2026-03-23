@@ -24,7 +24,9 @@ Delete a directed relationship between two nodes in the SysProM document. This i
    - Relationship type
 
 2. Remove the relationship:
-   !`spm remove-relationship $0 $1 $2`
+   ```bash
+   spm remove-relationship <arg1> <arg2> <arg3>
+   ```
 
 ## Warnings
 

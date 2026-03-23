@@ -24,7 +24,9 @@ Create a new change in the SysProM document. Changes represent modifications to 
    - Status (proposed, defined, introduced, complete)
 
 2. Create the change node:
-   !`spm add change --id $0 --name "$1" --description "$2" --scope "$3" --operations "$4" --status "$5"`
+   ```bash
+   spm add change --id <id> --name "<name>" --description "<description>" --scope "<scope>" --operations "<operations>" --status "<status>"
+   ```
 
 3. Optionally add task tracking:
    - Use `spm task add` to add tasks to the change

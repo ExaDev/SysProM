@@ -20,10 +20,14 @@ Trace the refinement chain from a node through abstraction layers, showing how a
    - Understand the layer it belongs to
 
 2. Trace the refinement chain:
-   !`spm query trace $0`
+   ```bash
+   spm query trace <arg1>
+   ```
 
 3. Trace in reverse (what refines this node):
-   !`spm query trace $0 --reverse`
+   ```bash
+   spm query trace <arg1> --reverse
+   ```
 
 ## Output
 

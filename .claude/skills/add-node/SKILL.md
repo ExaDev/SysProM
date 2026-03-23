@@ -23,7 +23,9 @@ Create a new node of any type in the SysProM document. Use this when you need to
    - Description of what it is and why it matters
 
 2. Create the node:
-   !`spm add node --type $0 --id $1 --name "$2" --description "$3"`
+   ```bash
+   spm add node --type <arg1> --id <arg2> --name "<arg3>" --description "<arg4>"
+   ```
 
 3. Link relationships:
    - Use `add-relationship` to connect this node to other nodes

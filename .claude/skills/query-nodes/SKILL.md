@@ -21,16 +21,24 @@ Search and list nodes in the SysProM document using various filters and criteria
    - Nodes with a specific status?
 
 2. Query nodes by type:
-   !`spm query nodes --type decision`
+   ```bash
+   spm query nodes --type decision
+   ```
 
 3. Or query a specific node by ID:
-   !`spm query node $0`
+   ```bash
+   spm query node <arg1>
+   ```
 
 4. Or search by status:
-   !`spm query nodes --status proposed`
+   ```bash
+   spm query nodes --status proposed
+   ```
 
 5. Or search by text:
-   !`spm query nodes --text "authentication"`
+   ```bash
+   spm query nodes --text "authentication"
+   ```
 
 ## Query Examples
 

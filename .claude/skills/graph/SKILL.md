@@ -16,16 +16,24 @@ Generate a visual graph of the SysProM document in Mermaid or DOT format, with o
 ## Steps
 
 1. Generate full graph in Mermaid format:
-   !`spm graph --format mermaid`
+   ```bash
+   spm graph --format mermaid
+   ```
 
 2. Or generate in DOT format:
-   !`spm graph --format dot`
+   ```bash
+   spm graph --format dot
+   ```
 
 3. Or filter by node type:
-   !`spm graph --format mermaid --type decision,invariant`
+   ```bash
+   spm graph --format mermaid --type decision,invariant
+   ```
 
 4. Or filter by specific nodes:
-   !`spm graph --format mermaid --nodes D1,D2,INV5`
+   ```bash
+   spm graph --format mermaid --nodes D1,D2,INV5
+   ```
 
 ## Output Formats
 

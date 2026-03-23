@@ -19,10 +19,14 @@ Show the status and progress of a plan within a change node. Displays current ph
    - Change node ID (e.g., C1, C42)
 
 2. Show plan status:
-   !`spm plan status $0`
+   ```bash
+   spm plan status <arg1>
+   ```
 
 3. Or show detailed progress:
-   !`spm plan status $0 --detailed`
+   ```bash
+   spm plan status <arg1> --detailed
+   ```
 
 ## Output
 

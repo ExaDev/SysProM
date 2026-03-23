@@ -23,13 +23,19 @@ Modify an existing node's properties in the SysProM document. Update description
    - Optional: lifecycle key-value pairs (e.g., phase=introduced, date=2026-03-22)
 
 2. Update the node field:
-   !`spm update node --id $0 --description "$1"`
+   ```bash
+   spm update node --id <arg1> --description "<arg2>"
+   ```
 
 3. Or update status:
-   !`spm update node --id $0 --status $1`
+   ```bash
+   spm update node --id <arg1> --status <arg2>
+   ```
 
 4. Or update lifecycle:
-   !`spm update node --id $0 --lifecycle phase=introduced --lifecycle date=2026-03-22`
+   ```bash
+   spm update node --id <arg1> --lifecycle phase=introduced --lifecycle date=2026-03-22
+   ```
 
 ## Status Values
 

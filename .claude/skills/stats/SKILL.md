@@ -16,7 +16,9 @@ None — operates on the current document.
 ## Steps
 
 1. Get document statistics:
-   !`spm stats`
+   ```bash
+   spm stats
+   ```
 
 2. Review the breakdown:
    - Total nodes and relationships

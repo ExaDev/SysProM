@@ -21,7 +21,9 @@ Synchronise SysProM provenance records bidirectionally with Spec-Kit specificati
    - Spec-Kit directory: `./spec-kit/`
 
 2. Sync SysProM and Spec-Kit:
-   !`spm speckit-sync $0 $1`
+   ```bash
+   spm speckit-sync <arg1> <arg2>
+   ```
 
 3. Or sync with specific strategy:
    - `--prefer-sysprom` — SysProM is source of truth
@@ -29,7 +31,9 @@ Synchronise SysProM provenance records bidirectionally with Spec-Kit specificati
    - `--report` — Report differences without modifying
 
 4. Or perform dry-run:
-   !`spm speckit-sync $0 $1 --prefer-sysprom --dry-run`
+   ```bash
+   spm speckit-sync <arg1> <arg2> --prefer-sysprom --dry-run
+   ```
 
 ## Resolution Strategies
 

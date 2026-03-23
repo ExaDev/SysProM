@@ -23,7 +23,9 @@ Create a new invariant in the SysProM document. Invariants define rules and cons
    - Consequence if violated
 
 2. Create the invariant node:
-   !`spm add invariant --id $0 --name "$1" --description "$2" --conditions "$3" --consequence "$4"`
+   ```bash
+   spm add invariant --id <arg1> --name "<arg2>" --description "<arg3>" --conditions "<arg4>" --consequence "<arg5>"
+   ```
 
 3. Link to decisions (use `add-relationship`):
    - Decisions that preserve this invariant should link via `must_preserve` relationship

@@ -24,7 +24,9 @@ Create a new decision in the SysProM document. Decisions capture choices made an
    - Rationale for the selection
 
 2. Create the decision node:
-   !`spm add decision --id $0 --name "$1" --context "$2" --option "$3" --selected "$4" --rationale "$5"`
+   ```bash
+   spm add decision --id <id> --name "<name>" --context "<context>" --option "<option>" --selected "<selected>" --rationale "<rationale>"
+   ```
 
 3. Optionally link to invariants (relationships added separately with `add-relationship`):
    - Use `must_preserve` relationship to link critical invariants that must hold

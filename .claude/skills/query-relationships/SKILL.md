@@ -21,13 +21,19 @@ Search and list relationships in the SysProM document using various filters and 
    - Relationships affecting a specific target?
 
 2. Query all relationships from a node:
-   !`spm query rels --from $0`
+   ```bash
+   spm query rels --from <arg1>
+   ```
 
 3. Or query relationships to a target:
-   !`spm query rels --to $0`
+   ```bash
+   spm query rels --to <arg1>
+   ```
 
 4. Or query by relationship type:
-   !`spm query rels --type must_preserve`
+   ```bash
+   spm query rels --type must_preserve
+   ```
 
 ## Query Examples
 

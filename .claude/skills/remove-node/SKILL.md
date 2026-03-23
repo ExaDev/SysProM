@@ -22,7 +22,9 @@ Delete a node from the SysProM document. This is a destructive operation that re
    - Consider impact on related nodes
 
 2. Remove the node with default settings:
-   !`spm remove $0`
+   ```bash
+   spm remove <id>
+   ```
 
 3. Or remove with options:
    - `--hard` — Physical removal (cannot be recovered)

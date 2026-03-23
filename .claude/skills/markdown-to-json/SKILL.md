@@ -21,10 +21,14 @@ Convert a SysProM document from Markdown format (`.spm/` folder or `.spm.md` fil
    - Destination: `.spm.json`
 
 2. Convert multi-file Markdown to JSON:
-   !`spm md2json .spm .spm.json`
+   ```bash
+   spm md2json .spm .spm.json
+   ```
 
 3. Or convert single-file Markdown to JSON:
-   !`spm md2json .spm.md .spm.json`
+   ```bash
+   spm md2json .spm.md .spm.json
+   ```
 
 ## Output Structure
 

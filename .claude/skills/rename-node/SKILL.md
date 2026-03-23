@@ -24,10 +24,14 @@ Change a node's ID and automatically update all references to it throughout the 
    - Consider impact on dependent nodes
 
 2. Rename the node:
-   !`spm rename $0 $1`
+   ```bash
+   spm update node <old-id> --id <new-id>
+   ```
 
 3. Verify the change:
-   !`spm query node $1`
+   ```bash
+   spm query node <arg2>
+   ```
 
 ## Constraints
 

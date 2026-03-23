@@ -20,10 +20,14 @@ Add a new task to a change node. Tasks represent work items that must be complet
    - Change node ID (e.g., C1, C42)
 
 2. Add a new task:
-   !`spm task add $0 "$1"`
+   ```bash
+   spm task add <arg1> "<arg2>"
+   ```
 
 3. Or add with assignment:
-   !`spm task add $0 "$1" --assignee john`
+   ```bash
+   spm task add <arg1> "<arg2>" --assignee john
+   ```
 
 ## Output
 

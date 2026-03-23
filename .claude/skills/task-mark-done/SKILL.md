@@ -22,10 +22,14 @@ Mark a task as completed in a change node. This updates the task status and trac
    - Task ID (e.g., T1, T5)
 
 2. Mark task as done:
-   !`spm task mark-done $0 $1`
+   ```bash
+   spm task mark-done <change-id> <task-index>
+   ```
 
 3. Or mark with completion note:
-   !`spm task mark-done $0 $1 --note "Implemented and tested"`
+   ```bash
+   spm task mark-done <arg1> <arg2> --note "Implemented and tested"
+   ```
 
 ## Output
 

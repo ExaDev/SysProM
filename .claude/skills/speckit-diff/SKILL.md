@@ -21,10 +21,14 @@ Compare SysProM provenance records with Spec-Kit specifications to identify misa
    - Spec-Kit directory: `./spec-kit/`
 
 2. Show differences:
-   !`spm speckit-diff $0 $1`
+   ```bash
+   spm speckit-diff <arg1> <arg2>
+   ```
 
 3. Or show detailed diff:
-   !`spm speckit-diff $0 $1 --detailed`
+   ```bash
+   spm speckit-diff <arg1> <arg2> --detailed
+   ```
 
 ## Output
 

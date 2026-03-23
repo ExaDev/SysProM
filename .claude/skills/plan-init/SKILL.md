@@ -21,10 +21,14 @@ Create a structured plan within a change node. Plans define phases, gates, and p
    - What is being planned?
 
 2. Initialise a new plan:
-   !`spm plan init $0 "$1"`
+   ```bash
+   spm plan init <arg1> "<arg2>"
+   ```
 
 3. Or initialise with phases:
-   !`spm plan init $0 "$1" --phases "Design,Implementation,Testing,Deployment"`
+   ```bash
+   spm plan init <arg1> "<arg2>" --phases "Design,Implementation,Testing,Deployment"
+   ```
 
 ## Plan Structure
 

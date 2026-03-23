@@ -23,10 +23,14 @@ Create a new SysProM document with metadata and directory structure. This sets u
    - Initial version
 
 2. Create a new document in Markdown format:
-   !`spm init --path .spm --title "$0" --author "$1" --description "$2"`
+   ```bash
+   spm init --path .spm --title "<arg1>" --author "<arg2>" --description "<arg3>"
+   ```
 
 3. Or create in JSON format:
-   !`spm init --path .spm.json --format json --title "$0"`
+   ```bash
+   spm init --path .spm.json --format json --title "<arg1>"
+   ```
 
 4. Review the generated structure:
    - `.spm/` directory with typed markdown files, or

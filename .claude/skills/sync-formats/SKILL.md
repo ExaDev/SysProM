@@ -22,7 +22,9 @@ Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representa
    - Markdown folder: `.spm/`
 
 2. Sync with default strategy (JSON is source of truth):
-   !`spm sync $0 $1`
+   ```bash
+   spm sync <arg1> <arg2>
+   ```
 
 3. Or sync with explicit strategy:
    - `--prefer-json` — JSON wins on conflicts
@@ -30,7 +32,9 @@ Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representa
    - `--report` — Report conflicts without resolving
 
 4. Or perform dry-run:
-   !`spm sync $0 $1 --prefer-json --dry-run`
+   ```bash
+   spm sync <arg1> <arg2> --prefer-json --dry-run
+   ```
 
 ## Conflict Resolution Strategies
 
