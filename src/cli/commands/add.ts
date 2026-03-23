@@ -17,6 +17,10 @@ const optsSchema = mutationOpts.extend({
 	rationale: z.string().optional().describe("Decision rationale"),
 	scope: z.array(z.string()).optional().describe("Change scope (repeatable)"),
 	selected: z.string().optional().describe("Selected option ID"),
+	decision: z
+		.string()
+		.optional()
+		.describe("Decision ID this change implements (required for change nodes)"),
 	option: z
 		.array(z.string())
 		.optional()
@@ -96,7 +100,7 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 		}
 
 		try {
-			const newDoc = addNodeOp({ doc, node });
+			const newDoc = addNodeOp({ doc, node, decisionId: opts.decision });
 
 			persistDoc(newDoc, loaded, opts);
 
