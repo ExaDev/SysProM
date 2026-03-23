@@ -346,7 +346,8 @@ const SysProMDocumentSchema = z
 			"JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
 	});
 
-const NodeSchema = z
+/** Base node object schema without ID-prefix refinement. Supports .partial(). */
+export const NodeBase = z
 	.looseObject({
 		id: z.string().describe("Unique identifier for this node."),
 		type: NodeType,
@@ -417,6 +418,19 @@ const NodeSchema = z
 	})
 	.describe("A uniquely identifiable entity within the system.");
 
+const NodeSchema = NodeBase.superRefine((node, ctx) => {
+	const prefix = NODE_ID_PREFIX[node.type as string];
+	if (!prefix) return; // Unknown type — skip validation
+	const pattern = new RegExp(`^${prefix}\\d+(-[A-Z][A-Z0-9_]*)*$`);
+	if (!pattern.test(node.id)) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			path: ["id"],
+			message: `Node ID "${node.id}" does not match required pattern for type "${node.type}": expected ${prefix}<number> with optional -SUFFIX segments (e.g. ${prefix}1, ${prefix}1-MY-LABEL)`,
+		});
+	}
+});
+
 // Attach .is() type guards after both schemas are declared
 
 /**
@@ -464,13 +478,13 @@ export const NODE_FILE_MAP: Record<string, string[]> = {
 
 /** Conventional ID prefix for each node type. */
 export const NODE_ID_PREFIX: Record<string, string> = {
-	intent: "I",
-	concept: "CN",
-	capability: "CP",
-	element: "EL",
-	realisation: "R",
+	intent: "INT",
+	concept: "CON",
+	capability: "CAP",
+	element: "ELEM",
+	realisation: "REAL",
 	invariant: "INV",
-	principle: "PR",
+	principle: "PRIN",
 	policy: "POL",
 	protocol: "PROT",
 	stage: "STG",
@@ -478,11 +492,11 @@ export const NODE_ID_PREFIX: Record<string, string> = {
 	gate: "GATE",
 	mode: "MODE",
 	artefact: "ART",
-	artefact_flow: "AF",
-	decision: "D",
-	change: "CH",
-	view: "V",
-	milestone: "MS",
+	artefact_flow: "FLOW",
+	decision: "DEC",
+	change: "CHG",
+	view: "VIEW",
+	milestone: "MILE",
 	version: "VER",
 };
 
