@@ -95,31 +95,31 @@ External resources do not point back into the graph.
 
 A conformant system MUST define nodes with types.
 
-- Constrained by: CON8
+- Constrained by: [CON8](./INTENT.md#con8--conformance)
 
 ### INV29 — Conformance — Relationships
 
 A conformant system MUST define relationships between nodes.
 
-- Constrained by: CON8
+- Constrained by: [CON8](./INTENT.md#con8--conformance)
 
 ### INV30 — Conformance — Lifecycle States
 
 A conformant system MUST define lifecycle states for decisions and changes.
 
-- Constrained by: CON8
+- Constrained by: [CON8](./INTENT.md#con8--conformance)
 
 ### INV31 — Conformance — At Least One Invariant
 
 A conformant system MUST define at least one invariant.
 
-- Constrained by: CON8
+- Constrained by: [CON8](./INTENT.md#con8--conformance)
 
 ### INV32 — Conformance — Traceability
 
 A conformant system MUST support traceability across abstraction layers.
 
-- Constrained by: CON8
+- Constrained by: [CON8](./INTENT.md#con8--conformance)
 
 ### INV21 — Text Field Duality
 
@@ -181,37 +181,37 @@ What exists now and how it got there are recorded separately.
 
 When removing a node from active use, mark it as deprecated rather than deleting it.
 
-- Governed by: INV5
+- Governed by: [INV5](#inv5--append-only-history)
 
 ### POL2 — Decisions Must Record Alternatives
 
 A decision SHOULD list the alternatives considered, not only the selected option.
 
-- Governed by: PRIN2
+- Governed by: [PRIN2](#prin2--decisions-are-more-important-than-documents)
 
 ### POL3 — Changes Must Define Scope
 
 A change SHOULD explicitly state which nodes it affects and which it does not.
 
-- Governed by: INV3
+- Governed by: [INV3](#inv3--invariant-preservation)
 
 ### POL4 — Capabilities Should Refine Concepts
 
 Capability nodes SHOULD refine concept nodes.
 
-- Governed by: INV9
+- Governed by: [INV9](#inv9--layer-direction)
 
 ### POL5 — Elements Should Realise Capabilities
 
 Element nodes SHOULD realise capability nodes.
 
-- Governed by: INV9
+- Governed by: [INV9](#inv9--layer-direction)
 
 ### POL6 — Prefer Internalisation for Portability
 
 When portability matters, the relevant content from an external resource SHOULD be captured directly within a node so the document set is self-contained.
 
-- Governed by: CON7
+- Governed by: [CON7](./INTENT.md#con7--external-resource-handling)
 
 ### POL7 — Security — Node Identity Integrity
 
@@ -231,14 +231,14 @@ The root entry point MUST be identifiable as a SysProM document.
 Valid filenames include SysProM.md, SYSPROM.md, SPM.md, and README.spm.md.
 Alternatively, front matter containing doc_type: sysprom is sufficient.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL11 — Root Entry Point Location
 
 A SysProM document set MAY live at any location.
 Valid locations include: repository root (./SysProM.md), dedicated folder (./SysProM/README.md), docs directory (./docs/SysProM.md), or any other reasonable path.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL12 — Multi-Document Hub
 
@@ -246,49 +246,49 @@ When a system is described across multiple files, a hub document (typically READ
 Separate files per concern: INTENT.md, INVARIANTS.md, STATE.md, DECISIONS.md, CHANGES.md.
 No document is mandatory.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL13 — Single-File Node Extension
 
 A node represented as a single file SHOULD use the .spm.md extension.
 Filename SHOULD include node ID and MAY include name: F1-sync.spm.md (preferred), F1.spm.md, or sync.spm.md.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL14 — Folder Node Naming
 
 A node represented as a folder SHOULD be named using the node ID and name: F1-sync/ (preferred), F1/, or sync/.
 The folder MUST contain at least a README. md.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL15 — Grouping Folders
 
 Node folders MAY be grouped under intermediate directories by type (e. g. features/, components/).
 Grouping folders are organisational and do not represent nodes.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL16 — Parent Linking Implicit
 
 Parent-child relationships between nodes are implicit from the folder hierarchy.
 Explicit parent references in frontmatter are not required.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL17 — Relationship Notation Flexibility
 
 Relationships MAY be expressed as labelled lists, arrow chains, tables, nested lists, or mermaid diagrams.
 Formats may be mixed. The choice is a presentation concern.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL18 — Frontmatter Is Metadata Only
 
 Front matter defines document-level metadata only (title, doc_type, scope, status, version).
 Node-level data belongs in the document body.
 
-- Part of: ELEM8
+- Part of: [ELEM8](./STATE.md#elem8--file-representation)
 
 ### POL19 — README Links Only to Present Files
 

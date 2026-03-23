@@ -12,9 +12,9 @@ doc_type: "changes"
 Establishes the core domain model with layered abstraction, decisions, changes, and invariants.
 
 - Affects:
-  - DEC1
-  - DEC2
-  - DEC7
+  - [DEC1](./DECISIONS.md#dec1--separate-domain-from-process-from-evolution)
+  - [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
+  - [DEC7](./DECISIONS.md#dec7--append-only-history)
 
 Scope:
 - INT1
@@ -59,8 +59,8 @@ Operations:
 Extends the model with process, artefact, and projection node families.
 
 - Affects:
-  - DEC3
-  - DEC4
+  - [DEC3](./DECISIONS.md#dec3--distinguish-invariants-from-principles-from-policies)
+  - [DEC4](./DECISIONS.md#dec4--add-process-modelling)
 
 Scope:
 - CON5
@@ -89,8 +89,8 @@ Operations:
 Defines how SysProM may be encoded in files, including single-document, multi-document, and recursive folder forms.
 
 - Affects:
-  - DEC5
-  - DEC6
+  - [DEC5](./DECISIONS.md#dec5--format-agnostic-with-markdown-as-primary-representation)
+  - [DEC6](./DECISIONS.md#dec6--recursive-composition-using-same-conventions)
 
 Scope:
 - CON6
@@ -133,9 +133,9 @@ Operations:
 Adds the external reference and internalisation mechanism with typed roles.
 
 - Affects:
-  - DEC8
-  - DEC4
-  - DEC2
+  - [DEC8](./DECISIONS.md#dec8--support-external-resources-via-reference-and-internalisation)
+  - [DEC4](./DECISIONS.md#dec4--add-process-modelling)
+  - [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
 
 Scope:
 - CON7
@@ -160,7 +160,7 @@ Operations:
 
 Adds the decision, change, and node lifecycle state machines as protocols with stages and ordering.
 
-- Affects: DEC4
+- Affects: [DEC4](./DECISIONS.md#dec4--add-process-modelling)
 
 Scope:
 - PROT1
@@ -182,7 +182,7 @@ Operations:
 
 Adds conformance requirements, missing invariants, security and extensibility policies, non-linear evolution capabilities, and complete node/relationship type vocabularies to make the JSON self-contained.
 
-- Affects: DEC2
+- Affects: [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
 
 Scope:
 - INV28
@@ -226,7 +226,7 @@ Operations:
 Adds support for text fields (description, context, rationale, internalised) to accept either a string or an array of strings.
 Updates the JSON schema, Zod definitions, and specification.
 
-- Affects: DEC9
+- Affects: [DEC9](./DECISIONS.md#dec9--allow-array-of-lines-for-text-fields)
 
 Scope:
 - INV21
@@ -250,7 +250,7 @@ Replaces open z.string() types with z.enum() for node types, statuses, relations
 Introduces labelledEnum() helper that defines values and labels in one place.
 Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label maps.
 
-- Affects: DEC10
+- Affects: [DEC10](./DECISIONS.md#dec10--use-strict-enums-for-core-types)
 
 Scope:
 - INV22
@@ -272,7 +272,7 @@ Operations:
 
 README generator now only links to files that contain nodes for the given subsystem.
 
-- Affects: DEC11
+- Affects: [DEC11](./DECISIONS.md#dec11--only-link-to-present-files-in-readme)
 
 Scope:
 - POL19
@@ -294,7 +294,7 @@ Operations:
 
 Removes the Navigation section and Document Roles table from generated READMEs. The file naming convention is self-documenting.
 
-- Affects: DEC12
+- Affects: [DEC12](./DECISIONS.md#dec12--remove-navigation-and-document-roles-from-readme)
 
 Scope:
 - DEC8
@@ -314,7 +314,7 @@ Operations:
 Updates INV3 to require must_preserve only when a decision affects domain nodes.
 Decisions affecting only non-domain nodes (realisations, policies, process nodes) should but are not required to identify preserved invariants.
 
-- Affects: DEC13
+- Affects: [DEC13](./DECISIONS.md#dec13--layer-dependent-invariant-preservation)
 
 Scope:
 - INV3
@@ -337,7 +337,7 @@ Worked examples become artefact nodes (ART2, ART3) with example SysProM graphs a
 Naming rationale is already captured in D8.
 Specification is already captured as the JSON itself — distilled/Specification.md is redundant.
 
-- Affects: DEC14
+- Affects: [DEC14](./DECISIONS.md#dec14--internalise-design-archive-into-sysprom-json)
 
 Scope:
 - ART1
@@ -361,7 +361,7 @@ Subsystems that would produce a single file over 100 lines are now split into mu
 Subsystems of the same node type are automatically grouped into type-named directories (e.g. elements/, artefacts/).
 Both heuristics are automatic — no user configuration needed.
 
-- Affects: DEC15
+- Affects: [DEC15](./DECISIONS.md#dec15--size-based-subsystem-splitting)
 
 Scope:
 - POL20
@@ -387,7 +387,7 @@ Generator reverses the mapping to produce valid Spec-Kit markdown from SysProM g
 CLI adds import, export, sync, and diff subcommands under sysprom speckit.
 Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 cases), plus round-trip fidelity.
 
-- Affects: DEC16
+- Affects: [DEC16](./DECISIONS.md#dec16--add-bidirectional-spec-kit-interoperability)
 
 Scope:
 - DEC16
@@ -419,7 +419,7 @@ Two new mutate helpers (addPlanTask, updatePlanTask) follow the immutable doc-in
 task list supports --pending and --json flags enabling agent scripting via jq.
 AGENTS.md documents the complete subagent workflow: discover, claim, progress, complete.
 
-- Affects: DEC17
+- Affects: [DEC17](./DECISIONS.md#dec17--add-task-subcommand-for-change-plan-tracking)
 
 Scope:
 - DEC17
@@ -442,7 +442,7 @@ Operations:
 
 New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.
 
-- Implements: DEC18
+- Implements: [DEC18](./DECISIONS.md#dec18--recursive-change-nodes-for-planning)
 
 - Status: complete
 
@@ -453,7 +453,7 @@ Scope:
 
 Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.
 
-- Implements: DEC19
+- Implements: [DEC19](./DECISIONS.md#dec19--extend-lifecycle-with-temporal-timestamps)
 
 - Status: complete
 
@@ -461,7 +461,7 @@ Extended lifecycle schema to accept ISO date strings alongside booleans. Added t
 
 Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.
 
-- Implements: DEC20
+- Implements: [DEC20](./DECISIONS.md#dec20--adopt-commanderjs-for-cli)
 
 - Status: complete
 
@@ -474,7 +474,7 @@ Replace manual process.argv parsing across all CLI command files with Commander.
 
 Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.
 
-- Implements: DEC21
+- Implements: [DEC21](./DECISIONS.md#dec21--adopt-typedoc-for-documentation)
 
 - Status: complete
 
@@ -495,7 +495,7 @@ Operations:
 
 Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
 
-- Implements: DEC22
+- Implements: [DEC22](./DECISIONS.md#dec22--adopt-turborepo-for-build-orchestration)
 
 - Status: complete
 
@@ -515,7 +515,7 @@ Operations:
 
 Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub Pages deployment, and npm publishing via OIDC trusted publishers. Add commitlint with husky hooks, semantic-release with all commit types triggering releases, and Dependabot for dependency updates.
 
-- Implements: DEC23
+- Implements: [DEC23](./DECISIONS.md#dec23--enforce-conventional-commits-and-automated-releases)
 
 - Status: complete
 
@@ -528,7 +528,7 @@ Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub P
 
 Replace all as type coercions across library and CLI code with runtime validation. Use Zod .is() and .safeParse() for domain type narrowing, isRecord() for object checks, instanceof for error handling, and properly typed Commander action handlers.
 
-- Implements: DEC24
+- Implements: [DEC24](./DECISIONS.md#dec24--eliminate-type-assertions)
 
 - Status: complete
 
@@ -541,7 +541,7 @@ Replace all as type coercions across library and CLI code with runtime validatio
 
 Update package.json entry points to reference compiled JavaScript in dist/. Move tsx from dependencies to devDependencies. Change CLI shebang to #!/usr/bin/env node.
 
-- Implements: DEC25
+- Implements: [DEC25](./DECISIONS.md#dec25--ship-compiled-javascript)
 
 - Status: complete
 
@@ -554,7 +554,7 @@ Update package.json entry points to reference compiled JavaScript in dist/. Move
 
 Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add command — auto-generates from type prefix + next available number.
 
-- Implements: DEC26
+- Implements: [DEC26](./DECISIONS.md#dec26--auto-generate-node-ids)
 
 - Status: complete
 
@@ -567,7 +567,7 @@ Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add comm
 
 Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm search, spm graph, spm rename, spm check, shell completions, and --dry-run.
 
-- Implements: DEC27
+- Implements: [DEC27](./DECISIONS.md#dec27--cli-ux-improvements)
 
 - Status: complete
 
@@ -580,7 +580,7 @@ Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm
 
 Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.
 
-- Implements: DEC28
+- Implements: [DEC28](./DECISIONS.md#dec28--unify-cli-with-zod-driven-command-definitions)
 
 - Status: complete
 
@@ -596,7 +596,7 @@ Scope:
 
 Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.
 
-- Implements: DEC29
+- Implements: [DEC29](./DECISIONS.md#dec29--unify-library-api-and-cli-with-defineoperation)
 
 - Status: complete
 
@@ -625,7 +625,7 @@ Scope:
 
 Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).
 
-- Implements: DEC30
+- Implements: [DEC30](./DECISIONS.md#dec30--distribute-sysprom-as-a-claude-code-plugin)
 
 - Status: introduced
 
@@ -641,7 +641,7 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 
 Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.
 
-- Implements: DEC31
+- Implements: [DEC31](./DECISIONS.md#dec31--bidirectional-sync-by-default)
 
 - Status: complete
 
@@ -665,7 +665,7 @@ Scope:
 
 Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.
 
-- Implements: DEC32
+- Implements: [DEC32](./DECISIONS.md#dec32--add-mcp-server-for-programmatic-api-access)
 
 - Status: complete
 
@@ -684,7 +684,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 ### CHG31 — Implement Keyed Provider Registry for External Formats
 
-- Implements: DEC33
+- Implements: [DEC33](./DECISIONS.md#dec33--abstract-external-format-interop-into-keyed-provider-registry)
 
 - Status: proposed
 
@@ -706,7 +706,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 ### CHG32 — Implement Safe Graph Removal
 
-- Implements: DEC34
+- Implements: [DEC34](./DECISIONS.md#dec34--safe-graph-removal-with-soft-delete-default)
 
 - Status: complete
 
@@ -729,8 +729,8 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 ### CHG33 — Implement Graph Mutation Safety Guards
 
-- Implements: DEC35
-- Depends on: CHG32
+- Implements: [DEC35](./DECISIONS.md#dec35--graph-mutation-safety-guards)
+- Depends on: [CHG32](#chg32--implement-safe-graph-removal)
 
 - Status: complete
 
@@ -754,7 +754,7 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.
 
-- Implements: DEC36
+- Implements: [DEC36](./DECISIONS.md#dec36--default-input-resolution-and-init-command)
 
 - Status: complete
 
@@ -775,13 +775,13 @@ Scope:
 
 Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.
 
-- Implements: DEC37
+- Implements: [DEC37](./DECISIONS.md#dec37--add-yaml-and-multi-file-json-serialisation-formats)
 
 ### CHG36 — Convert file-path positional args to flags
 
 Move path/input/output positional arguments to --flags in init, json2md, md2json, sync, speckit (import/export/sync/diff), and plan init commands.
 
-- Implements: DEC38
+- Implements: [DEC38](./DECISIONS.md#dec38--convert-file-path-positional-args-to-flags)
 
 #### Plan
 
@@ -799,7 +799,7 @@ Move path/input/output positional arguments to --flags in init, json2md, md2json
 
 Add saveDocument calls to all MCP write operations
 
-- Implements: DEC39
+- Implements: [DEC39](./DECISIONS.md#dec39--fix-mcp-write-operations-not-persisting)
 
 Scope:
 - src/mcp/server.ts
@@ -808,7 +808,7 @@ Scope:
 
 Check if path ends with correct suffix before appending
 
-- Implements: DEC40
+- Implements: [DEC40](./DECISIONS.md#dec40--fix-init-path-suffix-doubling)
 
 Scope:
 - src/cli/commands/init.ts

@@ -10,10 +10,10 @@ doc_type: "decisions"
 ### DEC1 — Separate Domain From Process From Evolution
 
 - Affects:
-  - ELEM1
-  - ELEM2
-  - ELEM4
-- Must preserve: INV1
+  - [ELEM1](./STATE.md#elem1--domain-node-family)
+  - [ELEM2](./STATE.md#elem2--process-node-family)
+  - [ELEM4](./STATE.md#elem4--evolution-node-family)
+- Must preserve: [INV1](./INVARIANTS.md#inv1--concept-independence)
 
 Context: The model needs to represent systems, workflows, and history.
 Mixing these concerns makes the graph hard to query and reason about.
@@ -37,10 +37,10 @@ Domain structure should not be tangled with process mechanics or evolution histo
 
 ### DEC2 — Make Decisions First-Class Entities
 
-- Affects: ELEM4
+- Affects: [ELEM4](./STATE.md#elem4--evolution-node-family)
 - Must preserve:
-  - INV2
-  - INV3
+  - [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
+  - [INV3](./INVARIANTS.md#inv3--invariant-preservation)
 
 Context: Systems evolve through choices, but most models bury decisions in prose or lose them entirely.
 
@@ -64,10 +64,10 @@ Graph nodes with typed relationships make decisions queryable, traceable, and en
 ### DEC3 — Distinguish Invariants From Principles From Policies
 
 - Affects:
-  - INV1
-  - PRIN1
-  - POL1
-- Must preserve: INV3
+  - [INV1](./INVARIANTS.md#inv1--concept-independence)
+  - [PRIN1](./INVARIANTS.md#prin1--separate-what-from-why-from-how)
+  - [POL1](./INVARIANTS.md#pol1--prefer-deprecation-over-deletion)
+- Must preserve: [INV3](./INVARIANTS.md#inv3--invariant-preservation)
 
 Context: Systems have rules at different levels of rigidity. Collapsing all rules into one type loses critical information.
 
@@ -90,9 +90,9 @@ Rationale: The three-way split matches how real systems distinguish structural g
 ### DEC4 — Add Process Modelling
 
 - Affects:
-  - ELEM2
-  - ELEM3
-- Must preserve: INV4
+  - [ELEM2](./STATE.md#elem2--process-node-family)
+  - [ELEM3](./STATE.md#elem3--artefact-node-family)
+- Must preserve: [INV4](./INVARIANTS.md#inv4--recursive-consistency)
 
 Context: Workflow-heavy systems (planning tools, spec-driven workflows, runtime orchestration) cannot be adequately modelled with decisions and changes alone.
 
@@ -115,8 +115,8 @@ Full process modelling makes the model capable of encoding systems like Spec Kit
 
 ### DEC5 — Format-Agnostic With Markdown as Primary Representation
 
-- Affects: REAL1
-- Must preserve: INV4
+- Affects: [REAL1](./STATE.md#real1--markdown-representation)
+- Must preserve: [INV4](./INVARIANTS.md#inv4--recursive-consistency)
 
 Context: The model needs a practical encoding but should not be locked to one format.
 
@@ -139,8 +139,8 @@ Other formats remain valid.
 
 ### DEC6 — Recursive Composition Using Same Conventions
 
-- Affects: REAL4
-- Must preserve: INV4
+- Affects: [REAL4](./STATE.md#real4--recursive-folder-form)
+- Must preserve: [INV4](./INVARIANTS.md#inv4--recursive-consistency)
 
 Context: Systems contain subsystems. If subsystems use different conventions, the model fractures.
 
@@ -162,7 +162,7 @@ Rationale: Recursive consistency means any node can be understood in isolation u
 
 ### DEC7 — Append-Only History
 
-- Must preserve: INV5
+- Must preserve: [INV5](./INVARIANTS.md#inv5--append-only-history)
 
 Context: Deleting history destroys traceability. If a decision is removed, it becomes impossible to answer why a node exists.
 
@@ -185,22 +185,22 @@ Rationale: Append-only preserves the full provenance chain.
 ### DEC8 — Support External Resources via Reference and Internalisation
 
 - Affects:
-  - ELEM7
-  - REAL5
-  - REAL1
-  - INV3
-  - ART1
-  - ART2
-  - ART3
+  - [ELEM7](./STATE.md#elem7--external-reference-model)
+  - [REAL5](./STATE.md#real5--json-serialisation)
+  - [REAL1](./STATE.md#real1--markdown-representation)
+  - [INV3](./INVARIANTS.md#inv3--invariant-preservation)
+  - [ART1](./STATE.md#art1--system-comparisons)
+  - [ART2](./STATE.md#art2--document-workspace-example)
+  - [ART3](./STATE.md#art3--planning-workflow-example)
 - Must preserve:
-  - INV19
-  - INV20
-  - INV21
-  - INV22
-  - INV18
-  - POL19
-  - INV3
-  - POL20
+  - [INV19](./INVARIANTS.md#inv19--external-reference-role-required)
+  - [INV20](./INVARIANTS.md#inv20--external-reference-directionality)
+  - [INV21](./INVARIANTS.md#inv21--text-field-duality)
+  - [INV22](./INVARIANTS.md#inv22--strict-type-enums)
+  - [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
+  - [POL19](./INVARIANTS.md#pol19--readme-links-only-to-present-files)
+  - [INV3](./INVARIANTS.md#inv3--invariant-preservation)
+  - [POL20](./INVARIANTS.md#pol20--subsystem-representation-heuristic)
 
 Context: Nodes often relate to resources outside the graph.
 The model must handle this without coupling to a specific serialisation format.
@@ -225,9 +225,9 @@ Supporting both gives implementors flexibility without losing either property.
 ### DEC9 — Allow Array-of-Lines for Text Fields
 
 - Affects:
-  - REAL5
-  - REAL1
-- Must preserve: INV21
+  - [REAL5](./STATE.md#real5--json-serialisation)
+  - [REAL1](./STATE.md#real1--markdown-representation)
+- Must preserve: [INV21](./INVARIANTS.md#inv21--text-field-duality)
 
 Context: JSON does not support multiline strings.
 Long descriptions serialised as single strings with embedded \n are hard to read and produce poor diffs.
@@ -253,10 +253,10 @@ Accepting both avoids forcing a style while enabling better ergonomics where it 
 
 ### DEC10 — Use Strict Enums for Core Types
 
-- Affects: REAL5
+- Affects: [REAL5](./STATE.md#real5--json-serialisation)
 - Must preserve:
-  - INV22
-  - INV18
+  - [INV22](./INVARIANTS.md#inv22--strict-type-enums)
+  - [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
 
 Context: SysProM's purpose is provenance and traceability.
 If relationship types, node types, and statuses are arbitrary strings, layer constraints cannot be enforced, labels cannot be derived for rendering, and semantic validation is impossible.
@@ -280,8 +280,8 @@ The DRY labelledEnum pattern ensures each type is defined once with its label, e
 
 ### DEC11 — Only Link to Present Files in README
 
-- Affects: REAL1
-- Must preserve: POL19
+- Affects: [REAL1](./STATE.md#real1--markdown-representation)
+- Must preserve: [POL19](./INVARIANTS.md#pol19--readme-links-only-to-present-files)
 
 Context: The README generator was producing navigation links and document role entries for all possible files (INTENT, INVARIANTS, STATE, DECISIONS, CHANGES) regardless of whether the subsystem had nodes of those types.
 This created dead links in subsystem READMEs.
@@ -303,7 +303,7 @@ Rationale: Dead links mislead readers and break tooling. Links should reflect re
 
 ### DEC12 — Remove Navigation and Document Roles from README
 
-- Affects: REAL1
+- Affects: [REAL1](./STATE.md#real1--markdown-representation)
 
 Context: The README contained a Navigation section and a Document Roles table that restated what the filenames already communicate.
 Anyone looking at a folder with INTENT.md, DECISIONS.md, etc. already knows what they contain.
@@ -326,8 +326,8 @@ Rationale: Removing redundant sections reduces noise and maintenance burden. The
 
 ### DEC13 — Layer-Dependent Invariant Preservation
 
-- Affects: INV3
-- Must preserve: INV3
+- Affects: [INV3](./INVARIANTS.md#inv3--invariant-preservation)
+- Must preserve: [INV3](./INVARIANTS.md#inv3--invariant-preservation)
 
 Context: INV3 required every decision to identify preserved invariants.
 Operational decisions (naming, tooling, presentation) genuinely have no invariants at risk.
@@ -357,9 +357,9 @@ Leverages the existing layer model rather than adding new concepts.
 ### DEC14 — Internalise Design Archive into SysProM JSON
 
 - Affects:
-  - ART1
-  - ART2
-  - ART3
+  - [ART1](./STATE.md#art1--system-comparisons)
+  - [ART2](./STATE.md#art2--document-workspace-example)
+  - [ART3](./STATE.md#art3--planning-workflow-example)
 
 Context: The distilled/ folder contained four reference documents (Specification, Comparisons, Examples, Naming) produced during SysProM's design.
 These were external to the JSON but contained valuable content.
@@ -383,8 +383,8 @@ Rationale: Internalising makes the JSON self-contained. Artefact nodes with subs
 
 ### DEC15 — Size-Based Subsystem Splitting
 
-- Affects: REAL1
-- Must preserve: POL20
+- Affects: [REAL1](./STATE.md#real1--markdown-representation)
+- Must preserve: [POL20](./INVARIANTS.md#pol20--subsystem-representation-heuristic)
 
 Context: Small subsystems (e.g. 6 node type definitions) are cleaner as single .spm.md files.
 Large subsystems (e.g. 24 relationship type definitions at 107 lines) become unwieldy in a single file.
@@ -407,13 +407,13 @@ Rationale: Combining both heuristics keeps small subsystems compact while splitt
 
 ### DEC16 — Add Bidirectional Spec-Kit Interoperability
 
-- Affects: ELEM3
+- Affects: [ELEM3](./STATE.md#elem3--artefact-node-family)
 - Must preserve:
-  - INV4
-  - INV5
-  - INV6
-  - INV21
-  - INV22
+  - [INV4](./INVARIANTS.md#inv4--recursive-consistency)
+  - [INV5](./INVARIANTS.md#inv5--append-only-history)
+  - [INV6](./INVARIANTS.md#inv6--node-identity)
+  - [INV21](./INVARIANTS.md#inv21--text-field-duality)
+  - [INV22](./INVARIANTS.md#inv22--strict-type-enums)
 
 Context: SysProM can model Spec-Kit workflows as nodes and relationships, but could not read or write actual Spec-Kit files.
 Users working with Spec-Kit (spec.md, plan.md, tasks.md, constitution.md, checklist.md) had no way to import their existing work into SysProM or export SysProM graphs to Spec-Kit format.
@@ -437,7 +437,7 @@ Rationale: Full bidirectional support allows users to start in either ecosystem 
 
 ### DEC17 — Add Task Subcommand for Change Plan Tracking
 
-- Affects: CHG14
+- Affects: [CHG14](./CHANGES.md#chg14--implement-spec-kit-file-support)
 
 Context: Change nodes have a plan field (array of {description, done} tasks) defined in the schema, but no CLI command existed to manipulate it.
 Subagents working in a Claude Code session had no way to discover, claim, or progress through tasks purely via CLI.
@@ -462,7 +462,7 @@ Rationale: A dedicated command keeps the update command focused on node fields a
 
 Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -484,7 +484,7 @@ Rationale: A phase is just a task with children. Using change nodes with recursi
 
 Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -502,7 +502,7 @@ Rationale: One schema change enables all three temporal capabilities: timestampe
 
 Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -527,7 +527,7 @@ Rationale: Commander.js has zero dependencies, the lowest migration effort from 
 
 Choose TypeDoc with typedoc-plugin-zod for API documentation generation, producing both markdown (committed) and HTML (for GitHub Pages) output.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -550,7 +550,7 @@ Rationale: TypeDoc directly generates docs from TypeScript source with minimal c
 
 Choose Turborepo for build task orchestration with dependency management and output caching.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -573,7 +573,7 @@ Rationale: Turborepo provides automatic caching (FULL TURBO on repeat builds), p
 
 Adopt commitlint for commit message enforcement, semantic-release for automated publishing, and husky for git hook management.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -596,7 +596,7 @@ Rationale: Automated enforcement ensures every commit follows conventional forma
 
 Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -619,7 +619,7 @@ Rationale: Runtime validation catches type errors that assertions silently mask.
 
 Switch package entry points (main, exports, bin) from TypeScript source to compiled JavaScript in dist/, removing the tsx runtime dependency for consumers.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -642,7 +642,7 @@ Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, redu
 
 Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -665,7 +665,7 @@ Rationale: The existing ID convention (D for decisions, CH for changes, INV for 
 
 Add auto-generated option IDs, init command, auto-sync, coloured output, JSON output on mutations, full-text search, graph export, rename, stricter validation, shell completions, and dry-run mode.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -688,7 +688,7 @@ Rationale: Each improvement targets a specific friction point: auto-IDs reduce m
 
 Replace separate Commander definitions, run() functions, and doc generator metadata with a single defineCommand pattern using Zod schemas.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -711,7 +711,7 @@ Rationale: A single defineCommand pattern eliminates duplication. Commander prog
 
 Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.
 
-- Must preserve: INV2
+- Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
 - Status: accepted
 
@@ -771,8 +771,8 @@ Rationale: Same package avoids monorepo overhead. The MCP server is a thin wrapp
 
 ### DEC33 — Abstract External Format Interop into Keyed Provider Registry
 
-- Must preserve: CON6
-- Supersedes: CHG14
+- Must preserve: [CON6](./INTENT.md#con6--format-agnosticism)
+- Supersedes: [CHG14](./CHANGES.md#chg14--implement-spec-kit-file-support)
 
 Context: SysProM has speckit interop (import/export/sync/diff) hardcoded to one external format. Superpowers (obra/superpowers) uses a similar directory-of-markdown pattern for specs and plans. Other workflow tools may emerge. The speckit code has a clear detect/parse/generate structure that can be generalised.
 
@@ -787,7 +787,7 @@ Rationale: Keyed registry gives type-safe lookup, avoids stringly-typed dispatch
 
 ### DEC34 — Safe Graph Removal with Soft Delete Default
 
-- Must preserve: INV23
+- Must preserve: [INV23](./INVARIANTS.md#inv23--retired-node-relationship-guard)
 
 Context: Current removeNode and removeRelationship operations silently break must_follow chains, leave dangling scope/operation references, and can lose nested subsystems without warning. Need safe removal that preserves graph integrity by default.
 
@@ -803,9 +803,9 @@ Rationale: Soft delete via existing status: retired is zero-cost (no schema chan
 ### DEC35 — Graph Mutation Safety Guards
 
 - Must preserve:
-  - INV24
-  - INV25
-  - INV26
+  - [INV24](./INVARIANTS.md#inv24--no-duplicate-relationships)
+  - [INV25](./INVARIANTS.md#inv25--relationship-endpoint-type-validity)
+  - [INV26](./INVARIANTS.md#inv26--retirement-impact-awareness)
 
 Context: Several mutation operations (updateNode, addRelationship) lack safety checks. Status transitions to retired have no impact awareness. Duplicate relationships can be added. Type changes can invalidate existing relationships. addRelationship has no semantic validation of endpoint types.
 

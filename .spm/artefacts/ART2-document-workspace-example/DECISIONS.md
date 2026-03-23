@@ -9,8 +9,8 @@ doc_type: "decisions"
 
 ### DEC1 — Abstract Conversion Placement
 
-- Affects: ELEM1
-- Must preserve: INV2
+- Affects: [ELEM1](./STATE.md#elem1--transformation-engine)
+- Must preserve: [INV2](./INVARIANTS.md#inv2--placement-agnostic-conversion)
 
 Options:
 - O1: UI distinguishes local and remote

@@ -11,7 +11,7 @@ doc_type: "state"
 
 The set of node types that model what the system is.
 
-- Realises: CAP1
+- Realises: [CAP1](./INTENT.md#cap1--cross-layer-traceability)
 
 - Status: active
 
@@ -45,7 +45,7 @@ Constraint that must always hold. Independent of decisions and changes. Constrai
 
 The set of node types that model how work flows through the system.
 
-- Realises: CAP6
+- Realises: [CAP6](./INTENT.md#cap6--process-modelling)
 
 - Status: active
 
@@ -85,7 +85,7 @@ MAY be triggered by gates, selected by policies, or chosen explicitly.
 
 The set of node types that model what is produced and consumed.
 
-- Realises: CAP6
+- Realises: [CAP6](./INTENT.md#cap6--process-modelling)
 
 - Status: active
 
@@ -105,8 +105,8 @@ Provides traceability of how documents and records evolve through a process.
 The set of node types that model how the system changes over time.
 
 - Realises:
-  - CAP2
-  - CAP4
+  - [CAP2](./INTENT.md#cap2--decision-recording)
+  - [CAP4](./INTENT.md#cap4--change-tracking)
 
 - Status: active
 
@@ -148,7 +148,7 @@ A frozen snapshot of the system.
 
 The set of typed, directed connections available between nodes.
 
-- Realises: CAP1
+- Realises: [CAP1](./INTENT.md#cap1--cross-layer-traceability)
 
 - Status: active
 
@@ -254,7 +254,7 @@ A mode disables a capability.
 
 The mechanism for relating nodes to resources outside the graph.
 
-- Realises: CAP8
+- Realises: [CAP8](./INTENT.md#cap8--external-resource-referencing)
 
 - Status: active
 
@@ -301,7 +301,7 @@ Existing work that this node relates to or was influenced by.
 
 Conventions for encoding SysProM in file-based formats.
 
-- Realises: CAP7
+- Realises: [CAP7](./INTENT.md#cap7--flexible-representation)
 
 - Status: active
 
@@ -310,9 +310,9 @@ Conventions for encoding SysProM in file-based formats.
 The model supports branching, merging, and revival of nodes.
 
 - Realises:
-  - CAP9
-  - CAP10
-  - CAP11
+  - [CAP9](./INTENT.md#cap9--branching)
+  - [CAP10](./INTENT.md#cap10--merging)
+  - [CAP11](./INTENT.md#cap11--revival)
 
 - Status: active
 
@@ -320,8 +320,8 @@ The model supports branching, merging, and revival of nodes.
 
 The mechanism for extending SysProM beyond its core types.
 
-- Realises: CAP7
-- Constrained by: INV18
+- Realises: [CAP7](./INTENT.md#cap7--flexible-representation)
+- Constrained by: [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
 
 - Status: active
 
@@ -332,10 +332,10 @@ The mechanism for extending SysProM beyond its core types.
 Primary representation using headings as nodes, lists as relationships, checkboxes as lifecycle, front matter as document metadata.
 
 - Implements:
-  - ELEM1
-  - ELEM2
-  - ELEM3
-  - ELEM4
+  - [ELEM1](#elem1--domain-node-family)
+  - [ELEM2](#elem2--process-node-family)
+  - [ELEM3](#elem3--artefact-node-family)
+  - [ELEM4](#elem4--evolution-node-family)
 
 - Status: active
 
@@ -343,7 +343,7 @@ Primary representation using headings as nodes, lists as relationships, checkbox
 
 All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).
 
-- Implements: ELEM8
+- Implements: [ELEM8](#elem8--file-representation)
 
 - Status: active
 
@@ -351,7 +351,7 @@ All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).
 
 Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGES).
 
-- Implements: ELEM8
+- Implements: [ELEM8](#elem8--file-representation)
 
 - Status: active
 
@@ -359,7 +359,7 @@ Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGE
 
 Node folders with their own document sets. Nodes may also be single files using .spm.md extension.
 
-- Implements: ELEM8
+- Implements: [ELEM8](#elem8--file-representation)
 
 - Status: active
 
@@ -368,10 +368,10 @@ Node folders with their own document sets. Nodes may also be single files using 
 JSON representation validated against schema.json. Supports recursive composition via the subsystem property.
 
 - Implements:
-  - ELEM1
-  - ELEM2
-  - ELEM3
-  - ELEM4
+  - [ELEM1](#elem1--domain-node-family)
+  - [ELEM2](#elem2--process-node-family)
+  - [ELEM3](#elem3--artefact-node-family)
+  - [ELEM4](#elem4--evolution-node-family)
 
 - Status: active
 
@@ -395,110 +395,110 @@ The general lifecycle state machine for nodes.
 
 Decision has been proposed but not yet evaluated.
 
-- Part of: PROT1
+- Part of: [PROT1](#prot1--decision-lifecycle)
 
 ### STG2-DEC-ACCEPTED — accepted
 
 Decision has been accepted as the chosen path.
 
-- Part of: PROT1
-- Must follow: STG1-DEC-PROPOSED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Must follow: [STG1-DEC-PROPOSED](#stg1-dec-proposed--proposed)
 
 ### STG3-DEC-IMPLEMENTED — implemented
 
 Decision has been implemented in the system.
 
-- Part of: PROT1
-- Must follow: STG2-DEC-ACCEPTED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Must follow: [STG2-DEC-ACCEPTED](#stg2-dec-accepted--accepted)
 
 ### STG4-DEC-ADOPTED — adopted
 
 Decision has been fully adopted across the system.
 
-- Part of: PROT1
-- Must follow: STG3-DEC-IMPLEMENTED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Must follow: [STG3-DEC-IMPLEMENTED](#stg3-dec-implemented--implemented)
 
 ### STG5-DEC-SUPERSEDED — superseded
 
 Decision has been replaced by a newer decision.
 
-- Part of: PROT1
-- Precedes: STG4-DEC-ADOPTED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Precedes: [STG4-DEC-ADOPTED](#stg4-dec-adopted--adopted)
 
 ### STG6-DEC-ABANDONED — abandoned
 
 Decision was accepted but later abandoned without implementation.
 
-- Part of: PROT1
-- Precedes: STG2-DEC-ACCEPTED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Precedes: [STG2-DEC-ACCEPTED](#stg2-dec-accepted--accepted)
 
 ### STG7-DEC-DEFERRED — deferred
 
 Decision was accepted but deferred for later implementation.
 
-- Part of: PROT1
-- Precedes: STG2-DEC-ACCEPTED
+- Part of: [PROT1](#prot1--decision-lifecycle)
+- Precedes: [STG2-DEC-ACCEPTED](#stg2-dec-accepted--accepted)
 
 ### STG8-CHG-DEFINED — defined
 
 Change has been defined with scope and operations.
 
-- Part of: PROT2
+- Part of: [PROT2](#prot2--change-lifecycle)
 
 ### STG9-CHG-INTRODUCED — introduced
 
 Change has been introduced into the system.
 
-- Part of: PROT2
-- Must follow: STG8-CHG-DEFINED
+- Part of: [PROT2](#prot2--change-lifecycle)
+- Must follow: [STG8-CHG-DEFINED](#stg8-chg-defined--defined)
 
 ### STG10-CHG-IN_PROGRESS — in_progress
 
 Change is being actively worked on.
 
-- Part of: PROT2
-- Must follow: STG9-CHG-INTRODUCED
+- Part of: [PROT2](#prot2--change-lifecycle)
+- Must follow: [STG9-CHG-INTRODUCED](#stg9-chg-introduced--introduced)
 
 ### STG11-CHG-COMPLETE — complete
 
 Change has been fully applied.
 
-- Part of: PROT2
-- Must follow: STG10-CHG-IN_PROGRESS
+- Part of: [PROT2](#prot2--change-lifecycle)
+- Must follow: [STG10-CHG-IN_PROGRESS](#stg10-chg-in_progress--in_progress)
 
 ### STG12-CHG-CONSOLIDATED — consolidated
 
 Change has been consolidated and cleaned up.
 
-- Part of: PROT2
-- Must follow: STG11-CHG-COMPLETE
+- Part of: [PROT2](#prot2--change-lifecycle)
+- Must follow: [STG11-CHG-COMPLETE](#stg11-chg-complete--complete)
 
 ### STG13-NODE-PROPOSED — proposed
 
 Node has been proposed but is not yet active.
 
-- Part of: PROT3
+- Part of: [PROT3](#prot3--node-lifecycle)
 
 ### STG14-NODE-ACTIVE — active
 
 Node is currently active in the system.
 
-- Part of: PROT3
-- Must follow: STG13-NODE-PROPOSED
+- Part of: [PROT3](#prot3--node-lifecycle)
+- Must follow: [STG13-NODE-PROPOSED](#stg13-node-proposed--proposed)
 
 ### STG15-NODE-DEPRECATED — deprecated
 
 Node is deprecated but still present in the system.
 
-- Part of: PROT3
-- Must follow: STG14-NODE-ACTIVE
+- Part of: [PROT3](#prot3--node-lifecycle)
+- Must follow: [STG14-NODE-ACTIVE](#stg14-node-active--active)
 
 ### STG16-NODE-RETIRED — retired
 
 Node has been retired from active use.
 
-- Part of: PROT3
-- Must follow: STG15-NODE-DEPRECATED
+- Part of: [PROT3](#prot3--node-lifecycle)
+- Must follow: [STG15-NODE-DEPRECATED](#stg15-node-deprecated--deprecated)
 
 ## Artefacts
 
@@ -506,7 +506,7 @@ Node has been retired from active use.
 
 Comparison of SysProM against existing systems and tools, demonstrating what each covers and where SysProM fills gaps.
 
-- Affects: DEC4
+- Affects: [DEC4](./DECISIONS.md#dec4--add-process-modelling)
 
 #### Subsystem
 
@@ -599,19 +599,19 @@ Enable users to ingest, transform, store, and access documents consistently acro
 
 Documents can be converted between representations.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
 ##### CON2 — Document Persistence
 
 Documents can be stored and later retrieved.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
 ##### CON3 — Document Synchronisation
 
 Documents can be kept consistent across multiple contexts.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
 ##### INV1 — Stable Document Identity
 
@@ -631,40 +631,40 @@ If synchronisation is enabled, persistence must support shared remote state.
 
 ##### ELEM1 — Transformation Engine
 
-- Realises: CON1
+- Realises: [CON1](#con1--document-transformation)
 
 ##### ELEM2 — Document Store
 
-- Realises: CON2
+- Realises: [CON2](#con2--document-persistence)
 
 ##### REAL1 — Local Conversion
 
-- Implements: ELEM1
+- Implements: [ELEM1](#elem1--transformation-engine)
 
 - Status: active
 
 ##### REAL2 — Remote Conversion
 
-- Implements: ELEM1
+- Implements: [ELEM1](#elem1--transformation-engine)
 
 - Status: active
 
 ##### REAL3 — Local Storage
 
-- Implements: ELEM2
+- Implements: [ELEM2](#elem2--document-store)
 
 - Status: active
 
 ##### REAL4 — Remote Storage
 
-- Implements: ELEM2
+- Implements: [ELEM2](#elem2--document-store)
 
 - Status: active
 
 ##### DEC1 — Abstract Conversion Placement
 
-- Affects: ELEM1
-- Must preserve: INV2
+- Affects: [ELEM1](#elem1--transformation-engine)
+- Must preserve: [INV2](#inv2--placement-agnostic-conversion)
 
 Options:
 - O1: UI distinguishes local and remote
@@ -702,41 +702,41 @@ Approval cannot occur until review has completed.
 
 Produces an initial scoped plan.
 
-- Performs: STG1
+- Performs: [STG1](#stg1--draft-plan)
 
 ##### ROLE2 — Architect
 
 Reviews structural and design soundness.
 
-- Performs: STG2
+- Performs: [STG2](#stg2--architectural-review)
 
 ##### ROLE3 — Critic
 
 Evaluates quality, completeness, and testability.
 
-- Performs: STG3
+- Performs: [STG3](#stg3--critical-evaluation)
 
 ##### PROT1 — Consensus Planning
 
 ##### STG1 — Draft Plan
 
-- Part of: PROT1
+- Part of: [PROT1](#prot1--consensus-planning)
 
 ##### STG2 — Architectural Review
 
-- Part of: PROT1
-- Must follow: STG1
+- Part of: [PROT1](#prot1--consensus-planning)
+- Must follow: [STG1](#stg1--draft-plan)
 
 ##### STG3 — Critical Evaluation
 
-- Part of: PROT1
-- Must follow: STG2
+- Part of: [PROT1](#prot1--consensus-planning)
+- Must follow: [STG2](#stg2--architectural-review)
 
 ##### GATE1 — Scope Gate
 
 Blocks execution when work is vague or underspecified.
 
-- Governed by: INV1
+- Governed by: [INV1](#inv1--traceable-scope)
 
 ##### MODE1 — Standard Mode
 
@@ -744,11 +744,11 @@ Blocks execution when work is vague or underspecified.
 
 Adds explicit user checkpoints.
 
-- Modifies: PROT1
+- Modifies: [PROT1](#prot1--consensus-planning)
 
 ##### MODE3 — Deliberate Mode
 
 Adds stronger risk analysis and broader verification.
 
-- Modifies: PROT1
+- Modifies: [PROT1](#prot1--consensus-planning)
 

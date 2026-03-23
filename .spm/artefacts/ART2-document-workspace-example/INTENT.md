@@ -17,17 +17,17 @@ Enable users to ingest, transform, store, and access documents consistently acro
 
 Documents can be converted between representations.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
 ### CON2 — Document Persistence
 
 Documents can be stored and later retrieved.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
 ### CON3 — Document Synchronisation
 
 Documents can be kept consistent across multiple contexts.
 
-- Refines: INT1
+- Refines: [INT1](#int1--document-workspace)
 
