@@ -1,3 +1,17 @@
+## [1.15.0](https://github.com/ExaDev/SysProM/compare/v1.14.0...v1.15.0) (2026-03-23)
+
+### Features
+
+* **cli:** add infer command with subcommands ([e402944](https://github.com/ExaDev/SysProM/commit/e402944920ed1e8ac4b0790d761b7b2da9e5568d))
+* **mcp:** add inference tools to MCP server ([93ab7c0](https://github.com/ExaDev/SysProM/commit/93ab7c09d97e49cfb56e60816784c6ede9f9cf5a))
+* **ops:** add deterministic graph inference operations ([96ae4c7](https://github.com/ExaDev/SysProM/commit/96ae4c78d69661d80e3a09766feac5f3ccad15a2))
+
+### Documentation
+
+* **spm:** add DEC41 and CHG39 for deterministic graph inference ([e6e13f5](https://github.com/ExaDev/SysProM/commit/e6e13f5effd34613a155b63e2f2d695cec86bdc2))
+* **spm:** add DEC41 and CHG39 for deterministic graph inference ([7a8a5c6](https://github.com/ExaDev/SysProM/commit/7a8a5c6e9f77827a9b85189bc4fe992dcb23258c))
+* **spm:** add inference operations to README and public API ([3a1fa42](https://github.com/ExaDev/SysProM/commit/3a1fa421292b245458db764d33f837cb17db7ac6))
+
 ## [1.14.0](https://github.com/ExaDev/SysProM/compare/v1.13.2...v1.14.0) (2026-03-23)
 
 ### Features
