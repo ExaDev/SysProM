@@ -1,3 +1,31 @@
+## [1.14.0](https://github.com/ExaDev/SysProM/compare/v1.13.2...v1.14.0) (2026-03-23)
+
+### Features
+
+* **cli:** case-insensitive file resolution with two-phase matching ([dd28e63](https://github.com/ExaDev/SysProM/commit/dd28e63c06867a8a1347a7ff8933f0fb6c724dd4))
+* **md:** hyperlink node IDs in markdown output ([54dde87](https://github.com/ExaDev/SysProM/commit/54dde87ad3f568392a6cf128c70593cb64320ea4))
+
+### Bug Fixes
+
+* **cli:** detect case-variant collisions in Phase 1 of file resolution ([c8bca3b](https://github.com/ExaDev/SysProM/commit/c8bca3ba55587f265f7451c916a0e51d3a5e378f))
+* **cli:** prevent path suffix doubling in init command ([3ba18fa](https://github.com/ExaDev/SysProM/commit/3ba18fa7bc9b12d44da771bc251298549a58bbfc))
+* **mcp:** persist changes to disk in write operations ([b1f400c](https://github.com/ExaDev/SysProM/commit/b1f400c938c37122becaff5423d9aa1e56895048))
+* **test:** replace hardcoded project root with import.meta.dirname ([a9e4ff7](https://github.com/ExaDev/SysProM/commit/a9e4ff7577ecfb273daa8b81d468e387a7f10372))
+
+### Code Refactoring
+
+* **docs:** update command examples to prefer sysprom over spm ([65598b5](https://github.com/ExaDev/SysProM/commit/65598b5f3bdbc24de5e5de8a156659eed536755e))
+* update default file/folder naming to .SysProM.* with .spm.* fallback ([db7b843](https://github.com/ExaDev/SysProM/commit/db7b843d82c690a0a61c7a3c8e4f745a84681a59))
+
+### Documentation
+
+* add MCP server section to README ([f0b257a](https://github.com/ExaDev/SysProM/commit/f0b257a1aa51be8041031558931f0be29339a02b))
+* **spm:** regenerate markdown with hyperlinked node references ([b965483](https://github.com/ExaDev/SysProM/commit/b9654835f4689bd485ccb7c2a2d3af210095064a))
+
+### Tests
+
+* **md:** add hyperlink tests for single-file and multi-doc modes ([bb992fa](https://github.com/ExaDev/SysProM/commit/bb992fa241ac87f884ef35f04a6d87b4f128ac9e))
+
 ## [1.13.2](https://github.com/ExaDev/SysProM/compare/v1.13.1...v1.13.2) (2026-03-23)
 
 ### Code Refactoring
