@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import packageJson from "../../package.json" with { type: "json" };
 import { buildCommander } from "./define-command.js";
 import type { CommandDef } from "./define-command.js";
 import { validateCommand } from "./commands/validate.js";
@@ -19,8 +20,6 @@ import { taskCommand } from "./commands/task.js";
 import { planCommand } from "./commands/plan.js";
 import { syncCommandDef } from "./commands/sync.js";
 
-const VERSION = "1.0.0";
-
 export const program = new Command();
 
 program
@@ -28,7 +27,7 @@ program
 	.description(
 		"System Provenance Model CLI — record where every part of a system came from",
 	)
-	.version(VERSION)
+	.version(packageJson.version)
 	.showHelpAfterError(true);
 
 export const commands: CommandDef[] = [
