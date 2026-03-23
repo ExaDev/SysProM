@@ -152,12 +152,17 @@ export function buildCommander(def: CommandDef, parent: Command): Command {
 				if (!field || !isZodField(field)) continue;
 				const desc = fieldDescription(field);
 				const choices = fieldChoices(field);
+				const optional = fieldIsOptional(field);
 				const flagName = camelToKebab(key);
 
 				if (choices) {
-					cmd.addArgument(new Argument(`<${flagName}>`, desc).choices(choices));
+					const arg = new Argument(
+						optional ? `[${flagName}]` : `<${flagName}>`,
+						desc,
+					).choices(choices);
+					cmd.addArgument(arg);
 				} else {
-					cmd.argument(`<${flagName}>`, desc);
+					cmd.argument(optional ? `[${flagName}]` : `<${flagName}>`, desc);
 				}
 			}
 		}

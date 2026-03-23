@@ -25,25 +25,25 @@ const operationType = z.enum(["add", "update", "remove", "link"]);
 
 function parseNodeType(s: string): NodeType {
 	const result = NodeType.safeParse(s);
-	if (!result.success) throw new Error(`Unknown node type: ${s}`);
+	if (!result.success) throw new Error(`Unknown node type: "${s}". Valid types: ${NodeType.options.join(", ")}`);
 	return result.data;
 }
 
 function parseRelType(s: string): RelationshipType {
 	const result = RelationshipType.safeParse(s);
-	if (!result.success) throw new Error(`Unknown relationship type: ${s}`);
+	if (!result.success) throw new Error(`Unknown relationship type: "${s}". Valid types: ${RelationshipType.options.join(", ")}`);
 	return result.data;
 }
 
 function parseNodeStatus(s: string): NodeStatus {
 	const result = NodeStatus.safeParse(s);
-	if (!result.success) throw new Error(`Unknown node status: ${s}`);
+	if (!result.success) throw new Error(`Unknown node status: "${s}". Valid statuses: ${NodeStatus.options.join(", ")}`);
 	return result.data;
 }
 
 function parseExtRefRole(s: string): ExternalReferenceRole {
 	const result = ExternalReferenceRole.safeParse(s);
-	if (!result.success) throw new Error(`Unknown external reference role: ${s}`);
+	if (!result.success) throw new Error(`Unknown external reference role: "${s}". Valid roles: ${ExternalReferenceRole.options.join(", ")}`);
 	return result.data;
 }
 
@@ -349,7 +349,7 @@ function parseNodeFromSection(
 			const rawType = parts[0];
 			const parsed = operationType.safeParse(rawType);
 			if (!parsed.success) {
-				throw new Error(`Unknown operation type: ${rawType}`);
+				throw new Error(`Unknown operation type: "${rawType}". Valid types: ${operationType.options.join(", ")}`);
 			}
 			const type = parsed.data;
 			const rest = parts.slice(1);

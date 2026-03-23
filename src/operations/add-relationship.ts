@@ -1,7 +1,10 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument, Relationship } from "../schema.js";
-import { isValidEndpointPair } from "../endpoint-types.js";
+import {
+	isValidEndpointPair,
+	RELATIONSHIP_ENDPOINT_TYPES,
+} from "../endpoint-types.js";
 
 /**
  * Add a relationship to a SysProM document. Returns a new document with the relationship appended.
@@ -30,8 +33,9 @@ export const addRelationshipOp = defineOperation({
 
 		// Validate endpoint types for this relationship
 		if (!isValidEndpointPair(rel.type, fromNode.type, toNode.type)) {
+			const endpoints = RELATIONSHIP_ENDPOINT_TYPES[rel.type];
 			throw new Error(
-				`Invalid endpoint types for ${rel.type}: ${fromNode.type} → ${toNode.type}`,
+				`Invalid endpoint types for ${rel.type}: ${fromNode.type} → ${toNode.type}. Valid: [${endpoints.from.join(", ")}] → [${endpoints.to.join(", ")}]`,
 			);
 		}
 

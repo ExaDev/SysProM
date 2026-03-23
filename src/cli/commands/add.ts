@@ -59,7 +59,9 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 		const type = args.nodeType;
 
 		if (!NodeType.is(type)) {
-			console.error(`Unknown node type: ${type}`);
+			console.error(
+				`Unknown node type: "${type}". Valid types: ${NodeType.options.join(", ")}`,
+			);
 			process.exit(1);
 		}
 
@@ -74,7 +76,9 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 
 		if (opts.status) {
 			if (!NodeStatus.is(opts.status)) {
-				console.error(`Unknown status: ${opts.status}`);
+				console.error(
+					`Unknown status: "${opts.status}". Valid statuses: ${NodeStatus.options.join(", ")}`,
+				);
 				process.exit(1);
 			}
 			node.status = opts.status;

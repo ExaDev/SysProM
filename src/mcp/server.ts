@@ -4,7 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod";
 import { loadDocument } from "../io.js";
-import { RelationshipType } from "../schema.js";
+import { NodeType, RelationshipType } from "../schema.js";
 import {
 	validateOp,
 	statsOp,
@@ -197,31 +197,11 @@ server.registerTool(
 	},
 	({ path, type, id, name, description }) => {
 		const { doc } = loadDocument(path);
-		const nodeType = z
-			.enum([
-				"intent",
-				"concept",
-				"capability",
-				"element",
-				"realisation",
-				"invariant",
-				"principle",
-				"policy",
-				"protocol",
-				"stage",
-				"role",
-				"gate",
-				"mode",
-				"artefact",
-				"artefact_flow",
-				"decision",
-				"change",
-				"view",
-				"version",
-			])
-			.safeParse(type);
+		const nodeType = NodeType.safeParse(type);
 		if (!nodeType.success) {
-			throw new Error(`Invalid node type: ${type}`);
+			throw new Error(
+				`Invalid node type: "${type}". Valid types: ${NodeType.options.join(", ")}`,
+			);
 		}
 		const nodeId = id ?? nextIdOp({ doc, type: nodeType.data });
 		const updated = addNodeOp({
@@ -360,7 +340,9 @@ server.registerTool(
 		const { doc } = loadDocument(path);
 		const relType = RelationshipType.safeParse(type);
 		if (!relType.success) {
-			throw new Error(`Invalid relationship type: ${type}`);
+			throw new Error(
+				`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
+			);
 		}
 		const updated = addRelationshipOp({
 			doc,
@@ -404,7 +386,9 @@ server.registerTool(
 		const { doc } = loadDocument(path);
 		const relType = RelationshipType.safeParse(type);
 		if (!relType.success) {
-			throw new Error(`Invalid relationship type: ${type}`);
+			throw new Error(
+				`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
+			);
 		}
 		const result = removeRelationshipOp({
 			doc,

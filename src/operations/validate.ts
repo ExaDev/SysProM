@@ -1,7 +1,10 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
-import { isValidEndpointPair } from "../endpoint-types.js";
+import {
+	isValidEndpointPair,
+	RELATIONSHIP_ENDPOINT_TYPES,
+} from "../endpoint-types.js";
 
 /** Zod schema for the result of validating a SysProM document. */
 export const ValidationResult = z.object({
@@ -80,8 +83,9 @@ export const validateOp = defineOperation({
 				toNode &&
 				!isValidEndpointPair(r.type, fromNode.type, toNode.type)
 			) {
+				const endpoints = RELATIONSHIP_ENDPOINT_TYPES[r.type];
 				issues.push(
-					`Invalid endpoint types for ${r.type}: ${fromNode.type} → ${toNode.type} (${r.from} → ${r.to})`,
+					`Invalid endpoint types for ${r.type}: ${fromNode.type} → ${toNode.type} (${r.from} → ${r.to}). Valid: [${endpoints.from.join(", ")}] → [${endpoints.to.join(", ")}]`,
 				);
 			}
 		}
