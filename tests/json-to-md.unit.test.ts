@@ -346,8 +346,27 @@ describe("json-to-md single file", () => {
 	it("renders view includes", () => {
 		const md = jsonToMarkdownSingle(full());
 		assert.ok(md.includes("Includes:"));
-		assert.ok(md.includes("- INT1"));
-		assert.ok(md.includes("- CON1"));
+	});
+
+	it("hyperlinks relationship targets to anchor headings", () => {
+		const md = jsonToMarkdownSingle(full());
+		// CON1 refines INT1 — anchor-only link in single file
+		assert.ok(
+			md.includes("[INT1](#int1--test-intent)"),
+			`Expected anchor link to INT1 in single file, got:\n${md}`,
+		);
+	});
+
+	it("hyperlinks view includes to anchor headings", () => {
+		const md = jsonToMarkdownSingle(full());
+		assert.ok(
+			md.includes("[INT1](#int1--test-intent)"),
+			`Expected anchor link to INT1 in view includes`,
+		);
+		assert.ok(
+			md.includes("[CON1](#con1--test-concept)"),
+			`Expected anchor link to CON1 in view includes`,
+		);
 	});
 
 	it("renders multiline descriptions as separate lines", () => {
@@ -470,9 +489,11 @@ describe("json-to-md multi-doc", () => {
 	it("renders node relationships in the correct file", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const intent = readFileSync(join(tmpDir, "INTENT.md"), "utf8");
-		assert.ok(intent.includes("Refines: INT1"));
+		assert.ok(intent.includes("Refines:"));
+		assert.ok(intent.includes("INT1"));
 		const state = readFileSync(join(tmpDir, "STATE.md"), "utf8");
-		assert.ok(state.includes("Realises: CAP1"));
+		assert.ok(state.includes("Realises:"));
+		assert.ok(state.includes("CAP1"));
 	});
 
 	it("README contains external references", () => {
@@ -485,7 +506,35 @@ describe("json-to-md multi-doc", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const readme = readFileSync(join(tmpDir, "README.md"), "utf8");
 		assert.ok(readme.includes("### VIEW1 — Domain View"));
-		assert.ok(readme.includes("- INT1"));
+	});
+
+	it("hyperlinks relationship targets to their node headings", () => {
+		jsonToMarkdownMultiDoc(full(), tmpDir);
+		const intent = readFileSync(join(tmpDir, "INTENT.md"), "utf8");
+		// CON1 refines INT1 — same file, so anchor-only link
+		assert.ok(
+			intent.includes("[INT1](#int1--test-intent)"),
+			`Expected anchor link to INT1 in INTENT.md, got:\n${intent}`,
+		);
+		const state = readFileSync(join(tmpDir, "STATE.md"), "utf8");
+		// ELEM1 realises CAP1 — cross-file link to INTENT.md
+		assert.ok(
+			state.includes("[CAP1](./INTENT.md#cap1--test-capability)"),
+			`Expected cross-file link to CAP1 in STATE.md, got:\n${state}`,
+		);
+	});
+
+	it("hyperlinks view includes to their node headings", () => {
+		jsonToMarkdownMultiDoc(full(), tmpDir);
+		const readme = readFileSync(join(tmpDir, "README.md"), "utf8");
+		assert.ok(
+			readme.includes("[INT1](./INTENT.md#int1--test-intent)"),
+			`Expected hyperlinked INT1 in view includes, got:\n${readme}`,
+		);
+		assert.ok(
+			readme.includes("[CON1](./INTENT.md#con1--test-concept)"),
+			`Expected hyperlinked CON1 in view includes, got:\n${readme}`,
+		);
 	});
 
 	it("creates subsystem folders", () => {
