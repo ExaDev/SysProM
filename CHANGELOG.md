@@ -1,3 +1,23 @@
+## [1.13.0](https://github.com/ExaDev/SysProM/compare/v1.12.0...v1.13.0) (2026-03-23)
+
+### Features
+
+* **schema:** normalise ID prefixes to 3-4 chars and add Zod refinement ([a6f786d](https://github.com/ExaDev/SysProM/commit/a6f786d09b4e5495cbcd196395628c16cdb1f758))
+
+### Bug Fixes
+
+* **dx:** include valid options in error messages ([db706ec](https://github.com/ExaDev/SysProM/commit/db706eceb074cbfe5b1cd31c6782d26e10822607))
+* **update-node:** use NodeBase.partial() for Zod 4 compatibility ([e825497](https://github.com/ExaDev/SysProM/commit/e825497f20e05468ee79f7f2c5bd1f731b47df42))
+
+### Tests
+
+* **schema:** add node ID prefix validation tests ([07d0acc](https://github.com/ExaDev/SysProM/commit/07d0accf87bac028dd08d7e2d3f46f6ccfb7891b))
+* update all test IDs to new prefix convention ([3c07cce](https://github.com/ExaDev/SysProM/commit/3c07cce0341dbb7458496b04b1b735ce20cb03f3))
+
+### Miscellaneous Chores
+
+* **spm:** rename all node IDs to new 3-4 char prefix convention ([e1118d8](https://github.com/ExaDev/SysProM/commit/e1118d8226e4c39c19f36ac22f5c3df22d28a5e2))
+
 ## [1.12.0](https://github.com/ExaDev/SysProM/compare/v1.11.0...v1.12.0) (2026-03-23)
 
 ### Features
