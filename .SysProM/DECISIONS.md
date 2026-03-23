@@ -891,3 +891,16 @@ Chosen: OPT-B
 
 Rationale: Each inference category has fundamentally different inputs (impact needs a startId; others do not) and output shapes. A union return type forces consumers to narrow on every call. Separate operations follow the existing pattern where validate, stats, trace, and query are all independent. Option C would bloat validate with unrelated concerns.
 
+### DEC42 — Enhance impact analysis for SysML/ArchiMate parity
+
+Context: inferImpactOp only follows outgoing edges and ignores 14 of 24 relationship types. SysML models bidirectional typed traceability; ArchiMate adds polarity annotations on influence relationships. Both are needed to move Impact from partial to first-class support.
+
+Options:
+- OPT-A: Add influence relationship type only — no directional change
+- OPT-B: Bidirectional traversal only — no polarity annotations
+- OPT-C: Both — bidirectional traversal plus optional polarity and strength on Relationship plus influence type plus full relationship classification
+
+Chosen: OPT-C
+
+Rationale: OPT-A alone cannot answer what depends on X — the key SysML gap. OPT-B alone cannot annotate polarity — the key ArchiMate gap. OPT-C delivers both with minimal schema additions (two optional fields, one new relationship type).
+

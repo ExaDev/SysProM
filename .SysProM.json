@@ -4096,6 +4096,92 @@
 			],
 			"status": "introduced",
 			"type": "change"
+		},
+		{
+			"context": "inferImpactOp only follows outgoing edges and ignores 14 of 24 relationship types. SysML models bidirectional typed traceability; ArchiMate adds polarity annotations on influence relationships. Both are needed to move Impact from partial to first-class support.",
+			"id": "DEC42",
+			"name": "Enhance impact analysis for SysML/ArchiMate parity",
+			"options": [
+				{
+					"description": "Add influence relationship type only — no directional change",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Bidirectional traversal only — no polarity annotations",
+					"id": "OPT-B"
+				},
+				{
+					"description": "Both — bidirectional traversal plus optional polarity and strength on Relationship plus influence type plus full relationship classification",
+					"id": "OPT-C"
+				}
+			],
+			"rationale": "OPT-A alone cannot answer what depends on X — the key SysML gap. OPT-B alone cannot annotate polarity — the key ArchiMate gap. OPT-C delivers both with minimal schema additions (two optional fields, one new relationship type).",
+			"selected": "OPT-C",
+			"type": "decision"
+		},
+		{
+			"description": "Add bidirectional BFS, polarity/strength on relationships, influence relationship type, full relationship classification, impactSummaryOp for hotspot analysis, and CLI/MCP surface changes.",
+			"id": "CHG40",
+			"name": "Enhance impact analysis for bidirectional traversal and polarity",
+			"plan": [
+				{
+					"description": "Write failing tests for bidirectional traversal and polarity",
+					"done": false
+				},
+				{
+					"description": "Add ImpactPolarity type, polarity/strength to Relationship in schema.ts",
+					"done": false
+				},
+				{
+					"description": "Add influence to relationshipTypeDef",
+					"done": false
+				},
+				{
+					"description": "Classify all 24 relationship types into impact/potential/excluded buckets",
+					"done": false
+				},
+				{
+					"description": "Implement bidirectional BFS with direction/maxDepth/relationshipFilter params",
+					"done": false
+				},
+				{
+					"description": "Add impactSummaryOp for document-level hotspot analysis",
+					"done": false
+				},
+				{
+					"description": "Extend CLI impact subcommand with --direction, --max-depth, --filter flags",
+					"done": false
+				},
+				{
+					"description": "Add hotspot view to infer all",
+					"done": false
+				},
+				{
+					"description": "Update MCP infer-impact tool with new optional inputs",
+					"done": false
+				},
+				{
+					"description": "Export ImpactPolarity and impactSummaryOp from public API",
+					"done": false
+				},
+				{
+					"description": "Regenerate schema.json",
+					"done": false
+				},
+				{
+					"description": "Sync .spm.json and .SysProM/",
+					"done": false
+				}
+			],
+			"scope": [
+				"src/schema.ts",
+				"src/operations/infer-impact.ts",
+				"src/cli/commands/infer.ts",
+				"src/mcp/server.ts",
+				"src/index.ts",
+				"tests/infer-impact.unit.test.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5179,6 +5265,11 @@
 			"from": "DEC41",
 			"to": "INV2",
 			"type": "must_preserve"
+		},
+		{
+			"from": "CHG40",
+			"to": "DEC42",
+			"type": "implements"
 		}
 	]
 }

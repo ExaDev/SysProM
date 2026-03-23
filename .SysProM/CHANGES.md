@@ -840,3 +840,32 @@ Scope:
 - [x] Register MCP tools for inference
 - [x] Add infer all subcommand
 
+### CHG40 — Enhance impact analysis for bidirectional traversal and polarity
+
+Add bidirectional BFS, polarity/strength on relationships, influence relationship type, full relationship classification, impactSummaryOp for hotspot analysis, and CLI/MCP surface changes.
+
+- Implements: [DEC42](./DECISIONS.md#dec42--enhance-impact-analysis-for-sysmlarchimate-parity)
+
+Scope:
+- src/schema.ts
+- src/operations/infer-impact.ts
+- src/cli/commands/infer.ts
+- src/mcp/server.ts
+- src/index.ts
+- tests/infer-impact.unit.test.ts
+
+#### Plan
+
+- [ ] Write failing tests for bidirectional traversal and polarity
+- [ ] Add ImpactPolarity type, polarity/strength to Relationship in schema.ts
+- [ ] Add influence to relationshipTypeDef
+- [ ] Classify all 24 relationship types into impact/potential/excluded buckets
+- [ ] Implement bidirectional BFS with direction/maxDepth/relationshipFilter params
+- [ ] Add impactSummaryOp for document-level hotspot analysis
+- [ ] Extend CLI impact subcommand with --direction, --max-depth, --filter flags
+- [ ] Add hotspot view to infer all
+- [ ] Update MCP infer-impact tool with new optional inputs
+- [ ] Export ImpactPolarity and impactSummaryOp from public API
+- [ ] Regenerate schema.json
+- [ ] Sync .spm.json and .SysProM/
+
