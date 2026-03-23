@@ -53,7 +53,7 @@ export default {
 		[
 			"@semantic-release/git",
 			{
-				assets: ["CHANGELOG.md", "package.json", ".claude-plugin/marketplace.json"],
+				assets: ["CHANGELOG.md", "package.json", ".claude-plugin/plugin.json"],
 				message:
 					"chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
 			},

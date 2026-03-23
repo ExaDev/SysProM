@@ -1,0 +1,15 @@
+{
+  "name": "sysprom",
+  "description": "SysProM (System Provenance Model) — skills and MCP server for creating, querying, and managing provenance graphs",
+  "version": "1.10.1",
+  "author": {
+    "name": "ExaDev",
+    "email": "support@exadev.io"
+  },
+  "homepage": "https://github.com/ExaDev/SysProM",
+  "repository": "https://github.com/ExaDev/SysProM.git",
+  "license": "MIT",
+  "keywords": ["sysprom", "provenance", "decision", "architecture", "traceability"],
+  "skills": "./.claude/skills/",
+  "mcpServers": "./.mcp.json"
+}

@@ -1,7 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "sysprom",
-  "description": "SysProM (System Provenance Model) — record decisions, changes, invariants, and architecture traceability",
   "owner": {
     "name": "ExaDev",
     "email": "support@exadev.io"
@@ -9,32 +8,9 @@
   "plugins": [
     {
       "name": "sysprom",
-      "description": "SysProM (System Provenance Model) — skills for creating, querying, and managing provenance graphs",
-      "version": "1.10.1",
       "source": "./",
-      "category": "productivity",
-      "homepage": "https://github.com/ExaDev/SysProM",
-      "skills": "./.claude/skills/",
-      "strict": false
-    },
-    {
-      "name": "sysprom-mcp",
-      "description": "SysProM (System Provenance Model) — MCP server for provenance graph operations",
-      "version": "1.10.1",
-      "source": "./",
-      "category": "productivity",
-      "homepage": "https://github.com/ExaDev/SysProM",
-      "mcpServers": {
-        "sysprom": {
-          "command": "npx",
-          "args": [
-            "-y",
-            "sysprom",
-            "mcp"
-          ]
-        }
-      },
-      "strict": false
+      "description": "SysProM (System Provenance Model) — skills and MCP server for creating, querying, and managing provenance graphs",
+      "category": "productivity"
     }
   ]
 }

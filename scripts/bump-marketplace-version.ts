@@ -10,14 +10,13 @@ if (!version) {
 }
 
 const root = join(dirname(new URL(import.meta.url).pathname), "..");
-const path = join(root, ".claude-plugin", "marketplace.json");
+const claudePluginDir = join(root, ".claude-plugin");
 
-const manifest = JSON.parse(readFileSync(path, "utf8")) as {
-	plugins: { version: string }[];
+// Bump plugin.json version (authoritative source with strict: true)
+const pluginPath = join(claudePluginDir, "plugin.json");
+const plugin = JSON.parse(readFileSync(pluginPath, "utf8")) as {
+	version: string;
 };
-for (const plugin of manifest.plugins) {
-	plugin.version = version;
-}
-
-writeFileSync(path, JSON.stringify(manifest, null, 2) + "\n");
-console.log(`Bumped ${String(manifest.plugins.length)} plugin(s) to ${version}`);
+plugin.version = version;
+writeFileSync(pluginPath, JSON.stringify(plugin, null, 2) + "\n");
+console.log(`Bumped plugin.json to ${version}`);
