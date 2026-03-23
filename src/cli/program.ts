@@ -49,6 +49,7 @@ import { speckitCommand } from "./commands/speckit.js";
 import { taskCommand } from "./commands/task.js";
 import { planCommand } from "./commands/plan.js";
 import { syncCommandDef } from "./commands/sync.js";
+import { inferCommand } from "./commands/infer.js";
 
 export const program = new Command();
 
@@ -82,6 +83,7 @@ export const commands: CommandDef[] = [
 	taskCommand,
 	planCommand,
 	syncCommandDef,
+	inferCommand,
 ];
 
 for (const cmd of commands) {
