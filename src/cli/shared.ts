@@ -32,7 +32,10 @@ const pathOpt = z
  *  13. *.spm.json     14. *.spm.md     15. *.spm/
  *  16. *.sysprom.json 17. *.sysprom.md 18. *.sysprom/
  *
- * All matching is case-insensitive. Glob tiers must have exactly one match.
+ * Matching is case-insensitive for base names and directory matches.
+ * Files like .SysProM.json, .sysprom.json, and .SYSPROM.JSON are treated
+ * as equivalent and all match the .SysProM.json priority tier.
+ * Glob tiers must have exactly one match.
  * @param input - Explicit document path, or undefined for auto-detection.
  * @param cwd - Working directory to search from (defaults to `.`).
  * @returns The resolved document path.
@@ -47,7 +50,6 @@ export function resolveInput(input?: string, cwd?: string): string {
 
 	const dir = resolve(cwd ?? ".");
 
-	// Exact names to check, in priority order (case-insensitive)
 	const exactNames = [
 		".SysProM.json",
 		".SysProM.md",
@@ -62,12 +64,35 @@ export function resolveInput(input?: string, cwd?: string): string {
 
 	const entries = readdirSync(dir);
 
+	// Phase 1: Try exact case-sensitive matches first
 	for (const name of exactNames) {
 		const isDirSuffix =
 			name.endsWith(".SysProM") ||
 			name.endsWith(".spm") ||
 			name.endsWith(".sysprom");
-		const found = entries.filter((e) => e.toLowerCase() === name);
+		const found = entries.filter((e) => e === name);
+		if (found.length === 1) {
+			const candidate = join(dir, found[0]);
+			if (isDirSuffix) {
+				try {
+					if (statSync(candidate).isDirectory()) return candidate;
+				} catch {
+					/* skip */
+				}
+			} else {
+				return candidate;
+			}
+		}
+	}
+
+	// Phase 2: Try case-insensitive matches (supports case variations like .SPM.JSON)
+	for (const name of exactNames) {
+		const isDirSuffix =
+			name.endsWith(".SysProM") ||
+			name.endsWith(".spm") ||
+			name.endsWith(".sysprom");
+		const nameLower = name.toLowerCase();
+		const found = entries.filter((e) => e.toLowerCase() === nameLower);
 		if (found.length > 1) {
 			throw new Error(
 				`Multiple SysProM documents found: ${found.join(", ")}. Specify one explicitly.`,
@@ -103,10 +128,17 @@ export function resolveInput(input?: string, cwd?: string): string {
 	for (const suffix of globSuffixes) {
 		const isDirSuffix =
 			suffix === ".SysProM" || suffix === ".spm" || suffix === ".sysprom";
+		const suffixLower = suffix.toLowerCase();
 		const matches = entries
 			.filter((e) => {
 				const lower = e.toLowerCase();
-				return lower.endsWith(suffix) && lower !== suffix;
+				// Match files ending with this suffix (case-insensitive) that don't start with "."
+				// and are not exact matches (those were already checked)
+				return (
+					lower.endsWith(suffixLower) &&
+					lower !== suffixLower &&
+					!e.startsWith(".")
+				);
 			})
 			.map((e) => join(dir, e))
 			.filter((p) => {
