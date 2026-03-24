@@ -1,3 +1,9 @@
+## [1.16.1](https://github.com/ExaDev/SysProM/compare/v1.16.0...v1.16.1) (2026-03-24)
+
+### Documentation
+
+* remove CLI docs from TypeDoc projectDocuments ([42e974b](https://github.com/ExaDev/SysProM/commit/42e974bf15fcf7f76e4d3ec817c935a02b88f872))
+
 ## [1.16.0](https://github.com/ExaDev/SysProM/compare/v1.15.0...v1.16.0) (2026-03-23)
 
 ### Features
