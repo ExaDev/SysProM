@@ -52,7 +52,7 @@ jobs:
             turbo-docs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             turbo-docs-${{ runner.os }}-
       - run: npx turbo run _docs:cli _docs:api:html
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: site/
 
