@@ -1,3 +1,37 @@
+## [1.18.0](https://github.com/ExaDev/SysProM/compare/v1.17.0...v1.18.0) (2026-03-31)
+
+### Features
+
+* add justifies relationship type ([766b222](https://github.com/ExaDev/SysProM/commit/766b222f0080514850736a4a7e06729e8f4554f4))
+* expand applies_to to target invariants ([b95ffef](https://github.com/ExaDev/SysProM/commit/b95ffef04f5e4987b117a7f271ad15fd115116b2))
+* expand consumes to accept role sources ([d2325db](https://github.com/ExaDev/SysProM/commit/d2325db46b4c6386b26563d9cf9a1bdacbc6f7fc))
+* expand governed_by to accept artefact sources ([6d1b594](https://github.com/ExaDev/SysProM/commit/6d1b594650f3453d061a6cab058c32c3031815d0))
+* expand performs to target stages ([badd3e8](https://github.com/ExaDev/SysProM/commit/badd3e8bda514ce16273756669133d30812c36b6))
+* expand produces for concept-to-concept causation ([dc4c72b](https://github.com/ExaDev/SysProM/commit/dc4c72b3a0f67d43e46913fbdb76e0017f624cf2))
+* expand realises endpoint types ([8483047](https://github.com/ExaDev/SysProM/commit/8483047b228a52436548860430b5de764a253c1a))
+* **graph:** add graph rendering and diagram export ([f9cc575](https://github.com/ExaDev/SysProM/commit/f9cc575aa2c53a46b739f3ab4d7dd6ffe3eb3a20))
+
+### Bug Fixes
+
+* add justifies and influence to schema test coverage, correct comment ([79b6e9f](https://github.com/ExaDev/SysProM/commit/79b6e9f919163f3d060efb4d08e4d922c1ffeec5))
+* **cli/graph:** pass all required options to graphOp ([3650328](https://github.com/ExaDev/SysProM/commit/3650328e90c20c632b27b7312d89a402f494b228))
+
+### Code Refactoring
+
+* **cli:** simplify command schema definitions ([1ad0f2a](https://github.com/ExaDev/SysProM/commit/1ad0f2a7c0f0f72ec57d15384468fdf30331d6e9))
+* **schema:** extract reusable schema guard helper ([204465f](https://github.com/ExaDev/SysProM/commit/204465f366b873eae0a5c9a13460c2d0d7ab5f8e))
+
+### Documentation
+
+* record endpoint expansion decision in self-describing document ([f92dc10](https://github.com/ExaDev/SysProM/commit/f92dc104e9593b361286d289a808e4645a1931e8))
+* **sysprom:** sync generated documentation and workspace ([de866ec](https://github.com/ExaDev/SysProM/commit/de866ecd3a5af247f15b8871d58ff887435e5395))
+
+### Miscellaneous Chores
+
+* add pre-push hook to validate with turbo ([e8a3981](https://github.com/ExaDev/SysProM/commit/e8a3981f5b899a5df6ce21f0027e7250e28b025d))
+* **lint:** update tooling and resolve eslint failures ([137684a](https://github.com/ExaDev/SysProM/commit/137684a427de9ce5840d448c65268a5a31759265))
+* **plugin:** refresh Claude integration assets ([7590639](https://github.com/ExaDev/SysProM/commit/7590639306a548ae975d7130505f9f7bc0f432db))
+
 ## [1.17.0](https://github.com/ExaDev/SysProM/compare/v1.16.1...v1.17.0) (2026-03-31)
 
 ### Features
