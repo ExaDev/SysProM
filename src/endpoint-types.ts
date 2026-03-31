@@ -294,6 +294,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"stage",
 			"decision",
 			"change",
+			"invariant",
 		],
 	},
 

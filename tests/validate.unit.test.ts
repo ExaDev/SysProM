@@ -130,4 +130,17 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("applies_to accepts principle → invariant", () => {
+		const doc = makeDoc(
+			[
+				{ id: "PRIN1", type: "principle", name: "P" },
+				{ id: "INV1", type: "invariant", name: "I" },
+			],
+			[{ from: "PRIN1", to: "INV1", type: "applies_to" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });
