@@ -31,7 +31,11 @@
       "cache": false
     },
     "_docs:cli": {
-      "inputs": ["src/cli/**/*.ts", "src/schema.ts", "scripts/generate-cli-docs.ts"],
+      "inputs": [
+        "src/cli/**/*.ts",
+        "src/schema.ts",
+        "scripts/generate-cli-docs.ts"
+      ],
       "outputs": ["docs/cli/**"]
     },
     "_docs:api": {
@@ -45,6 +49,10 @@
     },
     "_build": {
       "dependsOn": ["_compile", "_schema", "_docs:cli", "_docs:api"],
+      "outputs": []
+    },
+    "_validate": {
+      "dependsOn": ["_lint", "_typecheck", "_build", "_test"],
       "outputs": []
     }
   }

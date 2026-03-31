@@ -58,6 +58,7 @@
     "_docs:cli": "tsx scripts/generate-cli-docs.ts",
     "_docs:api": "typedoc",
     "_docs:api:html": "typedoc",
+    "validate": "turbo run _validate",
     "prepare": "husky"
   },
   "dependencies": {
