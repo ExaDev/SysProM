@@ -42,34 +42,40 @@ const optsSchema = mutationOpts.extend({
 });
 
 /**
- * Build a node object from CLI options.
- * @param id - The unique identifier for the node
- * @param type - The kind of node (decision, change, invariant, etc.)
- * @param name - The human-readable name of the node
- * @param opts - CLI options to apply to the node
- * @returns The constructed node with fields populated from opts
+ * Populate optional node fields from CLI options.
+ * @param node - The node to populate
+ * @param description - Optional description
+ * @param status - Optional (pre-validated) status
+ * @param context - Optional decision context
+ * @param rationale - Optional decision rationale
+ * @param scope - Optional change scope
+ * @param selected - Optional selected option ID
+ * @param options - Optional array of option descriptions
  * @example
  * ```ts
- * const node = buildNodeFromOpts("D1", "decision", "My Decision", opts);
+ * const node: Node = { id: "D1", type: "decision", name: "My Decision" };
+ * populateNodeFromOpts(node, desc, status, ctx, rat, scope, sel, opts);
  * ```
  */
-function buildNodeFromOpts(
-	id: string,
-	type: string,
-	name: string,
-	opts: z.infer<typeof optsSchema>,
-): Node {
-	const node: Node = { id, type, name };
+function populateNodeFromOpts(
+	node: Node,
+	description?: string,
+	status?: NodeStatus,
+	context?: string,
+	rationale?: string,
+	scope?: string[],
+	selected?: string,
+	options?: string[],
+): void {
+	if (description) node.description = description;
+	if (status) node.status = status;
+	if (context) node.context = context;
+	if (rationale) node.rationale = rationale;
+	if (scope?.length) node.scope = scope;
+	if (selected) node.selected = selected;
 
-	if (opts.description) node.description = opts.description;
-	if (opts.status) node.status = opts.status;
-	if (opts.context) node.context = opts.context;
-	if (opts.rationale) node.rationale = opts.rationale;
-	if (opts.scope?.length) node.scope = opts.scope;
-	if (opts.selected) node.selected = opts.selected;
-
-	if (opts.option?.length) {
-		node.options = opts.option.map((arg, i) => {
+	if (options?.length) {
+		node.options = options.map((arg, i) => {
 			const colonIdx = arg.indexOf(":");
 			if (colonIdx >= 0) {
 				return {
@@ -78,11 +84,9 @@ function buildNodeFromOpts(
 				};
 			}
 			const letter = String.fromCharCode(65 + i);
-			return { id: `${id}-OPT-${letter}`, description: arg };
+			return { id: `${node.id}-OPT-${letter}`, description: arg };
 		});
 	}
-
-	return node;
 }
 
 export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
@@ -117,7 +121,24 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 		}
 
 		const id = opts.id ?? nextIdOp({ doc, type });
-		const node = buildNodeFromOpts(id, type, opts.name, opts);
+		const node: Node = { id, type, name: opts.name };
+
+		// Use type guard to narrow status type after validation
+		let status: NodeStatus | undefined;
+		if (opts.status && NodeStatus.is(opts.status)) {
+			status = opts.status;
+		}
+
+		populateNodeFromOpts(
+			node,
+			opts.description,
+			status,
+			opts.context,
+			opts.rationale,
+			opts.scope,
+			opts.selected,
+			opts.option,
+		);
 
 		try {
 			const newDoc = addNodeOp({
