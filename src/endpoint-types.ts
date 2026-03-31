@@ -301,8 +301,8 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Produces — generation
 	produces: {
-		from: ["stage", "artefact_flow", "realisation"],
-		to: ["artefact"],
+		from: ["stage", "artefact_flow", "realisation", "concept"],
+		to: ["artefact", "concept"],
 	},
 
 	// Consumes — usage

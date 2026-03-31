@@ -182,4 +182,17 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("produces accepts concept → concept", () => {
+		const doc = makeDoc(
+			[
+				{ id: "CON1", type: "concept", name: "Supersession" },
+				{ id: "CON2", type: "concept", name: "Kill Switch" },
+			],
+			[{ from: "CON1", to: "CON2", type: "produces" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });
