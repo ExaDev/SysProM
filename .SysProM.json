@@ -378,7 +378,7 @@
 			"type": "invariant"
 		},
 		{
-			"description": "Each relationship type has a set of valid source and target node types. For example, implements must go from a change to a decision; governed_by must point at a protocol. Enforced in addRelationship (refuse) and validate (report).",
+			"description": "Each relationship type has a set of valid source and target node types. The endpoint matrix must remain semantically meaningful while allowing practical system-provenance patterns such as role-to-concept or role-to-protocol performs, capability-to-artefact produces, invariant-to-concept applies_to, and protocol decomposition via part_of. Enforced in addRelationship (refuse) and validate (report).",
 			"id": "INV25",
 			"name": "Relationship Endpoint Type Validity",
 			"type": "invariant"
@@ -4242,7 +4242,7 @@
 			"type": "view"
 		},
 		{
-			"context": "Symphony modelling revealed six endpoint restrictions blocking valid governance patterns",
+			"context": "Product-system modelling revealed endpoint restrictions blocking valid specification, design, and implementation provenance patterns.",
 			"id": "DEC43",
 			"name": "Expand endpoint type matrix for governance modelling",
 			"options": [
@@ -4255,9 +4255,70 @@
 					"id": "OPT-B"
 				}
 			],
-			"rationale": "All expansions are additive with no regressions. Justifies relationship type is semantically justified and consistent with existing design.",
+			"rationale": "The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology.",
 			"selected": "OPT-A",
+			"status": "implemented",
 			"type": "decision"
+		},
+		{
+			"description": "A recommended modelling profile for product repositories that uses SysProM to describe the system's specification, design, and implementation with a consistent trace chain across layers.",
+			"id": "CON9",
+			"name": "System Provenance Profile",
+			"type": "concept"
+		},
+		{
+			"description": "Guide authors to model product systems through intent, concept, capability, element, realisation, artefact, decision, and change nodes with practical traceability and implementation provenance.",
+			"id": "CAP12",
+			"name": "Product Repository Modelling Guidance",
+			"type": "capability"
+		},
+		{
+			"description": "README guidance describing recommended node usage, trace chains, relationship usage, and implementation provenance patterns for product repositories.",
+			"external_references": [
+				{
+					"description": "System Provenance Profile section in the project README.",
+					"identifier": "README.md",
+					"role": "source"
+				}
+			],
+			"id": "ART4",
+			"name": "System Provenance Profile Guidance",
+			"type": "artefact"
+		},
+		{
+			"description": "Update endpoint validation rules, tests, and README guidance so SysProM better supports modelling product-system specification, design, and implementation provenance.",
+			"id": "CHG41",
+			"lifecycle": {
+				"implemented": "2026-03-31",
+				"proposed": "2026-03-31"
+			},
+			"name": "Implement system provenance profile and broaden endpoint modelling",
+			"plan": [
+				{
+					"description": "Expand the endpoint matrix for system-provenance modelling patterns",
+					"done": true
+				},
+				{
+					"description": "Add validation and safety test coverage for the broadened endpoint combinations",
+					"done": true
+				},
+				{
+					"description": "Add README guidance for a generic system provenance profile",
+					"done": true
+				},
+				{
+					"description": "Type-check the implementation changes",
+					"done": true
+				}
+			],
+			"scope": [
+				"src/endpoint-types.ts",
+				"tests/validate.unit.test.ts",
+				"tests/safety-guards.unit.test.ts",
+				"README.md"
+			],
+			"status": "implemented",
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5345,6 +5406,51 @@
 			"from": "CHG40",
 			"to": "DEC42",
 			"type": "implements"
+		},
+		{
+			"from": "CON9",
+			"to": "INT1",
+			"type": "refines"
+		},
+		{
+			"from": "CAP12",
+			"to": "CON9",
+			"type": "refines"
+		},
+		{
+			"from": "DEC43",
+			"to": "INV25",
+			"type": "affects"
+		},
+		{
+			"from": "DEC43",
+			"to": "CAP12",
+			"type": "affects"
+		},
+		{
+			"from": "DEC43",
+			"to": "INV18",
+			"type": "must_preserve"
+		},
+		{
+			"from": "CAP12",
+			"to": "ART4",
+			"type": "produces"
+		},
+		{
+			"from": "CHG41",
+			"to": "DEC43",
+			"type": "implements"
+		},
+		{
+			"from": "CHG41",
+			"to": "CAP12",
+			"type": "modifies"
+		},
+		{
+			"from": "CHG41",
+			"to": "ART4",
+			"type": "modifies"
 		}
 	]
 }

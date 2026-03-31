@@ -245,6 +245,47 @@ if (node.is(thing)) {
 
 SysProM models systems as directed graphs across abstraction layers — intent, concept, capability, structure, and realisation — with explicit decisions, changes, and invariants. It is domain-agnostic, format-agnostic, and recursively composable.
 
+## System Provenance Profile
+
+For product repositories, use SysProM to model the specification, design, and implementation of the system being built.
+
+Recommended node usage:
+
+- `intent`: user outcomes, business goals, and product promises
+- `concept`: domain concepts, behavioural boundaries, and system rules
+- `capability`: user-visible or externally meaningful system behaviours
+- `element`: architectural components, services, stores, queues, and UI surfaces
+- `realisation`: implementation units such as packages, modules, handlers, schemas, and jobs
+- `protocol`: workflows and lifecycle paths such as review, publish, sync, or ingestion flows
+- `artefact`: API contracts, documents, prompts, tests, migrations, and generated outputs
+- `decision`: selected trade-offs and architectural choices
+- `change`: implementation slices or delivery units
+- `role`: human or system actors
+- `view`: curated slices such as specification, architecture, implementation, and operations
+
+Recommended trace chain:
+
+```text
+intent -> concept -> capability -> element -> realisation -> artefact
+```
+
+Recommended relationship usage:
+
+- `refines`: tighten intent into concepts and concepts into capabilities
+- `part_of`: decompose concepts, protocols, capabilities, and architecture structures
+- `realises`: connect design structures to implementation structures
+- `produces`: connect capabilities or stages to the artefacts they generate
+- `performs`: connect roles to capabilities, stages, protocols, and operational concepts
+- `governed_by` / `constrained_by`: express rules, policies, and invariants on design and implementation
+- `implements` / `modifies`: connect delivery changes to the nodes they implement or alter
+- `affects` + `must_preserve`: connect decisions to impacted areas and their protected invariants
+
+Recommended implementation provenance:
+
+- use `external_references` on `realisation` nodes to point to code paths, packages, handlers, or schemas
+- use `external_references` on `artefact` nodes to point to API definitions, test files, migrations, docs, PRs, and generated outputs
+- use `status`, `scope`, and decision/change links so the graph can answer both “what is the design?” and “what has actually been built?”
+
 ## How SysProM Compares
 
 <table>
