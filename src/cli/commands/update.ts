@@ -13,22 +13,46 @@ import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 // CLI helper functions
 // ---------------------------------------------------------------------------
 
-function parseLifecycleValue(rawVal: string): boolean | string {
-	if (rawVal === "true") {
-		return true;
-	}
-	if (rawVal === "false") {
-		return false;
-	}
-	if (/^\d{4}-\d{2}-\d{2}/.test(rawVal)) {
-		return rawVal; // ISO date string
-	}
+function parseLifecycleValue(rawVal: string): unknown {
+	if (rawVal === "true") return true;
+	if (rawVal === "false") return false;
+	if (/^\d{4}-\d{2}-\d{2}/.test(rawVal)) return rawVal;
 	return rawVal;
 }
 
 function parseMetaValue(val: string): unknown {
 	const numVal = Number(val);
 	return Number.isFinite(numVal) && val === String(numVal) ? numVal : val;
+}
+
+/**
+ * Parse lifecycle field updates from key=value format.
+ * @param nodeLifecycle - Optional existing lifecycle object from the node
+ * @param lifecycleArgs - Array of key=value strings to parse
+ * @returns Lifecycle object with parsed values, or null if no args
+ * @example
+ * ```ts
+ * const lifecycle = parseLifecycleFields(node.lifecycle, ["created=2026-01-01"]);
+ * ```
+ */
+function parseLifecycleFields(
+	nodeLifecycle: Record<string, unknown> | undefined,
+	lifecycleArgs: string[],
+): Record<string, unknown> | null {
+	if (!lifecycleArgs.length) return null;
+
+	const lifecycle = { ...nodeLifecycle };
+	for (const kv of lifecycleArgs) {
+		const eqIdx = kv.indexOf("=");
+		if (eqIdx < 0) {
+			console.error(`Invalid --lifecycle format: ${kv} (expected key=value)`);
+			process.exit(1);
+		}
+		const key = kv.slice(0, eqIdx);
+		const rawVal = kv.slice(eqIdx + 1);
+		lifecycle[key] = parseLifecycleValue(rawVal);
+	}
+	return lifecycle;
 }
 
 // ---------------------------------------------------------------------------
@@ -95,21 +119,12 @@ const nodeSubcommand: CommandDef = {
 		if (opts.context !== undefined) fields.context = opts.context;
 		if (opts.rationale !== undefined) fields.rationale = opts.rationale;
 
-		if (opts.lifecycle && opts.lifecycle.length > 0) {
-			const lifecycle = { ...node.lifecycle };
-			for (const kv of opts.lifecycle) {
-				const eqIdx = kv.indexOf("=");
-				if (eqIdx < 0) {
-					console.error(
-						`Invalid --lifecycle format: ${kv} (expected key=value)`,
-					);
-					process.exit(1);
-				}
-				const key = kv.slice(0, eqIdx);
-				const rawVal = kv.slice(eqIdx + 1);
-				lifecycle[key] = parseLifecycleValue(rawVal);
-			}
-			fields.lifecycle = lifecycle;
+		const lifecycleFields = parseLifecycleFields(
+			node.lifecycle,
+			opts.lifecycle ?? [],
+		);
+		if (lifecycleFields) {
+			fields.lifecycle = lifecycleFields;
 		}
 
 		if (Object.keys(fields).length === 0) {
