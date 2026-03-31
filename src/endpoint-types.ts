@@ -307,7 +307,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Consumes — usage
 	consumes: {
-		from: ["stage", "artefact_flow", "realisation"],
+		from: ["stage", "artefact_flow", "realisation", "role"],
 		to: ["artefact"],
 	},
 

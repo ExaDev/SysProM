@@ -156,4 +156,17 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("consumes accepts role → artefact", () => {
+		const doc = makeDoc(
+			[
+				{ id: "ROLE1", type: "role", name: "R" },
+				{ id: "ART1", type: "artefact", name: "A" },
+			],
+			[{ from: "ROLE1", to: "ART1", type: "consumes" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });
