@@ -48,20 +48,21 @@ Launch exploration subagents to discover each node type. Each subagent searches 
 
 **Dispatch these in parallel:**
 
-| Subagent | What to find | Where to look |
-|----------|-------------|---------------|
-| Intent | Project purpose, goals, mission | README, CLAUDE.md, AGENTS.md, docs/, package.json description, repo description |
-| Concepts | Domain models, key abstractions, bounded contexts | src/ type definitions, interfaces, schemas, domain models, glossaries |
-| Capabilities | Features, APIs, services, what the system can do | Route handlers, exported functions, CLI commands, public API surface |
-| Elements | Modules, packages, key files, infrastructure | Directory structure, package.json workspaces, build config, Dockerfiles |
-| Decisions | Architectural choices, technology selections, trade-offs | ADRs (docs/adr/, docs/decisions/), commit messages, config file choices (tsconfig, eslint, framework config), CLAUDE.md conventions |
-| Invariants | Rules that must always hold, constraints, policies | Lint rules, type constraints, test assertions, CI checks, validation schemas, CLAUDE.md rules |
+| Subagent     | What to find                                             | Where to look                                                                                                                       |
+| ------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Intent       | Project purpose, goals, mission                          | README, CLAUDE.md, AGENTS.md, docs/, package.json description, repo description                                                     |
+| Concepts     | Domain models, key abstractions, bounded contexts        | src/ type definitions, interfaces, schemas, domain models, glossaries                                                               |
+| Capabilities | Features, APIs, services, what the system can do         | Route handlers, exported functions, CLI commands, public API surface                                                                |
+| Elements     | Modules, packages, key files, infrastructure             | Directory structure, package.json workspaces, build config, Dockerfiles                                                             |
+| Decisions    | Architectural choices, technology selections, trade-offs | ADRs (docs/adr/, docs/decisions/), commit messages, config file choices (tsconfig, eslint, framework config), CLAUDE.md conventions |
+| Invariants   | Rules that must always hold, constraints, policies       | Lint rules, type constraints, test assertions, CI checks, validation schemas, CLAUDE.md rules                                       |
 
 **Subagent prompt template:**
 
 > You are exploring a codebase to discover [NODE TYPE] for a SysProM provenance document. Search thoroughly using Glob, Grep, and Read. Return a structured list of discoveries in this format:
 >
 > For each discovery:
+>
 > - **Suggested ID**: [TYPE_PREFIX][N] (e.g. I1, CN3, CP5, EL12, D7, INV4)
 > - **Name**: Short descriptive name
 > - **Description**: What it is and why it matters
@@ -117,15 +118,15 @@ sysprom update add-rel <from> <type> <to>
 
 Common relationship types to look for:
 
-| Pattern | Relationship |
-|---------|-------------|
-| Intent → Concept | `refines` |
-| Concept → Capability | `refines` |
-| Capability → Element | `realises` |
-| Element → Element | `depends_on` |
-| Decision → Element | `affects` |
-| Decision → Invariant | `must_preserve` |
-| Invariant → Capability | `constrains` |
+| Pattern                | Relationship    |
+| ---------------------- | --------------- |
+| Intent → Concept       | `refines`       |
+| Concept → Capability   | `refines`       |
+| Capability → Element   | `realises`      |
+| Element → Element      | `depends_on`    |
+| Decision → Element     | `affects`       |
+| Decision → Invariant   | `must_preserve` |
+| Invariant → Capability | `constrains`    |
 
 ### Step 6: Validate and sync
 
@@ -138,11 +139,11 @@ Review any validation warnings and fix before finishing.
 
 ## Granularity Guide
 
-| Too coarse | Right level | Too fine |
-|-----------|------------|---------|
-| "The backend" | "Authentication service" | "validatePassword function" |
-| "We use TypeScript" | "Strict TypeScript with no `any`" (invariant) | "tsconfig.json line 4" |
-| "The API" | "REST API for user management" | "GET /users/:id endpoint" |
+| Too coarse          | Right level                                   | Too fine                    |
+| ------------------- | --------------------------------------------- | --------------------------- |
+| "The backend"       | "Authentication service"                      | "validatePassword function" |
+| "We use TypeScript" | "Strict TypeScript with no `any`" (invariant) | "tsconfig.json line 4"      |
+| "The API"           | "REST API for user management"                | "GET /users/:id endpoint"   |
 
 Aim for nodes that a developer would recognise as meaningful architectural units.
 

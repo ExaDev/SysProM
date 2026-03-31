@@ -20,6 +20,7 @@ Trace the refinement chain from a node through abstraction layers, showing how a
    - Understand the layer it belongs to
 
 2. Trace the refinement chain:
+
    ```bash
    spm query trace <arg1>
    ```
@@ -32,6 +33,7 @@ Trace the refinement chain from a node through abstraction layers, showing how a
 ## Output
 
 Shows the chain:
+
 - Starting node (intent, concept, capability, element, realisation, etc.)
 - Each refinement relationship
 - Destination nodes at lower abstraction layers

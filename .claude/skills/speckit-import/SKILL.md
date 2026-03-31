@@ -22,6 +22,7 @@ Import features from Spec-Kit format (GitHub Spec-Kit directories) into SysProM 
    - Output SysProM file path
 
 2. Import Spec-Kit features:
+
    ```bash
    spm speckit import --speckit-dir ./features --output doc.spm.json
    ```
@@ -34,6 +35,7 @@ Import features from Spec-Kit format (GitHub Spec-Kit directories) into SysProM 
 ## Mapping
 
 Spec-Kit features are mapped to SysProM nodes:
+
 - Spec-Kit features → SysProM capabilities or concepts
 - Spec-Kit acceptance criteria → Related invariants
 - Spec-Kit references → Relationships
@@ -41,6 +43,7 @@ Spec-Kit features are mapped to SysProM nodes:
 ## Output
 
 Creates new SysProM nodes:
+
 - One node per Spec-Kit feature
 - Links to parent node if specified
 - Preservation of feature metadata

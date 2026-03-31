@@ -49,20 +49,21 @@ Dispatch subagents to check each audit dimension. Each subagent reads the SysPro
 
 **Dispatch these in parallel:**
 
-| Subagent | What to check |
-|----------|--------------|
-| Ghost nodes | Nodes in SysProM that reference files, modules, or concepts that no longer exist |
-| Undocumented code | Significant modules, services, or APIs in the codebase with no corresponding SysProM node |
-| Decision drift | Decisions recorded in SysProM whose selected option no longer matches reality (e.g. "chose SQLite" but codebase uses Postgres) |
-| Invariant enforcement | Invariants claimed in SysProM that are not actually enforced (no lint rule, no test, no type constraint) |
-| Relationship accuracy | Relationships that are structurally wrong (A depends_on B but no import exists, A refines B but they are unrelated) |
-| Staleness | Nodes with outdated descriptions, names that no longer match, or statuses that should have progressed |
+| Subagent              | What to check                                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Ghost nodes           | Nodes in SysProM that reference files, modules, or concepts that no longer exist                                               |
+| Undocumented code     | Significant modules, services, or APIs in the codebase with no corresponding SysProM node                                      |
+| Decision drift        | Decisions recorded in SysProM whose selected option no longer matches reality (e.g. "chose SQLite" but codebase uses Postgres) |
+| Invariant enforcement | Invariants claimed in SysProM that are not actually enforced (no lint rule, no test, no type constraint)                       |
+| Relationship accuracy | Relationships that are structurally wrong (A depends_on B but no import exists, A refines B but they are unrelated)            |
+| Staleness             | Nodes with outdated descriptions, names that no longer match, or statuses that should have progressed                          |
 
 **Subagent prompt template:**
 
 > You are auditing a codebase against its SysProM provenance document.
 >
 > First, read the SysProM document:
+>
 > ```bash
 > sysprom query nodes
 > sysprom query rels
@@ -71,6 +72,7 @@ Dispatch subagents to check each audit dimension. Each subagent reads the SysPro
 > Then explore the codebase to check for [AUDIT DIMENSION].
 >
 > For each finding, report:
+>
 > - **Issue**: What is wrong
 > - **Severity**: critical / warning / info
 > - **Node**: Which SysProM node is affected (or "none" for undocumented code)
@@ -107,14 +109,14 @@ Present findings grouped by severity:
 
 For each approved fix, use the appropriate CLI command:
 
-| Drift type | Fix |
-|-----------|-----|
-| Ghost node | `sysprom remove <id>` or `sysprom update node <id> --status retired` |
-| Undocumented code | `sysprom add <type> --name "<name>" --description "<desc>"` |
-| Decision drift | `sysprom update node <id> --description "<updated>"` or add new decision |
-| Broken invariant | Update invariant description, or add enforcement, or retire |
+| Drift type         | Fix                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| Ghost node         | `sysprom remove <id>` or `sysprom update node <id> --status retired`                            |
+| Undocumented code  | `sysprom add <type> --name "<name>" --description "<desc>"`                                     |
+| Decision drift     | `sysprom update node <id> --description "<updated>"` or add new decision                        |
+| Broken invariant   | Update invariant description, or add enforcement, or retire                                     |
 | Wrong relationship | `sysprom update remove-rel <from> <type> <to>` then `sysprom update add-rel <from> <type> <to>` |
-| Stale status | `sysprom update node <id> --status <new-status>` |
+| Stale status       | `sysprom update node <id> --status <new-status>`                                                |
 
 ### Step 6: Validate and sync
 
@@ -127,11 +129,11 @@ Confirm zero validation errors after fixes.
 
 ## Severity Guide
 
-| Severity | Criteria |
-|----------|---------|
+| Severity     | Criteria                                                                         |
+| ------------ | -------------------------------------------------------------------------------- |
 | **Critical** | Node references something that does not exist, or invariant is actively violated |
-| **Warning** | Document is incomplete or inaccurate but not misleading |
-| **Info** | Opportunity to improve coverage or update stale metadata |
+| **Warning**  | Document is incomplete or inaccurate but not misleading                          |
+| **Info**     | Opportunity to improve coverage or update stale metadata                         |
 
 ## Common Mistakes
 

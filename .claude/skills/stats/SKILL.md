@@ -16,6 +16,7 @@ None — operates on the current document.
 ## Steps
 
 1. Get document statistics:
+
    ```bash
    spm stats
    ```
@@ -30,6 +31,7 @@ None — operates on the current document.
 ## Output
 
 Returns comprehensive statistics:
+
 - Node counts by type (decisions, invariants, capabilities, elements, etc.)
 - Relationship counts by type
 - Lifecycle stage distribution

@@ -24,6 +24,7 @@ Create a new change in the SysProM document. Changes represent modifications to 
    - Status (proposed, defined, introduced, complete)
 
 2. Create the change node:
+
    ```bash
    spm add change --id <id> --name "<name>" --description "<description>" --scope "<scope>" --operations "<operations>" --status "<status>"
    ```

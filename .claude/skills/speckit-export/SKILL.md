@@ -22,6 +22,7 @@ Export SysProM capability or concept nodes to Spec-Kit format for use with GitHu
    - Output Spec-Kit directory
 
 2. Export to Spec-Kit format:
+
    ```bash
    spm speckit export --input doc.spm.json --speckit-dir spec-kit/ --prefix AUTH
    ```
@@ -34,6 +35,7 @@ Export SysProM capability or concept nodes to Spec-Kit format for use with GitHu
 ## Mapping
 
 SysProM nodes are mapped to Spec-Kit elements:
+
 - SysProM capabilities → Spec-Kit features
 - SysProM invariants → Spec-Kit acceptance criteria
 - Relationships → Feature dependencies
@@ -41,6 +43,7 @@ SysProM nodes are mapped to Spec-Kit elements:
 ## Output
 
 Generates Spec-Kit structure:
+
 ```
 spec-kit/
 ├── features/

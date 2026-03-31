@@ -22,6 +22,7 @@ Convert a SysProM document from JSON format (`.spm.json`) to human-readable Mark
    - Destination: `.spm/` folder or `.spm.md` file
 
 2. Convert to multi-file Markdown (in folder):
+
    ```bash
    spm json2md --input .spm.json --output .spm
    ```
@@ -34,6 +35,7 @@ Convert a SysProM document from JSON format (`.spm.json`) to human-readable Mark
 ## Output Structure
 
 **Multi-file** (folder):
+
 ```
 .spm/
 ├── DECISIONS.md
@@ -45,6 +47,7 @@ Convert a SysProM document from JSON format (`.spm.json`) to human-readable Mark
 ```
 
 **Single-file** (`.spm.md`):
+
 ```
 # SysProM Document
 

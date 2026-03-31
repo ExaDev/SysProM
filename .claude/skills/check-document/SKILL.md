@@ -16,6 +16,7 @@ None — operates on the current document.
 ## Steps
 
 1. Validate the document:
+
    ```bash
    spm validate
    ```
@@ -29,6 +30,7 @@ None — operates on the current document.
 ## Output
 
 Returns validation result:
+
 - ✅ Valid if no issues found (node count, relationship count)
 - ❌ Invalid if issues found (list of specific issues)
 

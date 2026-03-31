@@ -21,16 +21,19 @@ Search and list nodes in the SysProM document using various filters and criteria
    - Nodes with a specific status?
 
 2. Query nodes by type:
+
    ```bash
    spm query nodes --type decision
    ```
 
 3. Or query a specific node by ID:
+
    ```bash
    spm query node <arg1>
    ```
 
 4. Or search by status:
+
    ```bash
    spm query nodes --status proposed
    ```
@@ -42,17 +45,18 @@ Search and list nodes in the SysProM document using various filters and criteria
 
 ## Query Examples
 
-| Query | Purpose |
-|-------|---------|
-| `spm query nodes --type decision` | All decisions |
-| `spm query nodes --type invariant` | All invariants |
-| `spm query node D1` | Specific node D1 |
+| Query                                 | Purpose                   |
+| ------------------------------------- | ------------------------- |
+| `spm query nodes --type decision`     | All decisions             |
+| `spm query nodes --type invariant`    | All invariants            |
+| `spm query node D1`                   | Specific node D1          |
 | `spm query nodes --status introduced` | Nodes in introduced state |
-| `spm query nodes --text "auth"` | Nodes containing "auth" |
+| `spm query nodes --text "auth"`       | Nodes containing "auth"   |
 
 ## Output
 
 Returns matching nodes with their metadata:
+
 - Node ID and type
 - Name and description
 - Status and lifecycle

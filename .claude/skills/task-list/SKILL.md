@@ -20,6 +20,7 @@ Show all tasks in a change node, including their status, description, and comple
    - This change must have tasks defined
 
 2. List tasks in the change:
+
    ```bash
    spm task list <arg1>
    ```
@@ -32,6 +33,7 @@ Show all tasks in a change node, including their status, description, and comple
 ## Output
 
 Returns task list:
+
 - Task ID and description
 - Status (pending, in-progress, completed)
 - Percentage complete

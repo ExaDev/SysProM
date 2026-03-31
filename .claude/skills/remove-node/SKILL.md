@@ -22,6 +22,7 @@ Delete a node from the SysProM document. This is a destructive operation that re
    - Consider impact on related nodes
 
 2. Remove the node with default settings:
+
    ```bash
    spm remove <id>
    ```
@@ -34,12 +35,12 @@ Delete a node from the SysProM document. This is a destructive operation that re
 
 ## Flags
 
-| Flag | Purpose |
-|------|---------|
-| `--hard` | Hard delete (physical removal from document) |
-| `--recursive` | Allow removal of subsystems with nested nodes |
-| `--repair` | Repair must_follow relationship chains automatically |
-| `--dry-run` | Preview removal without modifying document |
+| Flag          | Purpose                                              |
+| ------------- | ---------------------------------------------------- |
+| `--hard`      | Hard delete (physical removal from document)         |
+| `--recursive` | Allow removal of subsystems with nested nodes        |
+| `--repair`    | Repair must_follow relationship chains automatically |
+| `--dry-run`   | Preview removal without modifying document           |
 
 ## Warnings
 

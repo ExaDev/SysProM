@@ -29,17 +29,17 @@ Create a directed relationship between two nodes in the SysProM document. Relati
 
 ## Common Relationship Types
 
-| Type | Meaning |
-|------|---------|
-| `refines` | A concept refines (elaborates) another |
-| `realises` | Implementation realises an abstraction |
-| `implements` | A change implements a decision |
-| `depends_on` | A depends on B (functional dependency) |
-| `affects` | A modification affects B |
-| `supersedes` | A replaces/obsoletes B |
-| `must_preserve` | A decision must preserve invariant B |
-| `requires` | A requires B to function |
-| `conflicts_with` | A conflicts with B |
+| Type             | Meaning                                |
+| ---------------- | -------------------------------------- |
+| `refines`        | A concept refines (elaborates) another |
+| `realises`       | Implementation realises an abstraction |
+| `implements`     | A change implements a decision         |
+| `depends_on`     | A depends on B (functional dependency) |
+| `affects`        | A modification affects B               |
+| `supersedes`     | A replaces/obsoletes B                 |
+| `must_preserve`  | A decision must preserve invariant B   |
+| `requires`       | A requires B to function               |
+| `conflicts_with` | A conflicts with B                     |
 
 ## Example
 

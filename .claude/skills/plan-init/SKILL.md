@@ -22,6 +22,7 @@ Create a structured plan within a change node. Plans define phases, gates, and p
    - What prefix to use?
 
 2. Initialise a new plan:
+
    ```bash
    spm plan init --output plan.spm.json --prefix PLAN --name "My Plan"
    ```
@@ -34,6 +35,7 @@ Create a structured plan within a change node. Plans define phases, gates, and p
 ## Plan Structure
 
 A plan contains:
+
 - Phases (sequential stages)
 - Gates (readiness checks between phases)
 - Tasks and milestones

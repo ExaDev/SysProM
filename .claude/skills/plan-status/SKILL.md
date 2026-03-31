@@ -19,6 +19,7 @@ Show the status and progress of a plan within a change node. Displays current ph
    - Change node ID (e.g., C1, C42)
 
 2. Show plan status:
+
    ```bash
    spm plan status <arg1>
    ```
@@ -31,6 +32,7 @@ Show the status and progress of a plan within a change node. Displays current ph
 ## Output
 
 Returns plan status:
+
 - Current phase
 - Completed phases
 - Gates status (blocked/open/passed)

@@ -24,6 +24,7 @@ Create a new decision in the SysProM document. Decisions capture choices made an
    - Rationale for the selection
 
 2. Create the decision node:
+
    ```bash
    spm add decision --id <id> --name "<name>" --context "<context>" --option "<option>" --selected "<selected>" --rationale "<rationale>"
    ```

@@ -20,6 +20,7 @@ Add a new task to a change node. Tasks represent work items that must be complet
    - Change node ID (e.g., C1, C42)
 
 2. Add a new task:
+
    ```bash
    spm task add <arg1> "<arg2>"
    ```
@@ -32,6 +33,7 @@ Add a new task to a change node. Tasks represent work items that must be complet
 ## Output
 
 Creates new task:
+
 - Assigned auto-incremented task ID
 - Linked to parent change
 - Initial status: pending

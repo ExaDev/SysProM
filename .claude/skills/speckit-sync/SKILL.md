@@ -22,6 +22,7 @@ Synchronise SysProM provenance records bidirectionally with Spec-Kit specificati
    - Spec-Kit directory: `./spec-kit/`
 
 2. Sync SysProM and Spec-Kit:
+
    ```bash
    spm speckit sync --input .spm.json --speckit-dir ./spec-kit/
    ```
@@ -33,15 +34,16 @@ Synchronise SysProM provenance records bidirectionally with Spec-Kit specificati
 
 ## Resolution Strategies
 
-| Strategy | Behaviour |
-|----------|-----------|
-| `--prefer-sysprom` | SysProM decisions are authoritative |
+| Strategy           | Behaviour                                 |
+| ------------------ | ----------------------------------------- |
+| `--prefer-sysprom` | SysProM decisions are authoritative       |
 | `--prefer-speckit` | Spec-Kit specifications are authoritative |
-| `--report` | Report differences without resolving |
+| `--report`         | Report differences without resolving      |
 
 ## Output
 
 Returns sync result:
+
 - Nodes synced
 - Specifications updated
 - Changes made

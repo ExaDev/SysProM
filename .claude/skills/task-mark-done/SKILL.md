@@ -22,6 +22,7 @@ Mark a task as completed in a change node. This updates the task status and trac
    - Task ID (e.g., T1, T5)
 
 2. Mark task as done:
+
    ```bash
    spm task mark-done <change-id> <task-index>
    ```
@@ -34,6 +35,7 @@ Mark a task as completed in a change node. This updates the task status and trac
 ## Output
 
 Updates task status:
+
 - Status changed to: completed
 - Completion timestamp recorded
 - Progress updated (affects parent change)

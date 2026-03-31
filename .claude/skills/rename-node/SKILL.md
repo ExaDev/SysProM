@@ -24,6 +24,7 @@ Change a node's ID and automatically update all references to it throughout the 
    - Consider impact on dependent nodes
 
 2. Rename the node:
+
    ```bash
    spm update node <old-id> --id <new-id>
    ```

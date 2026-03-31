@@ -21,6 +21,7 @@ Convert a SysProM document from Markdown format (`.spm/` folder or `.spm.md` fil
    - Destination: `.spm.json`
 
 2. Convert multi-file Markdown to JSON:
+
    ```bash
    spm md2json --input .spm --output .spm.json
    ```
@@ -33,6 +34,7 @@ Convert a SysProM document from Markdown format (`.spm/` folder or `.spm.md` fil
 ## Output Structure
 
 Produces `.spm.json` with validated schema:
+
 - Nodes array (decisions, invariants, capabilities, elements, etc.)
 - Relationships array (typed directed edges)
 - Metadata (title, author, version)
@@ -40,6 +42,7 @@ Produces `.spm.json` with validated schema:
 ## Validation
 
 Conversion includes validation:
+
 - Schema conformance
 - ID uniqueness
 - Relationship integrity

@@ -24,11 +24,13 @@ Create a new SysProM document with metadata and directory structure. This sets u
    - Scope
 
 2. Create a new document in Markdown format:
+
    ```bash
    spm init --path .spm --title "My Project" --scope system
    ```
 
 3. Or create in JSON format:
+
    ```bash
    spm init --path .spm.json --format json --title "My Project"
    ```

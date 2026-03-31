@@ -23,6 +23,7 @@ Create a new invariant in the SysProM document. Invariants define rules and cons
    - Consequence if violated
 
 2. Create the invariant node:
+
    ```bash
    spm add invariant --id <arg1> --name "<arg2>" --description "<arg3>" --conditions "<arg4>" --consequence "<arg5>"
    ```

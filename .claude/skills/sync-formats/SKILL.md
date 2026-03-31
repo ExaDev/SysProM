@@ -25,11 +25,13 @@ Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representa
    - Markdown folder: `.spm/`
 
 2. Sync with default strategy (JSON is source of truth):
+
    ```bash
    spm sync --input .spm.json --output .spm
    ```
 
 3. Or sync with explicit strategy:
+
    ```bash
    spm sync --input .spm.json --output .spm --prefer-md
    ```
@@ -41,16 +43,17 @@ Synchronise changes between JSON (`.spm.json`) and Markdown (`.spm/`) representa
 
 ## Conflict Resolution Strategies
 
-| Strategy | Behaviour |
-|----------|-----------|
-| `--prefer-json` | JSON is source of truth; conflicts resolved in JSON's favour |
-| `--prefer-md` | Markdown is source of truth; conflicts resolved in Markdown's favour |
-| `--report` | Report conflicts without modifying files (error exit) |
-| (default) | Equivalent to `--prefer-json` |
+| Strategy        | Behaviour                                                            |
+| --------------- | -------------------------------------------------------------------- |
+| `--prefer-json` | JSON is source of truth; conflicts resolved in JSON's favour         |
+| `--prefer-md`   | Markdown is source of truth; conflicts resolved in Markdown's favour |
+| `--report`      | Report conflicts without modifying files (error exit)                |
+| (default)       | Equivalent to `--prefer-json`                                        |
 
 ## Output
 
 Returns sync result:
+
 - Files synchronised
 - Conflicts detected and resolved
 - Changes made

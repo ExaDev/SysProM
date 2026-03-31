@@ -23,6 +23,7 @@ Create a new node of any type in the SysProM document. Use this when you need to
    - Description of what it is and why it matters
 
 2. Create the node:
+
    ```bash
    spm add node --type <arg1> --id <arg2> --name "<arg3>" --description "<arg4>"
    ```

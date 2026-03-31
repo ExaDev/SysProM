@@ -22,6 +22,7 @@ Compare SysProM provenance records with Spec-Kit specifications to identify misa
    - Spec-Kit directory: `./spec-kit/`
 
 2. Show differences:
+
    ```bash
    spm speckit diff --input .spm.json --speckit-dir ./spec-kit/
    ```
@@ -34,6 +35,7 @@ Compare SysProM provenance records with Spec-Kit specifications to identify misa
 ## Output
 
 Returns difference report:
+
 - Features in Spec-Kit but missing from SysProM
 - Decisions in SysProM not reflected in Spec-Kit
 - Metadata mismatches
