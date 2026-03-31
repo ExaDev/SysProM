@@ -169,4 +169,17 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("performs accepts role → stage", () => {
+		const doc = makeDoc(
+			[
+				{ id: "ROLE1", type: "role", name: "R" },
+				{ id: "STG1", type: "stage", name: "S" },
+			],
+			[{ from: "ROLE1", to: "STG1", type: "performs" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });

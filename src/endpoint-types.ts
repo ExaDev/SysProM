@@ -175,7 +175,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 	// Performs — process enactment
 	performs: {
 		from: ["stage", "role"],
-		to: ["capability", "artefact", "artefact_flow"],
+		to: ["capability", "artefact", "artefact_flow", "stage"],
 	},
 
 	// Precedes — temporal ordering
