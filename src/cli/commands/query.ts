@@ -19,41 +19,41 @@ import type { Node } from "../../schema.js";
 // Presentation helpers
 // ---------------------------------------------------------------------------
 
-function printNode(r: Node, verbose: boolean): void {
-	if (verbose) {
-		console.log(`${pc.cyan(r.id)} — ${pc.bold(r.name)}`);
-		console.log(`  ${pc.dim("Type")}: ${r.type}`);
-		if (r.status) console.log(`  ${pc.dim("Status")}: ${pc.yellow(r.status)}`);
-		if (r.description)
-			console.log(`  ${pc.dim("Description")}: ${textToString(r.description)}`);
-		if (r.context)
-			console.log(`  ${pc.dim("Context")}: ${textToString(r.context)}`);
-		if (r.rationale)
-			console.log(`  ${pc.dim("Rationale")}: ${textToString(r.rationale)}`);
-		if (r.selected) console.log(`  ${pc.dim("Selected")}: ${r.selected}`);
-		if (r.options) {
-			console.log(`  ${pc.dim("Options")}:`);
-			for (const o of r.options)
-				console.log(`    ${o.id}: ${textToString(o.description)}`);
-		}
-		if (r.scope) console.log(`  ${pc.dim("Scope")}: ${r.scope.join(", ")}`);
-		if (r.lifecycle) {
-			const states = Object.entries(r.lifecycle)
-				.map(([k, v]) => `${k}=${String(v)}`)
-				.join(", ");
-			console.log(`  ${pc.dim("Lifecycle")}: ${states}`);
-		}
-		if (r.includes)
-			console.log(`  ${pc.dim("Includes")}: ${r.includes.join(", ")}`);
-		console.log("");
-	} else {
-		const desc = r.description
-			? " — " + textToString(r.description).slice(0, 60)
-			: "";
-		console.log(
-			`${pc.cyan(r.id.padEnd(12))} ${pc.dim(r.type.padEnd(16))} ${pc.bold(r.name)}${desc}`,
-		);
+function printNodeCompact(r: Node): void {
+	const desc = r.description
+		? " — " + textToString(r.description).slice(0, 60)
+		: "";
+	console.log(
+		`${pc.cyan(r.id.padEnd(12))} ${pc.dim(r.type.padEnd(16))} ${pc.bold(r.name)}${desc}`,
+	);
+}
+
+function printNodeVerbose(r: Node): void {
+	console.log(`${pc.cyan(r.id)} — ${pc.bold(r.name)}`);
+	console.log(`  ${pc.dim("Type")}: ${r.type}`);
+	if (r.status) console.log(`  ${pc.dim("Status")}: ${pc.yellow(r.status)}`);
+	if (r.description)
+		console.log(`  ${pc.dim("Description")}: ${textToString(r.description)}`);
+	if (r.context)
+		console.log(`  ${pc.dim("Context")}: ${textToString(r.context)}`);
+	if (r.rationale)
+		console.log(`  ${pc.dim("Rationale")}: ${textToString(r.rationale)}`);
+	if (r.selected) console.log(`  ${pc.dim("Selected")}: ${r.selected}`);
+	if (r.options) {
+		console.log(`  ${pc.dim("Options")}:`);
+		for (const o of r.options)
+			console.log(`    ${o.id}: ${textToString(o.description)}`);
 	}
+	if (r.scope) console.log(`  ${pc.dim("Scope")}: ${r.scope.join(", ")}`);
+	if (r.lifecycle) {
+		const states = Object.entries(r.lifecycle)
+			.map(([k, v]) => `${k}=${String(v)}`)
+			.join(", ");
+		console.log(`  ${pc.dim("Lifecycle")}: ${states}`);
+	}
+	if (r.includes)
+		console.log(`  ${pc.dim("Includes")}: ${r.includes.join(", ")}`);
+	console.log("");
 }
 
 /** Matches the recursive trace structure returned by traceFromNodeOp. */
@@ -131,7 +131,7 @@ const nodesSubcommand: CommandDef = {
 		if (opts.json) {
 			console.log(JSON.stringify(nodes, null, 2));
 		} else {
-			for (const n of nodes) printNode(n, false);
+			for (const n of nodes) printNodeCompact(n);
 			console.log(`\n${String(nodes.length)} node(s)`);
 		}
 	},
@@ -155,7 +155,7 @@ const nodeSubcommand: CommandDef = {
 		if (opts.json) {
 			console.log(JSON.stringify(result.node, null, 2));
 		} else {
-			printNode(result.node, true);
+			printNodeVerbose(result.node);
 			if (result.outgoing.length > 0) {
 				console.log(`${pc.dim("Outgoing relationships")}:`);
 				for (const r of result.outgoing)
