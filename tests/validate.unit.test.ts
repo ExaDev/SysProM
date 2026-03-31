@@ -143,4 +143,17 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("governed_by accepts artefact → invariant", () => {
+		const doc = makeDoc(
+			[
+				{ id: "ART1", type: "artefact", name: "A" },
+				{ id: "INV1", type: "invariant", name: "I" },
+			],
+			[{ from: "ART1", to: "INV1", type: "governed_by" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });

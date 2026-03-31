@@ -247,6 +247,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"gate",
 			"change",
 			"policy",
+			"artefact",
 		],
 		to: ["policy", "protocol", "role", "principle", "invariant", "concept"],
 	},
