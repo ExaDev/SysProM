@@ -20,6 +20,9 @@ export const graphCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
 				doc,
 				format: opts.format ?? "mermaid",
 				typeFilter: opts.type,
+				layout: "TD",
+				cluster: true,
+				connectedOnly: false,
 			});
 			console.log(output);
 		} catch (err: unknown) {
