@@ -1,3 +1,18 @@
+## [1.19.0](https://github.com/ExaDev/SysProM/compare/v1.18.0...v1.19.0) (2026-03-31)
+
+### Features
+
+* **core:** broaden provenance endpoint validation ([2119ea2](https://github.com/ExaDev/SysProM/commit/2119ea22fb1ee78b7ca77f3cac5382dc469b8944))
+
+### Documentation
+
+* **readme:** add system provenance profile guidance ([e56dc57](https://github.com/ExaDev/SysProM/commit/e56dc570f510dc9b540c673e6f05ce75b9635d06))
+* remove hardcoded README values ([ddbc787](https://github.com/ExaDev/SysProM/commit/ddbc7871322a77822df449a97ab9365dd653df5e))
+
+### Tests
+
+* format validate unit test ([12c0552](https://github.com/ExaDev/SysProM/commit/12c055263076e5cc463dc4fd7280a9624fcd60c9))
+
 ## [1.18.0](https://github.com/ExaDev/SysProM/compare/v1.17.0...v1.18.0) (2026-03-31)
 
 ### Features
