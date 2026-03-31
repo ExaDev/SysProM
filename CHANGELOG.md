@@ -1,3 +1,29 @@
+## [1.17.0](https://github.com/ExaDev/SysProM/compare/v1.16.1...v1.17.0) (2026-03-31)
+
+### Features
+
+* **io:** add error handling with validation and extraction ([db6f730](https://github.com/ExaDev/SysProM/commit/db6f730c0cda882639623df4563525cfeaa07668))
+* **linting:** integrate SonarJS ESLint plugin ([628a65b](https://github.com/ExaDev/SysProM/commit/628a65be02d243342a75a5acdc54de77621ddbef))
+* **mcp:** add error handling with causes to all tools ([72eb312](https://github.com/ExaDev/SysProM/commit/72eb312f3fc3dfc5c7288d88f37918c7fb54fc04))
+
+### Bug Fixes
+
+* **cli/add:** resolve type safety with narrowing instead of assertions ([d278e7a](https://github.com/ExaDev/SysProM/commit/d278e7a469def73882a7dbc6433214628096b26d))
+* **hooks:** fail pre-commit on unfixable eslint errors ([abc9386](https://github.com/ExaDev/SysProM/commit/abc9386bb97f3e0c8c9b0a57a27b17638216a012))
+
+### Code Refactoring
+
+* **cli/add:** extract buildNodeFromOpts helper ([d4eec7d](https://github.com/ExaDev/SysProM/commit/d4eec7da8bd110f29308d3ed469bcb28a8aa95f8))
+* **cli/infer:** extract helpers and remove nested templates ([b753c37](https://github.com/ExaDev/SysProM/commit/b753c37e43ace5f96c41c5d0c753b3957e3338cf))
+* **cli/query:** split printNode into separate functions ([aca38f7](https://github.com/ExaDev/SysProM/commit/aca38f7174ba838765a5161d17f95346aa67c1de))
+* **cli/speckit:** extract validation and display helpers ([36d17d7](https://github.com/ExaDev/SysProM/commit/36d17d7e45599d285c41e0693daad495335ab822))
+* **cli/stats:** add explicit sort comparators ([eed16d3](https://github.com/ExaDev/SysProM/commit/eed16d394482e65cc3b51ac49bc9d6394e23d99f))
+* **cli/update:** extract parseLifecycleFields helper ([25819ef](https://github.com/ExaDev/SysProM/commit/25819efb2d0f5cb0b88a57de3eda143739552c99))
+
+### Documentation
+
+* add npm and GitHub badges to README header ([b7a996f](https://github.com/ExaDev/SysProM/commit/b7a996fb41d6260c960aaf3f25e4dbbe212b5811))
+
 ## [1.16.1](https://github.com/ExaDev/SysProM/compare/v1.16.0...v1.16.1) (2026-03-24)
 
 ### Documentation
