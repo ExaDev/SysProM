@@ -17,7 +17,6 @@ Establishes the core domain model with layered abstraction, decisions, changes, 
   - [DEC7](./DECISIONS.md#dec7--append-only-history)
 
 Scope:
-
 - INT1
 - CON1
 - CON2
@@ -44,7 +43,6 @@ Scope:
 - PRIN5
 
 Operations:
-
 - add INT1
 - add ELEM1
 - add ELEM4
@@ -65,7 +63,6 @@ Extends the model with process, artefact, and projection node families.
   - [DEC4](./DECISIONS.md#dec4--add-process-modelling)
 
 Scope:
-
 - CON5
 - CAP6
 - ELEM2
@@ -77,7 +74,6 @@ Scope:
 - INV11
 
 Operations:
-
 - add ELEM2
 - add ELEM3
 - add ELEM5
@@ -97,7 +93,6 @@ Defines how SysProM may be encoded in files, including single-document, multi-do
   - [DEC6](./DECISIONS.md#dec6--recursive-composition-using-same-conventions)
 
 Scope:
-
 - CON6
 - CAP7
 - REAL1
@@ -120,7 +115,6 @@ Scope:
 - POL18
 
 Operations:
-
 - add ELEM8
 - add REAL1
 - add REAL2
@@ -144,7 +138,6 @@ Adds the external reference and internalisation mechanism with typed roles.
   - [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
 
 Scope:
-
 - CON7
 - CAP8
 - ELEM7
@@ -153,7 +146,6 @@ Scope:
 - POL6
 
 Operations:
-
 - add CON7
 - add CAP8
 - add ELEM7
@@ -171,13 +163,11 @@ Adds the decision, change, and node lifecycle state machines as protocols with s
 - Affects: [DEC4](./DECISIONS.md#dec4--add-process-modelling)
 
 Scope:
-
 - PROT1
 - PROT2
 - PROT3
 
 Operations:
-
 - add PROT1
 - add PROT2
 - add PROT3
@@ -195,7 +185,6 @@ Adds conformance requirements, missing invariants, security and extensibility po
 - Affects: [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
 
 Scope:
-
 - INV28
 - INV29
 - INV30
@@ -222,7 +211,6 @@ Scope:
 - CON8
 
 Operations:
-
 - add CON8
 - add ELEM9
 - add ELEM10
@@ -241,12 +229,10 @@ Updates the JSON schema, Zod definitions, and specification.
 - Affects: [DEC9](./DECISIONS.md#dec9--allow-array-of-lines-for-text-fields)
 
 Scope:
-
 - INV21
 - DEC8
 
 Operations:
-
 - add INV21
 - add DEC8
 - update REAL5 — JSON schema updated to accept string | string[] for text fields
@@ -267,13 +253,11 @@ Derives SECTION_LABELS, RELATIONSHIP_LABELS, and reverse lookups from the label 
 - Affects: [DEC10](./DECISIONS.md#dec10--use-strict-enums-for-core-types)
 
 Scope:
-
 - INV22
 - DEC8
 - REAL5
 
 Operations:
-
 - add INV22
 - add DEC8
 - update REAL5 — JSON schema now uses enum instead of string with examples
@@ -291,13 +275,11 @@ README generator now only links to files that contain nodes for the given subsys
 - Affects: [DEC11](./DECISIONS.md#dec11--only-link-to-present-files-in-readme)
 
 Scope:
-
 - POL19
 - DEC8
 - REAL1
 
 Operations:
-
 - add POL19
 - add DEC8
 - update REAL1 — json-to-md updated to check present node types before generating links
@@ -315,12 +297,10 @@ Removes the Navigation section and Document Roles table from generated READMEs. 
 - Affects: [DEC12](./DECISIONS.md#dec12--remove-navigation-and-document-roles-from-readme)
 
 Scope:
-
 - DEC8
 - REAL1
 
 Operations:
-
 - update REAL1 — README generation simplified to omit navigation and document roles
 
 #### Lifecycle
@@ -337,12 +317,10 @@ Decisions affecting only non-domain nodes (realisations, policies, process nodes
 - Affects: [DEC13](./DECISIONS.md#dec13--layer-dependent-invariant-preservation)
 
 Scope:
-
 - INV3
 - DEC8
 
 Operations:
-
 - update INV3 — Reworded to distinguish domain and non-domain affects
 
 #### Lifecycle
@@ -362,13 +340,11 @@ Specification is already captured as the JSON itself — distilled/Specification
 - Affects: [DEC14](./DECISIONS.md#dec14--internalise-design-archive-into-sysprom-json)
 
 Scope:
-
 - ART1
 - ART2
 - ART3
 
 Operations:
-
 - add ART1
 - add ART2
 - add ART3
@@ -388,13 +364,11 @@ Both heuristics are automatic — no user configuration needed.
 - Affects: [DEC15](./DECISIONS.md#dec15--size-based-subsystem-splitting)
 
 Scope:
-
 - POL20
 - DEC8
 - REAL1
 
 Operations:
-
 - add POL20
 - add DEC8
 - update REAL1 — json-to-md updated with line count threshold and auto-grouping
@@ -416,13 +390,11 @@ Tests cover all 5 parser functions (40 cases) and all 5 generator functions (28 
 - Affects: [DEC16](./DECISIONS.md#dec16--add-bidirectional-spec-kit-interoperability)
 
 Scope:
-
 - DEC16
 - ELEM3
 - CMP-SPECKIT
 
 Operations:
-
 - add src/speckit/parse.ts
 - add src/speckit/generate.ts
 - add src/speckit/project.ts
@@ -450,12 +422,10 @@ AGENTS.md documents the complete subagent workflow: discover, claim, progress, c
 - Affects: [DEC17](./DECISIONS.md#dec17--add-task-subcommand-for-change-plan-tracking)
 
 Scope:
-
 - DEC17
 - CHG14
 
 Operations:
-
 - add src/cli/task.ts
 - add tests/task-cli.unit.test.ts
 - add AGENTS.md
@@ -477,7 +447,6 @@ New spm plan command with five subcommands: init (scaffold feature skeleton), ad
 - Status: complete
 
 Scope:
-
 - ["EL-CLI","EL-SPECKIT"]
 
 ### CHG17 — Implement Temporal Support
@@ -510,11 +479,9 @@ Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/
 - Status: complete
 
 Scope:
-
 - ELEM3
 
 Operations:
-
 - add — Create typedoc.json and typedoc.html.json configuration files
 - add — Create scripts/generate-cli-docs.ts for auto-generating CLI docs from Commander metadata
 - update — Add @param and @returns JSDoc tags to all public functions
@@ -526,18 +493,16 @@ Operations:
 
 ### CHG20 — Add Turborepo Build Orchestration
 
-Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic \_-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
+Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
 
 - Implements: [DEC22](./DECISIONS.md#dec22--adopt-turborepo-for-build-orchestration)
 
 - Status: complete
 
 Scope:
-
 - ELEM3
 
 Operations:
-
 - add — Create turbo.json with task dependency graph and input/output declarations
 - update — Restructure package.json scripts into atomic tasks with turbo entry points
 
@@ -620,7 +585,6 @@ Create defineCommand() with Zod schema introspection for Commander generation an
 - Status: complete
 
 Scope:
-
 - ELEM3
 
 #### Lifecycle
@@ -637,7 +601,6 @@ Create defineOperation infrastructure, define operations for all domain function
 - Status: complete
 
 Scope:
-
 - ELEM3
 
 #### Plan
@@ -683,7 +646,6 @@ Add a unified 'spm sync' command that performs bidirectional synchronisation bet
 - Status: complete
 
 Scope:
-
 - DEC31
 
 #### Plan
@@ -695,9 +657,9 @@ Scope:
 - [ ] Add --interactive flag: prompt the user to choose per-conflict when both sides have diverged
 - [x] Add --dry-run flag: preview sync actions without writing any files
 - [x] Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified
-- [x] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-\* flag)
+- [x] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)
 - [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
-- [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-\* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
+- [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
 
 ### CHG30 — Implement MCP Server
 
@@ -797,7 +759,6 @@ Make input arg optional with priority-based auto-detection (.spm.json > .spm.md 
 - Status: complete
 
 Scope:
-
 - src/cli/shared.ts
 - src/cli/commands/init.ts
 
@@ -841,7 +802,6 @@ Add saveDocument calls to all MCP write operations
 - Implements: [DEC39](./DECISIONS.md#dec39--fix-mcp-write-operations-not-persisting)
 
 Scope:
-
 - src/mcp/server.ts
 
 ### CHG38 — Fix init path suffix doubling
@@ -851,7 +811,6 @@ Check if path ends with correct suffix before appending
 - Implements: [DEC40](./DECISIONS.md#dec40--fix-init-path-suffix-doubling)
 
 Scope:
-
 - src/cli/commands/init.ts
 
 ### CHG39 — Implement deterministic graph inference
@@ -863,7 +822,6 @@ Add four inference operations (impact, completeness, lifecycle, derived) exposed
 - Status: introduced
 
 Scope:
-
 - src/operations/infer-impact.ts
 - src/operations/infer-completeness.ts
 - src/operations/infer-lifecycle.ts
@@ -891,7 +849,6 @@ Add bidirectional BFS, polarity/strength on relationships, influence relationshi
 - Status: introduced
 
 Scope:
-
 - src/schema.ts
 - src/operations/infer-impact.ts
 - src/cli/commands/infer.ts
@@ -913,3 +870,4 @@ Scope:
 - [ ] Export ImpactPolarity and impactSummaryOp from public API
 - [ ] Regenerate schema.json
 - [ ] Sync .spm.json and .SysProM/
+

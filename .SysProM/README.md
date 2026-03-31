@@ -14,41 +14,35 @@ Enable any system — regardless of domain — to record where every part came f
 ## Navigation
 
 ### Understand why this exists
-
 See: [INTENT.md](./INTENT.md)
 
 ### Understand what must always hold
-
 See: [INVARIANTS.md](./INVARIANTS.md)
 
 ### Understand what currently exists
-
 See: [STATE.md](./STATE.md)
 
 ### Understand why things are the way they are
-
 See: [DECISIONS.md](./DECISIONS.md)
 
 ### Understand how it has evolved
-
 See: [CHANGES.md](./CHANGES.md)
 
 ## Document Roles
 
-| Document      | Role                                         |
-| ------------- | -------------------------------------------- |
-| INTENT.md     | Enduring purpose, concepts, capabilities     |
+| Document | Role |
+|----------|------|
+| INTENT.md | Enduring purpose, concepts, capabilities |
 | INVARIANTS.md | Rules that must hold across all valid states |
-| STATE.md      | Current structure and active elements        |
-| DECISIONS.md  | Choices and rationale                        |
-| CHANGES.md    | Evolution over time                          |
+| STATE.md | Current structure and active elements |
+| DECISIONS.md | Choices and rationale |
+| CHANGES.md | Evolution over time |
 
 ## Views
 
 ### VIEW1 — Domain View
 
 Includes:
-
 - [INT1](./INTENT.md#int1--system-provenance)
 - [CON1](./INTENT.md#con1--layered-abstraction)
 - [CON2](./INTENT.md#con2--decision-driven-evolution)
@@ -143,7 +137,6 @@ Includes:
 ### VIEW2 — Process View
 
 Includes:
-
 - [PROT1](./STATE.md#prot1--decision-lifecycle)
 - [PROT2](./STATE.md#prot2--change-lifecycle)
 - [PROT3](./STATE.md#prot3--node-lifecycle)
@@ -167,7 +160,6 @@ Includes:
 ### VIEW3 — Evolution View
 
 Includes:
-
 - [DEC1](./DECISIONS.md#dec1--separate-domain-from-process-from-evolution)
 - [DEC2](./DECISIONS.md#dec2--make-decisions-first-class-entities)
 - [DEC3](./DECISIONS.md#dec3--distinguish-invariants-from-principles-from-policies)
@@ -214,3 +206,4 @@ Includes:
 - standard: https://datatracker.ietf.org/doc/html/rfc2119
   - Node: CN8
   - RFC 2119 defines the interpretation of MUST, SHOULD, and MAY used throughout the specification.
+

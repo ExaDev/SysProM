@@ -22,3 +22,4 @@ The storage contract is identical regardless of persistence location.
 ### INV4 — Sync Requires Shared Persistence
 
 If synchronisation is enabled, persistence must support shared remote state.
+

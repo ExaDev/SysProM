@@ -102,3 +102,4 @@ A gate or mode requires a condition.
 ### CON24-DISABLES — disables
 
 A mode disables a capability.
+

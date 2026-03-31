@@ -30,3 +30,4 @@ Documents can be stored and later retrieved.
 Documents can be kept consistent across multiple contexts.
 
 - Refines: [INT1](#int1--document-workspace)
+

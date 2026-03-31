@@ -667,7 +667,6 @@ If synchronisation is enabled, persistence must support shared remote state.
 - Must preserve: [INV2](#inv2--placement-agnostic-conversion)
 
 Options:
-
 - O1: UI distinguishes local and remote
 - O2: Single contract independent of placement
 
@@ -699,6 +698,22 @@ No change may be executed unless its scope can be identified.
 
 Approval cannot occur until review has completed.
 
+##### PROT1 — Consensus Planning
+
+##### STG1 — Draft Plan
+
+- Part of: [PROT1](#prot1--consensus-planning)
+
+##### STG2 — Architectural Review
+
+- Part of: [PROT1](#prot1--consensus-planning)
+- Must follow: [STG1](#stg1--draft-plan)
+
+##### STG3 — Critical Evaluation
+
+- Part of: [PROT1](#prot1--consensus-planning)
+- Must follow: [STG2](#stg2--architectural-review)
+
 ##### ROLE1 — Planner
 
 Produces an initial scoped plan.
@@ -716,22 +731,6 @@ Reviews structural and design soundness.
 Evaluates quality, completeness, and testability.
 
 - Performs: [STG3](#stg3--critical-evaluation)
-
-##### PROT1 — Consensus Planning
-
-##### STG1 — Draft Plan
-
-- Part of: [PROT1](#prot1--consensus-planning)
-
-##### STG2 — Architectural Review
-
-- Part of: [PROT1](#prot1--consensus-planning)
-- Must follow: [STG1](#stg1--draft-plan)
-
-##### STG3 — Critical Evaluation
-
-- Part of: [PROT1](#prot1--consensus-planning)
-- Must follow: [STG2](#stg2--architectural-review)
 
 ##### GATE1 — Scope Gate
 
@@ -752,3 +751,4 @@ Adds explicit user checkpoints.
 Adds stronger risk analysis and broader verification.
 
 - Modifies: [PROT1](#prot1--consensus-planning)
+

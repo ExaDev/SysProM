@@ -299,3 +299,4 @@ Generated README navigation and document roles MUST only link to files that cont
 A subsystem is rendered as a single .spm.md file when it would produce only one document file type AND the result is 100 lines or fewer.
 A subsystem is rendered as a multi-document folder when it would produce multiple file types OR the single file would exceed 100 lines.
 Subsystems of the same node type are automatically grouped into a type-named directory when 2 or more exist.
+

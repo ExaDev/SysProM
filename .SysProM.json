@@ -2921,7 +2921,14 @@
 					"type": "add"
 				}
 			],
-			"scope": ["CON7", "CAP8", "ELEM7", "INV19", "INV20", "POL6"],
+			"scope": [
+				"CON7",
+				"CAP8",
+				"ELEM7",
+				"INV19",
+				"INV20",
+				"POL6"
+			],
 			"type": "change"
 		},
 		{
@@ -2947,7 +2954,11 @@
 					"type": "add"
 				}
 			],
-			"scope": ["PROT1", "PROT2", "PROT3"],
+			"scope": [
+				"PROT1",
+				"PROT2",
+				"PROT3"
+			],
 			"type": "change"
 		},
 		{
@@ -3033,7 +3044,10 @@
 					"type": "update"
 				}
 			],
-			"scope": ["INV21", "DEC8"],
+			"scope": [
+				"INV21",
+				"DEC8"
+			],
 			"type": "change"
 		},
 		{
@@ -3064,7 +3078,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["INV22", "DEC8", "REAL5"],
+			"scope": [
+				"INV22",
+				"DEC8",
+				"REAL5"
+			],
 			"type": "change"
 		},
 		{
@@ -3091,7 +3109,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["POL19", "DEC8", "REAL1"],
+			"scope": [
+				"POL19",
+				"DEC8",
+				"REAL1"
+			],
 			"type": "change"
 		},
 		{
@@ -3110,7 +3132,10 @@
 					"type": "update"
 				}
 			],
-			"scope": ["DEC8", "REAL1"],
+			"scope": [
+				"DEC8",
+				"REAL1"
+			],
 			"type": "change"
 		},
 		{
@@ -3132,7 +3157,10 @@
 					"type": "update"
 				}
 			],
-			"scope": ["INV3", "DEC8"],
+			"scope": [
+				"INV3",
+				"DEC8"
+			],
 			"type": "change"
 		},
 		{
@@ -3164,7 +3192,11 @@
 					"type": "add"
 				}
 			],
-			"scope": ["ART1", "ART2", "ART3"],
+			"scope": [
+				"ART1",
+				"ART2",
+				"ART3"
+			],
 			"type": "change"
 		},
 		{
@@ -3195,7 +3227,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["POL20", "DEC8", "REAL1"],
+			"scope": [
+				"POL20",
+				"DEC8",
+				"REAL1"
+			],
 			"type": "change"
 		},
 		{
@@ -3258,7 +3294,11 @@
 					"type": "update"
 				}
 			],
-			"scope": ["DEC16", "ELEM3", "CMP-SPECKIT"],
+			"scope": [
+				"DEC16",
+				"ELEM3",
+				"CMP-SPECKIT"
+			],
 			"type": "change"
 		},
 		{
@@ -3299,14 +3339,19 @@
 					"type": "update"
 				}
 			],
-			"scope": ["DEC17", "CHG14"],
+			"scope": [
+				"DEC17",
+				"CHG14"
+			],
 			"type": "change"
 		},
 		{
 			"description": "New spm plan command with five subcommands: init (scaffold feature skeleton), add-task (add tasks with optional --parent for nesting), status (workflow completeness report), progress (per-task ASCII progress bars), and gate (phase readiness validation). Phases are change nodes in PROT-IMPL.subsystem; subtasks nest recursively via child subsystems. Includes isTaskDone and countTasks helpers for recursive completion tracking. Updated generateTasks and parseTasks to use change-only model.",
 			"id": "CHG16",
 			"name": "Implement Plan Command with Recursive Task Model",
-			"scope": ["[\"EL-CLI\",\"EL-SPECKIT\"]"],
+			"scope": [
+				"[\"EL-CLI\",\"EL-SPECKIT\"]"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3350,7 +3395,9 @@
 					"type": "update"
 				}
 			],
-			"scope": ["ELEM3"],
+			"scope": [
+				"ELEM3"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3372,7 +3419,9 @@
 					"type": "update"
 				}
 			],
-			"scope": ["ELEM3"],
+			"scope": [
+				"ELEM3"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3439,7 +3488,9 @@
 				"proposed": "2026-03-22"
 			},
 			"name": "Implement defineCommand Pattern",
-			"scope": ["ELEM3"],
+			"scope": [
+				"ELEM3"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3493,7 +3544,9 @@
 					"done": true
 				}
 			],
-			"scope": ["ELEM3"],
+			"scope": [
+				"ELEM3"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3572,7 +3625,9 @@
 					"done": false
 				}
 			],
-			"scope": ["DEC31"],
+			"scope": [
+				"DEC31"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3839,7 +3894,10 @@
 					"done": true
 				}
 			],
-			"scope": ["src/cli/shared.ts", "src/cli/commands/init.ts"],
+			"scope": [
+				"src/cli/shared.ts",
+				"src/cli/commands/init.ts"
+			],
 			"status": "complete",
 			"type": "change"
 		},
@@ -3897,14 +3955,18 @@
 			"description": "Add saveDocument calls to all MCP write operations",
 			"id": "CHG37",
 			"name": "Fix MCP persistence bug",
-			"scope": ["src/mcp/server.ts"],
+			"scope": [
+				"src/mcp/server.ts"
+			],
 			"type": "change"
 		},
 		{
 			"description": "Check if path ends with correct suffix before appending",
 			"id": "CHG38",
 			"name": "Fix init path suffix doubling",
-			"scope": ["src/cli/commands/init.ts"],
+			"scope": [
+				"src/cli/commands/init.ts"
+			],
 			"type": "change"
 		},
 		{
@@ -4178,6 +4240,24 @@
 			],
 			"name": "Evolution View",
 			"type": "view"
+		},
+		{
+			"context": "Symphony modelling revealed six endpoint restrictions blocking valid governance patterns",
+			"id": "DEC43",
+			"name": "Expand endpoint type matrix for governance modelling",
+			"options": [
+				{
+					"description": "Expand endpoints and add justifies relationship type — all additive, semantically valid",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Keep strict matrix — no changes",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "All expansions are additive with no regressions. Justifies relationship type is semantically justified and consistent with existing design.",
+			"selected": "OPT-A",
+			"type": "decision"
 		}
 	],
 	"relationships": [
