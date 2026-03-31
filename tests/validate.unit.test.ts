@@ -104,4 +104,30 @@ describe("validate", () => {
 		assert.equal(result.valid, true);
 		assert.deepEqual(result.issues, []);
 	});
+
+	it("realises accepts capability → stage", () => {
+		const doc = makeDoc(
+			[
+				{ id: "CAP1", type: "capability", name: "C" },
+				{ id: "STG1", type: "stage", name: "S" },
+			],
+			[{ from: "CAP1", to: "STG1", type: "realises" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
+
+	it("realises accepts artefact → concept", () => {
+		const doc = makeDoc(
+			[
+				{ id: "ART1", type: "artefact", name: "A" },
+				{ id: "CON1", type: "concept", name: "C" },
+			],
+			[{ from: "ART1", to: "CON1", type: "realises" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });

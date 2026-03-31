@@ -35,8 +35,8 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Realises — implementation hierarchy
 	realises: {
-		from: ["capability", "element", "realisation"],
-		to: ["capability", "element", "realisation"],
+		from: ["capability", "element", "realisation", "artefact", "mode"],
+		to: ["capability", "element", "realisation", "concept", "stage"],
 	},
 
 	// Implements — operationalisation
