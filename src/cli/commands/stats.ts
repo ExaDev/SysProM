@@ -16,14 +16,18 @@ export const statsCommand: CommandDef<typeof noArgs, typeof readOpts> = {
 		console.log("");
 
 		console.log(pc.bold("Nodes by type:"));
-		for (const [type, count] of Object.entries(s.nodesByType).sort()) {
+		for (const [type, count] of Object.entries(s.nodesByType).sort(([a], [b]) =>
+			a.localeCompare(b),
+		)) {
 			console.log(`  ${type.padEnd(20)} ${pc.cyan(String(count))}`);
 		}
 		console.log(`  ${"TOTAL".padEnd(20)} ${pc.cyan(String(s.totalNodes))}`);
 		console.log("");
 
 		console.log(pc.bold("Relationships by type:"));
-		for (const [type, count] of Object.entries(s.relationshipsByType).sort()) {
+		for (const [type, count] of Object.entries(s.relationshipsByType).sort(
+			([a], [b]) => a.localeCompare(b),
+		)) {
 			console.log(`  ${type.padEnd(20)} ${pc.cyan(String(count))}`);
 		}
 		console.log(
@@ -47,7 +51,9 @@ export const statsCommand: CommandDef<typeof noArgs, typeof readOpts> = {
 		if (Object.keys(s.decisionLifecycle).length > 0) {
 			console.log("");
 			console.log(pc.bold("Decision lifecycle:"));
-			for (const [state, count] of Object.entries(s.decisionLifecycle).sort()) {
+			for (const [state, count] of Object.entries(s.decisionLifecycle).sort(
+				([a], [b]) => a.localeCompare(b),
+			)) {
 				console.log(`  ${state.padEnd(20)} ${pc.cyan(String(count))}`);
 			}
 		}
@@ -55,7 +61,9 @@ export const statsCommand: CommandDef<typeof noArgs, typeof readOpts> = {
 		if (Object.keys(s.changeLifecycle).length > 0) {
 			console.log("");
 			console.log(pc.bold("Change lifecycle:"));
-			for (const [state, count] of Object.entries(s.changeLifecycle).sort()) {
+			for (const [state, count] of Object.entries(s.changeLifecycle).sort(
+				([a], [b]) => a.localeCompare(b),
+			)) {
 				console.log(`  ${state.padEnd(20)} ${pc.cyan(String(count))}`);
 			}
 		}
