@@ -43,6 +43,9 @@ export { statsOp, type DocumentStats } from "./stats.js";
 export { searchOp } from "./search.js";
 export { checkOp } from "./check.js";
 export { graphOp } from "./graph.js";
+export { graphRefinementOp } from "./graph-refinement.js";
+export { graphDecisionOp } from "./graph-decision.js";
+export { graphDependencyOp } from "./graph-dependency.js";
 export { renameOp } from "./rename.js";
 
 // Conversion operations

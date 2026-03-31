@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as z from "zod";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -14,13 +15,34 @@ const optsSchema = z
 			.boolean()
 			.optional()
 			.describe("Force single-file output format"),
+		embedDiagrams: z
+			.boolean()
+			.optional()
+			.describe("Embed Mermaid diagrams in the output"),
+		labelMode: z
+			.enum(["friendly", "compact"])
+			.optional()
+			.describe("Node label mode for embedded diagrams"),
+		relationshipLayout: z
+			.enum(["LR", "TD", "RL", "BT"])
+			.optional()
+			.describe("Override layout for relationship diagrams"),
+		refinementLayout: z
+			.enum(["LR", "TD", "RL", "BT"])
+			.optional()
+			.describe("Override layout for refinement diagrams"),
+		decisionLayout: z
+			.enum(["LR", "TD", "RL", "BT"])
+			.optional()
+			.describe("Override layout for decision diagrams"),
+		dependencyLayout: z
+			.enum(["LR", "TD", "RL", "BT"])
+			.optional()
+			.describe("Override layout for dependency diagrams"),
 	})
 	.strict();
 
-export const json2mdCommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof optsSchema
-> = {
+export const json2mdCommand: CommandDef<z.ZodObject, typeof optsSchema> = {
 	name: "json2md",
 	description: jsonToMarkdownOp.def.description,
 	apiLink: jsonToMarkdownOp.def.name,
@@ -31,6 +53,7 @@ export const json2mdCommand: CommandDef<
 
 		const raw: unknown = JSON.parse(readFileSync(inputPath, "utf8"));
 
+		// Use the attached type guard for clearer intent and narrower runtime checks
 		if (!SysProMDocument.is(raw)) {
 			const result = SysProMDocument.safeParse(raw);
 			if (!result.success) {
@@ -47,7 +70,23 @@ export const json2mdCommand: CommandDef<
 				? "single-file"
 				: "multi-doc";
 
-		jsonToMarkdown(raw, outputPath, { form });
+		// Forward per-diagram layout overrides via environment-like flags.
+		// We accept flags on the command line for common diagram layouts but also
+		// preserve sensible per-diagram defaults in jsonToMarkdown when not set.
+		// For now we expose a single --label-mode flag and keep per-diagram layout
+		// defaults internal; a future enhancement could expose per-diagram
+		// flags such as --relationship-layout, --dependency-layout, etc.
+
+		jsonToMarkdown(raw, outputPath, {
+			form,
+			embedDiagrams: opts.embedDiagrams,
+			// forward labelMode for embedded diagrams (default friendly)
+			labelMode: opts.labelMode ?? "friendly",
+			relationshipLayout: opts.relationshipLayout,
+			refinementLayout: opts.refinementLayout,
+			decisionLayout: opts.decisionLayout,
+			dependencyLayout: opts.dependencyLayout,
+		});
 
 		if (form === "single-file") {
 			console.log(`Written to ${outputPath}`);

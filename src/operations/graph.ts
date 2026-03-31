@@ -1,96 +1,232 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
-import { SysProMDocument } from "../schema.js";
+import { SysProMDocument, type Relationship, type Node } from "../schema.js";
+import {
+	sanitiseMermaidId,
+	NODE_CATEGORIES,
+	mermaidShapeForNode,
+	renderMermaidNode,
+	renderMermaidClassDefs,
+	mermaidClassForNode,
+	dotNodeAttrsWithMode,
+	filterNodes,
+	filterRelationships,
+	applyConnectedOnly,
+	type GraphFilterOptions,
+} from "./graph-shared.js";
+import { renderRelationshipLabel } from "./graph-shared.js";
 
-function sanitiseMermaidId(id: string): string {
-	return id.replace(/[^a-zA-Z0-9_]/g, "_");
-}
+// ---------------------------------------------------------------------------
+// DOT generation
+// ---------------------------------------------------------------------------
 
 function generateDot(
-	doc: SysProMDocument,
-	rels: SysProMDocument["relationships"],
+	nodes: Node[],
+	rels: Relationship[],
+	cluster: boolean,
+	layout: string,
+	labelMode: "friendly" | "compact",
 ): string {
 	const lines: string[] = [];
 	lines.push("digraph SysProM {");
-	lines.push("  rankdir=LR;");
+	// Map mermaid layout to DOT rankdir where needed
+	const rankdir =
+		layout === "TD"
+			? "TB"
+			: layout === "BT"
+				? "BT"
+				: layout === "RL"
+					? "RL"
+					: "LR";
+	lines.push(`  rankdir=${rankdir};`);
+	lines.push("  node [style=filled];");
 
-	// Add node labels
-	for (const node of doc.nodes) {
-		const label = `${node.id}\\n${node.name}`;
-		lines.push(`  "${node.id}" [label="${label}"];`);
+	if (cluster) {
+		for (const cat of NODE_CATEGORIES) {
+			const catNodes = nodes.filter((n) => cat.types.includes(n.type));
+			if (catNodes.length === 0) continue;
+			lines.push(`  subgraph cluster_${cat.name} {`);
+			lines.push(`    label="${cat.label}";`);
+			lines.push(`    style=filled;`);
+			lines.push(`    color="${cat.colour}22";`);
+			for (const node of catNodes) {
+				lines.push(
+					`    "${node.id}" ${dotNodeAttrsWithMode(node, labelMode)};`,
+				);
+			}
+			lines.push("  }");
+		}
+		const clusteredIds = new Set(
+			NODE_CATEGORIES.flatMap((c) =>
+				nodes.filter((n) => c.types.includes(n.type)).map((n) => n.id),
+			),
+		);
+		for (const node of nodes) {
+			if (!clusteredIds.has(node.id)) {
+				lines.push(`  "${node.id}" ${dotNodeAttrsWithMode(node, labelMode)};`);
+			}
+		}
+	} else {
+		for (const node of nodes) {
+			lines.push(`  "${node.id}" ${dotNodeAttrsWithMode(node, labelMode)};`);
+		}
 	}
 
-	// Add relationships
 	for (const rel of rels ?? []) {
-		lines.push(`  "${rel.from}" -> "${rel.to}" [label="${rel.type}"];`);
+		const label = renderRelationshipLabel(rel);
+		const attrs = [`label="${label}"`];
+		if (rel.polarity === "negative") attrs.push("style=dashed");
+		if (rel.strength !== undefined && rel.strength >= 0.8) {
+			attrs.push("penwidth=2");
+		}
+		lines.push(`  "${rel.from}" -> "${rel.to}" [${attrs.join(" ")}];`);
 	}
 
 	lines.push("}");
 	return lines.join("\n");
 }
 
+// ---------------------------------------------------------------------------
+// Mermaid generation
+// ---------------------------------------------------------------------------
+
 function generateMermaid(
-	doc: SysProMDocument,
-	rels: SysProMDocument["relationships"],
+	nodes: Node[],
+	rels: Relationship[],
+	cluster: boolean,
+	layout: string,
+	labelMode: "friendly" | "compact",
 ): string {
 	const lines: string[] = [];
-	lines.push("graph LR");
+	lines.push(`graph ${layout}`);
 
-	// Add node definitions with type-specific shapes
-	for (const node of doc.nodes) {
-		const id = sanitiseMermaidId(node.id);
-		let shape: string;
+	for (const def of renderMermaidClassDefs()) {
+		lines.push(`  ${def}`);
+	}
+	lines.push("");
 
-		if (node.type === "decision") {
-			shape = `{${node.id}: ${node.name}}`;
-		} else if (node.type === "invariant") {
-			shape = `[/${node.id}: ${node.name}/]`;
-		} else {
-			shape = `[${node.id}: ${node.name}]`;
+	const nodeIds = new Set(nodes.map((n) => n.id));
+
+	if (cluster) {
+		for (const cat of NODE_CATEGORIES) {
+			const catNodes = nodes.filter((n) => cat.types.includes(n.type));
+			if (catNodes.length === 0) continue;
+			lines.push(`  subgraph ${cat.name} ["${cat.label}"]`);
+			for (const node of catNodes) {
+				const shape = mermaidShapeForNode(node);
+				const cls = mermaidClassForNode(node);
+				lines.push(
+					`    ${renderMermaidNode(node.id, node.name, shape, labelMode)}:::${cls}`,
+				);
+			}
+			lines.push("  end");
+			lines.push("");
 		}
-
-		lines.push(`  ${id}${shape}`);
+		const categorizedTypes = new Set(NODE_CATEGORIES.flatMap((c) => c.types));
+		for (const node of nodes) {
+			if (categorizedTypes.has(node.type)) continue;
+			const shape = mermaidShapeForNode(node);
+			const cls = mermaidClassForNode(node);
+			lines.push(
+				`  ${renderMermaidNode(node.id, node.name, shape, labelMode)}:::${cls}`,
+			);
+		}
+	} else {
+		for (const node of nodes) {
+			const shape = mermaidShapeForNode(node);
+			const cls = mermaidClassForNode(node);
+			lines.push(
+				`  ${renderMermaidNode(node.id, node.name, shape, labelMode)}:::${cls}`,
+			);
+		}
 	}
 
-	// Add relationships
+	lines.push("");
 	for (const rel of rels ?? []) {
+		if (!nodeIds.has(rel.from) || !nodeIds.has(rel.to)) continue;
 		const fromId = sanitiseMermaidId(rel.from);
 		const toId = sanitiseMermaidId(rel.to);
-		lines.push(`  ${fromId} -->|${rel.type}| ${toId}`);
+		const label = renderRelationshipLabel(rel);
+		let edge = `${fromId} -->|${label}| ${toId}`;
+		if (rel.polarity === "negative") {
+			edge = `${fromId} -.->|${label}| ${toId}`;
+		}
+		lines.push(`  ${edge}`);
 	}
 
 	return lines.join("\n");
 }
 
+// ---------------------------------------------------------------------------
+// Graph generation
+// ---------------------------------------------------------------------------
+
 function generateGraph(
 	doc: SysProMDocument,
 	format: string,
-	typeFilter?: string,
+	filterOpts: GraphFilterOptions,
+	layout: string,
+	cluster: boolean,
+	labelMode: "friendly" | "compact",
 ): string {
-	let rels = doc.relationships ?? [];
-	if (typeFilter) {
-		rels = rels.filter((r) => r.type === typeFilter);
+	let nodes = filterNodes(doc.nodes, filterOpts);
+	const nodeIds = new Set(nodes.map((n) => n.id));
+	let rels = filterRelationships(doc.relationships ?? [], filterOpts, nodeIds);
+
+	if (filterOpts.connectedOnly) {
+		nodes = applyConnectedOnly(nodes, rels);
+		rels = filterRelationships(rels, {}, new Set(nodes.map((n) => n.id)));
 	}
 
 	if (format === "dot") {
-		return generateDot(doc, rels);
+		// Historically DOT output used left-right rankdir by default regardless
+		// of the Mermaid default layout. Preserve that behaviour: if the
+		// requested layout is the Mermaid default "TD", map it to "LR" for DOT
+		// so existing tests and callers keep expecting LR unless another layout
+		// was explicitly chosen.
+		const dotLayout = layout === "TD" ? "LR" : layout;
+		return generateDot(nodes, rels, cluster, dotLayout, labelMode);
 	}
 
-	return generateMermaid(doc, rels);
+	return generateMermaid(nodes, rels, cluster, layout, labelMode);
 }
 
-/** Generate a graph of a SysProM document in Mermaid or DOT format, with optional filtering by relationship type. */
+/** Generate a graph of a SysProM document in Mermaid or DOT format, with optional filtering. */
 export const graphOp = defineOperation({
 	name: "graph",
 	description:
-		"Generate a graph of the SysProM document in Mermaid or DOT format, with optional filtering by relationship type.",
+		"Generate a graph of the SysProM document in Mermaid or DOT format, with optional filtering by node type, node ID, or relationship type.",
 	input: z.object({
 		doc: SysProMDocument,
 		format: z.enum(["mermaid", "dot"]).default("mermaid"),
 		typeFilter: z.string().optional(),
+		nodeTypes: z.array(z.string()).optional(),
+		nodeIds: z.array(z.string()).optional(),
+		relTypes: z.array(z.string()).optional(),
+		layout: z.enum(["LR", "TD", "RL", "BT"]).default("TD"),
+		cluster: z.boolean().default(true),
+		labelMode: z.enum(["friendly", "compact"]).default("friendly"),
+		connectedOnly: z.boolean().default(false),
 	}),
 	output: z.string(),
-	fn({ doc, format, typeFilter }) {
-		return generateGraph(doc, format, typeFilter);
+	fn({
+		doc,
+		format,
+		typeFilter,
+		nodeTypes,
+		nodeIds,
+		relTypes,
+		layout,
+		cluster,
+		labelMode,
+		connectedOnly,
+	}) {
+		const filterOpts: GraphFilterOptions = {
+			nodeTypes,
+			nodeIds,
+			relTypes: relTypes ?? (typeFilter ? [typeFilter] : undefined),
+			connectedOnly,
+		};
+		return generateGraph(doc, format, filterOpts, layout, cluster, labelMode);
 	},
 });

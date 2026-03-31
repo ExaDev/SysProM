@@ -9,7 +9,24 @@ export const jsonToMarkdownOp = defineOperation({
 	description: "Convert a SysProM document to single-file Markdown",
 	input: z.object({
 		doc: SysProMDocument,
+		// Optional per-diagram layout overrides when converting to Markdown
+		relationshipLayout: z.enum(["LR", "TD", "RL", "BT"]).optional(),
+		refinementLayout: z.enum(["LR", "TD", "RL", "BT"]).optional(),
+		decisionLayout: z.enum(["LR", "TD", "RL", "BT"]).optional(),
+		dependencyLayout: z.enum(["LR", "TD", "RL", "BT"]).optional(),
 	}),
 	output: z.string(),
-	fn: ({ doc }) => jsonToMarkdownSingle(doc),
+	fn: ({
+		doc,
+		relationshipLayout,
+		refinementLayout,
+		decisionLayout,
+		dependencyLayout,
+	}) =>
+		jsonToMarkdownSingle(doc, {
+			relationshipLayout,
+			refinementLayout,
+			decisionLayout,
+			dependencyLayout,
+		}),
 });

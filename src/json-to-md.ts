@@ -12,6 +12,10 @@ import {
 	RelationshipType,
 	RELATIONSHIP_TYPE_LABELS,
 } from "./schema.js";
+import { graphOp } from "./operations/graph.js";
+import { graphRefinementOp } from "./operations/graph-refinement.js";
+import { graphDecisionOp } from "./operations/graph-decision.js";
+import { graphDependencyOp } from "./operations/graph-dependency.js";
 
 // ---------------------------------------------------------------------------
 // Text helpers
@@ -39,14 +43,19 @@ function renderFrontMatter(fields: Record<string, unknown>): string {
 // Node location map (for hyperlinking)
 // ---------------------------------------------------------------------------
 
-/** GitHub-compatible heading anchor slug. */
+/**
+ * GitHub-compatible heading anchor slug.
+ * @param text
+ * @example
+ * // Convert a heading into a GitHub-style slug
+ * // slugify('ID — Name') // 'id---name'
+ */
 function slugify(text: string): string {
 	return text
 		.toLowerCase()
 		.replace(/[^\w\s-]/g, "")
 		.replace(/\s/g, "-");
 }
-
 /** Heading anchor for a node: `id--name` slugified from `### ID — Name`. */
 function nodeAnchor(n: Node): string {
 	return slugify(`${n.id} — ${n.name}`);
@@ -76,7 +85,6 @@ function buildNodeLocationMap(
 	}
 	return map;
 }
-
 /** Determine the markdown file a node type belongs to in multi-doc mode. */
 function fileForNodeType(type: string): string {
 	for (const [fileName, types] of Object.entries(NODE_FILE_MAP)) {
@@ -90,6 +98,10 @@ function fileForNodeType(type: string): string {
  * In single-file mode: `[ID](#anchor)`
  * In multi-doc mode: `[ID](./FILE.md#anchor)`
  * Falls back to plain ID if the node isn't in the map.
+ * @param id
+ * @param nodeMap
+ * @param currentFile
+ * @example
  */
 function linkNodeId(
 	id: string,
@@ -373,13 +385,19 @@ function renderNodesGrouped(
 		lines.push("");
 
 		for (const n of matching) {
-			lines.push(...renderNode(n, headingLevel + 1, fromIdx, nodeMap, currentFile));
+			lines.push(
+				...renderNode(n, headingLevel + 1, fromIdx, nodeMap, currentFile),
+			);
 		}
 	}
 	return lines;
 }
 
-function generateReadme(doc: SysProMDocument, fromIdx: RelIndex, nodeMap: NodeLocationMap): string {
+function generateReadme(
+	doc: SysProMDocument,
+	fromIdx: RelIndex,
+	nodeMap: NodeLocationMap,
+): string {
 	const lines: string[] = [];
 	const title = doc.metadata?.title ?? "SysProM";
 
@@ -460,7 +478,16 @@ function generateReadme(doc: SysProMDocument, fromIdx: RelIndex, nodeMap: NodeLo
 	// Views
 	const views = doc.nodes.filter((n) => n.type === "view");
 	if (views.length > 0) {
-		lines.push(...renderNodesGrouped(doc.nodes, ["view"], fromIdx, 2, nodeMap, "README.md"));
+		lines.push(
+			...renderNodesGrouped(
+				doc.nodes,
+				["view"],
+				fromIdx,
+				2,
+				nodeMap,
+				"README.md",
+			),
+		);
 	}
 
 	// Graph-level external references
@@ -497,7 +524,110 @@ function generateDocFile(
 	lines.push("");
 	lines.push(`# ${fileName.replace(".md", "")}`);
 	lines.push("");
-	lines.push(...renderNodesGrouped(doc.nodes, types, fromIdx, 2, nodeMap, `${fileName}.md`));
+	lines.push(
+		...renderNodesGrouped(
+			doc.nodes,
+			types,
+			fromIdx,
+			2,
+			nodeMap,
+			`${fileName}.md`,
+		),
+	);
+
+	return lines.join("\n") + "\n";
+}
+
+// ---------------------------------------------------------------------------
+// Diagram generation for Markdown embedding
+// ---------------------------------------------------------------------------
+
+type DiagramLayout = "LR" | "TD" | "RL" | "BT";
+
+interface DiagramOptions {
+	labelMode?: "friendly" | "compact";
+	relationshipLayout?: DiagramLayout;
+	refinementLayout?: DiagramLayout;
+	decisionLayout?: DiagramLayout;
+	dependencyLayout?: DiagramLayout;
+}
+
+function generateDiagramsFile(
+	doc: SysProMDocument,
+	opts?: DiagramOptions,
+): string {
+	const lines: string[] = [];
+
+	lines.push(
+		renderFrontMatter({
+			title: "Diagrams",
+			doc_type: "diagrams",
+		}),
+	);
+	lines.push("");
+	lines.push("# Diagrams");
+	lines.push("");
+
+	lines.push("## Relationship Graph");
+	lines.push("");
+	lines.push("```mermaid");
+	lines.push(
+		graphOp({
+			doc,
+			format: "mermaid",
+			layout: opts?.relationshipLayout ?? "TD",
+			labelMode: opts?.labelMode ?? "friendly",
+			cluster: true,
+			connectedOnly: false,
+		}),
+	);
+	lines.push("```");
+	lines.push("");
+
+	const refinement = graphRefinementOp({
+		doc,
+		format: "mermaid",
+		layout: opts?.refinementLayout ?? "TD",
+		labelMode: opts?.labelMode ?? "friendly",
+	});
+	if (refinement.includes("-->")) {
+		lines.push("## Refinement Chain");
+		lines.push("");
+		lines.push("```mermaid");
+		lines.push(refinement);
+		lines.push("```");
+		lines.push("");
+	}
+
+	const decisions = graphDecisionOp({
+		doc,
+		format: "mermaid",
+		layout: opts?.decisionLayout ?? "TD",
+		labelMode: opts?.labelMode ?? "friendly",
+	});
+	if (decisions.includes("-->")) {
+		lines.push("## Decision Map");
+		lines.push("");
+		lines.push("```mermaid");
+		lines.push(decisions);
+		lines.push("```");
+		lines.push("");
+	}
+
+	const dependencies = graphDependencyOp({
+		doc,
+		format: "mermaid",
+		layout: opts?.dependencyLayout ?? "LR",
+		labelMode: opts?.labelMode ?? "friendly",
+	});
+	if (dependencies.includes("-->") || dependencies.includes("-.->")) {
+		lines.push("## Dependency Graph");
+		lines.push("");
+		lines.push("```mermaid");
+		lines.push(dependencies);
+		lines.push("```");
+		lines.push("");
+	}
 
 	return lines.join("\n") + "\n";
 }
@@ -509,11 +639,33 @@ function generateDocFile(
 /** Options for controlling JSON-to-Markdown conversion. */
 export interface ConvertOptions {
 	form: "single-file" | "multi-doc";
+	embedDiagrams?: boolean;
+	labelMode?: "friendly" | "compact";
+	relationshipLayout?: DiagramLayout;
+	refinementLayout?: DiagramLayout;
+	decisionLayout?: DiagramLayout;
+	dependencyLayout?: DiagramLayout;
+}
+
+interface MarkdownRenderOptions {
+	embedDiagrams?: boolean;
+	labelMode?: "friendly" | "compact";
+	relationshipLayout?: DiagramLayout;
+	refinementLayout?: DiagramLayout;
+	decisionLayout?: DiagramLayout;
+	dependencyLayout?: DiagramLayout;
 }
 
 /**
  * Convert a SysProM document to a single Markdown string.
  * @param doc - The SysProM document to convert.
+ * @param options
+ * @param options.embedDiagrams
+ * @param options.labelMode
+ * @param options.relationshipLayout
+ * @param options.refinementLayout
+ * @param options.decisionLayout
+ * @param options.dependencyLayout
  * @returns The Markdown representation.
  * @example
  * ```ts
@@ -521,7 +673,10 @@ export interface ConvertOptions {
  * writeFileSync("output.spm.md", md);
  * ```
  */
-export function jsonToMarkdownSingle(doc: SysProMDocument): string {
+export function jsonToMarkdownSingle(
+	doc: SysProMDocument,
+	options?: MarkdownRenderOptions,
+): string {
 	const fromIdx = indexRelationshipsFrom(doc.relationships ?? []);
 	const nodeMap = buildNodeLocationMap(doc.nodes, "single-file");
 	const lines: string[] = [];
@@ -554,6 +709,31 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 
 	lines.push(...renderNodesGrouped(doc.nodes, allTypes, fromIdx, 2, nodeMap));
 
+	// Diagrams section
+	if (
+		options?.embedDiagrams &&
+		doc.relationships &&
+		doc.relationships.length > 0
+	) {
+		lines.push("## Diagrams");
+		lines.push("");
+		lines.push("### Relationship Graph");
+		lines.push("");
+		lines.push("```mermaid");
+		lines.push(
+			graphOp({
+				doc,
+				format: "mermaid",
+				layout: options?.relationshipLayout ?? "TD",
+				labelMode: options?.labelMode ?? "friendly",
+				cluster: true,
+				connectedOnly: false,
+			}),
+		);
+		lines.push("```");
+		lines.push("");
+	}
+
 	// Relationships summary
 	if (doc.relationships && doc.relationships.length > 0) {
 		lines.push("## Relationships");
@@ -585,6 +765,13 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
  * Convert a SysProM document to a multi-document Markdown folder.
  * @param doc - The SysProM document to convert.
  * @param outDir - Output directory path.
+ * @param options
+ * @param options.embedDiagrams
+ * @param options.labelMode
+ * @param options.relationshipLayout
+ * @param options.refinementLayout
+ * @param options.decisionLayout
+ * @param options.dependencyLayout
  * @example
  * ```ts
  * jsonToMarkdownMultiDoc(doc, "./SysProM");
@@ -593,13 +780,17 @@ export function jsonToMarkdownSingle(doc: SysProMDocument): string {
 export function jsonToMarkdownMultiDoc(
 	doc: SysProMDocument,
 	outDir: string,
+	options?: MarkdownRenderOptions,
 ): void {
 	mkdirSync(outDir, { recursive: true });
 
 	const fromIdx = indexRelationshipsFrom(doc.relationships ?? []);
 	const nodeMap = buildNodeLocationMap(doc.nodes, "multi-doc");
 
-	writeFileSync(join(outDir, "README.md"), generateReadme(doc, fromIdx, nodeMap));
+	writeFileSync(
+		join(outDir, "README.md"),
+		generateReadme(doc, fromIdx, nodeMap),
+	);
 
 	for (const [fileName, types] of Object.entries(NODE_FILE_MAP)) {
 		const hasNodes = doc.nodes.some((n) => types.includes(n.type));
@@ -607,6 +798,24 @@ export function jsonToMarkdownMultiDoc(
 		writeFileSync(
 			join(outDir, `${fileName}.md`),
 			generateDocFile(doc, fileName, types, fromIdx, nodeMap),
+		);
+	}
+
+	// Diagrams file
+	if (
+		options?.embedDiagrams &&
+		doc.relationships &&
+		doc.relationships.length > 0
+	) {
+		writeFileSync(
+			join(outDir, "DIAGRAMS.md"),
+			generateDiagramsFile(doc, {
+				labelMode: options?.labelMode ?? "friendly",
+				relationshipLayout: options?.relationshipLayout,
+				refinementLayout: options?.refinementLayout,
+				decisionLayout: options?.decisionLayout,
+				dependencyLayout: options?.dependencyLayout,
+			}),
 		);
 	}
 
@@ -682,8 +891,25 @@ export function jsonToMarkdown(
 	options: ConvertOptions,
 ): void {
 	if (options.form === "single-file") {
-		writeFileSync(output, jsonToMarkdownSingle(doc));
+		writeFileSync(
+			output,
+			jsonToMarkdownSingle(doc, {
+				embedDiagrams: options.embedDiagrams,
+				labelMode: options.labelMode,
+				relationshipLayout: options.relationshipLayout,
+				refinementLayout: options.refinementLayout,
+				decisionLayout: options.decisionLayout,
+				dependencyLayout: options.dependencyLayout,
+			}),
+		);
 	} else {
-		jsonToMarkdownMultiDoc(doc, output);
+		jsonToMarkdownMultiDoc(doc, output, {
+			embedDiagrams: options.embedDiagrams,
+			labelMode: options.labelMode,
+			relationshipLayout: options.relationshipLayout,
+			refinementLayout: options.refinementLayout,
+			decisionLayout: options.decisionLayout,
+			dependencyLayout: options.dependencyLayout,
+		});
 	}
 }
