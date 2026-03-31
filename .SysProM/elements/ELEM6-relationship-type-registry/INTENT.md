@@ -63,6 +63,10 @@ A gate blocks a stage.
 
 A gate redirects to a stage.
 
+### CON25-ORCHESTRATES — orchestrates
+
+An abstract workflow machine directs executable milestones, stages, gates, or artefact flows.
+
 ### CON15-GOVERNED_BY — governed_by
 
 A gate or policy is governed by a principle or invariant.

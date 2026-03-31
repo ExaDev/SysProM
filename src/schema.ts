@@ -143,6 +143,7 @@ const relationshipTypeDef = labelledEnum({
 	must_follow: "Must follow",
 	blocks: "Blocks",
 	routes_to: "Routes to",
+	orchestrates: "Orchestrates",
 	governed_by: "Governed by",
 	modifies: "Modifies",
 	triggered_by: "Triggered by",

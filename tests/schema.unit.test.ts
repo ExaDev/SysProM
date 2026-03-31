@@ -284,6 +284,7 @@ describe("relationships", () => {
 		"must_follow",
 		"blocks",
 		"routes_to",
+		"orchestrates",
 		"governed_by",
 		"modifies",
 		"triggered_by",

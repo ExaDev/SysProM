@@ -906,13 +906,20 @@ Rationale: OPT-A alone cannot answer what depends on X — the key SysML gap. OP
 
 ### DEC43 — Expand endpoint type matrix for governance modelling
 
-Context: Symphony modelling revealed six endpoint restrictions blocking valid governance patterns
+- Affects:
+  - [INV25](./INVARIANTS.md#inv25--relationship-endpoint-type-validity)
+  - [CAP12](./INTENT.md#cap12--product-repository-modelling-guidance)
+- Must preserve: [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
+
+- Status: implemented
+
+Context: Product-system modelling revealed endpoint restrictions blocking valid specification, design, and implementation provenance patterns.
 
 Options:
-- OPT-A: Expand endpoints and add justifies relationship type — all additive, semantically valid
+- OPT-A: Expand endpoints and add workflow-safe relationship types such as orchestrates — all additive, semantically valid
 - OPT-B: Keep strict matrix — no changes
 
 Chosen: OPT-A
 
-Rationale: All expansions are additive with no regressions. Justifies relationship type is semantically justified and consistent with existing design.
+Rationale: The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology. Abstract workflow machines can now connect cleanly to executable flow nodes without overloading part_of semantics.
 

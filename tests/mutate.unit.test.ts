@@ -177,6 +177,23 @@ describe("addRelationship", () => {
 			/Node not found.*INT2/,
 		);
 	});
+
+	it("adds orchestrates with valid workflow endpoints", () => {
+		const doc = makeDoc([
+			{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
+			{ id: "MILE1", type: "milestone", name: "Batch Approved" },
+		]);
+		const newDoc = addRelationshipOp({
+			doc,
+			rel: {
+				from: "PROT1",
+				to: "MILE1",
+				type: "orchestrates",
+			},
+		});
+		assert.equal(newDoc.relationships?.length, 1);
+		assert.equal(newDoc.relationships?.[0].type, "orchestrates");
+	});
 });
 
 describe("removeRelationship", () => {

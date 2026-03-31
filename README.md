@@ -273,6 +273,9 @@ Recommended relationship usage:
 
 - `refines`: tighten intent into concepts and concepts into capabilities
 - `part_of`: decompose concepts, protocols, capabilities, and architecture structures
+- `orchestrates`: connect abstract workflow machines to executable milestones, stages, gates, or artefact flows
+- `precedes`: order milestones, stages, and gates within an executable flow
+- `routes_to`: model artefact or data movement between artefact flows, stages, and artefacts
 - `realises`: connect design structures to implementation structures
 - `produces`: connect capabilities or stages to the artefacts they generate
 - `performs`: connect roles to capabilities, stages, protocols, and operational concepts

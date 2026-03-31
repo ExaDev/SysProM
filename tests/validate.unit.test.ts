@@ -261,6 +261,79 @@ describe("validate", () => {
 		assert.deepEqual(result.issues, []);
 	});
 
+	it("orchestrates accepts concept → milestone", () => {
+		const doc = makeDoc(
+			[
+				{ id: "CON1", type: "concept", name: "Review State Machine" },
+				{ id: "MILE1", type: "milestone", name: "Pending Review" },
+			],
+			[{ from: "CON1", to: "MILE1", type: "orchestrates" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
+
+	it("orchestrates accepts protocol → stage", () => {
+		const doc = makeDoc(
+			[
+				{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
+				{ id: "STG1", type: "stage", name: "Publish Stage" },
+			],
+			[{ from: "PROT1", to: "STG1", type: "orchestrates" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
+
+	it("orchestrates accepts capability → artefact_flow", () => {
+		const doc = makeDoc(
+			[
+				{ id: "CAP1", type: "capability", name: "Retrieval Assembly" },
+				{
+					id: "FLOW1",
+					type: "artefact_flow",
+					name: "Response Flow",
+					input: "ART1",
+					output: "ART2",
+				},
+				{ id: "ART1", type: "artefact", name: "Candidate Evidence" },
+				{ id: "ART2", type: "artefact", name: "Response Payload" },
+			],
+			[{ from: "CAP1", to: "FLOW1", type: "orchestrates" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
+
+	it("orchestrates rejects milestone → concept", () => {
+		const doc = makeDoc(
+			[
+				{ id: "MILE1", type: "milestone", name: "Pending Review" },
+				{ id: "CON1", type: "concept", name: "Review State Machine" },
+			],
+			[{ from: "MILE1", to: "CON1", type: "orchestrates" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, false);
+		assert.match(result.issues[0] ?? "", /Invalid endpoint types for orchestrates/);
+	});
+
+	it("orchestrates rejects artefact → milestone", () => {
+		const doc = makeDoc(
+			[
+				{ id: "ART1", type: "artefact", name: "Spec" },
+				{ id: "MILE1", type: "milestone", name: "Pending Review" },
+			],
+			[{ from: "ART1", to: "MILE1", type: "orchestrates" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, false);
+		assert.match(result.issues[0] ?? "", /Invalid endpoint types for orchestrates/);
+	});
+
 	it("validates a product-system provenance chain from intent to implementation", () => {
 		const doc = makeDoc(
 			[

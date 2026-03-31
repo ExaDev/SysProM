@@ -871,3 +871,32 @@ Scope:
 - [ ] Regenerate schema.json
 - [ ] Sync .spm.json and .SysProM/
 
+### CHG41 — Implement system provenance profile and broaden endpoint modelling
+
+Update endpoint validation rules, tests, and README guidance so SysProM better supports modelling product-system specification, design, and implementation provenance.
+
+- Implements: [DEC43](./DECISIONS.md#dec43--expand-endpoint-type-matrix-for-governance-modelling)
+- Modifies:
+  - [CAP12](./INTENT.md#cap12--product-repository-modelling-guidance)
+  - [ART4](./STATE.md#art4--system-provenance-profile-guidance)
+
+- Status: implemented
+
+Scope:
+- src/endpoint-types.ts
+- tests/validate.unit.test.ts
+- tests/safety-guards.unit.test.ts
+- README.md
+
+#### Plan
+
+- [x] Expand the endpoint matrix for system-provenance modelling patterns
+- [x] Add validation and safety test coverage for the broadened endpoint combinations
+- [x] Add README guidance for a generic system provenance profile
+- [x] Type-check the implementation changes
+
+#### Lifecycle
+
+- [x] proposed (2026-03-31)
+- [x] implemented (2026-03-31)
+

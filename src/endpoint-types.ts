@@ -243,6 +243,12 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		to: ["artefact_flow", "stage", "artefact"],
 	},
 
+	// Orchestrates — abstract workflow nodes direct executable flow nodes
+	orchestrates: {
+		from: ["concept", "protocol", "capability"],
+		to: ["milestone", "stage", "gate", "artefact_flow"],
+	},
+
 	// Governed by — governance relationships
 	governed_by: {
 		from: [

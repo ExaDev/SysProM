@@ -143,7 +143,7 @@ A document must not contain two relationships with identical from, type, and to.
 
 ### INV25 — Relationship Endpoint Type Validity
 
-Each relationship type has a set of valid source and target node types. For example, implements must go from a change to a decision; governed_by must point at a protocol. Enforced in addRelationship (refuse) and validate (report).
+Each relationship type has a set of valid source and target node types. The endpoint matrix must remain semantically meaningful while allowing practical system-provenance patterns such as role-to-concept or role-to-protocol performs, capability-to-artefact produces, invariant-to-concept applies_to, protocol decomposition via part_of, and abstract workflow control via orchestrates. Enforced in addRelationship (refuse) and validate (report).
 
 ### INV26 — Retirement Impact Awareness
 

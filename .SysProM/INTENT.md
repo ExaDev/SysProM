@@ -69,6 +69,12 @@ A system conforms to SysProM if it meets a defined set of minimum requirements, 
 
 - Refines: [INT1](#int1--system-provenance)
 
+### CON9 — System Provenance Profile
+
+A recommended modelling profile for product repositories that uses SysProM to describe the system's specification, design, and implementation with a consistent trace chain across layers.
+
+- Refines: [INT1](#int1--system-provenance)
+
 ## Capabilities
 
 ### CAP1 — Cross-Layer Traceability
@@ -137,4 +143,11 @@ Branches MAY be merged.
 Previously deprecated or retired nodes MAY be reintroduced.
 
 - Refines: [CON3](#con3--append-only-history)
+
+### CAP12 — Product Repository Modelling Guidance
+
+Guide authors to model product systems through intent, concept, capability, element, realisation, artefact, decision, and change nodes with practical traceability and implementation provenance.
+
+- Refines: [CON9](#con9--system-provenance-profile)
+- Produces: [ART4](./STATE.md#art4--system-provenance-profile-guidance)
 

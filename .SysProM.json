@@ -378,7 +378,7 @@
 			"type": "invariant"
 		},
 		{
-			"description": "Each relationship type has a set of valid source and target node types. The endpoint matrix must remain semantically meaningful while allowing practical system-provenance patterns such as role-to-concept or role-to-protocol performs, capability-to-artefact produces, invariant-to-concept applies_to, and protocol decomposition via part_of. Enforced in addRelationship (refuse) and validate (report).",
+			"description": "Each relationship type has a set of valid source and target node types. The endpoint matrix must remain semantically meaningful while allowing practical system-provenance patterns such as role-to-concept or role-to-protocol performs, capability-to-artefact produces, invariant-to-concept applies_to, protocol decomposition via part_of, and abstract workflow control via orchestrates. Enforced in addRelationship (refuse) and validate (report).",
 			"id": "INV25",
 			"name": "Relationship Endpoint Type Validity",
 			"type": "invariant"
@@ -895,6 +895,12 @@
 						"description": "A gate redirects to a stage.",
 						"id": "CON14-ROUTES_TO",
 						"name": "routes_to",
+						"type": "concept"
+					},
+					{
+						"description": "An abstract workflow machine directs executable milestones, stages, gates, or artefact flows.",
+						"id": "CON25-ORCHESTRATES",
+						"name": "orchestrates",
 						"type": "concept"
 					},
 					{
@@ -4247,7 +4253,7 @@
 			"name": "Expand endpoint type matrix for governance modelling",
 			"options": [
 				{
-					"description": "Expand endpoints and add justifies relationship type — all additive, semantically valid",
+					"description": "Expand endpoints and add workflow-safe relationship types such as orchestrates — all additive, semantically valid",
 					"id": "OPT-A"
 				},
 				{
@@ -4255,7 +4261,7 @@
 					"id": "OPT-B"
 				}
 			],
-			"rationale": "The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology.",
+			"rationale": "The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology. Abstract workflow machines can now connect cleanly to executable flow nodes without overloading part_of semantics.",
 			"selected": "OPT-A",
 			"status": "implemented",
 			"type": "decision"

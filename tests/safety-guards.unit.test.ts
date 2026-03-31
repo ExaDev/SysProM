@@ -97,6 +97,14 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 					{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
 					{ id: "CAP1", type: "capability", name: "Retrieval" },
 					{ id: "ART1", type: "artefact", name: "Knowledge Brief" },
+					{ id: "MILE1", type: "milestone", name: "Pending Review" },
+					{
+						id: "FLOW1",
+						type: "artefact_flow",
+						name: "Response Assembly",
+						input: "ART1",
+						output: "ART1",
+					},
 					{ id: "INV1", type: "invariant", name: "Publish Boundary" },
 				],
 			};
@@ -112,11 +120,19 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 				doc: withProtocol,
 				rel: { from: "CAP1", to: "ART1", type: "produces" },
 			});
-			const newDoc = addRelationshipOp({
+			const withMachine = addRelationshipOp({
 				doc: withArtefact,
+				rel: { from: "CON1", to: "MILE1", type: "orchestrates" },
+			});
+			const withFlow = addRelationshipOp({
+				doc: withMachine,
+				rel: { from: "CAP1", to: "FLOW1", type: "orchestrates" },
+			});
+			const newDoc = addRelationshipOp({
+				doc: withFlow,
 				rel: { from: "INV1", to: "CON1", type: "applies_to" },
 			});
-			assert.equal(newDoc.relationships?.length, 4);
+			assert.equal(newDoc.relationships?.length, 6);
 		});
 
 		it("flags invalid endpoint types in validate", () => {

@@ -210,6 +210,10 @@ A gate blocks a stage.
 
 A gate redirects to a stage.
 
+##### CON25-ORCHESTRATES — orchestrates
+
+An abstract workflow machine directs executable milestones, stages, gates, or artefact flows.
+
 ##### CON15-GOVERNED_BY — governed_by
 
 A gate or policy is governed by a principle or invariant.
@@ -751,4 +755,14 @@ Adds explicit user checkpoints.
 Adds stronger risk analysis and broader verification.
 
 - Modifies: [PROT1](#prot1--consensus-planning)
+
+### ART4 — System Provenance Profile Guidance
+
+README guidance describing recommended node usage, trace chains, relationship usage, and implementation provenance patterns for product repositories.
+
+
+#### External References
+
+- source: README.md
+  - System Provenance Profile section in the project README.
 
