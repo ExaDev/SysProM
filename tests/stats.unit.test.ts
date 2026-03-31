@@ -73,8 +73,18 @@ describe("stats", () => {
 				name: "D",
 				lifecycle: { proposed: true, reviewed: true },
 			},
-			{ id: "DEC2", type: "decision", name: "DEC2", lifecycle: { proposed: true } },
-			{ id: "CHG1", type: "change", name: "C", lifecycle: { implemented: true } },
+			{
+				id: "DEC2",
+				type: "decision",
+				name: "DEC2",
+				lifecycle: { proposed: true },
+			},
+			{
+				id: "CHG1",
+				type: "change",
+				name: "C",
+				lifecycle: { implemented: true },
+			},
 		]);
 		const result = statsOp({ doc });
 		assert.equal(result.decisionLifecycle.proposed, 2);

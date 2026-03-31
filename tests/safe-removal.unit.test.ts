@@ -77,7 +77,12 @@ describe("CHG32: Safe Graph Removal", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "INT1", type: "intent", name: "Intent" },
-					{ id: "CHG1", type: "change", name: "Change", scope: ["INT1", "INT2"] },
+					{
+						id: "CHG1",
+						type: "change",
+						name: "Change",
+						scope: ["INT1", "INT2"],
+					},
 				],
 			};
 			const result = removeNodeOp({ doc, id: "INT1" });
@@ -156,7 +161,12 @@ describe("CHG32: Safe Graph Removal", () => {
 		it("removes node from view includes", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "VIEW1", type: "view", name: "View", includes: ["INT1", "INT2"] },
+					{
+						id: "VIEW1",
+						type: "view",
+						name: "View",
+						includes: ["INT1", "INT2"],
+					},
 					{ id: "INT1", type: "intent", name: "Intent 1" },
 					{ id: "INT2", type: "intent", name: "Intent 2" },
 				],

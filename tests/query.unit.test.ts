@@ -5,7 +5,6 @@ import {
 	queryNodeOp,
 	queryRelationshipsOp,
 	traceFromNodeOp,
-	type TraceNode,
 } from "../src/index.js";
 import type { SysProMDocument } from "../src/schema.js";
 

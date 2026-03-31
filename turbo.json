@@ -1,59 +1,59 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "_lint": {
-      "inputs": ["src/**/*.ts", "tests/**/*.ts", "eslint.config.ts"],
-      "outputs": []
-    },
-    "_typecheck": {
-      "inputs": ["src/**/*.ts", "tests/**/*.ts", "tsconfig.json"],
-      "outputs": []
-    },
-    "_compile": {
-      "dependsOn": ["_typecheck"],
-      "inputs": ["src/**/*.ts", "tsconfig.json"],
-      "outputs": ["dist/**"]
-    },
-    "_schema": {
-      "dependsOn": ["_compile"],
-      "inputs": ["src/**/*.ts"],
-      "outputs": ["schema.json"]
-    },
-    "_test": {
-      "dependsOn": ["_typecheck"],
-      "inputs": ["src/**/*.ts", "tests/**/*.ts"],
-      "outputs": []
-    },
-    "_test:coverage": {
-      "dependsOn": ["_typecheck"],
-      "inputs": ["src/**/*.ts", "tests/**/*.ts"],
-      "outputs": ["coverage/**"],
-      "cache": false
-    },
-    "_docs:cli": {
-      "inputs": [
-        "src/cli/**/*.ts",
-        "src/schema.ts",
-        "scripts/generate-cli-docs.ts"
-      ],
-      "outputs": ["docs/cli/**"]
-    },
-    "_docs:api": {
-      "inputs": ["src/**/*.ts", "typedoc.json"],
-      "outputs": ["docs/api/**"]
-    },
-    "_docs:api:html": {
-      "dependsOn": ["_docs:cli"],
-      "inputs": ["src/**/*.ts", "typedoc.html.json", "docs/cli/**"],
-      "outputs": ["site/**"]
-    },
-    "_build": {
-      "dependsOn": ["_compile", "_schema", "_docs:cli", "_docs:api"],
-      "outputs": []
-    },
-    "_validate": {
-      "dependsOn": ["_lint", "_typecheck", "_build", "_test"],
-      "outputs": []
-    }
-  }
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"_lint": {
+			"inputs": ["src/**/*.ts", "tests/**/*.ts", "eslint.config.ts"],
+			"outputs": []
+		},
+		"_typecheck": {
+			"inputs": ["src/**/*.ts", "tests/**/*.ts", "tsconfig.json"],
+			"outputs": []
+		},
+		"_compile": {
+			"dependsOn": ["_typecheck"],
+			"inputs": ["src/**/*.ts", "tsconfig.json"],
+			"outputs": ["dist/**"]
+		},
+		"_schema": {
+			"dependsOn": ["_compile"],
+			"inputs": ["src/**/*.ts"],
+			"outputs": ["schema.json"]
+		},
+		"_test": {
+			"dependsOn": ["_typecheck"],
+			"inputs": ["src/**/*.ts", "tests/**/*.ts"],
+			"outputs": []
+		},
+		"_test:coverage": {
+			"dependsOn": ["_typecheck"],
+			"inputs": ["src/**/*.ts", "tests/**/*.ts"],
+			"outputs": ["coverage/**"],
+			"cache": false
+		},
+		"_docs:cli": {
+			"inputs": [
+				"src/cli/**/*.ts",
+				"src/schema.ts",
+				"scripts/generate-cli-docs.ts"
+			],
+			"outputs": ["docs/cli/**"]
+		},
+		"_docs:api": {
+			"inputs": ["src/**/*.ts", "typedoc.json"],
+			"outputs": ["docs/api/**"]
+		},
+		"_docs:api:html": {
+			"dependsOn": ["_docs:cli"],
+			"inputs": ["src/**/*.ts", "typedoc.html.json", "docs/cli/**"],
+			"outputs": ["site/**"]
+		},
+		"_build": {
+			"dependsOn": ["_compile", "_schema", "_docs:cli", "_docs:api"],
+			"outputs": []
+		},
+		"_validate": {
+			"dependsOn": ["_lint", "_typecheck", "_build", "_test"],
+			"outputs": []
+		}
+	}
 }

@@ -37,7 +37,9 @@ import {
 describe("schema .is() type guards", () => {
 	it("SysProMDocument.is() returns true for valid doc", () => {
 		assert.ok(
-			SysProMDocument.is({ nodes: [{ id: "INT1", type: "intent", name: "T" }] }),
+			SysProMDocument.is({
+				nodes: [{ id: "INT1", type: "intent", name: "T" }],
+			}),
 		);
 	});
 

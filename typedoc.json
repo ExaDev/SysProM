@@ -1,24 +1,24 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["./src"],
-  "entryPointStrategy": "expand",
-  "exclude": ["**/cli/**", "**/generate-schema.ts"],
-  "out": "site",
-  "plugin": ["typedoc-plugin-zod"],
-  "name": "SysProM",
-  "readme": "README.md",
-  "projectDocuments": [],
-  "excludePrivate": true,
-  "excludeInternal": true,
-  "navigation": {
-    "includeCategories": false,
-    "includeGroups": false,
-    "includeFolders": true,
-    "compactFolders": false
-  },
-  "validation": {
-    "notExported": true,
-    "invalidLink": true,
-    "notDocumented": false
-  }
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": ["./src"],
+	"entryPointStrategy": "expand",
+	"exclude": ["**/cli/**", "**/generate-schema.ts"],
+	"out": "site",
+	"plugin": ["typedoc-plugin-zod"],
+	"name": "SysProM",
+	"readme": "README.md",
+	"projectDocuments": [],
+	"excludePrivate": true,
+	"excludeInternal": true,
+	"navigation": {
+		"includeCategories": false,
+		"includeGroups": false,
+		"includeFolders": true,
+		"compactFolders": false
+	},
+	"validation": {
+		"notExported": true,
+		"invalidLink": true,
+		"notDocumented": false
+	}
 }

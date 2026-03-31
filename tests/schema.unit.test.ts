@@ -467,7 +467,9 @@ describe("recursive composition (subsystem)", () => {
 							{ id: "INT1", type: "intent", name: "Synchronised Access" },
 							{ id: "INV1", type: "invariant", name: "Requires Remote" },
 						],
-						relationships: [{ from: "INV1", to: "INT1", type: "constrained_by" }],
+						relationships: [
+							{ from: "INV1", to: "INT1", type: "constrained_by" },
+						],
 					},
 				},
 			],
@@ -724,7 +726,16 @@ describe("full document", () => {
 					id: "VIEW1",
 					type: "view",
 					name: "Domain View",
-					includes: ["INT1", "CON1", "CAP1", "INV1", "INV2", "ELEM1", "REAL1", "REAL2"],
+					includes: [
+						"INT1",
+						"CON1",
+						"CAP1",
+						"INV1",
+						"INV2",
+						"ELEM1",
+						"REAL1",
+						"REAL2",
+					],
 				},
 			],
 			relationships: [

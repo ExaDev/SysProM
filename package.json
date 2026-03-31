@@ -1,96 +1,100 @@
 {
-  "name": "sysprom",
-  "version": "1.17.0",
-  "description": "SysProM — System Provenance Model CLI and library",
-  "author": "ExaDev",
-  "homepage": "https://exadev.github.io/SysProM",
-  "bugs": "https://github.com/ExaDev/SysProM/issues",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ExaDev/SysProM.git"
-  },
-  "keywords": [
-    "sysprom",
-    "provenance",
-    "decision",
-    "architecture",
-    "traceability",
-    "system-model",
-    "cli"
-  ],
-  "packageManager": "pnpm@10.32.1",
-  "type": "module",
-  "main": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/src/index.d.ts",
-      "import": "./dist/src/index.js"
-    }
-  },
-  "files": [
-    "dist/src/**/*.js",
-    "dist/src/**/*.d.ts",
-    "schema.json"
-  ],
-  "bin": {
-    "sysprom": "dist/src/cli/index.js",
-    "spm": "dist/src/cli/index.js",
-    "sysprom-mcp": "dist/src/mcp/index.js"
-  },
-  "scripts": {
-    "build": "turbo run _build",
-    "typecheck": "turbo run _typecheck",
-    "compile": "turbo run _compile",
-    "schema": "turbo run _schema",
-    "test": "turbo run _test",
-    "test:coverage": "turbo run _test:coverage",
-    "docs": "turbo run _docs:cli _docs:api:html",
-    "docs:serve": "typedoc --watch --serve",
-    "lint": "turbo run _lint",
-    "spm": "tsx src/cli/index.ts",
-    "_lint": "eslint --cache .",
-    "_typecheck": "tsc --noEmit",
-    "_compile": "tsc",
-    "_schema": "tsx src/generate-schema.ts",
-    "_test": "tsx --test tests/*.test.ts",
-    "_test:coverage": "c8 --src src --exclude 'src/cli/**' --exclude 'src/generate-schema.ts' tsx --test tests/*.test.ts",
-    "_docs:cli": "tsx scripts/generate-cli-docs.ts",
-    "_docs:api": "typedoc",
-    "_docs:api:html": "typedoc",
-    "validate": "turbo run _validate",
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "1.27.1",
-    "commander": "14.0.3",
-    "picocolors": "1.1.1",
-    "zod": "4.3.6"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "20.5.0",
-    "@commitlint/config-conventional": "20.5.0",
-    "@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
-    "@eslint/js": "10.0.1",
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/exec": "7.1.0",
-    "@semantic-release/git": "10.0.1",
-    "@types/node": "25.5.0",
-    "c8": "11.0.0",
-    "conventional-changelog-conventionalcommits": "9.3.0",
-    "eslint": "10.1.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-jsdoc": "62.8.0",
-    "eslint-plugin-prettier": "5.5.5",
-    "husky": "9.1.7",
-    "prettier": "3.8.1",
-    "semantic-release": "25.0.3",
-    "tsx": "4.21.0",
-    "turbo": "2.8.20",
-    "typedoc": "0.28.17",
-    "typedoc-plugin-markdown": "4.11.0",
-    "typedoc-plugin-zod": "1.4.3",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.57.1"
-  }
+	"name": "sysprom",
+	"version": "1.17.0",
+	"description": "SysProM — System Provenance Model CLI and library",
+	"author": "ExaDev",
+	"homepage": "https://exadev.github.io/SysProM",
+	"bugs": "https://github.com/ExaDev/SysProM/issues",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ExaDev/SysProM.git"
+	},
+	"keywords": [
+		"sysprom",
+		"provenance",
+		"decision",
+		"architecture",
+		"traceability",
+		"system-model",
+		"cli"
+	],
+	"packageManager": "pnpm@10.32.1",
+	"type": "module",
+	"main": "./dist/src/index.js",
+	"types": "./dist/src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/src/index.d.ts",
+			"import": "./dist/src/index.js"
+		}
+	},
+	"files": [
+		"dist/src/**/*.js",
+		"dist/src/**/*.d.ts",
+		"schema.json"
+	],
+	"bin": {
+		"sysprom": "dist/src/cli/index.js",
+		"spm": "dist/src/cli/index.js",
+		"sysprom-mcp": "dist/src/mcp/index.js"
+	},
+	"scripts": {
+		"build": "turbo run _build",
+		"typecheck": "turbo run _typecheck",
+		"compile": "turbo run _compile",
+		"schema": "turbo run _schema",
+		"test": "turbo run _test",
+		"test:coverage": "turbo run _test:coverage",
+		"docs": "turbo run _docs:cli _docs:api:html",
+		"docs:serve": "typedoc --watch --serve",
+		"lint": "turbo run _lint",
+		"spm": "tsx src/cli/index.ts",
+		"_lint": "eslint --cache .",
+		"_typecheck": "tsc --noEmit",
+		"_compile": "tsc",
+		"_schema": "tsx src/generate-schema.ts",
+		"_test": "tsx --test tests/*.test.ts",
+		"_test:coverage": "c8 --src src --exclude 'src/cli/**' --exclude 'src/generate-schema.ts' tsx --test tests/*.test.ts",
+		"_docs:cli": "tsx scripts/generate-cli-docs.ts",
+		"_docs:api": "typedoc",
+		"_docs:api:html": "typedoc",
+		"validate": "turbo run _validate",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "1.27.1",
+		"commander": "14.0.3",
+		"picocolors": "1.1.1",
+		"zod": "4.3.6"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "20.5.0",
+		"@commitlint/config-conventional": "20.5.0",
+		"@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
+		"@eslint/compat": "2.0.3",
+		"@eslint/eslintrc": "3.3.5",
+		"@eslint/js": "10.0.1",
+		"@semantic-release/changelog": "6.0.3",
+		"@semantic-release/exec": "7.1.0",
+		"@semantic-release/git": "10.0.1",
+		"@types/node": "25.5.0",
+		"c8": "11.0.0",
+		"conventional-changelog-conventionalcommits": "9.3.0",
+		"eslint": "10.1.0",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-formatter-compact": "9.0.1",
+		"eslint-plugin-jsdoc": "62.8.0",
+		"eslint-plugin-prettier": "5.5.5",
+		"eslint-plugin-sonarjs": "^4.0.2",
+		"husky": "9.1.7",
+		"prettier": "3.8.1",
+		"semantic-release": "25.0.3",
+		"tsx": "4.21.0",
+		"turbo": "2.8.20",
+		"typedoc": "0.28.18",
+		"typedoc-plugin-markdown": "4.11.0",
+		"typedoc-plugin-zod": "1.4.3",
+		"typescript": "6.0.2",
+		"typescript-eslint": "8.57.2"
+	}
 }

@@ -161,8 +161,7 @@ describe("addNode gate-invariant guard (INV8)", () => {
 		assert.equal(result.nodes.length, 6);
 		assert.ok(result.nodes.find((n) => n.id === "GATE1"));
 		const rel = result.relationships?.find(
-			(r) =>
-				r.from === "GATE1" && r.to === "INV1" && r.type === "governed_by",
+			(r) => r.from === "GATE1" && r.to === "INV1" && r.type === "governed_by",
 		);
 		assert.ok(rel, "governed_by relationship should be created");
 	});
@@ -175,8 +174,7 @@ describe("addNode gate-invariant guard (INV8)", () => {
 			governedById: "POL1",
 		});
 		const rel = result.relationships?.find(
-			(r) =>
-				r.from === "GATE1" && r.to === "POL1" && r.type === "governed_by",
+			(r) => r.from === "GATE1" && r.to === "POL1" && r.type === "governed_by",
 		);
 		assert.ok(rel, "governed_by relationship should be created for policy");
 	});

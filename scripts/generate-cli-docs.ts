@@ -38,7 +38,9 @@ function renderApiLink(apiLink: string | undefined): string {
 	// e.g. "validate" -> "validateOp", "query-nodes" -> "queryNodesOp"
 	const operationName = apiLink
 		.split("-")
-		.map((part, i) => (i === 0 ? part : part[0]?.toUpperCase() + part.slice(1)))
+		.map((part, i) =>
+			i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1),
+		)
 		.join("");
 	const exportedName = operationName + "Op";
 	// Use TypeDoc module export syntax: src/operations/file!exportedName

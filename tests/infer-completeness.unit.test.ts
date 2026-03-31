@@ -1,9 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import {
-	inferCompletenessOp,
-	type CompletenessResult,
-} from "../src/operations/infer-completeness.js";
+import { inferCompletenessOp } from "../src/operations/infer-completeness.js";
 import type { SysProMDocument } from "../src/schema.js";
 
 describe("inferCompletenessOp", () => {

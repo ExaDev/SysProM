@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { removeNodeOp, removeRelationshipOp } from "../src/index.js";
-import type { SysProMDocument, Relationship } from "../src/schema.js";
+import type { SysProMDocument } from "../src/schema.js";
 
 describe("CHG32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 	describe("Soft delete (default)", () => {

@@ -6,10 +6,6 @@ import {
 	planStatus,
 	planProgress,
 	checkGate,
-	isTaskDone,
-	countTasks,
-	type PlanStatus,
-	type PhaseProgress,
 } from "../src/speckit/plan.js";
 import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
 

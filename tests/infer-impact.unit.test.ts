@@ -1,6 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { inferImpactOp, impactSummaryOp } from "../src/operations/infer-impact.js";
+import {
+	inferImpactOp,
+	impactSummaryOp,
+	type ImpactSummaryOutput,
+} from "../src/operations/infer-impact.js";
 import type { SysProMDocument } from "../src/schema.js";
 
 describe("inferImpactOp", () => {
@@ -285,7 +289,9 @@ describe("inferImpactOp", () => {
 			// ELEM4 should be top hotspot (affected by ELEM2 and ELEM3)
 			// ELEM2 and ELEM3 should be secondary (affected by ELEM1)
 			assert.ok(result.hotspots.length > 0);
-			const hotspotIds = result.hotspots.map((h: any) => h.nodeId);
+			const hotspotIds = result.hotspots.map(
+				(h: ImpactSummaryOutput["hotspots"][number]) => h.nodeId,
+			);
 			assert.ok(hotspotIds.includes("ELEM4"));
 		});
 

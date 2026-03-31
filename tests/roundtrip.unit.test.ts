@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import { strict as assert } from "node:assert";
-import { mkdtempSync, rmSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -450,7 +450,9 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [{ id: "INT1", type: "intent", name: "Test", description: "Test." }],
+			nodes: [
+				{ id: "INT1", type: "intent", name: "Test", description: "Test." },
+			],
 		};
 		const md = jsonToMarkdownSingle(original);
 		const result = markdownSingleToJson(md);
@@ -461,7 +463,9 @@ describe("round trip: $schema preservation", () => {
 		const original: SysProMDocument = {
 			$schema: "./schema.json",
 			metadata: { title: "Schema Test" },
-			nodes: [{ id: "INT1", type: "intent", name: "Test", description: "Test." }],
+			nodes: [
+				{ id: "INT1", type: "intent", name: "Test", description: "Test." },
+			],
 		};
 		const tmpDir = mkdtempSync(join(tmpdir(), "sysprom-schema-"));
 		try {

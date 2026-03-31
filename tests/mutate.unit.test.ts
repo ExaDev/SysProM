@@ -127,7 +127,11 @@ describe("updateNode", () => {
 			{ id: "INT1", type: "intent", name: "A" },
 			{ id: "INT2", type: "intent", name: "B" },
 		]);
-		const newDoc = updateNodeOp({ doc, id: "INT1", fields: { name: "Updated" } });
+		const newDoc = updateNodeOp({
+			doc,
+			id: "INT1",
+			fields: { name: "Updated" },
+		});
 		assert.equal(newDoc.nodes[1].name, "B");
 	});
 });
@@ -203,7 +207,12 @@ describe("removeRelationship", () => {
 		};
 		assert.throws(
 			() =>
-				removeRelationshipOp({ doc, from: "INT1", type: "refines", to: "INT2" }),
+				removeRelationshipOp({
+					doc,
+					from: "INT1",
+					type: "refines",
+					to: "INT2",
+				}),
 			/not found/,
 		);
 	});

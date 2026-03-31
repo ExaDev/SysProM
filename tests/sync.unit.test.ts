@@ -1,12 +1,6 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import { strict as assert } from "node:assert";
-import {
-	mkdtempSync,
-	rmSync,
-	readFileSync,
-	writeFileSync,
-	utimesSync,
-} from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, utimesSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { detectChanges } from "../src/sync.js";
