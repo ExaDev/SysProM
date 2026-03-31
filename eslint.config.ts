@@ -4,6 +4,7 @@ import { defineConfig } from "eslint/config";
 import eslintComments from "@eslint-community/eslint-plugin-eslint-comments";
 import jsdoc from "eslint-plugin-jsdoc";
 import prettier from "eslint-plugin-prettier/recommended";
+import sonarjs from "eslint-plugin-sonarjs";
 import tseslint from "typescript-eslint";
 
 // ---------------------------------------------------------------------------
@@ -122,6 +123,7 @@ export default defineConfig(
 	eslint.configs.recommended,
 	tseslint.configs.strictTypeChecked,
 	tseslint.configs.stylisticTypeChecked,
+	sonarjs.configs.recommended,
 	prettier,
 	{
 		files: ["src/**/*.ts"],
