@@ -41,6 +41,50 @@ const optsSchema = mutationOpts.extend({
 		),
 });
 
+/**
+ * Build a node object from CLI options.
+ * @param id - The unique identifier for the node
+ * @param type - The kind of node (decision, change, invariant, etc.)
+ * @param name - The human-readable name of the node
+ * @param opts - CLI options to apply to the node
+ * @returns The constructed node with fields populated from opts
+ * @example
+ * ```ts
+ * const node = buildNodeFromOpts("D1", "decision", "My Decision", opts);
+ * ```
+ */
+function buildNodeFromOpts(
+	id: string,
+	type: string,
+	name: string,
+	opts: z.infer<typeof optsSchema>,
+): Node {
+	const node: Node = { id, type, name };
+
+	if (opts.description) node.description = opts.description;
+	if (opts.status) node.status = opts.status;
+	if (opts.context) node.context = opts.context;
+	if (opts.rationale) node.rationale = opts.rationale;
+	if (opts.scope?.length) node.scope = opts.scope;
+	if (opts.selected) node.selected = opts.selected;
+
+	if (opts.option?.length) {
+		node.options = opts.option.map((arg, i) => {
+			const colonIdx = arg.indexOf(":");
+			if (colonIdx >= 0) {
+				return {
+					id: arg.slice(0, colonIdx),
+					description: arg.slice(colonIdx + 1),
+				};
+			}
+			const letter = String.fromCharCode(65 + i);
+			return { id: `${id}-OPT-${letter}`, description: arg };
+		});
+	}
+
+	return node;
+}
+
 export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 	name: "add",
 	description: addNodeOp.def.description,
@@ -65,55 +109,15 @@ export const addCommand: CommandDef<typeof argsSchema, typeof optsSchema> = {
 			process.exit(1);
 		}
 
+		if (opts.status && !NodeStatus.is(opts.status)) {
+			console.error(
+				`Unknown status: "${opts.status}". Valid statuses: ${NodeStatus.options.join(", ")}`,
+			);
+			process.exit(1);
+		}
+
 		const id = opts.id ?? nextIdOp({ doc, type });
-
-		// Build the node from CLI options
-		const node: Node = { id, type, name: opts.name };
-
-		if (opts.description) {
-			node.description = opts.description;
-		}
-
-		if (opts.status) {
-			if (!NodeStatus.is(opts.status)) {
-				console.error(
-					`Unknown status: "${opts.status}". Valid statuses: ${NodeStatus.options.join(", ")}`,
-				);
-				process.exit(1);
-			}
-			node.status = opts.status;
-		}
-
-		if (opts.context) {
-			node.context = opts.context;
-		}
-
-		if (opts.rationale) {
-			node.rationale = opts.rationale;
-		}
-
-		if (opts.scope && opts.scope.length > 0) {
-			node.scope = opts.scope;
-		}
-
-		if (opts.selected) {
-			node.selected = opts.selected;
-		}
-
-		if (opts.option && opts.option.length > 0) {
-			node.options = opts.option.map((arg, i) => {
-				const colonIdx = arg.indexOf(":");
-				if (colonIdx >= 0) {
-					return {
-						id: arg.slice(0, colonIdx),
-						description: arg.slice(colonIdx + 1),
-					};
-				}
-				// Auto-generate ID: D26-OPT-A, D26-OPT-B, etc.
-				const letter = String.fromCharCode(65 + i); // A, B, C, ...
-				return { id: `${id}-OPT-${letter}`, description: arg };
-			});
-		}
+		const node = buildNodeFromOpts(id, type, opts.name, opts);
 
 		try {
 			const newDoc = addNodeOp({
