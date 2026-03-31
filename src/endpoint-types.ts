@@ -175,7 +175,14 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 	// Performs — process enactment
 	performs: {
 		from: ["stage", "role"],
-		to: ["capability", "artefact", "artefact_flow", "stage"],
+		to: [
+			"capability",
+			"artefact",
+			"artefact_flow",
+			"stage",
+			"concept",
+			"protocol",
+		],
 	},
 
 	// Precedes — temporal ordering
@@ -202,6 +209,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"stage",
 			"policy",
 			"principle",
+			"protocol",
 			"role",
 			"gate",
 			"mode",
@@ -285,7 +293,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Applies to — applicability and scope
 	applies_to: {
-		from: ["policy", "principle", "mode", "protocol"],
+		from: ["policy", "principle", "mode", "protocol", "invariant"],
 		to: [
 			"intent",
 			"concept",
@@ -301,7 +309,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Produces — generation
 	produces: {
-		from: ["stage", "artefact_flow", "realisation", "concept"],
+		from: ["stage", "artefact_flow", "realisation", "concept", "capability"],
 		to: ["artefact", "concept"],
 	},
 

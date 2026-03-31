@@ -89,6 +89,36 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 			assert.equal(newDoc.relationships?.length, 1);
 		});
 
+		it("allows broadened system-provenance endpoint combinations", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "ROLE1", type: "role", name: "Steward" },
+					{ id: "CON1", type: "concept", name: "Conflict Resolution" },
+					{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
+					{ id: "CAP1", type: "capability", name: "Retrieval" },
+					{ id: "ART1", type: "artefact", name: "Knowledge Brief" },
+					{ id: "INV1", type: "invariant", name: "Publish Boundary" },
+				],
+			};
+			const withConcept = addRelationshipOp({
+				doc,
+				rel: { from: "ROLE1", to: "CON1", type: "performs" },
+			});
+			const withProtocol = addRelationshipOp({
+				doc: withConcept,
+				rel: { from: "ROLE1", to: "PROT1", type: "performs" },
+			});
+			const withArtefact = addRelationshipOp({
+				doc: withProtocol,
+				rel: { from: "CAP1", to: "ART1", type: "produces" },
+			});
+			const newDoc = addRelationshipOp({
+				doc: withArtefact,
+				rel: { from: "INV1", to: "CON1", type: "applies_to" },
+			});
+			assert.equal(newDoc.relationships?.length, 4);
+		});
+
 		it("flags invalid endpoint types in validate", () => {
 			const doc: SysProMDocument = {
 				nodes: [
