@@ -338,6 +338,12 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"stage",
 		],
 	},
+
+	// Justifies — design rationale grounding (principle/decision → invariant/decision/concept)
+	justifies: {
+		from: ["principle", "decision"],
+		to: ["invariant", "decision", "principle", "concept"],
+	},
 };
 
 /**

@@ -91,4 +91,17 @@ describe("validate", () => {
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("has no selected")));
 	});
+
+	it("justifies relationship type is accepted between principle and invariant", () => {
+		const doc = makeDoc(
+			[
+				{ id: "PRIN1", type: "principle", name: "P" },
+				{ id: "INV1", type: "invariant", name: "I" },
+			],
+			[{ from: "PRIN1", to: "INV1", type: "justifies" }],
+		);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.deepEqual(result.issues, []);
+	});
 });

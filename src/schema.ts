@@ -154,6 +154,7 @@ const relationshipTypeDef = labelledEnum({
 	requires: "Requires",
 	disables: "Disables",
 	influence: "Influence",
+	justifies: "Justifies",
 });
 
 /** Zod schema for the set of valid relationship types (e.g. `"refines"`, `"depends_on"`, `"affects"`). */
