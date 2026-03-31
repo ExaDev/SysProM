@@ -1,16 +1,5 @@
 import * as z from "zod";
-
-// ---------------------------------------------------------------------------
-// defineSchema — attaches a .is() type guard to any Zod schema
-// ---------------------------------------------------------------------------
-
-function defineSchema<T extends z.ZodType>(schema: T) {
-	return Object.assign(schema, {
-		is(value: unknown): value is z.infer<T> {
-			return schema.safeParse(value).success;
-		},
-	});
-}
+import { defineSchema } from "./utils/define-schema.js";
 
 // ---------------------------------------------------------------------------
 // Text type — allows a string or an array of lines
@@ -328,7 +317,9 @@ export const Relationship = defineSchema(
 			to: z.string().describe("Target node ID."),
 			type: RelationshipType,
 			description: Text.optional(),
-			polarity: ImpactPolarity.optional().describe("Impact polarity — positive, negative, neutral, or uncertain."),
+			polarity: ImpactPolarity.optional().describe(
+				"Impact polarity — positive, negative, neutral, or uncertain.",
+			),
 			strength: z
 				.number()
 				.min(0)
@@ -447,12 +438,12 @@ export const NodeBase = z
 	.describe("A uniquely identifiable entity within the system.");
 
 const NodeSchema = NodeBase.superRefine((node, ctx) => {
-	const prefix = NODE_ID_PREFIX[node.type as string];
+	const prefix = NODE_ID_PREFIX[node.type];
 	if (!prefix) return; // Unknown type — skip validation
 	const pattern = new RegExp(`^${prefix}\\d+(-[A-Z][A-Z0-9_]*)*$`);
 	if (!pattern.test(node.id)) {
 		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
+			code: "custom",
 			path: ["id"],
 			message: `Node ID "${node.id}" does not match required pattern for type "${node.type}": expected ${prefix}<number> with optional -SUFFIX segments (e.g. ${prefix}1, ${prefix}1-MY-LABEL)`,
 		});
