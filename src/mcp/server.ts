@@ -4,7 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod";
 import { loadDocument, saveDocument } from "../io.js";
-import { NodeType, RelationshipType } from "../schema.js";
+import { NodeType, RelationshipType, SysProMDocument } from "../schema.js";
 import {
 	validateOp,
 	statsOp,
@@ -25,11 +25,90 @@ import {
 	inferDerivedOp,
 } from "../operations/index.js";
 
+/**
+ * Wrap an error with a descriptive prefix and attach the original as cause.
+ * @param prefix - The error prefix (e.g., "Failed to add node")
+ * @param error - The caught error
+ * @example
+ * ```ts
+ * try {
+ *   someOperation();
+ * } catch (error) {
+ *   wrapError("Failed to do X", error);
+ * }
+ * ```
+ */
+function wrapError(prefix: string, error: unknown): never {
+	throw new Error(
+		`${prefix}: ${error instanceof Error ? error.message : String(error)}`,
+		{ cause: error },
+	);
+}
+
 // Create MCP server instance
 const server = new McpServer({
 	name: "sysprom-mcp",
 	version: "1.0.0",
 });
+
+// Register init-document tool
+server.registerTool(
+	"init-document",
+	{
+		description:
+			"Initialise a new SysProM document with metadata and empty structure",
+		inputSchema: z.object({
+			path: z
+				.string()
+				.describe("Output path for the document (must end in .json)"),
+			title: z.string().describe("Document title"),
+			description: z.string().optional().describe("Document description"),
+			scope: z.string().optional().describe("Document scope"),
+		}),
+	},
+	({ path, title, description, scope }) => {
+		try {
+			const now = new Date().toISOString().split("T")[0];
+			const doc: SysProMDocument = {
+				$schema: "https://sysprom.org/schema.json",
+				metadata: {
+					title,
+					...(description && { description }),
+					...(scope && { scope }),
+					version: "1.0.0",
+					created: now,
+				},
+				nodes: [],
+				relationships: [],
+			};
+
+			try {
+				saveDocument(doc, "json", path);
+			} catch (error) {
+				wrapError("Failed to save document", error);
+			}
+
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: "Document initialised",
+								path,
+								title,
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("init-document", error);
+		}
+	},
+);
 
 // Register validate tool
 server.registerTool(
@@ -201,41 +280,59 @@ server.registerTool(
 		}),
 	},
 	({ path, type, id, name, description }) => {
-		const loaded = loadDocument(path);
-		const nodeType = NodeType.safeParse(type);
-		if (!nodeType.success) {
-			throw new Error(
-				`Invalid node type: "${type}". Valid types: ${NodeType.options.join(", ")}`,
-			);
-		}
-		const nodeId = id ?? nextIdOp({ doc: loaded.doc, type: nodeType.data });
-		const updated = addNodeOp({
-			doc: loaded.doc,
-			node: {
-				id: nodeId,
-				type: nodeType.data,
-				name,
-				...(description && { description }),
-			},
-		});
-		saveDocument(updated, loaded.format, loaded.path);
+		try {
+			const loaded = loadDocument(path);
+			const nodeType = NodeType.safeParse(type);
+			if (!nodeType.success) {
+				throw new Error(
+					`Invalid node type: "${type}". Valid types: ${NodeType.options.join(", ")}`,
+				);
+			}
+			const nodeId = id ?? nextIdOp({ doc: loaded.doc, type: nodeType.data });
 
-		return {
-			content: [
-				{
-					type: "text" as const,
-					text: JSON.stringify(
-						{
-							message: "Node added",
-							id: nodeId,
-							nodeCount: updated.nodes.length,
-						},
-						null,
-						2,
-					),
-				},
-			],
-		};
+			let updated: typeof loaded.doc;
+			try {
+				updated = addNodeOp({
+					doc: loaded.doc,
+					node: {
+						id: nodeId,
+						type: nodeType.data,
+						name,
+						...(description && { description }),
+					},
+				});
+			} catch (error) {
+				wrapError("Failed to add node", error);
+			}
+
+			try {
+				saveDocument(updated, loaded.format, loaded.path);
+			} catch (error) {
+				throw new Error(
+					`Failed to save document: ${error instanceof Error ? error.message : String(error)}`,
+					{ cause: error },
+				);
+			}
+
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: "Node added",
+								id: nodeId,
+								nodeCount: updated.nodes.length,
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("add-node", error);
+		}
 	},
 );
 
@@ -250,25 +347,44 @@ server.registerTool(
 		}),
 	},
 	({ path, id }) => {
-		const loaded = loadDocument(path);
-		const result = removeNodeOp({ doc: loaded.doc, id });
-		saveDocument(result.doc, loaded.format, loaded.path);
-		return {
-			content: [
-				{
-					type: "text" as const,
-					text: JSON.stringify(
-						{
-							message: `Node ${id} removed`,
-							nodeCount: result.doc.nodes.length,
-							warnings: result.warnings,
-						},
-						null,
-						2,
-					),
-				},
-			],
-		};
+		try {
+			const loaded = loadDocument(path);
+
+			let result;
+			try {
+				result = removeNodeOp({ doc: loaded.doc, id });
+			} catch (error) {
+				wrapError("Failed to remove node", error);
+			}
+
+			try {
+				saveDocument(result.doc, loaded.format, loaded.path);
+			} catch (error) {
+				throw new Error(
+					`Failed to save document: ${error instanceof Error ? error.message : String(error)}`,
+					{ cause: error },
+				);
+			}
+
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: `Node ${id} removed`,
+								nodeCount: result.doc.nodes.length,
+								warnings: result.warnings,
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("remove-node", error);
+		}
 	},
 );
 
@@ -284,51 +400,83 @@ server.registerTool(
 		}),
 	},
 	({ path, id, fields }) => {
-		const loaded = loadDocument(path);
-		// Validate fields are valid node property updates
-		const validFields = Object.entries(fields).reduce<Record<string, unknown>>(
-			(acc, [key, value]) => {
-				// Allow common node fields; unknown fields are silently ignored
-				if (
-					[
-						"name",
-						"description",
-						"status",
-						"context",
-						"options",
-						"selected",
-						"rationale",
-						"scope",
-						"operations",
-						"plan",
-						"propagation",
-						"includes",
-						"input",
-						"output",
-						"external_references",
-					].includes(key)
-				) {
+		try {
+			const loaded = loadDocument(path);
+
+			// Track which fields are valid
+			const allowedFields = [
+				"name",
+				"description",
+				"status",
+				"context",
+				"options",
+				"selected",
+				"rationale",
+				"scope",
+				"operations",
+				"plan",
+				"propagation",
+				"includes",
+				"input",
+				"output",
+				"external_references",
+			];
+			const droppedFields: string[] = [];
+			const validFields = Object.entries(fields).reduce<
+				Record<string, unknown>
+			>((acc, [key, value]) => {
+				if (allowedFields.includes(key)) {
 					acc[key] = value;
+				} else {
+					droppedFields.push(key);
 				}
 				return acc;
-			},
-			{},
-		);
-		const updated = updateNodeOp({
-			doc: loaded.doc,
-			id,
-			fields: validFields,
-		});
-		saveDocument(updated, loaded.format, loaded.path);
-		const node = updated.nodes.find((n) => n.id === id);
-		return {
-			content: [
-				{
-					type: "text" as const,
-					text: JSON.stringify({ message: "Node updated", node }, null, 2),
-				},
-			],
-		};
+			}, {});
+
+			let updated;
+			try {
+				updated = updateNodeOp({
+					doc: loaded.doc,
+					id,
+					fields: validFields,
+				});
+			} catch (error) {
+				wrapError("Failed to update node", error);
+			}
+
+			try {
+				saveDocument(updated, loaded.format, loaded.path);
+			} catch (error) {
+				throw new Error(
+					`Failed to save document: ${error instanceof Error ? error.message : String(error)}`,
+					{ cause: error },
+				);
+			}
+
+			const node = updated.nodes.find((n) => n.id === id);
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: "Node updated",
+								node,
+								...(droppedFields.length > 0 && {
+									warnings: [
+										`These fields are not updateable and were ignored: ${droppedFields.join(", ")}`,
+									],
+								}),
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("update-node", error);
+		}
 	},
 );
 
@@ -345,37 +493,56 @@ server.registerTool(
 		}),
 	},
 	({ path, from, to, type }) => {
-		const loaded = loadDocument(path);
-		const relType = RelationshipType.safeParse(type);
-		if (!relType.success) {
-			throw new Error(
-				`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
-			);
+		try {
+			const loaded = loadDocument(path);
+			const relType = RelationshipType.safeParse(type);
+			if (!relType.success) {
+				throw new Error(
+					`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
+				);
+			}
+
+			let updated;
+			try {
+				updated = addRelationshipOp({
+					doc: loaded.doc,
+					rel: {
+						from,
+						to,
+						type: relType.data,
+					},
+				});
+			} catch (error) {
+				wrapError("Failed to add relationship", error);
+			}
+
+			try {
+				saveDocument(updated, loaded.format, loaded.path);
+			} catch (error) {
+				throw new Error(
+					`Failed to save document: ${error instanceof Error ? error.message : String(error)}`,
+					{ cause: error },
+				);
+			}
+
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: "Relationship added",
+								relationshipCount: (updated.relationships ?? []).length,
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("add-relationship", error);
 		}
-		const updated = addRelationshipOp({
-			doc: loaded.doc,
-			rel: {
-				from,
-				to,
-				type: relType.data,
-			},
-		});
-		saveDocument(updated, loaded.format, loaded.path);
-		return {
-			content: [
-				{
-					type: "text" as const,
-					text: JSON.stringify(
-						{
-							message: "Relationship added",
-							relationshipCount: (updated.relationships ?? []).length,
-						},
-						null,
-						2,
-					),
-				},
-			],
-		};
 	},
 );
 
@@ -392,35 +559,54 @@ server.registerTool(
 		}),
 	},
 	({ path, from, to, type }) => {
-		const loaded = loadDocument(path);
-		const relType = RelationshipType.safeParse(type);
-		if (!relType.success) {
-			throw new Error(
-				`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
-			);
+		try {
+			const loaded = loadDocument(path);
+			const relType = RelationshipType.safeParse(type);
+			if (!relType.success) {
+				throw new Error(
+					`Invalid relationship type: "${type}". Valid types: ${RelationshipType.options.join(", ")}`,
+				);
+			}
+
+			let result;
+			try {
+				result = removeRelationshipOp({
+					doc: loaded.doc,
+					from,
+					to,
+					type: relType.data,
+				});
+			} catch (error) {
+				wrapError("Failed to remove relationship", error);
+			}
+
+			try {
+				saveDocument(result.doc, loaded.format, loaded.path);
+			} catch (error) {
+				throw new Error(
+					`Failed to save document: ${error instanceof Error ? error.message : String(error)}`,
+					{ cause: error },
+				);
+			}
+
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify(
+							{
+								message: "Relationship removed",
+								relationshipCount: (result.doc.relationships ?? []).length,
+							},
+							null,
+							2,
+						),
+					},
+				],
+			};
+		} catch (error) {
+			wrapError("remove-relationship", error);
 		}
-		const result = removeRelationshipOp({
-			doc: loaded.doc,
-			from,
-			to,
-			type: relType.data,
-		});
-		saveDocument(result.doc, loaded.format, loaded.path);
-		return {
-			content: [
-				{
-					type: "text" as const,
-					text: JSON.stringify(
-						{
-							message: "Relationship removed",
-							relationshipCount: (result.doc.relationships ?? []).length,
-						},
-						null,
-						2,
-					),
-				},
-			],
-		};
 	},
 );
 
