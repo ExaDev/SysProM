@@ -291,7 +291,11 @@ describe("validate", () => {
 					],
 					selected: "OPT1",
 				},
-				{ id: "INV1", type: "invariant", name: "Consumer reads published data only" },
+				{
+					id: "INV1",
+					type: "invariant",
+					name: "Consumer reads published data only",
+				},
 				{ id: "CHG1", type: "change", name: "Implement publish boundary" },
 			],
 			[
