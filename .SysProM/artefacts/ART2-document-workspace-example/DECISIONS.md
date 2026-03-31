@@ -13,6 +13,7 @@ doc_type: "decisions"
 - Must preserve: [INV2](./INVARIANTS.md#inv2--placement-agnostic-conversion)
 
 Options:
+
 - O1: UI distinguishes local and remote
 - O2: Single contract independent of placement
 
@@ -25,4 +26,3 @@ Rationale: Execution location is a realisation concern.
 - [x] proposed
 - [x] accepted
 - [x] implemented
-

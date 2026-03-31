@@ -667,6 +667,7 @@ If synchronisation is enabled, persistence must support shared remote state.
 - Must preserve: [INV2](#inv2--placement-agnostic-conversion)
 
 Options:
+
 - O1: UI distinguishes local and remote
 - O2: Single contract independent of placement
 
@@ -751,4 +752,3 @@ Adds explicit user checkpoints.
 Adds stronger risk analysis and broader verification.
 
 - Modifies: [PROT1](#prot1--consensus-planning)
-

@@ -38,4 +38,3 @@ MAY block a stage or route to an alternative.
 
 Named behavioural configuration that modifies a protocol or stage without redefining the system.
 MAY be triggered by gates, selected by policies, or chosen explicitly.
-

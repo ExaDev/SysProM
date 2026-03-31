@@ -10,11 +10,11 @@ status: "active"
 ## Navigation
 
 ### Understand why this exists
+
 See: [INTENT.md](./INTENT.md)
 
 ## Document Roles
 
-| Document | Role |
-|----------|------|
+| Document  | Role                                     |
+| --------- | ---------------------------------------- |
 | INTENT.md | Enduring purpose, concepts, capabilities |
-

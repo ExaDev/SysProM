@@ -82,4 +82,3 @@ SysProM captures the architectural truth: one stable capability surface, multipl
 ADR=decisions, C4=structure, DDD=concepts, Event sourcing=changes, Knowledge graph=relationships, Traceability=linking, EA=layers, RFC=lifecycle, Git=history, MBSE=formal modelling.
 Each optimises one axis. SysProM combines all into a single recursive graph.
 Spec Kit, Ralplan, and GSD compose with SysProM: Ralplan generates plans, Spec Kit stores specs, GSD executes, SysProM tracks provenance.
-

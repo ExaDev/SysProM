@@ -20,4 +20,3 @@ MAY supersede prior decisions. Superseded decisions remain in history.
 System modification over time.
 MUST define scope, reference decisions, define operations (add/update/remove/link), and define lifecycle state.
 MAY include execution plan. MAY overlap, depend on other changes, and be partially completed.
-

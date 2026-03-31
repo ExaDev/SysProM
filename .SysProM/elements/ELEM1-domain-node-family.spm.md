@@ -32,4 +32,3 @@ Concrete implementation of an element. Multiple realisations may coexist (altern
 ### CON6-INVARIANT — invariant
 
 Constraint that must always hold. Independent of decisions and changes. Constrains allowable system states.
-

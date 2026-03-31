@@ -20,4 +20,3 @@ A named point in evolution.
 ### CON3-VERSION — version
 
 A frozen snapshot of the system.
-

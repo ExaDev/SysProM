@@ -40,4 +40,3 @@ doc_type: "state"
 - Implements: [ELEM2](#elem2--document-store)
 
 - Status: active
-

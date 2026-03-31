@@ -68,4 +68,3 @@ Adds explicit user checkpoints.
 Adds stronger risk analysis and broader verification.
 
 - Modifies: [PROT1](#prot1--consensus-planning)
-
