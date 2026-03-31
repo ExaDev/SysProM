@@ -339,7 +339,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		],
 	},
 
-	// Justifies — design rationale grounding (principle/decision → invariant/decision/concept)
+	// Justifies — design rationale grounding (principle/decision → invariant/decision/principle/concept)
 	justifies: {
 		from: ["principle", "decision"],
 		to: ["invariant", "decision", "principle", "concept"],

@@ -294,6 +294,8 @@ describe("relationships", () => {
 		"selects",
 		"requires",
 		"disables",
+		"influence",
+		"justifies",
 	];
 
 	for (const type of coreRelationshipTypes) {

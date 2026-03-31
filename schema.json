@@ -63,7 +63,10 @@
 						"type": "string"
 					}
 				},
-				"required": ["role", "identifier"],
+				"required": [
+					"role",
+					"identifier"
+				],
 				"type": "object"
 			},
 			"type": "array"
@@ -188,7 +191,10 @@
 									"type": "string"
 								}
 							},
-							"required": ["role", "identifier"],
+							"required": [
+								"role",
+								"identifier"
+							],
 							"type": "object"
 						},
 						"type": "array"
@@ -253,11 +259,18 @@
 									"type": "string"
 								},
 								"type": {
-									"enum": ["add", "update", "remove", "link"],
+									"enum": [
+										"add",
+										"update",
+										"remove",
+										"link"
+									],
 									"type": "string"
 								}
 							},
-							"required": ["type"],
+							"required": [
+								"type"
+							],
 							"type": "object"
 						},
 						"type": "array"
@@ -285,7 +298,10 @@
 									"type": "string"
 								}
 							},
-							"required": ["id", "description"],
+							"required": [
+								"id",
+								"description"
+							],
 							"type": "object"
 						},
 						"type": "array"
@@ -318,7 +334,9 @@
 									"type": "boolean"
 								}
 							},
-							"required": ["description"],
+							"required": [
+								"description"
+							],
 							"type": "object"
 						},
 						"type": "array"
@@ -408,7 +426,11 @@
 						"type": "string"
 					}
 				},
-				"required": ["id", "type", "name"],
+				"required": [
+					"id",
+					"type",
+					"name"
+				],
 				"type": "object"
 			},
 			"type": "array"
@@ -438,7 +460,12 @@
 					},
 					"polarity": {
 						"description": "Impact polarity — positive, negative, neutral, or uncertain.",
-						"enum": ["positive", "negative", "neutral", "uncertain"],
+						"enum": [
+							"positive",
+							"negative",
+							"neutral",
+							"uncertain"
+						],
 						"type": "string"
 					},
 					"strength": {
@@ -477,18 +504,25 @@
 							"selects",
 							"requires",
 							"disables",
-							"influence"
+							"influence",
+							"justifies"
 						],
 						"type": "string"
 					}
 				},
-				"required": ["from", "to", "type"],
+				"required": [
+					"from",
+					"to",
+					"type"
+				],
 				"type": "object"
 			},
 			"type": "array"
 		}
 	},
-	"required": ["nodes"],
+	"required": [
+		"nodes"
+	],
 	"title": "SysProM: System Provenance Model",
 	"type": "object"
 }
