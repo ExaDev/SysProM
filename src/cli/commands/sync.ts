@@ -95,10 +95,7 @@ const syncOpts = z
 	})
 	.strict();
 
-export const syncCommandDef: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof syncOpts
-> = {
+export const syncCommandDef: CommandDef<z.ZodObject, typeof syncOpts> = {
 	name: "sync",
 	description:
 		"Synchronise JSON and Markdown representations with conflict resolution",

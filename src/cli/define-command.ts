@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as z from "zod";
 import { Argument, Command, Option } from "commander";
 
@@ -7,8 +8,8 @@ import { Argument, Command, Option } from "commander";
 
 /** Definition of a CLI command — name, description, Zod schemas for args/opts, optional subcommands, and action handler. */
 export interface CommandDef<
-	TArgs extends z.ZodObject<z.ZodRawShape> = z.ZodObject<z.ZodRawShape>,
-	TOpts extends z.ZodObject<z.ZodRawShape> = z.ZodObject<z.ZodRawShape>,
+	TArgs extends z.ZodObject = z.ZodObject,
+	TOpts extends z.ZodObject = z.ZodObject,
 > {
 	name: string;
 	description: string;
@@ -53,7 +54,6 @@ function fieldIsArray(field: ZodField): boolean {
 
 function fieldIsBoolean(field: ZodField): boolean {
 	const inner = unwrapField(field);
-	// ZodBoolean has no unique property, but we can check safeParse
 	const trueResult = inner.safeParse(true);
 	const strResult = inner.safeParse("test");
 	return trueResult.success && !strResult.success;
@@ -73,28 +73,8 @@ function fieldChoices(field: ZodField): string[] | undefined {
 	return undefined;
 }
 
-function isZodField(obj: unknown): obj is ZodField {
-	if (typeof obj !== "object" || obj === null) return false;
-	// Check if it has methods/properties characteristic of Zod fields
-	const maybeField = toRecord(obj);
-	return (
-		maybeField !== undefined &&
-		(typeof maybeField.safeParse === "function" ||
-			"description" in maybeField ||
-			"options" in maybeField ||
-			"element" in maybeField)
-	);
-}
-
 function isRecord(obj: unknown): obj is Record<string, unknown> {
 	return typeof obj === "object" && obj !== null;
-}
-
-function toRecord(obj: unknown): Record<string, unknown> | undefined {
-	if (isRecord(obj)) {
-		return obj;
-	}
-	return undefined;
 }
 
 function fieldDescription(field: ZodField): string {
@@ -113,6 +93,13 @@ function isZodLikeSchema(
 	return typeof maybeShape === "object" && maybeShape !== null;
 }
 
+function toRecord(obj: unknown): Record<string, unknown> | undefined {
+	if (isRecord(obj)) {
+		return obj;
+	}
+	return undefined;
+}
+
 function getShape(schema: unknown): Record<string, unknown> | undefined {
 	if (isZodLikeSchema(schema)) {
 		return schema.shape;
@@ -121,12 +108,158 @@ function getShape(schema: unknown): Record<string, unknown> | undefined {
 }
 
 // ---------------------------------------------------------------------------
-// Build Commander from CommandDef
+// Helpers
 // ---------------------------------------------------------------------------
 
 function collect(value: string, previous: string[]): string[] {
 	return [...previous, value];
 }
+
+// ---------------------------------------------------------------------------
+// Action handler
+// ---------------------------------------------------------------------------
+
+function actionFailure(message: string): never {
+	console.error(message);
+	process.exit(1);
+}
+
+function buildArgsObj(
+	argsSchema: z.ZodObject | undefined,
+	commanderArgs: unknown[],
+): Record<string, unknown> {
+	const argsKeys = argsSchema ? Object.keys(getShape(argsSchema) ?? {}) : [];
+	const argsObj: Record<string, unknown> = {};
+	for (let i = 0; i < argsKeys.length; i++) {
+		argsObj[argsKeys[i]] = commanderArgs[i];
+	}
+	return argsObj;
+}
+
+function buildOptsObj(
+	argsSchema: z.ZodObject | undefined,
+	commanderArgs: unknown[],
+): Record<string, unknown> {
+	const argsKeys = argsSchema ? Object.keys(getShape(argsSchema) ?? {}) : [];
+	const optsObjValue = commanderArgs[argsKeys.length];
+	return toRecord(optsObjValue) ?? {};
+}
+
+function validateAndParse(
+	schema: z.ZodObject,
+	data: Record<string, unknown>,
+	label: string,
+): Record<string, unknown> {
+	const parsed = schema.safeParse(data);
+	if (!parsed.success) {
+		for (const issue of parsed.error.issues) {
+			console.error(`${issue.path.join(".")}: ${issue.message}`);
+		}
+		actionFailure(`${label} validation failed`);
+	}
+	return schema.parse(data);
+}
+
+function runAction(
+	argsSchema: z.ZodObject | undefined,
+	optsSchema: z.ZodObject | undefined,
+	commanderArgs: unknown[],
+	action: (
+		args: Record<string, unknown>,
+		opts: Record<string, unknown>,
+	) => void,
+): void {
+	const argsObj = buildArgsObj(argsSchema, commanderArgs);
+	const optsObj = buildOptsObj(argsSchema, commanderArgs);
+
+	const argsData = argsSchema
+		? validateAndParse(argsSchema, argsObj, "Argument")
+		: {};
+	const optsData = optsSchema
+		? validateAndParse(optsSchema, optsObj, "Option")
+		: {};
+
+	try {
+		action(argsData, optsData);
+	} catch (err: unknown) {
+		const message = err instanceof Error ? err.message : String(err);
+		console.error(message);
+		actionFailure("Action threw an error");
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Argument / option registration helpers
+// ---------------------------------------------------------------------------
+
+function registerArguments(cmd: Command, argsSchema?: z.ZodObject): void {
+	const shape = getShape(argsSchema);
+	if (!shape) return;
+	for (const key of Object.keys(shape)) {
+		const field = shape[key];
+		if (!field || !isZodField(field)) continue;
+		const desc = fieldDescription(field);
+		const choices = fieldChoices(field);
+		const optional = fieldIsOptional(field);
+		const flagName = camelToKebab(key);
+		if (choices) {
+			const arg = new Argument(
+				optional ? `[${flagName}]` : `<${flagName}>`,
+				desc,
+			).choices(choices);
+			cmd.addArgument(arg);
+		} else {
+			cmd.argument(optional ? `[${flagName}]` : `<${flagName}>`, desc);
+		}
+	}
+}
+
+function registerOption(
+	cmd: Command,
+	flagName: string,
+	field: ZodField,
+	desc: string,
+): void {
+	const choices = fieldChoices(field);
+	const optional = fieldIsOptional(field);
+	const isArr = fieldIsArray(field);
+	const isBool = fieldIsBoolean(field);
+
+	if (isBool) {
+		cmd.addOption(new Option(`--${flagName}`, desc));
+		cmd.addOption(new Option(`--no-${flagName}`));
+	} else if (isArr) {
+		const opt = new Option(`--${flagName} <value>`)
+			.argParser<string[]>(collect)
+			.default([]);
+		if (!optional) opt.makeOptionMandatory(true);
+		cmd.addOption(opt);
+	} else if (choices) {
+		const opt = new Option(`--${flagName} <value>`).choices(choices);
+		if (!optional) opt.makeOptionMandatory(true);
+		cmd.addOption(opt);
+	} else if (optional) {
+		cmd.addOption(new Option(`--${flagName} <value>`).hideHelp());
+	} else {
+		cmd.addOption(
+			new Option(`--${flagName} <value>`).makeOptionMandatory(true).hideHelp(),
+		);
+	}
+}
+
+function registerOptions(cmd: Command, optsSchema?: z.ZodObject): void {
+	const shape = getShape(optsSchema);
+	if (!shape) return;
+	for (const key of Object.keys(shape)) {
+		const field = shape[key];
+		if (!field || !isZodField(field)) continue;
+		registerOption(cmd, camelToKebab(key), field, fieldDescription(field));
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Build Commander from CommandDef
+// ---------------------------------------------------------------------------
 
 /**
  * Build a Commander.js command tree from a declarative CommandDef, wiring up Zod-validated args, options, and actions.
@@ -143,113 +276,13 @@ function collect(value: string, previous: string[]): string[] {
 export function buildCommander(def: CommandDef, parent: Command): Command {
 	const cmd = parent.command(def.name);
 	cmd.description(def.description);
-
-	{
-		const argsShape = getShape(def.args);
-		if (argsShape) {
-			for (const key of Object.keys(argsShape)) {
-				const field = argsShape[key];
-				if (!field || !isZodField(field)) continue;
-				const desc = fieldDescription(field);
-				const choices = fieldChoices(field);
-				const optional = fieldIsOptional(field);
-				const flagName = camelToKebab(key);
-
-				if (choices) {
-					const arg = new Argument(
-						optional ? `[${flagName}]` : `<${flagName}>`,
-						desc,
-					).choices(choices);
-					cmd.addArgument(arg);
-				} else {
-					cmd.argument(optional ? `[${flagName}]` : `<${flagName}>`, desc);
-				}
-			}
-		}
-	}
-
-	{
-		const optsShape = getShape(def.opts);
-		if (optsShape) {
-			for (const key of Object.keys(optsShape)) {
-				const field = optsShape[key];
-				if (!field || !isZodField(field)) continue;
-				const desc = fieldDescription(field);
-				const choices = fieldChoices(field);
-				const flagName = camelToKebab(key);
-				const optional = fieldIsOptional(field);
-				const isArr = fieldIsArray(field);
-				const isBool = fieldIsBoolean(field);
-
-				if (isBool) {
-					cmd.option(`--${flagName}`, desc);
-				} else if (isArr) {
-					if (optional) {
-						cmd.option(`--${flagName} <value>`, desc, collect, []);
-					} else {
-						cmd.requiredOption(`--${flagName} <value>`, desc, collect, []);
-					}
-				} else if (choices) {
-					const opt = new Option(`--${flagName} <value>`, desc).choices(
-						choices,
-					);
-					if (!optional) opt.makeOptionMandatory();
-					cmd.addOption(opt);
-				} else if (optional) {
-					cmd.option(`--${flagName} <value>`, desc);
-				} else {
-					cmd.requiredOption(`--${flagName} <value>`, desc);
-				}
-			}
-		}
-	}
+	registerArguments(cmd, def.args);
+	registerOptions(cmd, def.opts);
 
 	if (def.action) {
 		const action = def.action;
-		const argsSchema = def.args;
-		const optsSchema = def.opts;
-
 		cmd.action((...commanderArgs: unknown[]) => {
-			let argsKeys: string[] = [];
-			const argsShape = getShape(argsSchema);
-			if (argsShape) {
-				argsKeys = Object.keys(argsShape);
-			}
-			const argsObj: Record<string, unknown> = {};
-			for (let i = 0; i < argsKeys.length; i++) {
-				argsObj[argsKeys[i]] = commanderArgs[i];
-			}
-			const optsObjValue = commanderArgs[argsKeys.length];
-			const optsObj: Record<string, unknown> = toRecord(optsObjValue) ?? {};
-
-			const parsedArgs = argsSchema
-				? argsSchema.safeParse(argsObj)
-				: { data: {} };
-			const parsedOpts = optsSchema
-				? optsSchema.safeParse(optsObj)
-				: { data: {} };
-
-			if ("success" in parsedArgs && !parsedArgs.success) {
-				for (const issue of parsedArgs.error.issues) {
-					console.error(`${issue.path.join(".")}: ${issue.message}`);
-				}
-				process.exit(1);
-			}
-			if ("success" in parsedOpts && !parsedOpts.success) {
-				for (const issue of parsedOpts.error.issues) {
-					console.error(`${issue.path.join(".")}: ${issue.message}`);
-				}
-				process.exit(1);
-			}
-
-			try {
-				const argsData = "data" in parsedArgs ? parsedArgs.data : {};
-				const optsData = "data" in parsedOpts ? parsedOpts.data : {};
-				action(argsData, optsData);
-			} catch (err: unknown) {
-				console.error(err instanceof Error ? err.message : String(err));
-				process.exit(1);
-			}
+			runAction(def.args, def.opts, commanderArgs, action);
 		});
 	}
 
@@ -265,6 +298,51 @@ export function buildCommander(def: CommandDef, parent: Command): Command {
 // ---------------------------------------------------------------------------
 // Documentation extraction
 // ---------------------------------------------------------------------------
+
+function buildArgDocs(shape: Record<string, unknown> | undefined): ArgDoc[] {
+	const docs: ArgDoc[] = [];
+	if (!shape) return docs;
+	for (const key of Object.keys(shape)) {
+		const field = shape[key];
+		if (!field || !isZodField(field)) continue;
+		docs.push({
+			name: camelToKebab(key),
+			description: fieldDescription(field),
+			required: !fieldIsOptional(field),
+			choices: fieldChoices(field),
+		});
+	}
+	return docs;
+}
+
+function buildOptDocs(shape: Record<string, unknown> | undefined): OptDoc[] {
+	const docs: OptDoc[] = [];
+	if (!shape) return docs;
+	for (const key of Object.keys(shape)) {
+		const field = shape[key];
+		if (!field || !isZodField(field)) continue;
+		docs.push({
+			flag: `--${camelToKebab(key)}`,
+			description: fieldDescription(field),
+			required: !fieldIsOptional(field),
+			repeatable: fieldIsArray(field),
+			choices: fieldChoices(field),
+		});
+	}
+	return docs;
+}
+
+function isZodField(obj: unknown): obj is ZodField {
+	if (typeof obj !== "object" || obj === null) return false;
+	const maybeField = toRecord(obj);
+	return (
+		maybeField !== undefined &&
+		(typeof maybeField.safeParse === "function" ||
+			"description" in maybeField ||
+			"options" in maybeField ||
+			"element" in maybeField)
+	);
+}
 
 /** Extracted documentation for a CLI positional argument. */
 export interface ArgDoc {
@@ -304,46 +382,11 @@ export interface CommandDoc {
  * ```
  */
 export function extractDocs(def: CommandDef): CommandDoc {
-	const args: ArgDoc[] = [];
-	{
-		const argsShape = getShape(def.args);
-		if (argsShape) {
-			for (const key of Object.keys(argsShape)) {
-				const field = argsShape[key];
-				if (!field || !isZodField(field)) continue;
-				args.push({
-					name: camelToKebab(key),
-					description: fieldDescription(field),
-					required: !fieldIsOptional(field),
-					choices: fieldChoices(field),
-				});
-			}
-		}
-	}
-
-	const opts: OptDoc[] = [];
-	{
-		const optsShape = getShape(def.opts);
-		if (optsShape) {
-			for (const key of Object.keys(optsShape)) {
-				const field = optsShape[key];
-				if (!field || !isZodField(field)) continue;
-				opts.push({
-					flag: `--${camelToKebab(key)}`,
-					description: fieldDescription(field),
-					required: !fieldIsOptional(field),
-					repeatable: fieldIsArray(field),
-					choices: fieldChoices(field),
-				});
-			}
-		}
-	}
-
 	return {
 		name: def.name,
 		description: def.description,
-		args,
-		opts,
+		args: buildArgDocs(getShape(def.args)),
+		opts: buildOptDocs(getShape(def.opts)),
 		subcommands: def.subcommands?.map(extractDocs),
 		apiLink: def.apiLink,
 	};

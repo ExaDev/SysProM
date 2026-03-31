@@ -36,7 +36,7 @@ export interface OperationDef<
 export type DefinedOperation<
 	TInput extends z.ZodType = z.ZodType,
 	TOutput extends z.ZodType = z.ZodType,
-> = ((input: z.infer<TInput>) => z.infer<TOutput>) & {
+> = ((input: z.input<TInput>) => z.infer<TOutput>) & {
 	/** The full operation definition including name, description, and schemas. */
 	def: OperationDef<TInput, TOutput>;
 	/** Zod schema for validating input before execution. */
@@ -71,7 +71,7 @@ export function defineOperation<
 	TInput extends z.ZodType,
 	TOutput extends z.ZodType,
 >(def: OperationDef<TInput, TOutput>): DefinedOperation<TInput, TOutput> {
-	function execute(input: z.infer<TInput>): z.infer<TOutput> {
+	function execute(input: z.input<TInput>): z.infer<TOutput> {
 		const parsed = def.input.safeParse(input);
 		if (!parsed.success) {
 			const messages = parsed.error.issues

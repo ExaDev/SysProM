@@ -74,10 +74,7 @@ const optsSchema = z
 	})
 	.strict();
 
-export const initCommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof optsSchema
-> = {
+export const initCommand: CommandDef<z.ZodObject, typeof optsSchema> = {
 	name: "init",
 	description: initDocumentOp.def.description,
 	apiLink: initDocumentOp.def.name,

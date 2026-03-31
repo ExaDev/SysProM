@@ -13,10 +13,7 @@ const optsSchema = z
 	})
 	.strict();
 
-export const md2jsonCommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof optsSchema
-> = {
+export const md2jsonCommand: CommandDef<z.ZodObject, typeof optsSchema> = {
 	name: "md2json",
 	description: markdownToJsonOp.def.description,
 	apiLink: markdownToJsonOp.def.name,

@@ -162,10 +162,7 @@ const importOpts = z.object({
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const importSubcommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof importOpts
-> = {
+const importSubcommand: CommandDef<z.ZodObject, typeof importOpts> = {
 	name: "import",
 	description: speckitImportOp.def.description,
 	opts: importOpts,
@@ -221,10 +218,7 @@ const exportOpts = z.object({
 	prefix: z.string().describe("ID prefix identifying nodes to export"),
 });
 
-const exportSubcommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof exportOpts
-> = {
+const exportSubcommand: CommandDef<z.ZodObject, typeof exportOpts> = {
 	name: "export",
 	description: speckitExportOp.def.description,
 	opts: exportOpts,
@@ -260,10 +254,7 @@ const syncSubOpts = z.object({
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const syncSubcommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof syncSubOpts
-> = {
+const syncSubcommand: CommandDef<z.ZodObject, typeof syncSubOpts> = {
 	name: "sync",
 	description: speckitSyncOp.def.description,
 	opts: syncSubOpts,
@@ -355,10 +346,7 @@ const diffSubOpts = z.object({
 		.describe("ID prefix (defaults to directory name)"),
 });
 
-const diffSubcommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof diffSubOpts
-> = {
+const diffSubcommand: CommandDef<z.ZodObject, typeof diffSubOpts> = {
 	name: "diff",
 	description: speckitDiffOp.def.description,
 	opts: diffSubOpts,

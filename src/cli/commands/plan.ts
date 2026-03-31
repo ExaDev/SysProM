@@ -21,10 +21,7 @@ const initOpts = z.object({
 	name: z.string().optional().describe("Plan name (defaults to prefix)"),
 });
 
-const initSubcommand: CommandDef<
-	z.ZodObject<z.ZodRawShape>,
-	typeof initOpts
-> = {
+const initSubcommand: CommandDef<z.ZodObject, typeof initOpts> = {
 	name: "init",
 	description: planInitOp.def.description,
 	apiLink: planInitOp.def.name,
