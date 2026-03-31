@@ -28,6 +28,86 @@ function detectFormat(outputPath: string): "json" | "single-md" | "multi-md" {
 	return "json"; // default
 }
 
+/**
+ * Validate that both paths exist, exits with error if not.
+ * @param inputPath - Path to SysProM document
+ * @param specKitDir - Path to Spec-Kit directory
+ * @example
+ * ```ts
+ * validatePaths(inputPath, specKitDir);
+ * ```
+ */
+function validatePaths(inputPath: string, specKitDir: string): void {
+	if (!existsSync(inputPath)) {
+		console.error(`Error: Input file does not exist: ${inputPath}`);
+		process.exit(1);
+	}
+	if (!existsSync(specKitDir)) {
+		console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
+		process.exit(1);
+	}
+}
+
+/**
+ * Search up to 5 parent directories for Spec-Kit constitution file.
+ * @param specKitDir - Path to Spec-Kit directory to start search from
+ * @returns Path to constitution file if found, undefined otherwise
+ * @example
+ * ```ts
+ * const path = findConstitutionPath(specKitDir);
+ * ```
+ */
+function findConstitutionPath(specKitDir: string): string | undefined {
+	let searchDir = dirname(specKitDir);
+	for (let i = 0; i < 5; i++) {
+		const project = detectSpecKitProject(searchDir);
+		if (project.constitutionPath) return project.constitutionPath;
+		const parent = dirname(searchDir);
+		if (parent === searchDir) break;
+		searchDir = parent;
+	}
+	return undefined;
+}
+
+/**
+ * Print diff results in human-readable format.
+ * @param diff - The diff structure containing added, modified, and removed nodes
+ * @example
+ * ```ts
+ * printDiffResults(diff);
+ * ```
+ */
+function printDiffResults(diff: NodeDiff): void {
+	console.log(`Diff between SysProM document and Spec-Kit directory:`);
+	if (
+		diff.added.length === 0 &&
+		diff.modified.length === 0 &&
+		diff.removed.length === 0
+	) {
+		console.log(`  (no changes)`);
+		return;
+	}
+
+	if (diff.added.length > 0) {
+		console.log(`  Added: ${String(diff.added.length)} node(s)`);
+		for (const node of diff.added) {
+			console.log(`    - ${node.id}: ${node.name}`);
+		}
+	}
+	if (diff.modified.length > 0) {
+		console.log(`  Modified: ${String(diff.modified.length)} node(s)`);
+		for (const { old } of diff.modified) {
+			console.log(`    - ${old.id}: ${old.name}`);
+		}
+	}
+	if (diff.removed.length > 0) {
+		console.log(`  Removed: ${String(diff.removed.length)} node(s)`);
+		for (const node of diff.removed) {
+			console.log(`    - ${node.id}: ${node.name}`);
+		}
+	}
+}
+
 // ============================================================================
 // Helper: Compare documents for sync/diff
 // ============================================================================
@@ -191,35 +271,11 @@ const syncSubcommand: CommandDef<
 		const inputPath = resolve(opts.input);
 		const specKitDir = resolve(opts.speckitDir);
 
-		if (!existsSync(inputPath)) {
-			console.error(`Error: Input file does not exist: ${inputPath}`);
-			process.exit(1);
-		}
+		validatePaths(inputPath, specKitDir);
 
-		if (!existsSync(specKitDir)) {
-			console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
-			process.exit(1);
-		}
-
-		// Determine the prefix: use flag if provided, otherwise use directory name
 		const idPrefix = opts.prefix ?? specKitDir.split("/").pop() ?? "FEAT";
-
-		// Load SysProM document
 		const { doc: syspromDoc, format } = loadDocument(inputPath);
-
-		// Find constitution file
-		let constitutionPath: string | undefined;
-		let searchDir = dirname(specKitDir);
-		for (let i = 0; i < 5; i++) {
-			const project = detectSpecKitProject(searchDir);
-			if (project.constitutionPath) {
-				constitutionPath = project.constitutionPath;
-				break;
-			}
-			const parent = dirname(searchDir);
-			if (parent === searchDir) break;
-			searchDir = parent;
-		}
+		const constitutionPath = findConstitutionPath(specKitDir);
 
 		// Parse Spec-Kit feature
 		const specKitDoc = parseSpecKitFeature(
@@ -310,74 +366,19 @@ const diffSubcommand: CommandDef<
 		const inputPath = resolve(opts.input);
 		const specKitDir = resolve(opts.speckitDir);
 
-		if (!existsSync(inputPath)) {
-			console.error(`Error: Input file does not exist: ${inputPath}`);
-			process.exit(1);
-		}
+		validatePaths(inputPath, specKitDir);
 
-		if (!existsSync(specKitDir)) {
-			console.error(`Error: Spec-Kit directory does not exist: ${specKitDir}`);
-			process.exit(1);
-		}
-
-		// Determine the prefix: use flag if provided, otherwise use directory name
 		const idPrefix = opts.prefix ?? specKitDir.split("/").pop() ?? "FEAT";
-
-		// Load SysProM document
 		const { doc: syspromDoc } = loadDocument(inputPath);
-
-		// Find constitution file
-		let constitutionPath: string | undefined;
-		let searchDir = dirname(specKitDir);
-		for (let i = 0; i < 5; i++) {
-			const project = detectSpecKitProject(searchDir);
-			if (project.constitutionPath) {
-				constitutionPath = project.constitutionPath;
-				break;
-			}
-			const parent = dirname(searchDir);
-			if (parent === searchDir) break;
-			searchDir = parent;
-		}
-
-		// Parse Spec-Kit feature
+		const constitutionPath = findConstitutionPath(specKitDir);
 		const specKitDoc = parseSpecKitFeature(
 			specKitDir,
 			idPrefix,
 			constitutionPath,
 		);
 
-		// Compare documents
 		const diff = compareDocuments(syspromDoc, specKitDoc);
-
-		// Print what would change (read-only)
-		console.log(`Diff between SysProM document and Spec-Kit directory:`);
-		if (
-			diff.added.length === 0 &&
-			diff.modified.length === 0 &&
-			diff.removed.length === 0
-		) {
-			console.log(`  (no changes)`);
-		} else {
-			if (diff.added.length > 0) {
-				console.log(`  Added: ${String(diff.added.length)} node(s)`);
-				for (const node of diff.added) {
-					console.log(`    - ${node.id}: ${node.name}`);
-				}
-			}
-			if (diff.modified.length > 0) {
-				console.log(`  Modified: ${String(diff.modified.length)} node(s)`);
-				for (const { old } of diff.modified) {
-					console.log(`    - ${old.id}: ${old.name}`);
-				}
-			}
-			if (diff.removed.length > 0) {
-				console.log(`  Removed: ${String(diff.removed.length)} node(s)`);
-				for (const node of diff.removed) {
-					console.log(`    - ${node.id}: ${node.name}`);
-				}
-			}
-		}
+		printDiffResults(diff);
 	},
 };
 
