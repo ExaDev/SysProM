@@ -82,7 +82,7 @@ sysprom query node D1
 sysprom query rels --from D1
 sysprom query trace I1
 sysprom query timeline
-sysprom query state-at 2026-03-22
+sysprom query state-at <ISO-timestamp>
 
 # Add nodes (ID auto-generated from type prefix if --id omitted)
 
@@ -116,7 +116,7 @@ All commands auto-detect the document — they search the current directory for 
 
 ## MCP Server
 
-SysProM includes an MCP (Model Context Protocol) server exposing 15 tools over stdio transport. Any MCP-compatible agent — Cursor, Windsurf, VS Code Copilot, Cline, or custom clients — can use it.
+SysProM includes an MCP (Model Context Protocol) server exposing tools over stdio transport. Any MCP-compatible agent — Cursor, Windsurf, VS Code Copilot, Cline, or custom clients — can use it.
 
 ### Configuration
 
@@ -404,7 +404,7 @@ sysprom md2json --input ./.SysProM --output .SysProM.json
 
 ## Claude Code Plugin
 
-SysProM is available as a Claude Code plugin with 28 skills for managing provenance documents. The plugin is defined in `.claude-plugin/marketplace.json` with skills in `.claude/skills/`.
+SysProM is available as a Claude Code plugin with skills for managing provenance documents. The plugin is defined in `.claude-plugin/marketplace.json` with skills in `.claude/skills/`.
 
 ### Install from Marketplace
 
@@ -424,25 +424,25 @@ When working on the SysProM repo itself, skills in `.claude/skills/` are auto-di
 
 ### Skills by Category
 
-**Node Creation (4 skills)**
+**Node Creation**
 
 - `add-decision` — Create decision nodes with context, options, rationale, and invariant links
 - `add-change` — Create change nodes with scope, operations, and task tracking
 - `add-invariant` — Create invariant nodes representing system rules and constraints
 - `add-node` — Generic node creation for any SysProM type
 
-**Node Modification (3 skills)**
+**Node Modification**
 
 - `update-node` — Modify node fields, status, lifecycle, context, or rationale
 - `remove-node` — Delete nodes with safety flags (hard delete, recursive, repair)
 - `rename-node` — Rename node IDs across all references
 
-**Relationships (2 skills)**
+**Relationships**
 
 - `add-relationship` — Create relationships between nodes with specific types
 - `remove-relationship` — Delete relationships
 
-**Query & Analysis (5 skills)**
+**Query & Analysis**
 
 - `query-nodes` — Search nodes by type, status, text, or ID
 - `query-relationships` — Query relationships by source, target, or type
@@ -450,31 +450,31 @@ When working on the SysProM repo itself, skills in `.claude/skills/` are auto-di
 - `check-document` — Validate document structure and report issues
 - `stats` — Show document statistics and composition metrics
 
-**Visualisation (1 skill)**
+**Visualisation**
 
 - `graph` — Generate Mermaid or DOT graphs with filtering
 
-**Format Conversion (4 skills)**
+**Format Conversion**
 
 - `init-document` — Create new SysProM documents with metadata
 - `json-to-markdown` — Convert JSON to Markdown format
 - `markdown-to-json` — Convert Markdown to JSON format
 - `sync-formats` — Bidirectional sync between JSON and Markdown
 
-**Spec-Kit Integration (4 skills)**
+**Spec-Kit Integration**
 
 - `speckit-import` — Import Spec-Kit features as SysProM nodes
 - `speckit-export` — Export SysProM nodes to Spec-Kit format
 - `speckit-sync` — Bidirectional sync with Spec-Kit specifications
 - `speckit-diff` — Show differences between SysProM and Spec-Kit
 
-**Task Management (3 skills)**
+**Task Management**
 
 - `task-list` — List tasks in a change node with progress
 - `task-add` — Add tasks to a change
 - `task-mark-done` — Mark tasks as complete
 
-**Plan Management (2 skills)**
+**Plan Management**
 
 - `plan-init` — Initialise plans with phases and gates
 - `plan-status` — Show plan progress and phase gates
