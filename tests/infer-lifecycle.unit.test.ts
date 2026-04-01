@@ -130,7 +130,12 @@ describe("inferLifecycleOp", () => {
 					name: "Test",
 					lifecycle: { proposed: true },
 				},
-				{ id: "INT2", type: "intent", name: "Test", lifecycle: { active: true } },
+				{
+					id: "INT2",
+					type: "intent",
+					name: "Test",
+					lifecycle: { active: true },
+				},
 				{
 					id: "INT3",
 					type: "intent",
