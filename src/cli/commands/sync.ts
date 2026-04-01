@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from "node:fs";
+import { resolve, extname } from "node:path";
 import type { CommandDef } from "../define-command.js";
 import {
 	syncDocumentsOp,
@@ -9,7 +9,7 @@ import {
 } from "../../operations/index.js";
 import { detectChanges } from "../../sync.js";
 import { markdownToJson } from "../../md-to-json.js";
-import { jsonToMarkdownSingle } from "../../json-to-md.js";
+import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc } from "../../json-to-md.js";
 import { canonicalise } from "../../canonical-json.js";
 import { SysProMDocument } from "../../schema.js";
 
@@ -64,8 +64,18 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 			);
 
 			// Update Markdown
-			const mdContent = jsonToMarkdownSingle(result.synced);
-			writeFileSync(mdPath, mdContent);
+			// If output path is an existing directory or doesn't look like a .md file,
+			// write multi-doc output into the directory. Otherwise write single-file MD.
+			if (existsSync(mdPath) && statSync(mdPath).isDirectory()) {
+				jsonToMarkdownMultiDoc(result.synced, mdPath);
+			} else if (extname(mdPath) === ".md") {
+				const mdContent = jsonToMarkdownSingle(result.synced);
+				writeFileSync(mdPath, mdContent);
+			} else {
+				// Treat as directory: ensure it exists and write multi-doc
+				mkdirSync(mdPath, { recursive: true });
+				jsonToMarkdownMultiDoc(result.synced, mdPath);
+			}
 		}
 	}
 
