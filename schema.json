@@ -369,25 +369,8 @@
 						"type": "string"
 					},
 					"status": {
-						"enum": [
-							"proposed",
-							"accepted",
-							"active",
-							"implemented",
-							"adopted",
-							"defined",
-							"introduced",
-							"in_progress",
-							"complete",
-							"consolidated",
-							"experimental",
-							"deprecated",
-							"retired",
-							"superseded",
-							"abandoned",
-							"deferred"
-						],
-						"type": "string"
+						"description": "Deprecated field. Node-level status is not supported; use lifecycle states instead.",
+						"not": {}
 					},
 					"subsystem": {
 						"$ref": "#"

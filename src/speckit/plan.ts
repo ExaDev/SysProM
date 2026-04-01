@@ -281,7 +281,7 @@ export function initDocument(prefix: string, name: string): SysProMDocument {
 			id: `${prefix}-SPEC`,
 			type: "artefact",
 			name: `${name} Specification`,
-			status: "proposed",
+			lifecycle: { proposed: true },
 		},
 		{
 			id: `${prefix}-PROT-IMPL`,

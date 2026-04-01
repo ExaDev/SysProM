@@ -68,7 +68,12 @@ function populateNodeFromOpts(
 	options?: string[],
 ): void {
 	if (description) node.description = description;
-	if (status) node.status = status;
+	if (status) {
+		node.lifecycle = {
+			...(node.lifecycle ?? {}),
+			[status]: true,
+		};
+	}
 	if (context) node.context = context;
 	if (rationale) node.rationale = rationale;
 	if (scope?.length) node.scope = scope;

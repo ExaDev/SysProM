@@ -160,11 +160,11 @@ server.registerTool(
 server.registerTool(
 	"query-nodes",
 	{
-		description: "Query nodes by type, status, or other criteria",
+		description: "Query nodes by type, lifecycle state, or other criteria",
 		inputSchema: z.object({
 			path: z.string().describe("Path to SysProM file"),
 			type: z.string().optional().describe("Filter by node type"),
-			status: z.string().optional().describe("Filter by node status"),
+			status: z.string().optional().describe("Filter by lifecycle state"),
 		}),
 	},
 	({ path, type, status }) => {
@@ -407,7 +407,6 @@ server.registerTool(
 			const allowedFields = [
 				"name",
 				"description",
-				"status",
 				"context",
 				"options",
 				"selected",

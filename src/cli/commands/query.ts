@@ -14,6 +14,7 @@ import {
 } from "../../operations/index.js";
 import { NodeType, NodeStatus } from "../../schema.js";
 import type { Node } from "../../schema.js";
+import { primaryLifecycleState } from "../../lifecycle-state.js";
 
 // ---------------------------------------------------------------------------
 // Presentation helpers
@@ -31,7 +32,8 @@ function printNodeCompact(r: Node): void {
 function printNodeVerbose(r: Node): void {
 	console.log(`${pc.cyan(r.id)} — ${pc.bold(r.name)}`);
 	console.log(`  ${pc.dim("Type")}: ${r.type}`);
-	if (r.status) console.log(`  ${pc.dim("Status")}: ${pc.yellow(r.status)}`);
+	const state = primaryLifecycleState(r);
+	if (state) console.log(`  ${pc.dim("State")}: ${pc.yellow(state)}`);
 	if (r.description)
 		console.log(`  ${pc.dim("Description")}: ${textToString(r.description)}`);
 	if (r.context)
@@ -90,7 +92,7 @@ function printTraceTree(tn: TraceTreeNode, depth: number): void {
 
 const nodesOpts = readOpts.extend({
 	type: NodeType.optional().describe("filter by node type"),
-	status: NodeStatus.optional().describe("filter by node status"),
+	status: NodeStatus.optional().describe("filter by lifecycle state"),
 });
 
 const nodeArgs = z.object({

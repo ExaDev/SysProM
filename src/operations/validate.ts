@@ -5,6 +5,7 @@ import {
 	isValidEndpointPair,
 	RELATIONSHIP_ENDPOINT_TYPES,
 } from "../endpoint-types.js";
+import { hasLifecycleState } from "../lifecycle-state.js";
 
 /** Zod schema for the result of validating a SysProM document. */
 export const ValidationResult = z.object({
@@ -104,7 +105,11 @@ export const validateOp = defineOperation({
 		]);
 		for (const r of input.doc.relationships ?? []) {
 			const toNode = nodeMap.get(r.to);
-			if (toNode?.status === "retired" && OPERATIONAL_REL_TYPES.has(r.type)) {
+			if (
+				toNode &&
+				hasLifecycleState(toNode, "retired") &&
+				OPERATIONAL_REL_TYPES.has(r.type)
+			) {
 				issues.push(
 					`Operational relationship ${r.type} targets retired node ${r.to}`,
 				);

@@ -13,7 +13,6 @@ import {
 	RELATIONSHIP_LABEL_TO_TYPE,
 	NodeType,
 	RelationshipType,
-	NodeStatus,
 	ExternalReferenceRole,
 } from "./schema.js";
 /** Strip markdown link syntax `[text](url)` → `text`. */
@@ -49,15 +48,6 @@ function parseRelType(s: string): RelationshipType {
 	if (!result.success)
 		throw new Error(
 			`Unknown relationship type: "${s}". Valid types: ${RelationshipType.options.join(", ")}`,
-		);
-	return result.data;
-}
-
-function parseNodeStatus(s: string): NodeStatus {
-	const result = NodeStatus.safeParse(s);
-	if (!result.success)
-		throw new Error(
-			`Unknown node status: "${s}". Valid statuses: ${NodeStatus.options.join(", ")}`,
 		);
 	return result.data;
 }
@@ -336,10 +326,6 @@ function parseNodeFromSection(
 	if (descLines.length > 0) {
 		node.description = parseText(descLines.join("\n"));
 	}
-
-	// Status
-	const status = parseSingleValue(body, "- Status");
-	if (status) node.status = parseNodeStatus(status);
 
 	// Decision fields
 	const context = parseSingleValue(body, "Context");

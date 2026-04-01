@@ -179,13 +179,13 @@ Users can reset their password via email link.
 		);
 	});
 
-	it("spec artefact has status proposed (mapped from Draft)", () => {
+	it("spec artefact has proposed lifecycle state (mapped from Draft)", () => {
 		const result = parseSpec(SAMPLE_SPEC, "TEST");
 		const specNode = result.nodes.find((n) => n.type === "artefact");
 		assert.equal(
-			specNode?.status,
-			"proposed",
-			"spec status should be proposed",
+			specNode?.lifecycle?.proposed,
+			true,
+			"spec lifecycle should include proposed",
 		);
 	});
 
@@ -220,16 +220,16 @@ Users can reset their password via email link.
 		assert.equal(frNodes.length, 3, "should have 3 FR invariant nodes");
 	});
 
-	it("FR-003 has status proposed (NEEDS CLARIFICATION)", () => {
+	it("FR-003 has proposed lifecycle state (NEEDS CLARIFICATION)", () => {
 		const result = parseSpec(SAMPLE_SPEC, "TEST");
 		const fr003 = result.nodes.find(
 			(n) => n.type === "invariant" && n.name === "FR-3",
 		);
 		assert(fr003, "FR-003 should exist");
 		assert.equal(
-			fr003.status,
-			"proposed",
-			"FR-003 should have proposed status due to NEEDS CLARIFICATION",
+			fr003.lifecycle?.proposed,
+			true,
+			"FR-003 should have proposed lifecycle state due to NEEDS CLARIFICATION",
 		);
 	});
 
@@ -292,7 +292,7 @@ Users can reset their password via email link.
 		}
 	});
 
-	it("handles missing status field with Draft default", () => {
+	it("handles missing status field with Draft default lifecycle state", () => {
 		const specNoStatus = `# Feature Specification: Test Feature
 
 ## User Scenarios & Testing *(mandatory)*
@@ -315,9 +315,9 @@ Test story description.
 		const result = parseSpec(specNoStatus, "TEST");
 		const specNode = result.nodes.find((n) => n.type === "artefact");
 		assert.equal(
-			specNode?.status,
-			"proposed",
-			"missing status should default to proposed",
+			specNode?.lifecycle?.proposed,
+			true,
+			"missing status should default to proposed lifecycle state",
 		);
 	});
 });

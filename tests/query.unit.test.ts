@@ -11,13 +11,23 @@ import type { SysProMDocument } from "../src/schema.js";
 function makeDoc(): SysProMDocument {
 	return {
 		nodes: [
-			{ id: "INT1", type: "intent", name: "Root Intent", status: "accepted" },
-			{ id: "CON1", type: "concept", name: "Concept", status: "proposed" },
+			{
+				id: "INT1",
+				type: "intent",
+				name: "Root Intent",
+				lifecycle: { accepted: true },
+			},
+			{
+				id: "CON1",
+				type: "concept",
+				name: "Concept",
+				lifecycle: { proposed: true },
+			},
 			{
 				id: "CON2",
 				type: "concept",
 				name: "Refined Concept",
-				status: "accepted",
+				lifecycle: { accepted: true },
 			},
 			{ id: "ELEM1", type: "element", name: "Element" },
 		],
@@ -47,7 +57,7 @@ describe("queryNodes", () => {
 		const doc = makeDoc();
 		const nodes = queryNodesOp({ doc, status: "accepted" });
 		assert.equal(nodes.length, 2);
-		assert.ok(nodes.every((n) => n.status === "accepted"));
+		assert.ok(nodes.every((n) => n.lifecycle?.accepted === true));
 	});
 
 	it("filters by type and status", () => {

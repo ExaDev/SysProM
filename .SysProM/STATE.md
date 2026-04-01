@@ -13,7 +13,9 @@ The set of node types that model what the system is.
 
 - Realises: [CAP1](./INTENT.md#cap1--cross-layer-traceability)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -47,7 +49,9 @@ The set of node types that model how work flows through the system.
 
 - Realises: [CAP6](./INTENT.md#cap6--process-modelling)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -87,7 +91,9 @@ The set of node types that model what is produced and consumed.
 
 - Realises: [CAP6](./INTENT.md#cap6--process-modelling)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -108,7 +114,9 @@ The set of node types that model how the system changes over time.
   - [CAP2](./INTENT.md#cap2--decision-recording)
   - [CAP4](./INTENT.md#cap4--change-tracking)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -128,7 +136,9 @@ MAY include execution plan. MAY overlap, depend on other changes, and be partial
 
 Optional node types for views and snapshots.
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -150,7 +160,9 @@ The set of typed, directed connections available between nodes.
 
 - Realises: [CAP1](./INTENT.md#cap1--cross-layer-traceability)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -260,7 +272,9 @@ The mechanism for relating nodes to resources outside the graph.
 
 - Realises: [CAP8](./INTENT.md#cap8--external-resource-referencing)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 #### Subsystem
 
@@ -307,7 +321,9 @@ Conventions for encoding SysProM in file-based formats.
 
 - Realises: [CAP7](./INTENT.md#cap7--flexible-representation)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### ELEM9 — Non-Linear Evolution
 
@@ -318,7 +334,9 @@ The model supports branching, merging, and revival of nodes.
   - [CAP10](./INTENT.md#cap10--merging)
   - [CAP11](./INTENT.md#cap11--revival)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### ELEM10 — Extensibility
 
@@ -327,7 +345,9 @@ The mechanism for extending SysProM beyond its core types.
 - Realises: [CAP7](./INTENT.md#cap7--flexible-representation)
 - Constrained by: [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ## Realisations
 
@@ -341,7 +361,9 @@ Primary representation using headings as nodes, lists as relationships, checkbox
   - [ELEM3](#elem3--artefact-node-family)
   - [ELEM4](#elem4--evolution-node-family)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL2 — Single-File Form
 
@@ -349,7 +371,9 @@ All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).
 
 - Implements: [ELEM8](#elem8--file-representation)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL3 — Multi-Document Form
 
@@ -357,7 +381,9 @@ Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGE
 
 - Implements: [ELEM8](#elem8--file-representation)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL4 — Recursive Folder Form
 
@@ -365,7 +391,9 @@ Node folders with their own document sets. Nodes may also be single files using 
 
 - Implements: [ELEM8](#elem8--file-representation)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL5 — JSON Serialisation
 
@@ -377,7 +405,9 @@ JSON representation validated against schema.json. Supports recursive compositio
   - [ELEM3](#elem3--artefact-node-family)
   - [ELEM4](#elem4--evolution-node-family)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ## Protocols
 
@@ -645,25 +675,33 @@ If synchronisation is enabled, persistence must support shared remote state.
 
 - Implements: [ELEM1](#elem1--transformation-engine)
 
-- Status: active
+###### Lifecycle
+
+- [x] active
 
 ##### REAL2 — Remote Conversion
 
 - Implements: [ELEM1](#elem1--transformation-engine)
 
-- Status: active
+###### Lifecycle
+
+- [x] active
 
 ##### REAL3 — Local Storage
 
 - Implements: [ELEM2](#elem2--document-store)
 
-- Status: active
+###### Lifecycle
+
+- [x] active
 
 ##### REAL4 — Remote Storage
 
 - Implements: [ELEM2](#elem2--document-store)
 
-- Status: active
+###### Lifecycle
+
+- [x] active
 
 ##### DEC1 — Abstract Conversion Placement
 
@@ -722,19 +760,13 @@ Approval cannot occur until review has completed.
 
 Produces an initial scoped plan.
 
-- Performs: [STG1](#stg1--draft-plan)
-
 ##### ROLE2 — Architect
 
 Reviews structural and design soundness.
 
-- Performs: [STG2](#stg2--architectural-review)
-
 ##### ROLE3 — Critic
 
 Evaluates quality, completeness, and testability.
-
-- Performs: [STG3](#stg3--critical-evaluation)
 
 ##### GATE1 — Scope Gate
 

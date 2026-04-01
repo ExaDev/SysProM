@@ -582,7 +582,6 @@
 			"description": "The set of node types that model what the system is.",
 			"id": "ELEM1",
 			"name": "Domain Node Family",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -629,13 +628,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The set of node types that model how work flows through the system.",
 			"id": "ELEM2",
 			"name": "Process Node Family",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -694,13 +695,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The set of node types that model what is produced and consumed.",
 			"id": "ELEM3",
 			"name": "Artefact Node Family",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -726,13 +729,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The set of node types that model how the system changes over time.",
 			"id": "ELEM4",
 			"name": "Evolution Node Family",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -763,13 +768,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "Optional node types for views and snapshots.",
 			"id": "ELEM5",
 			"name": "Projection Node Family",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -798,13 +805,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The set of typed, directed connections available between nodes.",
 			"id": "ELEM6",
 			"name": "Relationship Type Registry",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -965,13 +974,15 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The mechanism for relating nodes to resources outside the graph.",
 			"id": "ELEM7",
 			"name": "External Reference Model",
-			"status": "active",
 			"subsystem": {
 				"metadata": {
 					"doc_type": "element",
@@ -1039,63 +1050,82 @@
 					}
 				]
 			},
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "Conventions for encoding SysProM in file-based formats.",
 			"id": "ELEM8",
 			"name": "File Representation",
-			"status": "active",
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The model supports branching, merging, and revival of nodes.",
 			"id": "ELEM9",
 			"name": "Non-Linear Evolution",
-			"status": "active",
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The mechanism for extending SysProM beyond its core types.",
 			"id": "ELEM10",
 			"name": "Extensibility",
-			"status": "active",
-			"type": "element"
+			"type": "element",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "Primary representation using headings as nodes, lists as relationships, checkboxes as lifecycle, front matter as document metadata.",
 			"id": "REAL1",
 			"name": "Markdown Representation",
-			"status": "active",
-			"type": "realisation"
+			"type": "realisation",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "All sections in one file (SysProM.md, SYSPROM.md, SPM.md, or README.spm.md).",
 			"id": "REAL2",
 			"name": "Single-File Form",
-			"status": "active",
-			"type": "realisation"
+			"type": "realisation",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "Separate files per concern (README, INTENT, INVARIANTS, STATE, DECISIONS, CHANGES).",
 			"id": "REAL3",
 			"name": "Multi-Document Form",
-			"status": "active",
-			"type": "realisation"
+			"type": "realisation",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "Node folders with their own document sets. Nodes may also be single files using .spm.md extension.",
 			"id": "REAL4",
 			"name": "Recursive Folder Form",
-			"status": "active",
-			"type": "realisation"
+			"type": "realisation",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "JSON representation validated against schema.json. Supports recursive composition via the subsystem property.",
 			"id": "REAL5",
 			"name": "JSON Serialisation",
-			"status": "active",
-			"type": "realisation"
+			"type": "realisation",
+			"lifecycle": {
+				"active": true
+			}
 		},
 		{
 			"description": "The lifecycle state machine for decision nodes.",
@@ -1429,26 +1459,34 @@
 					{
 						"id": "REAL1",
 						"name": "Local Conversion",
-						"status": "active",
-						"type": "realisation"
+						"type": "realisation",
+						"lifecycle": {
+							"active": true
+						}
 					},
 					{
 						"id": "REAL2",
 						"name": "Remote Conversion",
-						"status": "active",
-						"type": "realisation"
+						"type": "realisation",
+						"lifecycle": {
+							"active": true
+						}
 					},
 					{
 						"id": "REAL3",
 						"name": "Local Storage",
-						"status": "active",
-						"type": "realisation"
+						"type": "realisation",
+						"lifecycle": {
+							"active": true
+						}
 					},
 					{
 						"id": "REAL4",
 						"name": "Remote Storage",
-						"status": "active",
-						"type": "realisation"
+						"type": "realisation",
+						"lifecycle": {
+							"active": true
+						}
 					},
 					{
 						"id": "DEC1",
@@ -2203,7 +2241,8 @@
 			"description": "Phases and tasks are structurally identical — a unit of work that can contain smaller units. Rather than maintaining separate stage nodes for phases and change nodes for tasks, use a single recursive model: change nodes with subsystems containing more change nodes. This eliminates the artificial three-layer model (protocol, stage, change, task) in favour of uniform recursive composition via SysProM's native subsystem mechanism.",
 			"id": "DEC18",
 			"lifecycle": {
-				"options": false
+				"options": false,
+				"accepted": true
 			},
 			"name": "Recursive Change Nodes for Planning",
 			"options": [
@@ -2218,7 +2257,6 @@
 			],
 			"rationale": "A phase is just a task with children. Using change nodes with recursive subsystems provides unlimited nesting depth, eliminates the stage node type from planning, and reuses SysProM's existing subsystem recursion rather than inventing a parallel mechanism.",
 			"selected": "D18-OPT-B",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2238,8 +2276,10 @@
 			],
 			"rationale": "One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.",
 			"selected": "D19-OPT-B",
-			"status": "accepted",
-			"type": "decision"
+			"type": "decision",
+			"lifecycle": {
+				"accepted": true
+			}
 		},
 		{
 			"context": "The CLI uses manual process.argv parsing with parseFlag() helpers duplicated across 11 command files. Usage text is embedded in console.error() strings, making automatic documentation generation impossible. A structured CLI framework is needed to enable programmatic access to command metadata for doc generation.",
@@ -2270,7 +2310,6 @@
 			],
 			"rationale": "Commander.js has zero dependencies, the lowest migration effort from manual argv parsing, and exposes a public API for walking the command tree programmatically. This enables a simple doc generation script without adopting a heavier framework.",
 			"selected": "D20-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2294,7 +2333,6 @@
 			],
 			"rationale": "TypeDoc directly generates docs from TypeScript source with minimal configuration. The typedoc-plugin-zod plugin resolves the z.infer rendering issue without requiring explicit interfaces. The projectDocuments feature allows CLI docs to be included in the same HTML site.",
 			"selected": "D21-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2318,7 +2356,6 @@
 			],
 			"rationale": "Turborepo provides automatic caching (FULL TURBO on repeat builds), parallel task execution, and explicit dependency declarations in turbo.json. It manages output directory cleaning automatically.",
 			"selected": "D22-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2342,7 +2379,6 @@
 			],
 			"rationale": "Automated enforcement ensures every commit follows conventional format, enabling semantic-release to determine version bumps and generate changelogs. All commit types trigger patch releases so no work is excluded.",
 			"selected": "D23-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2366,7 +2402,6 @@
 			],
 			"rationale": "Runtime validation catches type errors that assertions silently mask. The Zod schema provides .is() type guards via defineSchema — using them is both safer and consistent with the single-source-of-truth pattern.",
 			"selected": "D24-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2390,7 +2425,6 @@
 			],
 			"rationale": "Shipping compiled JavaScript removes the tsx runtime dependency, reduces install size, and follows standard npm package conventions.",
 			"selected": "D25-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2414,7 +2448,6 @@
 			],
 			"rationale": "The existing ID convention (D for decisions, CH for changes, INV for invariants, etc.) is consistent enough to derive automatically. The nextId function scans existing nodes for the highest number with that prefix and increments.",
 			"selected": "D26-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2438,7 +2471,6 @@
 			],
 			"rationale": "Each improvement targets a specific friction point: auto-IDs reduce manual bookkeeping, colour improves scanability, search/graph/rename add power-user workflows, and dry-run/completions improve developer experience.",
 			"selected": "D27-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2462,7 +2494,6 @@
 			],
 			"rationale": "A single defineCommand pattern eliminates duplication. Commander program, documentation, and validation are all derived from the Zod schema.",
 			"selected": "D28-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -2486,7 +2517,6 @@
 			],
 			"rationale": "Single source of truth eliminates duplication and drift. Operations are callable functions with introspectable schemas.",
 			"selected": "D29-OPT-A",
-			"status": "accepted",
 			"type": "decision"
 		},
 		{
@@ -3343,25 +3373,29 @@
 			"scope": [
 				"[\"EL-CLI\",\"EL-SPECKIT\"]"
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"description": "Extended lifecycle schema to accept ISO date strings alongside booleans. Added temporal query functions: timeline (chronological events), nodeHistory (single node history), stateAt (system state at a point in time). Updated markdown rendering and parsing for date lifecycle values. Added timeline and state-at subcommands to spm query.",
 			"id": "CHG17",
 			"name": "Implement Temporal Support",
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"description": "Replace manual process.argv parsing across all CLI command files with Commander.js declarative command definitions. Add a doc generation script that walks Commander's command tree to produce markdown files for TypeDoc's projectDocuments feature.",
 			"id": "CHG18",
 			"lifecycle": {
 				"implemented": "2026-03-21",
-				"proposed": "2026-03-21"
+				"proposed": "2026-03-21",
+				"complete": true
 			},
 			"name": "Migrate CLI to Commander.js",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3369,7 +3403,8 @@
 			"id": "CHG19",
 			"lifecycle": {
 				"implemented": "2026-03-21",
-				"proposed": "2026-03-21"
+				"proposed": "2026-03-21",
+				"complete": true
 			},
 			"name": "Add TypeDoc Documentation Pipeline",
 			"operations": [
@@ -3389,7 +3424,6 @@
 			"scope": [
 				"ELEM3"
 			],
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3397,7 +3431,8 @@
 			"id": "CHG20",
 			"lifecycle": {
 				"implemented": "2026-03-21",
-				"proposed": "2026-03-21"
+				"proposed": "2026-03-21",
+				"complete": true
 			},
 			"name": "Add Turborepo Build Orchestration",
 			"operations": [
@@ -3413,7 +3448,6 @@
 			"scope": [
 				"ELEM3"
 			],
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3421,10 +3455,10 @@
 			"id": "CHG21",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Add CI/CD Pipeline",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3432,10 +3466,10 @@
 			"id": "CHG22",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Remove Type Assertions",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3443,10 +3477,10 @@
 			"id": "CHG23",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Switch to Compiled Distribution",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3454,10 +3488,10 @@
 			"id": "CHG24",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Add Auto-ID Generation to CLI",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3465,10 +3499,10 @@
 			"id": "CHG25",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "CLI UX Improvements",
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3476,13 +3510,13 @@
 			"id": "CHG26",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Implement defineCommand Pattern",
 			"scope": [
 				"ELEM3"
 			],
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3490,7 +3524,8 @@
 			"id": "CHG27",
 			"lifecycle": {
 				"implemented": "2026-03-22",
-				"proposed": "2026-03-22"
+				"proposed": "2026-03-22",
+				"complete": true
 			},
 			"name": "Implement defineOperation Pattern",
 			"plan": [
@@ -3538,7 +3573,6 @@
 			"scope": [
 				"ELEM3"
 			],
-			"status": "complete",
 			"type": "change"
 		},
 		{
@@ -3567,8 +3601,10 @@
 					"done": true
 				}
 			],
-			"status": "introduced",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"introduced": true
+			}
 		},
 		{
 			"description": "Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.",
@@ -3619,8 +3655,10 @@
 			"scope": [
 				"DEC31"
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"description": "Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.",
@@ -3668,8 +3706,10 @@
 					"done": false
 				}
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"id": "CHG31",
@@ -3728,8 +3768,10 @@
 					"done": false
 				}
 			],
-			"status": "proposed",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"proposed": true
+			}
 		},
 		{
 			"id": "CHG32",
@@ -3792,8 +3834,10 @@
 					"done": false
 				}
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"id": "CHG33",
@@ -3852,8 +3896,10 @@
 					"done": false
 				}
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"description": "Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.",
@@ -3889,8 +3935,10 @@
 				"src/cli/shared.ts",
 				"src/cli/commands/init.ts"
 			],
-			"status": "complete",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"complete": true
+			}
 		},
 		{
 			"description": "Implement YAML serialisation (single-file and multi-document) and multi-file JSON support with 8 new CLI commands.",
@@ -4006,8 +4054,10 @@
 				"src/cli/commands/infer.ts",
 				"src/mcp/server.ts"
 			],
-			"status": "introduced",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"introduced": true
+			}
 		},
 		{
 			"description": "Add bidirectional BFS, polarity/strength on relationships, influence relationship type, full relationship classification, impactSummaryOp for hotspot analysis, and CLI/MCP surface changes.",
@@ -4071,8 +4121,10 @@
 				"src/index.ts",
 				"tests/infer-impact.unit.test.ts"
 			],
-			"status": "introduced",
-			"type": "change"
+			"type": "change",
+			"lifecycle": {
+				"introduced": true
+			}
 		},
 		{
 			"id": "VIEW1",
@@ -4248,8 +4300,10 @@
 			],
 			"rationale": "The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology. Abstract workflow machines can now connect cleanly to executable flow nodes without overloading part_of semantics.",
 			"selected": "OPT-A",
-			"status": "implemented",
-			"type": "decision"
+			"type": "decision",
+			"lifecycle": {
+				"implemented": true
+			}
 		},
 		{
 			"description": "A recommended modelling profile for product repositories that uses SysProM to describe the system's specification, design, and implementation with a consistent trace chain across layers.",
@@ -4308,7 +4362,6 @@
 				"tests/safety-guards.unit.test.ts",
 				"README.md"
 			],
-			"status": "implemented",
 			"type": "change"
 		}
 	],

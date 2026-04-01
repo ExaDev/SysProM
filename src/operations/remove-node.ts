@@ -104,9 +104,16 @@ export const removeNodeOp = defineOperation({
 			}
 		} else {
 			// Soft delete: mark as retired and preserve relationships
-			newNodes = doc.nodes.map((n) =>
-				n.id === id ? { ...n, status: "retired" as const } : n,
-			);
+			newNodes = doc.nodes.map((n) => {
+				if (n.id !== id) return n;
+				return {
+					...n,
+					lifecycle: {
+						...(n.lifecycle ?? {}),
+						retired: true,
+					},
+				};
+			});
 
 			// Don't remove relationships in soft delete
 		}

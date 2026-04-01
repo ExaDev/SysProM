@@ -278,7 +278,7 @@ const syncSubcommand: CommandDef<z.ZodObject, typeof syncSubOpts> = {
 		// Compare documents
 		const diff = compareDocuments(syspromDoc, specKitDoc);
 
-		// Merge: Spec-Kit wins for content (description, status), SysProM wins for structure
+		// Merge: Spec-Kit wins for content (description, lifecycle), SysProM wins for structure
 		const mergedNodes = new Map(syspromDoc.nodes.map((n) => [n.id, n]));
 		const specKitNodes = new Map(specKitDoc.nodes.map((n) => [n.id, n]));
 
@@ -292,7 +292,7 @@ const syncSubcommand: CommandDef<z.ZodObject, typeof syncSubOpts> = {
 				const merged: Node = {
 					...syspromNode,
 					description: specKitNode.description ?? syspromNode.description,
-					status: specKitNode.status ?? syspromNode.status,
+					lifecycle: specKitNode.lifecycle ?? syspromNode.lifecycle,
 					context: specKitNode.context ?? syspromNode.context,
 					options: specKitNode.options ?? syspromNode.options,
 					selected: specKitNode.selected ?? syspromNode.selected,

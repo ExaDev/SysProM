@@ -148,7 +148,12 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "INT1", type: "intent", name: "Intent" },
-					{ id: "CON1", type: "concept", name: "Concept", status: "retired" },
+					{
+						id: "CON1",
+						type: "concept",
+						name: "Concept",
+						lifecycle: { retired: true },
+					},
 				],
 				relationships: [{ from: "INT1", to: "CON1", type: "depends_on" }],
 			};
@@ -166,7 +171,12 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "INT1", type: "intent", name: "Intent" },
-					{ id: "CON1", type: "concept", name: "Concept", status: "retired" },
+					{
+						id: "CON1",
+						type: "concept",
+						name: "Concept",
+						lifecycle: { retired: true },
+					},
 				],
 				relationships: [{ from: "INT1", to: "CON1", type: "supersedes" }],
 			};

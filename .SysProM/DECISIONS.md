@@ -464,8 +464,6 @@ Phases and tasks are structurally identical — a unit of work that can contain 
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The spec-kit planning integration initially used stage nodes for phases and change nodes for tasks, with flat plan:Task[] arrays for leaf items. This created three separate mechanisms for what is conceptually the same thing.
 
 Options:
@@ -478,6 +476,7 @@ Rationale: A phase is just a task with children. Using change nodes with recursi
 
 #### Lifecycle
 
+- [x] accepted
 - [ ] options
 
 ### DEC19 — Extend Lifecycle with Temporal Timestamps
@@ -485,8 +484,6 @@ Rationale: A phase is just a task with children. Using change nodes with recursi
 Extend lifecycle values from boolean to boolean | string, where string values are ISO dates indicating when a state was reached. Date strings are truthy, so existing code using truthiness checks works unchanged. This single schema change enables timestamped lifecycle, temporal snapshots, and event ordering.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: SysProM had no temporal support. The lifecycle field tracked state completion but not when states were reached.
 
@@ -498,13 +495,15 @@ Chosen: D19-OPT-B
 
 Rationale: One schema change enables all three temporal capabilities: timestamped lifecycle, temporal snapshots via stateAt queries, and event ordering via timeline queries. Date strings are truthy, ensuring backwards compatibility.
 
+#### Lifecycle
+
+- [x] accepted
+
 ### DEC20 — Adopt Commander.js for CLI
 
 Choose a CLI framework to replace manual argument parsing, enabling automatic documentation generation from command definitions.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: The CLI uses manual process.argv parsing with parseFlag() helpers duplicated across 11 command files. Usage text is embedded in console.error() strings, making automatic documentation generation impossible. A structured CLI framework is needed to enable programmatic access to command metadata for doc generation.
 
@@ -529,8 +528,6 @@ Choose TypeDoc with typedoc-plugin-zod for API documentation generation, produci
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The library has a rich public API (~70 exports) but no automated documentation generation. TypeDoc generates browsable docs from TypeScript source and JSDoc comments. The typedoc-plugin-zod plugin resolves rendering issues with Zod-inferred types.
 
 Options:
@@ -551,8 +548,6 @@ Rationale: TypeDoc directly generates docs from TypeScript source with minimal c
 Choose Turborepo for build task orchestration with dependency management and output caching.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: The build pipeline has multiple tasks with dependencies (typecheck, compile, schema generation, doc generation) managed via chained pnpm scripts. Turborepo provides task dependency graphs, parallel execution, and output caching.
 
@@ -575,8 +570,6 @@ Adopt commitlint for commit message enforcement, semantic-release for automated 
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The project uses conventional commit messages informally. Enforcing them with tooling enables automated releases, changelogs, and consistent commit history.
 
 Options:
@@ -597,8 +590,6 @@ Rationale: Automated enforcement ensures every commit follows conventional forma
 Remove all as type coercions and replace them with Zod schema validation, type guard functions, and properly typed parameters.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: The codebase contained numerous as type assertions that bypass the type checker, telling the compiler to trust the developer rather than proving correctness at runtime.
 
@@ -621,8 +612,6 @@ Switch package entry points (main, exports, bin) from TypeScript source to compi
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The package previously shipped TypeScript source and required tsx at runtime. Consumers needed tsx as a dependency to use the CLI or import the library.
 
 Options:
@@ -643,8 +632,6 @@ Rationale: Shipping compiled JavaScript removes the tsx runtime dependency, redu
 Auto-generate node IDs from a type-prefix convention when --id is omitted from the add command.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: Adding nodes via the CLI required manually specifying IDs like D26 or CH24. This is tedious and error-prone, especially when the user must check existing IDs to avoid collisions.
 
@@ -667,8 +654,6 @@ Add auto-generated option IDs, init command, auto-sync, coloured output, JSON ou
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The CLI covers core CRUD operations but lacks quality-of-life features that reduce friction for frequent use.
 
 Options:
@@ -690,8 +675,6 @@ Replace separate Commander definitions, run() functions, and doc generator metad
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
 
-- Status: accepted
-
 Context: The CLI had three layers describing the same information independently: Zod schemas, Commander definitions, and run() functions with manual parseFlag helpers.
 
 Options:
@@ -712,8 +695,6 @@ Rationale: A single defineCommand pattern eliminates duplication. Commander prog
 Each domain operation defined once with Zod input/output schemas. Programmatic API, CLI, and docs derived from the single definition.
 
 - Must preserve: [INV2](./INVARIANTS.md#inv2--decision-change-linkage)
-
-- Status: accepted
 
 Context: Library functions have no metadata. CLI commands redeclare descriptions, types, and validation. Adding a feature requires updating 3 places.
 
@@ -911,8 +892,6 @@ Rationale: OPT-A alone cannot answer what depends on X — the key SysML gap. OP
   - [CAP12](./INTENT.md#cap12--product-repository-modelling-guidance)
 - Must preserve: [INV18](./INVARIANTS.md#inv18--extension-constraint-preservation)
 
-- Status: implemented
-
 Context: Product-system modelling revealed endpoint restrictions blocking valid specification, design, and implementation provenance patterns.
 
 Options:
@@ -922,4 +901,8 @@ Options:
 Chosen: OPT-A
 
 Rationale: The endpoint expansions are additive, preserve existing semantics, and make SysProM more effective for modelling real product systems without changing its core ontology. Abstract workflow machines can now connect cleanly to executable flow nodes without overloading part_of semantics.
+
+#### Lifecycle
+
+- [x] implemented
 

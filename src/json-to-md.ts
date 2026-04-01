@@ -12,6 +12,7 @@ import {
 	RelationshipType,
 	RELATIONSHIP_TYPE_LABELS,
 } from "./schema.js";
+import { primaryLifecycleState } from "./lifecycle-state.js";
 import { graphOp } from "./operations/graph.js";
 import { graphRefinementOp } from "./operations/graph-refinement.js";
 import { graphDecisionOp } from "./operations/graph-decision.js";
@@ -249,11 +250,6 @@ function renderNode(
 	const rels = renderNodeRelationships(n.id, fromIdx, nodeMap, currentFile);
 	if (rels.length > 0) {
 		lines.push(...rels);
-		lines.push("");
-	}
-
-	if (n.status) {
-		lines.push(`- Status: ${n.status}`);
 		lines.push("");
 	}
 
@@ -825,7 +821,7 @@ export function jsonToMarkdownMultiDoc(
 				title: `${n.id} — ${n.name}`,
 				doc_type: n.type,
 				scope: n.type,
-				status: n.status,
+				status: primaryLifecycleState(n),
 			},
 		};
 

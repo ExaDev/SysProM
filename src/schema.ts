@@ -359,7 +359,12 @@ export const NodeBase = z
 		type: NodeType,
 		name: z.string().describe("Human-readable name."),
 		description: Text.optional(),
-		status: NodeStatus.optional(),
+		status: z
+			.never()
+			.optional()
+			.describe(
+				"Deprecated field. Node-level status is not supported; use lifecycle states instead.",
+			),
 		lifecycle: z
 			.record(z.string(), z.union([z.boolean(), z.string()]))
 			.describe(

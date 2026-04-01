@@ -22,7 +22,7 @@ function minimal(): SysProMDocument {
 			title: "Test System",
 			doc_type: "sysprom",
 			scope: "system",
-			status: "active",
+			lifecycle: { active: true },
 			version: 1,
 		},
 		nodes: [
@@ -43,7 +43,7 @@ function full(): SysProMDocument {
 			title: "Full System",
 			doc_type: "sysprom",
 			scope: "system",
-			status: "active",
+			lifecycle: { active: true },
 			version: 1,
 		},
 		nodes: [
@@ -88,14 +88,14 @@ function full(): SysProMDocument {
 				type: "element",
 				name: "Test Element",
 				description: "An element.",
-				status: "active",
+				lifecycle: { active: true },
 			},
 			{
 				id: "REAL1",
 				type: "realisation",
 				name: "Test Realisation",
 				description: "A realisation.",
-				status: "active",
+				lifecycle: { active: true },
 			},
 			{
 				id: "DEC1",
@@ -169,7 +169,7 @@ function withSubsystem(): SysProMDocument {
 				id: "ELEM1",
 				type: "element",
 				name: "Child Feature",
-				status: "active",
+				lifecycle: { active: true },
 				subsystem: {
 					nodes: [
 						{

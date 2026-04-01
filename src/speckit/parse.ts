@@ -214,6 +214,10 @@ function mapStatusValue(value: string): NodeStatus {
 	return statusMap[lower] ?? "proposed";
 }
 
+function statusLifecycle(status: NodeStatus): Record<string, boolean> {
+	return { [status]: true };
+}
+
 /**
  * Extract a single line value from body text (e.g., "**Created**: 2025-01-01").
  * @param body - Markdown body text.
@@ -386,7 +390,7 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
 		id: specId,
 		type: "artefact",
 		name: title,
-		status,
+		lifecycle: statusLifecycle(status),
 		description: titleSection?.body,
 	});
 
@@ -483,7 +487,9 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
 								type: "invariant",
 								name: `FR-${String(frIdx)}`,
 								description: frText,
-								status: needsClarification ? "proposed" : "active",
+								lifecycle: statusLifecycle(
+									needsClarification ? "proposed" : "active",
+								),
 							});
 
 							relationships.push({
@@ -535,7 +541,7 @@ export function parseSpec(content: string, idPrefix: string): ParseResult {
 								type: "invariant",
 								name: `SC-${String(scIdx)}`,
 								description: scText,
-								status: "active",
+								lifecycle: statusLifecycle("active"),
 							});
 
 							relationships.push({

@@ -1,11 +1,12 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { Node, SysProMDocument } from "../schema.js";
+import { hasLifecycleState } from "../lifecycle-state.js";
 
-/** Query nodes from a SysProM document with optional filters for type and status. */
+/** Query nodes from a SysProM document with optional filters for type and lifecycle state. */
 export const queryNodesOp = defineOperation({
 	name: "query-nodes",
-	description: "Query nodes with optional filters for type and status",
+	description: "Query nodes with optional filters for type and lifecycle state",
 	input: z.object({
 		doc: SysProMDocument,
 		type: z.string().optional(),
@@ -19,8 +20,9 @@ export const queryNodesOp = defineOperation({
 			nodes = nodes.filter((n) => n.type === input.type);
 		}
 
-		if (input.status) {
-			nodes = nodes.filter((n) => n.status === input.status);
+		const lifecycleState = input.status;
+		if (lifecycleState) {
+			nodes = nodes.filter((n) => hasLifecycleState(n, lifecycleState));
 		}
 
 		return nodes;

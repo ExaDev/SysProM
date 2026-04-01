@@ -31,19 +31,13 @@ doc_type: "state"
 
 Produces an initial scoped plan.
 
-- Performs: [STG1](#stg1--draft-plan)
-
 ### ROLE2 — Architect
 
 Reviews structural and design soundness.
 
-- Performs: [STG2](#stg2--architectural-review)
-
 ### ROLE3 — Critic
 
 Evaluates quality, completeness, and testability.
-
-- Performs: [STG3](#stg3--critical-evaluation)
 
 ## Gates
 

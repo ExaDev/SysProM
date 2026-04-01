@@ -21,23 +21,31 @@ doc_type: "state"
 
 - Implements: [ELEM1](#elem1--transformation-engine)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL2 — Remote Conversion
 
 - Implements: [ELEM1](#elem1--transformation-engine)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL3 — Local Storage
 
 - Implements: [ELEM2](#elem2--document-store)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 
 ### REAL4 — Remote Storage
 
 - Implements: [ELEM2](#elem2--document-store)
 
-- Status: active
+#### Lifecycle
+
+- [x] active
 

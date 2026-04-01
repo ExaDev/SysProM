@@ -2,6 +2,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { SysProMDocument, Node, Relationship } from "../schema.js";
 import { textToString } from "../text.js";
+import {
+	hasLifecycleState,
+	primaryLifecycleState,
+} from "../lifecycle-state.js";
 
 // ============================================================================
 // Helper functions
@@ -135,22 +139,22 @@ function parseTasks(node: Node): { description: string; done: boolean }[] {
 }
 
 /**
- * Format the status for spec output: "proposed" -> "Draft", etc.
- * @param status - The node status string.
+ * Format the lifecycle state for spec output: "proposed" -> "Draft", etc.
+ * @param state - The node lifecycle state.
  * @returns Formatted status label.
  * @example
  * ```ts
  * formatStatus("proposed"); // => "Draft"
  * ```
  */
-function formatStatus(status?: string): string {
-	if (!status) return "Draft";
+function formatStatus(state?: string): string {
+	if (!state) return "Draft";
 	const mapping: Record<string, string> = {
 		proposed: "Draft",
 		active: "Active",
 		complete: "Complete",
 	};
-	return mapping[status] ?? status;
+	return mapping[state] ?? state;
 }
 
 // ============================================================================
@@ -279,7 +283,7 @@ export function generateSpec(doc: SysProMDocument, prefix: string): string {
 	// Metadata
 	output += `**Feature Branch**: \`${prefix.toLowerCase()}\`\n`;
 	output += `**Created**: ${new Date().toISOString().split("T")[0]}\n`;
-	output += `**Status**: ${formatStatus(spec.status)}\n\n`;
+	output += `**Status**: ${formatStatus(primaryLifecycleState(spec))}\n\n`;
 
 	// User Scenarios & Testing section
 	output += "## User Scenarios & Testing *(mandatory)*\n\n";
@@ -361,7 +365,9 @@ export function generateSpec(doc: SysProMDocument, prefix: string): string {
 	} else {
 		frNodes.forEach((req) => {
 			const reqText = textToString(req.description ?? "");
-			const status = req.status === "proposed" ? ` [NEEDS CLARIFICATION]` : "";
+			const status = hasLifecycleState(req, "proposed")
+				? ` [NEEDS CLARIFICATION]`
+				: "";
 			output += `- **${req.id}**: ${reqText}${status}\n`;
 		});
 		output += "\n";

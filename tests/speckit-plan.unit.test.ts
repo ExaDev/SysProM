@@ -99,10 +99,10 @@ describe("initDocument", () => {
 		assert.ok(const_?.description);
 	});
 
-	it("SPEC status is proposed", () => {
+	it("SPEC lifecycle includes proposed", () => {
 		const doc = initDocument("FEAT", "My Feature");
 		const spec = doc.nodes?.find((n) => n.id === "FEAT-SPEC");
-		assert.equal(spec?.status, "proposed");
+		assert.equal(spec?.lifecycle?.proposed, true);
 	});
 
 	it("CHK lifecycle is empty", () => {

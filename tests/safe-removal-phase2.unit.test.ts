@@ -5,7 +5,7 @@ import type { SysProMDocument } from "../src/schema.js";
 
 describe("CHG32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 	describe("Soft delete (default)", () => {
-		it("preserves node with status retired (soft delete by default)", () => {
+		it("preserves node with retired lifecycle state (soft delete by default)", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "INT1", type: "intent", name: "Intent" },
@@ -17,7 +17,11 @@ describe("CHG32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 			const result = removeNodeOp({ doc, id: "INT1" });
 			const retired = result.doc.nodes.find((n) => n.id === "INT1");
 			assert.ok(retired, "node should exist after soft delete");
-			assert.equal(retired.status, "retired", "node should be marked retired");
+			assert.equal(
+				retired.lifecycle?.retired,
+				true,
+				"node should be marked retired",
+			);
 		});
 
 		it("preserves relationships in soft delete", () => {
@@ -47,7 +51,7 @@ describe("CHG32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 			};
 			const result = removeNodeOp({ doc, id: "INT1" });
 			const retired = result.doc.nodes.find((n) => n.id === "INT1");
-			assert.equal(retired!.status, "retired");
+			assert.equal(retired?.lifecycle?.retired, true);
 			const change = result.doc.nodes.find((n) => n.id === "CHG1");
 			assert.equal(change?.scope, undefined);
 		});
@@ -138,7 +142,7 @@ describe("CHG32 Phase 2: Soft/Hard Delete and Chain Repair", () => {
 			// Soft delete (no hard flag) should succeed
 			const result = removeNodeOp({ doc, id: "ELEM1" });
 			const retired = result.doc.nodes.find((n) => n.id === "ELEM1");
-			assert.equal(retired!.status, "retired");
+			assert.equal(retired?.lifecycle?.retired, true);
 		});
 	});
 

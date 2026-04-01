@@ -64,7 +64,7 @@ const updateNodeArgs = z.object({
 });
 const updateNodeOpts = mutationOpts.extend({
 	description: z.string().optional().describe("update node description"),
-	status: NodeStatus.optional().describe("update node status"),
+	status: NodeStatus.optional().describe("set lifecycle state to true"),
 	context: z.string().optional().describe("update node context"),
 	rationale: z.string().optional().describe("update node rationale"),
 	lifecycle: z
@@ -115,14 +115,14 @@ const nodeSubcommand: CommandDef = {
 		const fields: Record<string, unknown> = {};
 
 		if (opts.description !== undefined) fields.description = opts.description;
-		if (opts.status !== undefined) fields.status = opts.status;
 		if (opts.context !== undefined) fields.context = opts.context;
 		if (opts.rationale !== undefined) fields.rationale = opts.rationale;
 
-		const lifecycleFields = parseLifecycleFields(
-			node.lifecycle,
-			opts.lifecycle ?? [],
-		);
+		const lifecycleArgs = [...(opts.lifecycle ?? [])];
+		if (opts.status !== undefined) {
+			lifecycleArgs.push(`${opts.status}=true`);
+		}
+		const lifecycleFields = parseLifecycleFields(node.lifecycle, lifecycleArgs);
 		if (lifecycleFields) {
 			fields.lifecycle = lifecycleFields;
 		}

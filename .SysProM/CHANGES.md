@@ -444,10 +444,12 @@ New spm plan command with five subcommands: init (scaffold feature skeleton), ad
 
 - Implements: [DEC18](./DECISIONS.md#dec18--recursive-change-nodes-for-planning)
 
-- Status: complete
-
 Scope:
 - ["EL-CLI","EL-SPECKIT"]
+
+#### Lifecycle
+
+- [x] complete
 
 ### CHG17 — Implement Temporal Support
 
@@ -455,7 +457,9 @@ Extended lifecycle schema to accept ISO date strings alongside booleans. Added t
 
 - Implements: [DEC19](./DECISIONS.md#dec19--extend-lifecycle-with-temporal-timestamps)
 
-- Status: complete
+#### Lifecycle
+
+- [x] complete
 
 ### CHG18 — Migrate CLI to Commander.js
 
@@ -463,20 +467,17 @@ Replace manual process.argv parsing across all CLI command files with Commander.
 
 - Implements: [DEC20](./DECISIONS.md#dec20--adopt-commanderjs-for-cli)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
+- [x] complete
 
 ### CHG19 — Add TypeDoc Documentation Pipeline
 
 Configure TypeDoc for markdown API docs (docs/api/), HTML site generation (site/), and auto-generated CLI reference (docs/cli/) from Commander.js metadata. Add @param/@returns JSDoc tags to all public functions. Use typedoc-plugin-zod to render Zod-inferred types cleanly.
 
 - Implements: [DEC21](./DECISIONS.md#dec21--adopt-typedoc-for-documentation)
-
-- Status: complete
 
 Scope:
 - ELEM3
@@ -490,14 +491,13 @@ Operations:
 
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
+- [x] complete
 
 ### CHG20 — Add Turborepo Build Orchestration
 
 Add turbo.json with task dependency graph for typecheck, compile, schema, test, and doc generation tasks. Restructure package.json scripts into atomic _-prefixed tasks orchestrated by turbo. Turbo manages output caching and directory cleaning.
 
 - Implements: [DEC22](./DECISIONS.md#dec22--adopt-turborepo-for-build-orchestration)
-
-- Status: complete
 
 Scope:
 - ELEM3
@@ -510,6 +510,7 @@ Operations:
 
 - [x] proposed (2026-03-21)
 - [x] implemented (2026-03-21)
+- [x] complete
 
 ### CHG21 — Add CI/CD Pipeline
 
@@ -517,12 +518,11 @@ Set up GitHub Actions CI workflow with quality checks, docs generation, GitHub P
 
 - Implements: [DEC23](./DECISIONS.md#dec23--enforce-conventional-commits-and-automated-releases)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG22 — Remove Type Assertions
 
@@ -530,12 +530,11 @@ Replace all as type coercions across library and CLI code with runtime validatio
 
 - Implements: [DEC24](./DECISIONS.md#dec24--eliminate-type-assertions)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG23 — Switch to Compiled Distribution
 
@@ -543,12 +542,11 @@ Update package.json entry points to reference compiled JavaScript in dist/. Move
 
 - Implements: [DEC25](./DECISIONS.md#dec25--ship-compiled-javascript)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG24 — Add Auto-ID Generation to CLI
 
@@ -556,12 +554,11 @@ Add nextId() function and NODE_ID_PREFIX map. Make --id optional on the add comm
 
 - Implements: [DEC26](./DECISIONS.md#dec26--auto-generate-node-ids)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG25 — CLI UX Improvements
 
@@ -569,20 +566,17 @@ Add auto-option IDs, spm init, --sync, coloured output, --json on mutations, spm
 
 - Implements: [DEC27](./DECISIONS.md#dec27--cli-ux-improvements)
 
-- Status: complete
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG26 — Implement defineCommand Pattern
 
 Create defineCommand() with Zod schema introspection for Commander generation and doc extraction. Migrate all 16 CLI commands to single-file definitions in src/cli/commands/. Delete old run() files.
 
 - Implements: [DEC28](./DECISIONS.md#dec28--unify-cli-with-zod-driven-command-definitions)
-
-- Status: complete
 
 Scope:
 - ELEM3
@@ -591,14 +585,13 @@ Scope:
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG27 — Implement defineOperation Pattern
 
 Create defineOperation infrastructure, define operations for all domain functions, refactor CLI commands to thin adapters, update exports.
 
 - Implements: [DEC29](./DECISIONS.md#dec29--unify-library-api-and-cli-with-defineoperation)
-
-- Status: complete
 
 Scope:
 - ELEM3
@@ -620,14 +613,13 @@ Scope:
 
 - [x] proposed (2026-03-22)
 - [x] implemented (2026-03-22)
+- [x] complete
 
 ### CHG28 — Implement Claude Code Plugin
 
 Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).
 
 - Implements: [DEC30](./DECISIONS.md#dec30--distribute-sysprom-as-a-claude-code-plugin)
-
-- Status: introduced
 
 #### Plan
 
@@ -637,13 +629,15 @@ Add a Claude Code plugin to the SysProM repository with skills, commands, hooks,
 - [x] Update CLAUDE.md with plugin documentation
 - [x] Mark CH28 as introduced in SysProM document
 
+#### Lifecycle
+
+- [x] introduced
+
 ### CHG29 — Implement Bidirectional Sync Command
 
 Add a unified 'spm sync' command that performs bidirectional synchronisation between JSON and Markdown representations by default, with flags for precise conflict handling.
 
 - Implements: [DEC31](./DECISIONS.md#dec31--bidirectional-sync-by-default)
-
-- Status: complete
 
 Scope:
 - DEC31
@@ -661,13 +655,15 @@ Scope:
 - [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
 - [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
 
+#### Lifecycle
+
+- [x] complete
+
 ### CHG30 — Implement MCP Server
 
 Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as MCP tools over stdio transport. Add sysprom-mcp bin entry to package.json. Add @modelcontextprotocol/sdk dependency. Add .mcp.json to the plugin referencing npx -y sysprom-mcp. Tools: validate, stats, query-nodes, query-node, query-relationships, trace, add-node, remove-node, update-node, add-relationship, remove-relationship, timeline, state-at.
 
 - Implements: [DEC32](./DECISIONS.md#dec32--add-mcp-server-for-programmatic-api-access)
-
-- Status: complete
 
 #### Plan
 
@@ -682,11 +678,13 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update plugin README with MCP server documentation
 - [ ] Sync JSON to Markdown
 
+#### Lifecycle
+
+- [x] complete
+
 ### CHG31 — Implement Keyed Provider Registry for External Formats
 
 - Implements: [DEC33](./DECISIONS.md#dec33--abstract-external-format-interop-into-keyed-provider-registry)
-
-- Status: proposed
 
 #### Plan
 
@@ -704,11 +702,13 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Update CLI commands to expose --format flag, update help text
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
+#### Lifecycle
+
+- [x] proposed
+
 ### CHG32 — Implement Safe Graph Removal
 
 - Implements: [DEC34](./DECISIONS.md#dec34--safe-graph-removal-with-soft-delete-default)
-
-- Status: complete
 
 #### Plan
 
@@ -727,12 +727,14 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Add retired node relationship check to validate operation (report as issue, not just warning)
 - [ ] Add unit tests for retired relationship guard: refused types throw, allowed types succeed, validate flags existing violations
 
+#### Lifecycle
+
+- [x] complete
+
 ### CHG33 — Implement Graph Mutation Safety Guards
 
 - Implements: [DEC35](./DECISIONS.md#dec35--graph-mutation-safety-guards)
 - Depends on: [CHG32](#chg32--implement-safe-graph-removal)
-
-- Status: complete
 
 #### Plan
 
@@ -750,13 +752,15 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 - [ ] Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes
 - [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
+#### Lifecycle
+
+- [x] complete
+
 ### CHG34 — Add default input resolution and init command
 
 Make input arg optional with priority-based auto-detection (.spm.json > .spm.md > .spm/ > glob). Rework init command to support optional path with context-dependent format and --format flag.
 
 - Implements: [DEC36](./DECISIONS.md#dec36--default-input-resolution-and-init-command)
-
-- Status: complete
 
 Scope:
 - src/cli/shared.ts
@@ -770,6 +774,10 @@ Scope:
 - [x] Rework init command with optional path and --format flag
 - [x] Write tests for resolveInput
 - [x] Write tests for init command
+
+#### Lifecycle
+
+- [x] complete
 
 ### CHG35 — Add YAML Support and Multi-File JSON Formats
 
@@ -819,8 +827,6 @@ Add four inference operations (impact, completeness, lifecycle, derived) exposed
 
 - Implements: [DEC41](./DECISIONS.md#dec41--add-deterministic-graph-inference)
 
-- Status: introduced
-
 Scope:
 - src/operations/infer-impact.ts
 - src/operations/infer-completeness.ts
@@ -840,13 +846,15 @@ Scope:
 - [x] Register MCP tools for inference
 - [x] Add infer all subcommand
 
+#### Lifecycle
+
+- [x] introduced
+
 ### CHG40 — Enhance impact analysis for bidirectional traversal and polarity
 
 Add bidirectional BFS, polarity/strength on relationships, influence relationship type, full relationship classification, impactSummaryOp for hotspot analysis, and CLI/MCP surface changes.
 
 - Implements: [DEC42](./DECISIONS.md#dec42--enhance-impact-analysis-for-sysmlarchimate-parity)
-
-- Status: introduced
 
 Scope:
 - src/schema.ts
@@ -871,6 +879,10 @@ Scope:
 - [ ] Regenerate schema.json
 - [ ] Sync .spm.json and .SysProM/
 
+#### Lifecycle
+
+- [x] introduced
+
 ### CHG41 — Implement system provenance profile and broaden endpoint modelling
 
 Update endpoint validation rules, tests, and README guidance so SysProM better supports modelling product-system specification, design, and implementation provenance.
@@ -879,8 +891,6 @@ Update endpoint validation rules, tests, and README guidance so SysProM better s
 - Modifies:
   - [CAP12](./INTENT.md#cap12--product-repository-modelling-guidance)
   - [ART4](./STATE.md#art4--system-provenance-profile-guidance)
-
-- Status: implemented
 
 Scope:
 - src/endpoint-types.ts

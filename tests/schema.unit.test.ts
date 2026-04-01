@@ -66,7 +66,7 @@ describe("metadata", () => {
 				title: "My System",
 				doc_type: "sysprom",
 				scope: "system",
-				status: "active",
+				lifecycle: { active: true },
 				version: 1,
 			},
 			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
@@ -144,9 +144,16 @@ describe("node types", () => {
 });
 
 describe("node lifecycle", () => {
-	it("accepts status field", () => {
+	it("accepts lifecycle state map", () => {
 		valid({
-			nodes: [{ id: "N1", type: "intent", name: "Test", status: "active" }],
+			nodes: [
+				{
+					id: "N1",
+					type: "intent",
+					name: "Test",
+					lifecycle: { active: true },
+				},
+			],
 		});
 	});
 
@@ -167,11 +174,9 @@ describe("node lifecycle", () => {
 		});
 	});
 
-	it("rejects unknown status values", () => {
+	it("rejects node-level status field", () => {
 		invalid({
-			nodes: [
-				{ id: "N1", type: "intent", name: "Test", status: "custom_status" },
-			],
+			nodes: [{ id: "N1", type: "intent", name: "Test", status: "active" }],
 		});
 	});
 });
@@ -619,7 +624,7 @@ describe("full document", () => {
 				title: "Document Workspace",
 				doc_type: "sysprom",
 				scope: "system",
-				status: "active",
+				lifecycle: { active: true },
 				version: 1,
 			},
 			nodes: [
@@ -648,13 +653,13 @@ describe("full document", () => {
 					id: "REAL1",
 					type: "realisation",
 					name: "Local Conversion",
-					status: "active",
+					lifecycle: { active: true },
 				},
 				{
 					id: "REAL2",
 					type: "realisation",
 					name: "Remote Conversion",
-					status: "active",
+					lifecycle: { active: true },
 				},
 				{
 					id: "DEC1",

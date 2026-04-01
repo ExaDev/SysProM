@@ -213,7 +213,7 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 		];
 		const doc = makeDoc(nodes);
@@ -232,7 +232,7 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 		];
 		const doc = makeDoc(nodes);
@@ -251,7 +251,7 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 			{
 				id: "TEST-US-1",
@@ -300,21 +300,21 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 			{
 				id: "TEST-FR-1",
 				type: "invariant",
 				name: "FR-1",
 				description: "System MUST authenticate users via email and password",
-				status: "active",
+				lifecycle: { active: true },
 			},
 			{
 				id: "TEST-FR-2",
 				type: "invariant",
 				name: "FR-2",
 				description: "System MUST hash passwords before storage",
-				status: "active",
+				lifecycle: { active: true },
 			},
 		];
 		const relationships: Relationship[] = [
@@ -345,14 +345,14 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 			{
 				id: "TEST-SC-1",
 				type: "invariant",
 				name: "SC-1",
 				description: "Users can complete login in under 3 seconds",
-				status: "active",
+				lifecycle: { active: true },
 			},
 		];
 		const relationships: Relationship[] = [
@@ -378,14 +378,14 @@ describe("generateSpec", () => {
 				id: "TEST-SPEC",
 				type: "artefact",
 				name: "User Authentication",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 			{
 				id: "TEST-FR-1",
 				type: "invariant",
 				name: "FR-1",
 				description: "System MUST support password reset",
-				status: "proposed",
+				lifecycle: { proposed: true },
 			},
 		];
 		const relationships: Relationship[] = [
