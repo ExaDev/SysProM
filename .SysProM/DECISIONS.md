@@ -906,3 +906,20 @@ Rationale: The endpoint expansions are additive, preserve existing semantics, an
 
 - [x] implemented
 
+### DEC44 — Adopt Graph-Native Task Lifecycle Model
+
+Context: Project tracking had two parallel task mechanisms: change.plan[] checklists and recursive change-node planning. This created duplicated semantics, unclear completion logic, and weak blockage derivation.
+
+Options:
+- OPT-A: Remove change.plan[] and use lifecycle-bearing change nodes as the only task model
+- OPT-B: Keep both models
+- OPT-C: Keep plan[] only
+
+Chosen: OPT-A
+
+Rationale: A single graph-native model keeps task semantics structurally consistent, enables deterministic blockage derivation from relationships and gates, and removes redundant command/API surfaces.
+
+#### Lifecycle
+
+- [x] implemented
+

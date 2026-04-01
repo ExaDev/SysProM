@@ -596,19 +596,6 @@ Create defineOperation infrastructure, define operations for all domain function
 Scope:
 - ELEM3
 
-#### Plan
-
-- [x] Create src/operations/define-operation.ts
-- [x] Create mutation operations
-- [x] Create query and temporal operations
-- [x] Create new API operations (search, check, graph, rename)
-- [x] Refactor CLI commands to thin adapters
-- [x] Update src/index.ts exports
-- [x] Verify and test
-- [x] Create operations for remaining CLI-only commands (init, json2md, md2json, plan, task, speckit)
-- [x] Extract shared CLI concerns (--json, --dry-run, --sync, <input>) into reusable schemas and adapter factories
-- [x] Deduplicate CLI argument descriptions that repeat operation input descriptions
-
 #### Lifecycle
 
 - [x] proposed (2026-03-22)
@@ -620,14 +607,6 @@ Scope:
 Add a Claude Code plugin to the SysProM repository with skills, commands, hooks, and agents for provenance-aware development workflows. The plugin is pure markdown — no compiled code. Commands call spm if available, falling back to npx -y sysprom after npm publication. Distribution via GitHub marketplace (marketplace.json in .claude-plugin/).
 
 - Implements: [DEC30](./DECISIONS.md#dec30--distribute-sysprom-as-a-claude-code-plugin)
-
-#### Plan
-
-- [x] Create ./.claude/plugin.json manifest
-- [x] Create 28 comprehensive skills covering all SysProM operations
-- [x] Create ./.claude/marketplace.json for GitHub distribution
-- [x] Update CLAUDE.md with plugin documentation
-- [x] Mark CH28 as introduced in SysProM document
 
 #### Lifecycle
 
@@ -642,19 +621,6 @@ Add a unified 'spm sync' command that performs bidirectional synchronisation bet
 Scope:
 - DEC31
 
-#### Plan
-
-- [x] Design conflict detection: compare timestamps and content hashes of JSON and Markdown representations to determine which side has changed
-- [x] Implement 'spm sync <json> <md-dir>' command that is bidirectional by default — detect which side changed and update the other
-- [x] Add --prefer-json flag: resolve conflicts by treating JSON as the source of truth
-- [x] Add --prefer-md flag: resolve conflicts by treating Markdown as the source of truth
-- [ ] Add --interactive flag: prompt the user to choose per-conflict when both sides have diverged
-- [x] Add --dry-run flag: preview sync actions without writing any files
-- [x] Handle the 'both sides changed' case: detect mutual divergence and abort with a clear error unless a conflict strategy is specified
-- [x] Write tests for all sync directions and conflict scenarios (no changes, JSON-only, MD-only, both changed, each --prefer-* flag)
-- [ ] Update CLI help text and CLAUDE.md documentation to reflect the new sync command
-- [ ] Support per-node conflict resolution: when multiple nodes have diverged on both sides, --interactive should prompt for each conflict individually, and --prefer-* flags should apply as a batch strategy across all conflicts. Add a --report flag that lists all conflicts without resolving any.
-
 #### Lifecycle
 
 - [x] complete
@@ -665,19 +631,6 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: [DEC32](./DECISIONS.md#dec32--add-mcp-server-for-programmatic-api-access)
 
-#### Plan
-
-- [ ] Add @modelcontextprotocol/sdk as dependency
-- [ ] Create src/mcp/index.ts — MCP server wrapping programmatic API
-- [ ] Register MCP tools: validate, stats, query-nodes, query-node, query-relationships, trace
-- [ ] Register MCP tools: add-node, remove-node, update-node, add-relationship, remove-relationship
-- [ ] Register MCP tools: timeline, state-at, search
-- [ ] Add sysprom-mcp bin entry to package.json
-- [ ] Add .mcp.json to plugin referencing npx -y sysprom-mcp
-- [ ] Add tests for MCP server tool handlers
-- [ ] Update plugin README with MCP server documentation
-- [ ] Sync JSON to Markdown
-
 #### Lifecycle
 
 - [x] complete
@@ -685,22 +638,6 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 ### CHG31 — Implement Keyed Provider Registry for External Formats
 
 - Implements: [DEC33](./DECISIONS.md#dec33--abstract-external-format-interop-into-keyed-provider-registry)
-
-#### Plan
-
-- [ ] Define ExternalFormatProvider interface, ExternalProject, and ExternalFeature types in src/providers/provider.ts
-- [ ] Define providerRegistry const object, ProviderKey type, getProvider() and detectProvider() functions in src/providers/provider.ts
-- [ ] Move src/speckit/ to src/providers/speckit/, implement ExternalFormatProvider interface, update all imports across codebase
-- [ ] Implement src/providers/superpowers/project.ts — detect docs/superpowers/{specs,plans}/ directories, list/get features by date-prefixed directory names
-- [ ] Implement src/providers/superpowers/parse.ts — parse design docs into decision nodes with options, parse plan docs into change nodes with checkbox tasks
-- [ ] Implement src/providers/superpowers/generate.ts — generate superpowers-format spec and plan markdown from SysProMDocument
-- [ ] Register superpowers provider in providerRegistry
-- [ ] Refactor speckit-import/export/sync/diff operations to dispatch through the provider registry with auto-detection and optional --format flag
-- [ ] Update Zod input schemas for operations to accept format?: z.enum(providerKeys) derived from registry
-- [ ] Add unit tests for superpowers parse (design doc round-trip) and generate (plan doc round-trip)
-- [ ] Add unit tests for provider registry auto-detection and explicit format dispatch
-- [ ] Update CLI commands to expose --format flag, update help text
-- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
 #### Lifecycle
 
@@ -710,23 +647,6 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: [DEC34](./DECISIONS.md#dec34--safe-graph-removal-with-soft-delete-default)
 
-#### Plan
-
-- [ ] Add RemovalImpact type (orphaned rels, chain breaks, subsystem loss, scope refs, governance loss, traceability loss)
-- [ ] Implement impactReport(doc, id) function that computes RemovalImpact without mutating
-- [ ] Implement must_follow chain repair: when removing node B from A→B→C, relink to A→C
-- [ ] Implement scope and operation reference cleanup (remove ghost IDs from scope[] and operations[].target)
-- [ ] Refactor removeNode: default to soft delete (set status: retired), --hard flag for physical removal with chain repair and cleanup
-- [ ] Add --recursive guard: --hard on nodes with non-empty subsystems requires --recursive, otherwise refuse
-- [ ] Refactor removeRelationship: add --repair flag for must_follow chain relinking
-- [ ] Return structured impact summary from both operations (nodes affected, chains repaired, refs cleaned)
-- [ ] Add unit tests: soft delete preserves edges, hard delete repairs chains, --recursive guard, impact report accuracy
-- [ ] Update CLI commands (spm remove node, spm update remove-rel) to expose --hard, --recursive, --repair flags
-- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
-- [ ] Implement retired node relationship guard in addRelationship: refuse operational rel types (depends_on, implements, constrained_by, must_follow, governed_by, affects, etc.) when either endpoint has status: retired; allow supersedes, derived_from, references
-- [ ] Add retired node relationship check to validate operation (report as issue, not just warning)
-- [ ] Add unit tests for retired relationship guard: refused types throw, allowed types succeed, validate flags existing violations
-
 #### Lifecycle
 
 - [x] complete
@@ -735,22 +655,6 @@ Add an MCP server at src/mcp/index.ts that wraps SysProM's programmatic API as M
 
 - Implements: [DEC35](./DECISIONS.md#dec35--graph-mutation-safety-guards)
 - Depends on: [CHG32](#chg32--implement-safe-graph-removal)
-
-#### Plan
-
-- [ ] Define RELATIONSHIP_ENDPOINT_TYPES map: for each relationship type, list valid source and target node types
-- [ ] Add duplicate check to addRelationship: refuse if identical (from, type, to) already exists
-- [ ] Add endpoint type validation to addRelationship: refuse if source or target node type is not in the valid set for the relationship type
-- [ ] Add type-change guard to updateNode: when changing node type, check all existing relationships still have valid endpoint types, refuse if any would be invalidated
-- [ ] Add retirement impact to updateNode: when setting status to retired, compute and return active dependents via operational relationships (reuse impactReport from CH32)
-- [ ] Add duplicate relationship check to validate operation
-- [ ] Add endpoint type validity check to validate operation
-- [ ] Add retirement dependency check to validate operation (flag operational rels to/from retired nodes)
-- [ ] Unit tests: duplicate relationship refused by addRelationship, flagged by validate
-- [ ] Unit tests: endpoint type validation — valid combos succeed, invalid combos refused, validate flags existing violations
-- [ ] Unit tests: type-change guard — refuse when existing rels would be invalidated, allow when all rels remain valid
-- [ ] Unit tests: retirement impact — updateNode returns active dependents, validate flags operational rels to retired nodes
-- [ ] Run full test suite, validate sysprom.spm.json, sync SysProM/ markdown
 
 #### Lifecycle
 
@@ -765,15 +669,6 @@ Make input arg optional with priority-based auto-detection (.spm.json > .spm.md 
 Scope:
 - src/cli/shared.ts
 - src/cli/commands/init.ts
-
-#### Plan
-
-- [x] Add resolveInput() function to shared.ts
-- [x] Make inputArg optional in shared.ts
-- [x] Update all commands to use resolveInput()
-- [x] Rework init command with optional path and --format flag
-- [x] Write tests for resolveInput
-- [x] Write tests for init command
 
 #### Lifecycle
 
@@ -790,18 +685,6 @@ Implement YAML serialisation (single-file and multi-document) and multi-file JSO
 Move path/input/output positional arguments to --flags in init, json2md, md2json, sync, speckit (import/export/sync/diff), and plan init commands.
 
 - Implements: [DEC38](./DECISIONS.md#dec38--convert-file-path-positional-args-to-flags)
-
-#### Plan
-
-- [x] Convert init command: path positional → --path flag
-- [x] Convert json2md command: input/output positionals → --input/--output flags
-- [x] Convert md2json command: input/output positionals → --input/--output flags
-- [x] Convert sync command: input/output positionals → --input/--output flags
-- [x] Convert speckit subcommands: path positionals → flags
-- [x] Convert plan init: output positional → --output flag
-- [x] Update tests for new flag-based CLI
-- [x] Remove deprecated inputArg from shared.ts
-- [x] Update CLAUDE.md CLI examples
 
 ### CHG37 — Fix MCP persistence bug
 
@@ -835,17 +718,6 @@ Scope:
 - src/cli/commands/infer.ts
 - src/mcp/server.ts
 
-#### Plan
-
-- [x] Implement inferCompletenessOp with tests
-- [x] Implement inferLifecycleOp with tests
-- [x] Implement inferImpactOp with tests
-- [x] Implement inferDerivedOp with tests
-- [x] Export operations from index and public API
-- [x] Create CLI infer command with subcommands
-- [x] Register MCP tools for inference
-- [x] Add infer all subcommand
-
 #### Lifecycle
 
 - [x] introduced
@@ -863,21 +735,6 @@ Scope:
 - src/mcp/server.ts
 - src/index.ts
 - tests/infer-impact.unit.test.ts
-
-#### Plan
-
-- [ ] Write failing tests for bidirectional traversal and polarity
-- [ ] Add ImpactPolarity type, polarity/strength to Relationship in schema.ts
-- [ ] Add influence to relationshipTypeDef
-- [ ] Classify all 24 relationship types into impact/potential/excluded buckets
-- [ ] Implement bidirectional BFS with direction/maxDepth/relationshipFilter params
-- [ ] Add impactSummaryOp for document-level hotspot analysis
-- [ ] Extend CLI impact subcommand with --direction, --max-depth, --filter flags
-- [ ] Add hotspot view to infer all
-- [ ] Update MCP infer-impact tool with new optional inputs
-- [ ] Export ImpactPolarity and impactSummaryOp from public API
-- [ ] Regenerate schema.json
-- [ ] Sync .spm.json and .SysProM/
 
 #### Lifecycle
 
@@ -898,15 +755,23 @@ Scope:
 - tests/safety-guards.unit.test.ts
 - README.md
 
-#### Plan
-
-- [x] Expand the endpoint matrix for system-provenance modelling patterns
-- [x] Add validation and safety test coverage for the broadened endpoint combinations
-- [x] Add README guidance for a generic system provenance profile
-- [x] Type-check the implementation changes
-
 #### Lifecycle
 
 - [x] proposed (2026-03-31)
 - [x] implemented (2026-03-31)
+
+### CHG42 — Implement Graph-Native Task Lifecycle and Blockage Tracking
+
+Removed the legacy plan-array task model and top-level task command, introduced lifecycle task transitions under plan commands, and derived blockage from depends_on and constrained_by gate readiness.
+
+- Implements: [DEC44](./DECISIONS.md#dec44--adopt-graph-native-task-lifecycle-model)
+
+Scope:
+- CON2-CHANGE
+- CAP4
+- PROT2
+
+#### Lifecycle
+
+- [x] complete
 
