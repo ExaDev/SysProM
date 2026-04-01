@@ -792,9 +792,3 @@ Adds stronger risk analysis and broader verification.
 
 README guidance describing recommended node usage, trace chains, relationship usage, and implementation provenance patterns for product repositories.
 
-
-#### External References
-
-- source: README.md
-  - System Provenance Profile section in the project README.
-
