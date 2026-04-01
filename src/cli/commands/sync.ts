@@ -125,5 +125,10 @@ export const syncCommandDef: CommandDef<z.ZodObject, typeof syncOpts> = {
 		if (result.changedNodes.length > 0) {
 			console.log(`  Changed nodes: ${result.changedNodes.join(", ")}`);
 		}
+
+		const hasDrift = result.jsonChanged || result.mdChanged || result.conflict;
+		if ((opts.dryRun || opts.report) && hasDrift) {
+			process.exitCode = 1;
+		}
 	},
 };
