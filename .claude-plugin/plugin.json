@@ -1,7 +1,7 @@
 {
   "name": "sysprom",
   "description": "SysProM (System Provenance Model) — skills and MCP server for creating, querying, and managing provenance graphs",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "author": {
     "name": "ExaDev",
     "email": "support@exadev.io"

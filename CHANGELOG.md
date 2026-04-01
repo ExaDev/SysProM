@@ -1,3 +1,18 @@
+## [1.21.2](https://github.com/ExaDev/SysProM/compare/v1.21.1...v1.21.2) (2026-04-01)
+
+### Build System
+
+* **deps-dev:** bump typescript-eslint from 8.57.1 to 8.57.2 ([8798ecf](https://github.com/ExaDev/SysProM/commit/8798ecf4fbdea0d5066e192c6f2007c3451716ee))
+* **deps:** bump @modelcontextprotocol/sdk from 1.27.1 to 1.28.0 ([4f530f0](https://github.com/ExaDev/SysProM/commit/4f530f01770fd8c4aea356a30c52dfd72ba69da8))
+
+### Continuous Integration
+
+* **actions:** bump actions/cache from 4 to 5 ([8a22574](https://github.com/ExaDev/SysProM/commit/8a22574746dd658d2c9548d5391a00b40e232058))
+* **actions:** bump actions/checkout from 4 to 6 ([a5e7912](https://github.com/ExaDev/SysProM/commit/a5e7912a8cf70ffe946b0727d3e78b717c2191a8))
+* **actions:** bump actions/deploy-pages from 4 to 5 ([611be87](https://github.com/ExaDev/SysProM/commit/611be87f977d4a5e98252fb300e450e05555c21d))
+* **actions:** bump actions/upload-pages-artifact from 3 to 4 ([9980620](https://github.com/ExaDev/SysProM/commit/9980620046107f9f83ea29efe9e490f559617d62))
+* **actions:** bump pnpm/action-setup from 4 to 5 ([f5f8339](https://github.com/ExaDev/SysProM/commit/f5f83395b656e2e8d4fad1ef0ebafa22743647a5))
+
 ## [1.21.1](https://github.com/ExaDev/SysProM/compare/v1.21.0...v1.21.1) (2026-04-01)
 
 ### Build System
