@@ -1,3 +1,9 @@
+## [1.21.1](https://github.com/ExaDev/SysProM/compare/v1.21.0...v1.21.1) (2026-04-01)
+
+### Build System
+
+* **deps-dev:** bump eslint-plugin-jsdoc from 62.8.0 to 62.8.1 ([8049f5d](https://github.com/ExaDev/SysProM/commit/8049f5d803dd6ea1b97f13f10cba27b1f6371c0e))
+
 ## [1.21.0](https://github.com/ExaDev/SysProM/compare/v1.20.0...v1.21.0) (2026-04-01)
 
 ### Features
