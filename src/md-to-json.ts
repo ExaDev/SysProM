@@ -578,7 +578,6 @@ export function markdownSingleToJson(content: string): SysProMDocument {
 		...NODE_FILE_MAP.CHANGES,
 		"view",
 		"milestone",
-		"version",
 	];
 
 	const { nodes, rels } = parseDocFile(content, allTypes);

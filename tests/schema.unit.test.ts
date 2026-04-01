@@ -127,7 +127,6 @@ describe("node types", () => {
 		"change",
 		"view",
 		"milestone",
-		"version",
 	];
 
 	for (const type of coreTypes) {
@@ -292,7 +291,6 @@ describe("relationships", () => {
 		"produces",
 		"consumes",
 		"transforms_into",
-		"selects",
 		"requires",
 		"disables",
 		"influence",
@@ -748,7 +746,7 @@ describe("full document", () => {
 				{ from: "REAL1", to: "ELEM1", type: "implements" },
 				{ from: "REAL2", to: "ELEM1", type: "implements" },
 				{ from: "DEC1", to: "ELEM1", type: "affects" },
-				{ from: "DEC1", to: "REAL1", type: "selects" },
+				{ from: "DEC1", to: "REAL1", type: "realises" },
 				{ from: "DEC1", to: "INV2", type: "must_preserve" },
 				{ from: "CHG1", to: "DEC1", type: "affects" },
 			],

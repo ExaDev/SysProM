@@ -420,8 +420,7 @@
 							"decision",
 							"change",
 							"view",
-							"milestone",
-							"version"
+							"milestone"
 						],
 						"type": "string"
 					}
@@ -502,7 +501,6 @@
 							"produces",
 							"consumes",
 							"transforms_into",
-							"selects",
 							"requires",
 							"disables",
 							"influence",

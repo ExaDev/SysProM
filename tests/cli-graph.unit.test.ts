@@ -31,7 +31,7 @@ const sampleDoc = {
 	relationships: [
 		{ from: "INT1", to: "CON1", type: "refines" },
 		{ from: "CON1", to: "ELEM1", type: "realises" },
-		{ from: "DEC1", to: "ELEM1", type: "selects" },
+		{ from: "DEC1", to: "ELEM1", type: "affects" },
 	],
 };
 

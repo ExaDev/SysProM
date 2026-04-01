@@ -79,7 +79,6 @@ const nodeTypeDef = labelledEnum({
 	change: "Changes",
 	view: "Views",
 	milestone: "Milestones",
-	version: "Versions",
 });
 
 /** Zod schema for the set of valid node types (e.g. `"intent"`, `"decision"`, `"change"`). */
@@ -151,7 +150,6 @@ const relationshipTypeDef = labelledEnum({
 	produces: "Produces",
 	consumes: "Consumes",
 	transforms_into: "Transforms into",
-	selects: "Selects",
 	requires: "Requires",
 	disables: "Disables",
 	influence: "Influence",
@@ -518,7 +516,6 @@ export const NODE_ID_PREFIX: Record<string, string> = {
 	change: "CHG",
 	view: "VIEW",
 	milestone: "MILE",
-	version: "VER",
 };
 
 // ---------------------------------------------------------------------------

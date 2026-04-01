@@ -33,7 +33,7 @@ const sampleDoc: SysProMDocument = {
 		{ from: "ELEM1", to: "REAL1", type: "implements" },
 		{ from: "ELEM1", to: "INV1", type: "constrained_by" },
 		{ from: "DEC1", to: "INV1", type: "must_preserve" },
-		{ from: "DEC1", to: "ELEM1", type: "selects" },
+		{ from: "DEC1", to: "ELEM1", type: "affects" },
 		{ from: "ELEM1", to: "CAP1", type: "depends_on" },
 		{ from: "CHG1", to: "ELEM1", type: "affects" },
 	],
@@ -250,11 +250,11 @@ describe("graphRefinementOp", () => {
 });
 
 describe("graphDecisionOp", () => {
-	it("shows decisions with must_preserve and selects links", () => {
+	it("shows decisions with must_preserve and affects links", () => {
 		const result = graphDecisionOp({ doc: sampleDoc, format: "mermaid" });
 		assert.match(result, /DEC1/);
 		assert.match(result, /must_preserve/);
-		assert.match(result, /selects/);
+		assert.match(result, /affects/);
 		assert.match(result, /INV1/);
 	});
 

@@ -69,7 +69,7 @@ export const NODE_CATEGORIES: NodeCategory[] = [
 	{
 		name: "meta",
 		label: "Meta",
-		types: ["view", "milestone", "version"],
+		types: ["view", "milestone"],
 		colour: "#95A5A6",
 		textColour: "#fff",
 	},
@@ -135,7 +135,6 @@ const NODE_TYPE_SHAPES: Record<string, MermaidShape> = {
 	change: "rectangle",
 	view: "rectangle",
 	milestone: "rectangle",
-	version: "rectangle",
 };
 
 /**

@@ -704,7 +704,6 @@ export function jsonToMarkdownSingle(
 		...NODE_FILE_MAP.CHANGES,
 		"view",
 		"milestone",
-		"version",
 	];
 
 	lines.push(...renderNodesGrouped(doc.nodes, allTypes, fromIdx, 2, nodeMap));

@@ -12,7 +12,6 @@ import {
 } from "./graph-shared.js";
 
 const DECISION_REL_TYPES = new Set([
-	"selects",
 	"must_preserve",
 	"affects",
 	"constrained_by",

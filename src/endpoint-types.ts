@@ -158,7 +158,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"realisation",
 			"decision",
 			"change",
-			"version",
 		],
 		to: [
 			"intent",
@@ -168,7 +167,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"realisation",
 			"decision",
 			"change",
-			"version",
 		],
 	},
 
@@ -323,12 +321,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 	consumes: {
 		from: ["stage", "artefact_flow", "realisation", "role"],
 		to: ["artefact"],
-	},
-
-	// Selects — choice and instantiation
-	selects: {
-		from: ["decision", "mode"],
-		to: ["capability", "stage"],
 	},
 
 	// Influence — soft dependency between decisions and across nodes (CHG40)
