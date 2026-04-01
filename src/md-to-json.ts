@@ -397,14 +397,6 @@ function parseNodeFromSection(
 				node.propagation = booleanOnly;
 			}
 		}
-		if (child.heading === "Plan") {
-			const plan: { description: string; done?: boolean }[] = [];
-			for (const line of child.body.split("\n")) {
-				const m = /^- \[([ x])\] (.+)$/.exec(line);
-				if (m) plan.push({ description: m[2], done: m[1] === "x" });
-			}
-			if (plan.length > 0) node.plan = plan;
-		}
 	}
 
 	// Relationships

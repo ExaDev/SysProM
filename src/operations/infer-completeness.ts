@@ -122,10 +122,6 @@ export const inferCompletenessOp = defineOperation({
 					issues.push("Change has no scope");
 					score -= 0.2;
 				}
-				if (!node.plan || node.plan.length === 0) {
-					issues.push("Change has no plan");
-					score -= 0.1;
-				}
 			}
 
 			if (node.type === "invariant") {

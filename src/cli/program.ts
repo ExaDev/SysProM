@@ -46,7 +46,6 @@ import { renameCommand } from "./commands/rename.js";
 import { queryCommand } from "./commands/query.js";
 import { updateCommand } from "./commands/update.js";
 import { speckitCommand } from "./commands/speckit.js";
-import { taskCommand } from "./commands/task.js";
 import { planCommand } from "./commands/plan.js";
 import { syncCommandDef } from "./commands/sync.js";
 import { inferCommand } from "./commands/infer.js";
@@ -80,7 +79,6 @@ export const commands: CommandDef[] = [
 	graphCommand,
 	renameCommand,
 	speckitCommand,
-	taskCommand,
 	planCommand,
 	syncCommandDef,
 	inferCommand,

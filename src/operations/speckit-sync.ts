@@ -112,7 +112,6 @@ export const speckitSyncOp = defineOperation({
 					rationale: specKitNode.rationale ?? syspromNode.rationale,
 					scope: specKitNode.scope ?? syspromNode.scope,
 					operations: specKitNode.operations ?? syspromNode.operations,
-					plan: specKitNode.plan ?? syspromNode.plan,
 				};
 				mergedNodes.set(id, merged);
 			} else {

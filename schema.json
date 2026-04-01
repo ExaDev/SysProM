@@ -302,37 +302,6 @@
 						},
 						"type": "array"
 					},
-					"plan": {
-						"description": "Execution plan as a sequence of tasks. Applicable to change nodes.",
-						"items": {
-							"additionalProperties": {},
-							"description": "A single task within a change's execution plan.",
-							"properties": {
-								"description": {
-									"anyOf": [
-										{
-											"type": "string"
-										},
-										{
-											"items": {
-												"type": "string"
-											},
-											"type": "array"
-										}
-									]
-								},
-								"done": {
-									"default": false,
-									"type": "boolean"
-								}
-							},
-							"required": [
-								"description"
-							],
-							"type": "object"
-						},
-						"type": "array"
-					},
 					"propagation": {
 						"additionalProperties": {
 							"type": "boolean"

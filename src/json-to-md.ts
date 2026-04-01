@@ -292,15 +292,6 @@ function renderNode(
 		}
 		lines.push("");
 	}
-	if (n.plan && n.plan.length > 0) {
-		lines.push(`${"#".repeat(headingLevel + 1)} Plan`);
-		lines.push("");
-		for (const t of n.plan) {
-			lines.push(`- [${t.done ? "x" : " "}] ${renderText(t.description)}`);
-		}
-		lines.push("");
-	}
-
 	// Lifecycle
 	if (n.lifecycle) {
 		lines.push(`${"#".repeat(headingLevel + 1)} Lifecycle`);

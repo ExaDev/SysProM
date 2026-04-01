@@ -413,7 +413,6 @@ server.registerTool(
 				"rationale",
 				"scope",
 				"operations",
-				"plan",
 				"propagation",
 				"includes",
 				"external_references",

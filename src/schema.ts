@@ -231,18 +231,6 @@ export const Operation = defineSchema(
 /** An atomic operation within a change, targeting a specific node. */
 export type Operation = z.infer<typeof Operation>;
 
-/** Zod schema for a task within a change's execution plan. */
-export const Task = defineSchema(
-	z
-		.looseObject({
-			description: Text,
-			done: z.boolean().default(false).optional(),
-		})
-		.describe("A single task within a change's execution plan."),
-);
-/** A single task within a change's execution plan, with a description and done flag. */
-export type Task = z.infer<typeof Task>;
-
 /** Zod schema for an external reference — a link to a resource outside the SysProM graph. */
 export const ExternalReference = defineSchema(
 	z
@@ -394,12 +382,6 @@ export const NodeBase = z
 		operations: z
 			.array(Operation)
 			.describe("Operations performed. Applicable to change nodes.")
-			.optional(),
-		plan: z
-			.array(Task)
-			.describe(
-				"Execution plan as a sequence of tasks. Applicable to change nodes.",
-			)
 			.optional(),
 		propagation: z
 			.record(z.string(), z.boolean())
