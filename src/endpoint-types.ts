@@ -64,6 +64,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"artefact",
 			"decision",
 			"change",
+			"view",
 		],
 		to: [
 			"intent",
@@ -230,6 +231,15 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 	},
 };
 
+const VIEW_READ_MODEL_DEPENDENCY_TARGETS: NodeType[] = [
+	"concept",
+	"capability",
+	"element",
+	"stage",
+	"artefact",
+	"role",
+];
+
 /**
  * Check if a relationship type is valid for the given endpoint node types.
  * @param relType - The relationship type
@@ -246,6 +256,24 @@ export function isValidEndpointPair(
 	fromType: NodeType,
 	toType: NodeType,
 ): boolean {
+	if (relType === "depends_on" && fromType === "view") {
+		return VIEW_READ_MODEL_DEPENDENCY_TARGETS.includes(toType);
+	}
 	const endpoints = RELATIONSHIP_ENDPOINT_TYPES[relType];
 	return endpoints.from.includes(fromType) && endpoints.to.includes(toType);
+}
+
+/**
+ * True when a relationship is a read-model view dependency.
+ */
+export function isViewReadModelDependsOnRelationship(
+	relType: RelationshipType,
+	fromType: NodeType,
+	toType: NodeType,
+): boolean {
+	return (
+		relType === "depends_on" &&
+		fromType === "view" &&
+		VIEW_READ_MODEL_DEPENDENCY_TARGETS.includes(toType)
+	);
 }

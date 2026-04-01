@@ -141,6 +141,37 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 			);
 			assert.ok(hasTypeIssue, "validate should flag invalid endpoint types");
 		});
+
+		it("allows view depends_on structural node targets", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "VIEW1", type: "view", name: "System View" },
+					{ id: "ELEM1", type: "element", name: "Core Element" },
+				],
+			};
+			const newDoc = addRelationshipOp({
+				doc,
+				rel: { from: "VIEW1", to: "ELEM1", type: "depends_on" },
+			});
+			assert.equal(newDoc.relationships?.length, 1);
+		});
+
+		it("rejects view depends_on non-structural targets", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "VIEW1", type: "view", name: "System View" },
+					{ id: "INT1", type: "intent", name: "Intent" },
+				],
+			};
+			assert.throws(
+				() =>
+					addRelationshipOp({
+						doc,
+						rel: { from: "VIEW1", to: "INT1", type: "depends_on" },
+					}),
+				/invalid|endpoint|type/i,
+			);
+		});
 	});
 
 	describe("Retirement impact", () => {
@@ -188,6 +219,30 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 				hasRetirementIssue,
 				false,
 				"supersedes to retired nodes should be allowed",
+			);
+		});
+
+		it("allows read-model view depends_on to retired nodes", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "VIEW1", type: "view", name: "System View" },
+					{
+						id: "ELEM1",
+						type: "element",
+						name: "Element",
+						lifecycle: { retired: true },
+					},
+				],
+				relationships: [{ from: "VIEW1", to: "ELEM1", type: "depends_on" }],
+			};
+			const result = validateOp({ doc });
+			const hasRetirementIssue = result.issues.some((issue) =>
+				issue.toLowerCase().includes("retired"),
+			);
+			assert.equal(
+				hasRetirementIssue,
+				false,
+				"view read-model dependencies should not trigger retirement guard",
 			);
 		});
 	});

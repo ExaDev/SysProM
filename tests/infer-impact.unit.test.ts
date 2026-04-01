@@ -265,6 +265,21 @@ describe("inferImpactOp", () => {
 			assert.strictEqual(result.impactedNodes.length, 1);
 			assert.strictEqual(result.impactedNodes[0].id, "DEC2");
 		});
+
+		it("ignores view read-model depends_on during traversal", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "VIEW1", type: "view", name: "Projection" },
+					{ id: "ELEM1", type: "element", name: "Element 1" },
+				],
+				relationships: [{ from: "VIEW1", to: "ELEM1", type: "depends_on" }],
+			};
+
+			const result = inferImpactOp({ doc, startId: "VIEW1" });
+
+			assert.strictEqual(result.impactedNodes.length, 0);
+			assert.strictEqual(result.summary.total, 0);
+		});
 	});
 
 	describe("impactSummaryOp (CHG40 hotspot analysis)", () => {
@@ -314,6 +329,21 @@ describe("inferImpactOp", () => {
 			assert.ok(result.summary.totalNodes >= 0);
 			assert.ok(result.summary.totalImpactedNodes >= 0);
 			assert.ok(result.summary.averageDegree >= 0);
+		});
+
+		it("excludes view read-model depends_on from hotspot counts", () => {
+			const doc: SysProMDocument = {
+				nodes: [
+					{ id: "VIEW1", type: "view", name: "Projection" },
+					{ id: "ELEM1", type: "element", name: "Element" },
+				],
+				relationships: [{ from: "VIEW1", to: "ELEM1", type: "depends_on" }],
+			};
+
+			const result = impactSummaryOp({ doc });
+
+			assert.strictEqual(result.hotspots.length, 0);
+			assert.strictEqual(result.summary.totalImpactedNodes, 0);
 		});
 	});
 });

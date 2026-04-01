@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
+import { isViewReadModelDependsOnRelationship } from "../endpoint-types.js";
 
 /**
  * A derived relationship inferred from transitive closure or composition.
@@ -75,10 +76,24 @@ export const inferDerivedOp = defineOperation({
 	output: DerivedOutput,
 	fn: (input): DerivedOutput => {
 		const derived: DerivedRelationship[] = [];
+		const nodeMap = new Map(input.doc.nodes.map((n) => [n.id, n]));
 		const existingKeys = new Set(
 			(input.doc.relationships ?? []).map((r) => `${r.from}:${r.type}:${r.to}`),
 		);
 		const derivedKeys = new Set<string>();
+		const relationships = input.doc.relationships ?? [];
+		const isReadModelViewDependsOn = (
+			rel: NonNullable<typeof input.doc.relationships>[number],
+		): boolean => {
+			const fromNode = nodeMap.get(rel.from);
+			const toNode = nodeMap.get(rel.to);
+			if (!fromNode || !toNode) return false;
+			return isViewReadModelDependsOnRelationship(
+				rel.type,
+				fromNode.type,
+				toNode.type,
+			);
+		};
 
 		// Helper to add derived relationship if not already existing
 		const addDerived = (
@@ -98,9 +113,13 @@ export const inferDerivedOp = defineOperation({
 		for (const [relType, derivedType] of Object.entries(
 			TRANSITIVE_RELATIONSHIPS,
 		)) {
-			const rels = (input.doc.relationships ?? []).filter(
-				(r) => r.type === relType,
-			);
+			const rels = relationships.filter((r) => {
+				if (r.type !== relType) return false;
+				if (relType === "depends_on" && isReadModelViewDependsOn(r)) {
+					return false;
+				}
+				return true;
+			});
 
 			// Build adjacency list
 			const adj = new Map<string, string[]>();
@@ -163,9 +182,13 @@ export const inferDerivedOp = defineOperation({
 		for (const [relType, inverseType] of Object.entries(
 			INVERSE_RELATIONSHIPS,
 		)) {
-			const rels = (input.doc.relationships ?? []).filter(
-				(r) => r.type === relType,
-			);
+			const rels = relationships.filter((r) => {
+				if (r.type !== relType) return false;
+				if (relType === "depends_on" && isReadModelViewDependsOn(r)) {
+					return false;
+				}
+				return true;
+			});
 
 			for (const r of rels) {
 				addDerived(
@@ -179,11 +202,9 @@ export const inferDerivedOp = defineOperation({
 		}
 
 		// 3. Composite patterns (A affects B, B depends_on C => A potentially_affects C)
-		const affectsRels = (input.doc.relationships ?? []).filter(
-			(r) => r.type === "affects",
-		);
-		const dependsRels = (input.doc.relationships ?? []).filter(
-			(r) => r.type === "depends_on",
+		const affectsRels = relationships.filter((r) => r.type === "affects");
+		const dependsRels = relationships.filter(
+			(r) => r.type === "depends_on" && !isReadModelViewDependsOn(r),
 		);
 
 		const dependsMap = new Map<string, string[]>();

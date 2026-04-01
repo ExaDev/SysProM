@@ -231,4 +231,35 @@ describe("inferDerivedOp", () => {
 			result.summary.total,
 		);
 	});
+
+	it("does not derive from read-model view depends_on relationships", () => {
+		const doc: SysProMDocument = {
+			nodes: [
+				{ id: "DEC1", type: "decision", name: "Decision" },
+				{ id: "VIEW1", type: "view", name: "Projection" },
+				{ id: "ELEM1", type: "element", name: "Element 1" },
+				{ id: "ELEM2", type: "element", name: "Element 2" },
+			],
+			relationships: [
+				{ from: "VIEW1", to: "ELEM1", type: "depends_on" },
+				{ from: "ELEM1", to: "ELEM2", type: "depends_on" },
+				{ from: "DEC1", to: "VIEW1", type: "affects" },
+			],
+		};
+
+		const result = inferDerivedOp({ doc });
+
+		const fromViewDependsOn = result.derivedRelationships.filter(
+			(r) => r.type === "depends_on" && r.from === "VIEW1",
+		);
+		const viewInverse = result.derivedRelationships.filter(
+			(r) => r.type === "enables" && r.to === "VIEW1",
+		);
+		const viewComposite = result.derivedRelationships.filter(
+			(r) => r.type === "potentially_affects" && r.to === "ELEM1",
+		);
+		assert.strictEqual(fromViewDependsOn.length, 0);
+		assert.strictEqual(viewInverse.length, 0);
+		assert.strictEqual(viewComposite.length, 0);
+	});
 });

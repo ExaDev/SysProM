@@ -3,6 +3,7 @@ import { defineOperation } from "./define-operation.js";
 import { SysProMDocument } from "../schema.js";
 import {
 	isValidEndpointPair,
+	isViewReadModelDependsOnRelationship,
 	RELATIONSHIP_ENDPOINT_TYPES,
 } from "../endpoint-types.js";
 import { hasLifecycleState } from "../lifecycle-state.js";
@@ -104,11 +105,18 @@ export const validateOp = defineOperation({
 			"produces",
 		]);
 		for (const r of input.doc.relationships ?? []) {
+			const fromNode = nodeMap.get(r.from);
 			const toNode = nodeMap.get(r.to);
 			if (
+				fromNode &&
 				toNode &&
 				hasLifecycleState(toNode, "retired") &&
-				OPERATIONAL_REL_TYPES.has(r.type)
+				OPERATIONAL_REL_TYPES.has(r.type) &&
+				!isViewReadModelDependsOnRelationship(
+					r.type,
+					fromNode.type,
+					toNode.type,
+				)
 			) {
 				issues.push(
 					`Operational relationship ${r.type} targets retired node ${r.to}`,

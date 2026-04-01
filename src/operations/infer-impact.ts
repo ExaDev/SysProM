@@ -6,6 +6,7 @@ import {
 	ImpactPolarity,
 	type ImpactPolarity as ImpactPolarityType,
 } from "../schema.js";
+import { isViewReadModelDependsOnRelationship } from "../endpoint-types.js";
 
 /**
  * Impact node in the impact trace.
@@ -118,6 +119,19 @@ export const inferImpactOp = defineOperation({
 				relationships
 					.filter((r) => r.from === nodeId)
 					.forEach((r) => {
+						const fromNode = nodeMap.get(r.from);
+						const toNode = nodeMap.get(r.to);
+						if (
+							fromNode &&
+							toNode &&
+							isViewReadModelDependsOnRelationship(
+								r.type,
+								fromNode.type,
+								toNode.type,
+							)
+						) {
+							return;
+						}
 						if (isImpactRel(r.type) || isPotentialRel(r.type)) {
 							edges.push({ to: r.to, type: r.type, polarity: r.polarity });
 						}
@@ -129,6 +143,19 @@ export const inferImpactOp = defineOperation({
 				relationships
 					.filter((r) => r.to === nodeId)
 					.forEach((r) => {
+						const fromNode = nodeMap.get(r.from);
+						const toNode = nodeMap.get(r.to);
+						if (
+							fromNode &&
+							toNode &&
+							isViewReadModelDependsOnRelationship(
+								r.type,
+								fromNode.type,
+								toNode.type,
+							)
+						) {
+							return;
+						}
 						if (isImpactRel(r.type) || isPotentialRel(r.type)) {
 							edges.push({ to: r.from, type: r.type, polarity: r.polarity });
 						}
@@ -272,6 +299,19 @@ export const impactSummaryOp = defineOperation({
 		}
 
 		for (const rel of relationships) {
+			const fromNode = nodeMap.get(rel.from);
+			const toNode = nodeMap.get(rel.to);
+			if (
+				fromNode &&
+				toNode &&
+				isViewReadModelDependsOnRelationship(
+					rel.type,
+					fromNode.type,
+					toNode.type,
+				)
+			) {
+				continue;
+			}
 			if (IMPACT_RELATIONSHIPS.has(rel.type)) {
 				const fromStats = impactStats.get(rel.from);
 				const toStats = impactStats.get(rel.to);
