@@ -102,27 +102,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		to: ["invariant", "principle", "policy", "protocol", "concept"],
 	},
 
-	// Requires — explicit requirements
-	requires: {
-		from: [
-			"intent",
-			"concept",
-			"capability",
-			"element",
-			"realisation",
-			"stage",
-			"change",
-		],
-		to: [
-			"intent",
-			"concept",
-			"capability",
-			"element",
-			"realisation",
-			"artefact",
-		],
-	},
-
 	// Affects — broad impact relationships
 	affects: {
 		from: ["decision", "change", "artefact", "stage"],
@@ -167,19 +146,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"realisation",
 			"decision",
 			"change",
-		],
-	},
-
-	// Performs — process enactment
-	performs: {
-		from: ["stage", "role"],
-		to: [
-			"capability",
-			"artefact",
-			"artefact_flow",
-			"stage",
-			"concept",
-			"protocol",
 		],
 	},
 
@@ -229,24 +195,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		],
 	},
 
-	// Blocks — impediments and constraints
-	blocks: {
-		from: ["invariant", "policy", "decision", "principle"],
-		to: ["decision", "change", "stage"],
-	},
-
-	// Routes to — data/process flow
-	routes_to: {
-		from: ["artefact_flow"],
-		to: ["artefact_flow", "stage", "artefact"],
-	},
-
-	// Orchestrates — abstract workflow nodes direct executable flow nodes
-	orchestrates: {
-		from: ["concept", "protocol", "capability"],
-		to: ["milestone", "stage", "gate", "artefact_flow"],
-	},
-
 	// Governed by — governance relationships
 	governed_by: {
 		from: [
@@ -277,81 +225,12 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 		],
 	},
 
-	// Transforms into — metamorphosis
-	transforms_into: {
-		from: ["artefact"],
-		to: ["artefact"],
-	},
-
-	// Triggered by — causation
-	triggered_by: {
-		from: ["stage", "gate", "artefact_flow", "change"],
-		to: ["decision", "artefact", "gate", "stage"],
-	},
-
-	// Disables — negation/reversal
-	disables: {
-		from: ["decision", "change"],
-		to: ["capability", "realisation"],
-	},
-
-	// Applies to — applicability and scope
-	applies_to: {
-		from: ["policy", "principle", "mode", "protocol", "invariant"],
-		to: [
-			"intent",
-			"concept",
-			"capability",
-			"element",
-			"realisation",
-			"stage",
-			"decision",
-			"change",
-			"invariant",
-		],
-	},
-
 	// Produces — generation
 	produces: {
 		from: ["stage", "artefact_flow", "realisation", "concept", "capability"],
 		to: ["artefact", "concept"],
 	},
 
-	// Consumes — usage
-	consumes: {
-		from: ["stage", "artefact_flow", "realisation", "role"],
-		to: ["artefact"],
-	},
-
-	// Influence — soft dependency between decisions and across nodes (CHG40)
-	influence: {
-		from: [
-			"intent",
-			"concept",
-			"capability",
-			"element",
-			"realisation",
-			"decision",
-			"change",
-			"stage",
-		],
-		to: [
-			"intent",
-			"concept",
-			"capability",
-			"element",
-			"realisation",
-			"decision",
-			"change",
-			"stage",
-		],
-	},
-
-	// Justifies — design rationale grounding (principle/decision → invariant/decision/principle/concept)
-	justifies: {
-		from: ["principle", "decision"],
-		to: ["invariant", "decision", "principle", "concept"],
-	},
 };
 
 /**

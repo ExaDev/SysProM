@@ -89,50 +89,40 @@ describe("CHG33: Graph Mutation Safety Guards", () => {
 			assert.equal(newDoc.relationships?.length, 1);
 		});
 
-		it("allows broadened system-provenance endpoint combinations", () => {
+		it("allows supported system-provenance endpoint combinations", () => {
 			const doc: SysProMDocument = {
 				nodes: [
-					{ id: "ROLE1", type: "role", name: "Steward" },
 					{ id: "CON1", type: "concept", name: "Conflict Resolution" },
 					{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
+					{ id: "PROT2", type: "protocol", name: "Review Workflow" },
 					{ id: "CAP1", type: "capability", name: "Retrieval" },
 					{ id: "ART1", type: "artefact", name: "Knowledge Brief" },
-					{ id: "MILE1", type: "milestone", name: "Pending Review" },
-					{
-						id: "FLOW1",
-						type: "artefact_flow",
-						name: "Response Assembly",
-						input: "ART1",
-						output: "ART1",
-					},
+					{ id: "STG1", type: "stage", name: "Pending Review" },
+					{ id: "POL1", type: "policy", name: "Publication Policy" },
 					{ id: "INV1", type: "invariant", name: "Publish Boundary" },
 				],
 			};
-			const withConcept = addRelationshipOp({
+			const withPartOf = addRelationshipOp({
 				doc,
-				rel: { from: "ROLE1", to: "CON1", type: "performs" },
+				rel: { from: "PROT2", to: "PROT1", type: "part_of" },
 			});
-			const withProtocol = addRelationshipOp({
-				doc: withConcept,
-				rel: { from: "ROLE1", to: "PROT1", type: "performs" },
+			const withGoverned = addRelationshipOp({
+				doc: withPartOf,
+				rel: { from: "STG1", to: "POL1", type: "governed_by" },
 			});
 			const withArtefact = addRelationshipOp({
-				doc: withProtocol,
+				doc: withGoverned,
 				rel: { from: "CAP1", to: "ART1", type: "produces" },
 			});
-			const withMachine = addRelationshipOp({
+			const withConstraint = addRelationshipOp({
 				doc: withArtefact,
-				rel: { from: "CON1", to: "MILE1", type: "orchestrates" },
-			});
-			const withFlow = addRelationshipOp({
-				doc: withMachine,
-				rel: { from: "CAP1", to: "FLOW1", type: "orchestrates" },
+				rel: { from: "CAP1", to: "INV1", type: "constrained_by" },
 			});
 			const newDoc = addRelationshipOp({
-				doc: withFlow,
-				rel: { from: "INV1", to: "CON1", type: "applies_to" },
+				doc: withConstraint,
+				rel: { from: "CON1", to: "CAP1", type: "refines" },
 			});
-			assert.equal(newDoc.relationships?.length, 6);
+			assert.equal(newDoc.relationships?.length, 5);
 		});
 
 		it("flags invalid endpoint types in validate", () => {

@@ -94,17 +94,13 @@ export const validateOp = defineOperation({
 		const OPERATIONAL_REL_TYPES = new Set([
 			"depends_on",
 			"constrained_by",
-			"requires",
 			"affects",
 			"must_preserve",
-			"performs",
 			"must_follow",
 			"part_of",
 			"governed_by",
 			"modifies",
-			"applies_to",
 			"produces",
-			"consumes",
 		]);
 		for (const r of input.doc.relationships ?? []) {
 			const toNode = nodeMap.get(r.to);

@@ -46,10 +46,7 @@ const IMPACT_RELATIONSHIPS = new Set([
 	"depends_on",
 	"modifies",
 	"constrained_by",
-	"requires",
 	"produces",
-	"consumes",
-	"influence",
 ]);
 
 /**

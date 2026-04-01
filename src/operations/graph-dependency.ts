@@ -14,8 +14,6 @@ import {
 const DEPENDENCY_REL_TYPES = new Set([
 	"depends_on",
 	"constrained_by",
-	"requires",
-	"blocks",
 	"governed_by",
 ]);
 
@@ -80,18 +78,8 @@ function generateDependencyMermaid(
 	for (const rel of rels) {
 		const fromId = sanitiseMermaidId(rel.from);
 		const toId = sanitiseMermaidId(rel.to);
-		const style =
-			rel.type === "blocks"
-				? "-.->|blocked|"
-				: rel.type === "requires"
-					? "==>|required|"
-					: `-->|${rel.type}|`;
 		const label = renderRelationshipLabel(rel);
-		if (rel.type === "blocks") {
-			lines.push(`  ${toId} ${style} ${fromId}`);
-		} else {
-			lines.push(`  ${fromId} ${style}${label ? `|${label}| ` : " "}${toId}`);
-		}
+		lines.push(`  ${fromId} -->|${label}| ${toId}`);
 	}
 
 	return lines.join("\n");
@@ -121,13 +109,7 @@ function generateDependencyDot(
 	}
 	for (const rel of rels) {
 		const attrs = [`label="${renderRelationshipLabel(rel)}"`];
-		if (rel.type === "blocks") {
-			attrs.push("style=dashed", "color=red");
-			lines.push(`  "${rel.to}" -> "${rel.from}" [${attrs.join(" ")}];`);
-		} else {
-			if (rel.type === "requires") attrs.push("penwidth=2");
-			lines.push(`  "${rel.from}" -> "${rel.to}" [${attrs.join(" ")}];`);
-		}
+		lines.push(`  "${rel.from}" -> "${rel.to}" [${attrs.join(" ")}];`);
 	}
 
 	lines.push("}");
@@ -138,7 +120,7 @@ function generateDependencyDot(
 export const graphDependencyOp = defineOperation({
 	name: "graphDependency",
 	description:
-		"Generate a dependency graph showing depends_on, constrained_by, requires, blocks, and governed_by relationships.",
+		"Generate a dependency graph showing depends_on, constrained_by, and governed_by relationships.",
 	input: z.object({
 		doc: SysProMDocument,
 		format: z.enum(["mermaid", "dot"]).default("mermaid"),

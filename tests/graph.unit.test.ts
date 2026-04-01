@@ -300,7 +300,7 @@ describe("graphDecisionOp", () => {
 });
 
 describe("graphDependencyOp", () => {
-	it("shows depends_on, constrained_by, and requires relationships", () => {
+	it("shows depends_on and constrained_by relationships", () => {
 		const result = graphDependencyOp({ doc: sampleDoc, format: "mermaid" });
 		assert.match(result, /depends_on/);
 		assert.match(result, /constrained_by/);
@@ -324,16 +324,16 @@ describe("graphDependencyOp", () => {
 		assert.match(result, /"ELEM1" -> "CAP1"/);
 	});
 
-	it("handles blocks relationship direction", () => {
+	it("handles standard dependency relationship direction", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{ id: "ELEM1", type: "element", name: "A" },
 				{ id: "ELEM2", type: "element", name: "B" },
 			],
-			relationships: [{ from: "ELEM1", to: "ELEM2", type: "blocks" }],
+			relationships: [{ from: "ELEM1", to: "ELEM2", type: "depends_on" }],
 		};
 		const result = graphDependencyOp({ doc, format: "mermaid" });
-		assert.match(result, /ELEM2.*blocked.*ELEM1/);
+		assert.match(result, /ELEM1 -->\|depends_on\| ELEM2/);
 	});
 
 	it("returns minimal output for doc with no dependency rels", () => {

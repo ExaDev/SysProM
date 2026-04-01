@@ -251,13 +251,13 @@ describe("inferImpactOp", () => {
 			assert.strictEqual(result.impactedNodes[0].polarity, "negative");
 		});
 
-		it("recognises influence relationship type", () => {
+		it("recognises modifies relationship type", () => {
 			const doc: SysProMDocument = {
 				nodes: [
 					{ id: "DEC1", type: "decision", name: "Decision 1" },
 					{ id: "DEC2", type: "decision", name: "Decision 2" },
 				],
-				relationships: [{ from: "DEC1", to: "DEC2", type: "influence" }],
+				relationships: [{ from: "DEC1", to: "DEC2", type: "modifies" }],
 			};
 
 			const result = inferImpactOp({ doc, startId: "DEC1" });

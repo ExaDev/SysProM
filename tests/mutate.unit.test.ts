@@ -178,21 +178,21 @@ describe("addRelationship", () => {
 		);
 	});
 
-	it("adds orchestrates with valid workflow endpoints", () => {
+	it("adds governed_by with valid endpoints", () => {
 		const doc = makeDoc([
-			{ id: "PROT1", type: "protocol", name: "Publish Workflow" },
-			{ id: "MILE1", type: "milestone", name: "Batch Approved" },
+			{ id: "STG1", type: "stage", name: "Publish Workflow" },
+			{ id: "POL1", type: "policy", name: "Approval Policy" },
 		]);
 		const newDoc = addRelationshipOp({
 			doc,
 			rel: {
-				from: "PROT1",
-				to: "MILE1",
-				type: "orchestrates",
+				from: "STG1",
+				to: "POL1",
+				type: "governed_by",
 			},
 		});
 		assert.equal(newDoc.relationships?.length, 1);
-		assert.equal(newDoc.relationships?.[0].type, "orchestrates");
+		assert.equal(newDoc.relationships?.[0].type, "governed_by");
 	});
 });
 

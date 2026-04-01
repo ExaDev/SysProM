@@ -487,24 +487,12 @@
 							"affects",
 							"supersedes",
 							"must_preserve",
-							"performs",
 							"part_of",
 							"precedes",
 							"must_follow",
-							"blocks",
-							"routes_to",
-							"orchestrates",
 							"governed_by",
 							"modifies",
-							"triggered_by",
-							"applies_to",
-							"produces",
-							"consumes",
-							"transforms_into",
-							"requires",
-							"disables",
-							"influence",
-							"justifies"
+							"produces"
 						],
 						"type": "string"
 					}
