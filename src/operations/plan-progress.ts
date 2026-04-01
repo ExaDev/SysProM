@@ -5,10 +5,18 @@ import { planProgress } from "../speckit/plan.js";
 
 export const PhaseProgressSchema = z.object({
 	phase: z.number(),
+	id: z.string(),
 	name: z.string(),
 	done: z.number(),
 	total: z.number(),
 	percent: z.number(),
+	blocked: z.boolean(),
+	blockageReasons: z.array(
+		z.object({
+			kind: z.enum(["dependency_unmet", "gate_not_ready"]),
+			nodeId: z.string(),
+		}),
+	),
 });
 
 /** Per-phase progress metrics: task counts and completion percentage. */

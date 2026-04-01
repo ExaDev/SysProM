@@ -171,6 +171,98 @@ export const validateOp = defineOperation({
 			}
 		}
 
+		const isLifecycleReached = (value: boolean | string | undefined): boolean =>
+			value === true || typeof value === "string";
+		const isGateReady = (
+			node: z.infer<typeof SysProMDocument>["nodes"][number],
+		): boolean => {
+			if (node.type !== "gate") return false;
+			const lifecycle = node.lifecycle ?? {};
+			const values = Object.values(lifecycle);
+			if (values.length === 0) return false;
+			return values.every((value) => isLifecycleReached(value));
+		};
+
+		const globalNodeMap = new Map(
+			input.doc.nodes.map((node) => [node.id, node]),
+		);
+
+		const validatePlanSubsystem = (
+			subsystem: z.infer<typeof SysProMDocument> | undefined,
+			protocolId: string,
+		) => {
+			if (!subsystem) return;
+
+			const localNodeMap = new Map(
+				subsystem.nodes.map((node) => [node.id, node]),
+			);
+			for (const node of subsystem.nodes) {
+				if (node.type !== "change") {
+					issues.push(
+						`${protocolId}: implementation plan contains non-change node ${node.id} (${node.type})`,
+					);
+					continue;
+				}
+
+				if (hasLifecycleState(node, "complete")) {
+					const blockers: string[] = [];
+					for (const rel of subsystem.relationships ?? []) {
+						if (rel.from !== node.id || rel.type !== "depends_on") continue;
+						const dependency =
+							localNodeMap.get(rel.to) ?? globalNodeMap.get(rel.to);
+						if (dependency?.type !== "change") {
+							blockers.push(`dependency ${rel.to} is not a change task`);
+							continue;
+						}
+						if (!hasLifecycleState(dependency, "complete")) {
+							blockers.push(`dependency ${rel.to} is not complete`);
+						}
+					}
+
+					for (const rel of subsystem.relationships ?? []) {
+						if (rel.from !== node.id || rel.type !== "constrained_by") continue;
+						const gate = localNodeMap.get(rel.to) ?? globalNodeMap.get(rel.to);
+						if (!gate || !isGateReady(gate)) {
+							blockers.push(`gate ${rel.to} is not ready`);
+						}
+					}
+
+					if (blockers.length > 0) {
+						issues.push(
+							`${node.id} (${node.name}): complete task has unresolved blockers (${blockers.join(", ")})`,
+						);
+					}
+				}
+
+				if (node.subsystem) {
+					validatePlanSubsystem(node.subsystem, protocolId);
+				}
+			}
+
+			for (const rel of subsystem.relationships ?? []) {
+				if (rel.type !== "depends_on") continue;
+				const fromNode = localNodeMap.get(rel.from);
+				const toNode = localNodeMap.get(rel.to);
+				if (!fromNode || !toNode) {
+					issues.push(
+						`${protocolId}: depends_on relationship ${rel.from} -> ${rel.to} must stay within the same plan scope`,
+					);
+					continue;
+				}
+				if (fromNode.type !== "change" || toNode.type !== "change") {
+					issues.push(
+						`${protocolId}: depends_on scheduling relationship must connect change task nodes (${rel.from} -> ${rel.to})`,
+					);
+				}
+			}
+		};
+
+		for (const node of input.doc.nodes) {
+			if (node.type !== "protocol") continue;
+			if (!node.id.endsWith("-PROT-IMPL")) continue;
+			validatePlanSubsystem(node.subsystem, node.id);
+		}
+
 		return {
 			valid: issues.length === 0,
 			issues,

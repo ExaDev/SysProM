@@ -1,5 +1,6 @@
 import type { SysProMDocument, Node, Relationship } from "../schema.js";
 import { textToString } from "../text.js";
+import { hasLifecycleState } from "../lifecycle-state.js";
 
 // ============================================================================
 // Types
@@ -14,7 +15,12 @@ export interface PlanStatus {
 		storiesNeedingAcceptanceCriteria: string[];
 	};
 	plan: { defined: boolean; phaseCount: number };
-	tasks: { total: number; done: number };
+	tasks: {
+		total: number;
+		done: number;
+		blocked: number;
+		blockedTasks: TaskBlockage[];
+	};
 	checklist: { defined: boolean; total: number; done: number };
 	nextStep: string;
 }
@@ -22,10 +28,13 @@ export interface PlanStatus {
 /** Per-phase progress metrics — task counts and completion percentage. */
 export interface PhaseProgress {
 	phase: number;
+	id: string;
 	name: string;
 	done: number;
 	total: number;
 	percent: number;
+	blocked: boolean;
+	blockageReasons: BlockageReason[];
 }
 
 /** A specific issue preventing gate entry — incomplete tasks, missing acceptance criteria, or unlinked requirements. */
@@ -46,6 +55,20 @@ export interface GateResult {
 export interface TaskCount {
 	total: number;
 	done: number;
+	blocked: number;
+	blockedTasks: TaskBlockage[];
+}
+
+/** Why a task is blocked. */
+export interface BlockageReason {
+	kind: "dependency_unmet" | "gate_not_ready";
+	nodeId: string;
+}
+
+/** Blockage detail for a specific task. */
+export interface TaskBlockage {
+	taskId: string;
+	reasons: BlockageReason[];
 }
 
 // ============================================================================
@@ -372,7 +395,7 @@ export function addTask(
 			id: changeId,
 			type: "change",
 			name: taskName,
-			plan: [],
+			lifecycle: { proposed: true },
 		};
 
 		// Build new relationships
@@ -467,7 +490,7 @@ function addTaskToParent(
 				id: changeId,
 				type: "change",
 				name: childName,
-				plan: [],
+				lifecycle: { proposed: true },
 			};
 
 			// Build new relationships for child
@@ -583,47 +606,170 @@ function addTaskToParent(
 }
 
 // ============================================================================
+// setTaskLifecycle
+// ============================================================================
+
+type TaskLifecycleAction = "start" | "complete" | "reopen";
+
+/**
+ * Set lifecycle state on a task (change node) within a plan implementation protocol.
+ *
+ * - start: marks introduced + in_progress true
+ * - complete: marks complete true and clears in_progress
+ * - reopen: clears complete and marks in_progress true
+ */
+export function setTaskLifecycle(
+	doc: SysProMDocument,
+	prefix: string,
+	taskId: string,
+	action: TaskLifecycleAction,
+): SysProMDocument {
+	const protImpl = findNode(doc, `${prefix}-PROT-IMPL`);
+	if (!protImpl?.subsystem) {
+		throw new Error(`Node ${prefix}-PROT-IMPL not found`);
+	}
+
+	function updateInSubsystem(subsystem: SysProMDocument): {
+		found: boolean;
+		updated: SysProMDocument;
+	} {
+		let found = false;
+		const updatedNodes = subsystem.nodes.map((node) => {
+			if (node.id === taskId) {
+				if (node.type !== "change") {
+					throw new Error(`Task node ${taskId} is not a change node`);
+				}
+				found = true;
+				const lifecycle = { ...(node.lifecycle ?? {}) };
+				if (action === "start") {
+					lifecycle.introduced = lifecycle.introduced ?? true;
+					lifecycle.in_progress = true;
+				} else if (action === "complete") {
+					lifecycle.complete = true;
+					delete lifecycle.in_progress;
+				} else {
+					delete lifecycle.complete;
+					lifecycle.in_progress = true;
+				}
+				return {
+					...node,
+					lifecycle,
+				};
+			}
+
+			if (!node.subsystem) {
+				return node;
+			}
+
+			const child = updateInSubsystem(node.subsystem);
+			if (child.found) {
+				found = true;
+				return {
+					...node,
+					subsystem: child.updated,
+				};
+			}
+			return node;
+		});
+
+		return {
+			found,
+			updated: {
+				...(subsystem.metadata ? { metadata: subsystem.metadata } : {}),
+				nodes: updatedNodes,
+				...(subsystem.relationships
+					? { relationships: subsystem.relationships }
+					: {}),
+				...(subsystem.external_references
+					? { external_references: subsystem.external_references }
+					: {}),
+			},
+		};
+	}
+
+	const updated = updateInSubsystem(protImpl.subsystem);
+	if (!updated.found) {
+		throw new Error(`Task ${taskId} not found in ${prefix}-PROT-IMPL`);
+	}
+
+	const updatedNodes = doc.nodes.map((node) =>
+		node.id === protImpl.id
+			? { ...protImpl, subsystem: updated.updated }
+			: node,
+	);
+	return {
+		...doc,
+		nodes: updatedNodes,
+	};
+}
+
+// ============================================================================
 // isTaskDone
 // ============================================================================
 
 /**
- * Check if a change node's task is complete.
- *
- * If no subsystem or no change children in subsystem:
- *   - All items in node.plan must have done === true AND at least one item must exist.
- * If subsystem has change children:
- *   - All children must be recursively done AND own plan items (if any) must be done.
+ * Check if a task change node is complete.
  * @param node - The change node to evaluate.
- * @returns Whether all tasks in the node's plan are complete.
+ * @returns Whether the task lifecycle includes complete.
  * @example
  * ```ts
- * isTaskDone(changeNode); // => true if all plan items done
+ * isTaskDone(changeNode); // => true when lifecycle.complete is reached
  * ```
  */
 export function isTaskDone(node: Node): boolean {
-	// If the node has a subsystem with change children, check those recursively
-	if (node.subsystem) {
-		const changeChildren = node.subsystem.nodes.filter(
-			(n) => n.type === "change",
-		);
-		if (changeChildren.length > 0) {
-			// All change children must be done, and own plan items must be done
-			const allChildrenDone = changeChildren.every((child) =>
-				isTaskDone(child),
-			);
-			const ownPlanDone =
-				(node.plan ?? []).length === 0 ||
-				(node.plan ?? []).every((item) => item.done === true);
-			return allChildrenDone && ownPlanDone;
+	return hasLifecycleState(node, "complete");
+}
+
+function isGateReady(node: Node): boolean {
+	if (node.type !== "gate") return false;
+	const lifecycle = node.lifecycle ?? {};
+	const values = Object.values(lifecycle);
+	if (values.length === 0) return false;
+	return values.every((value) => value === true || typeof value === "string");
+}
+
+function collectNodes(subsystem: SysProMDocument | undefined): Node[] {
+	if (!subsystem) return [];
+	const nodes: Node[] = [];
+	for (const node of subsystem.nodes) {
+		nodes.push(node);
+		if (node.subsystem) {
+			nodes.push(...collectNodes(node.subsystem));
+		}
+	}
+	return nodes;
+}
+
+function taskBlockageReasons(
+	doc: SysProMDocument,
+	subsystem: SysProMDocument | undefined,
+	taskNode: Node,
+): BlockageReason[] {
+	if (taskNode.type !== "change") return [];
+	const relationships = subsystem?.relationships ?? [];
+	const scopedNodeMap = new Map((subsystem?.nodes ?? []).map((n) => [n.id, n]));
+	const globalNodeMap = new Map(doc.nodes.map((n) => [n.id, n]));
+	const reasons: BlockageReason[] = [];
+
+	for (const rel of relationships) {
+		if (rel.from !== taskNode.id || rel.type !== "depends_on") continue;
+		const dependency = scopedNodeMap.get(rel.to) ?? globalNodeMap.get(rel.to);
+		const dependencyComplete =
+			dependency?.type === "change" && isTaskDone(dependency);
+		if (!dependencyComplete) {
+			reasons.push({ kind: "dependency_unmet", nodeId: rel.to });
 		}
 	}
 
-	// No subsystem or no change children: check own plan
-	const planItems = node.plan ?? [];
-	if (planItems.length === 0) {
-		return false;
+	for (const rel of relationships) {
+		if (rel.from !== taskNode.id || rel.type !== "constrained_by") continue;
+		const gate = scopedNodeMap.get(rel.to) ?? globalNodeMap.get(rel.to);
+		if (!gate || !isGateReady(gate)) {
+			reasons.push({ kind: "gate_not_ready", nodeId: rel.to });
+		}
 	}
-	return planItems.every((item) => item.done === true);
+
+	return reasons;
 }
 
 // ============================================================================
@@ -643,27 +789,59 @@ export function isTaskDone(node: Node): boolean {
  * ```
  */
 export function countTasks(node: Node): TaskCount {
+	if (node.type !== "change") {
+		return { total: 0, done: 0, blocked: 0, blockedTasks: [] };
+	}
+	const localDoc: SysProMDocument = {
+		nodes: [node, ...collectNodes(node.subsystem)],
+		relationships: [],
+	};
+	return countTasksInSubsystem(localDoc, {
+		nodes: [node],
+		relationships: [],
+	});
+}
+
+function countTasksInSubsystem(
+	doc: SysProMDocument,
+	subsystem: SysProMDocument | undefined,
+): TaskCount {
 	let total = 0;
 	let done = 0;
+	let blocked = 0;
+	const blockedTasks: TaskBlockage[] = [];
 
-	// Count own plan items
-	const ownPlan = node.plan ?? [];
-	total += ownPlan.length;
-	done += ownPlan.filter((item) => item.done === true).length;
+	if (!subsystem) {
+		return { total, done, blocked, blockedTasks };
+	}
 
-	// Recursively count from change children in subsystem
-	if (node.subsystem) {
-		const changeChildren = node.subsystem.nodes.filter(
-			(n) => n.type === "change",
+	for (const node of subsystem.nodes) {
+		if (node.type !== "change") continue;
+		const childChanges = (node.subsystem?.nodes ?? []).filter(
+			(child) => child.type === "change",
 		);
-		for (const child of changeChildren) {
-			const childCount = countTasks(child);
-			total += childCount.total;
-			done += childCount.done;
+		if (childChanges.length > 0) {
+			const childCounts = countTasksInSubsystem(doc, node.subsystem);
+			total += childCounts.total;
+			done += childCounts.done;
+			blocked += childCounts.blocked;
+			blockedTasks.push(...childCounts.blockedTasks);
+			continue;
+		}
+
+		total += 1;
+		if (isTaskDone(node)) {
+			done += 1;
+		}
+
+		const reasons = taskBlockageReasons(doc, subsystem, node);
+		if (reasons.length > 0) {
+			blocked += 1;
+			blockedTasks.push({ taskId: node.id, reasons });
 		}
 	}
 
-	return { total, done };
+	return { total, done, blocked, blockedTasks };
 }
 
 // ============================================================================
@@ -699,17 +877,10 @@ export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
 		(n) => n.type === "change",
 	).length;
 
-	// Count tasks using the helper
-	let totalTasks = 0;
-	let doneTasks = 0;
-	const changeNodes = (protImpl?.subsystem?.nodes ?? []).filter(
-		(n) => n.type === "change",
-	);
-	for (const change of changeNodes) {
-		const taskCount = countTasks(change);
-		totalTasks += taskCount.total;
-		doneTasks += taskCount.done;
-	}
+	const taskCounts = countTasksInSubsystem(doc, protImpl?.subsystem);
+	const totalTasks = taskCounts.total;
+	const doneTasks = taskCounts.done;
+	const blockedTasks = taskCounts.blocked;
 
 	// Checklist stats
 	const checklistLifecycle = checklist?.lifecycle ?? {};
@@ -772,6 +943,8 @@ export function planStatus(doc: SysProMDocument, prefix: string): PlanStatus {
 		tasks: {
 			total: totalTasks,
 			done: doneTasks,
+			blocked: blockedTasks,
+			blockedTasks: taskCounts.blockedTasks,
 		},
 		checklist: {
 			defined: checklist !== null,
@@ -816,8 +989,11 @@ export function planProgress(
 		const task = sortedTasks[i];
 		const taskNum = i + 1;
 
-		// Count tasks for this change node
-		const taskCount = countTasks(task);
+		const taskCount = countTasksInSubsystem(doc, {
+			nodes: [task],
+			relationships: task.subsystem?.relationships ?? [],
+		});
+		const reasons = taskBlockageReasons(doc, subsystem, task);
 
 		const percent =
 			taskCount.total === 0
@@ -826,10 +1002,13 @@ export function planProgress(
 
 		result.push({
 			phase: taskNum,
+			id: task.id,
 			name: task.name,
 			done: taskCount.done,
 			total: taskCount.total,
 			percent,
+			blocked: reasons.length > 0,
+			blockageReasons: reasons,
 		});
 	}
 

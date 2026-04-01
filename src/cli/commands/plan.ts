@@ -3,9 +3,13 @@ import { existsSync } from "node:fs";
 import type { CommandDef } from "../define-command.js";
 import { saveDocument } from "../../io.js";
 import { loadDoc, mutationOpts, persistDoc, noArgs } from "../shared.js";
+import type { SysProMDocument } from "../../schema.js";
 import {
 	planInitOp,
 	planAddTaskOp,
+	planStartTaskOp,
+	planCompleteTaskOp,
+	planReopenTaskOp,
 	planStatusOp,
 	planProgressOp,
 	planGateOp,
@@ -81,6 +85,79 @@ const addTaskSubcommand: CommandDef<typeof noArgs, typeof addTaskOpts> = {
 	},
 };
 
+const taskLifecycleOpts = mutationOpts.pick({ path: true }).extend({
+	prefix: z.string().describe("Plan prefix"),
+	task: z.string().describe("Task change node ID"),
+});
+
+function runTaskLifecycleUpdate(
+	opts: z.infer<typeof taskLifecycleOpts>,
+	handler: (args: {
+		doc: SysProMDocument;
+		prefix: string;
+		taskId: string;
+	}) => SysProMDocument,
+	message: string,
+) {
+	try {
+		const loaded = loadDoc(opts.path);
+		const updated = handler({
+			doc: loaded.doc,
+			prefix: opts.prefix,
+			taskId: opts.task,
+		});
+		persistDoc(updated, loaded, { ...opts, json: false, dryRun: false });
+		console.log(message);
+	} catch (err: unknown) {
+		console.error(err instanceof Error ? err.message : String(err));
+		process.exit(1);
+	}
+}
+
+const startSubcommand: CommandDef<typeof noArgs, typeof taskLifecycleOpts> = {
+	name: "start",
+	description: planStartTaskOp.def.description,
+	apiLink: planStartTaskOp.def.name,
+	opts: taskLifecycleOpts,
+	action(_args, opts) {
+		runTaskLifecycleUpdate(
+			opts,
+			({ doc, prefix, taskId }) => planStartTaskOp({ doc, prefix, taskId }),
+			`Marked ${opts.task} in progress`,
+		);
+	},
+};
+
+const completeSubcommand: CommandDef<typeof noArgs, typeof taskLifecycleOpts> =
+	{
+		name: "complete",
+		description: planCompleteTaskOp.def.description,
+		apiLink: planCompleteTaskOp.def.name,
+		opts: taskLifecycleOpts,
+		action(_args, opts) {
+			runTaskLifecycleUpdate(
+				opts,
+				({ doc, prefix, taskId }) =>
+					planCompleteTaskOp({ doc, prefix, taskId }),
+				`Marked ${opts.task} complete`,
+			);
+		},
+	};
+
+const reopenSubcommand: CommandDef<typeof noArgs, typeof taskLifecycleOpts> = {
+	name: "reopen",
+	description: planReopenTaskOp.def.description,
+	apiLink: planReopenTaskOp.def.name,
+	opts: taskLifecycleOpts,
+	action(_args, opts) {
+		runTaskLifecycleUpdate(
+			opts,
+			({ doc, prefix, taskId }) => planReopenTaskOp({ doc, prefix, taskId }),
+			`Reopened ${opts.task}`,
+		);
+	},
+};
+
 const statusOpts = mutationOpts.pick({ path: true }).extend({
 	prefix: z.string().describe("Plan prefix"),
 	json: z.boolean().optional().describe("Output as JSON"),
@@ -117,7 +194,7 @@ const statusSubcommand: CommandDef<typeof noArgs, typeof statusOpts> = {
 				`Plan:         ${formatBoolean(status.plan.defined)} (${String(status.plan.phaseCount)} phases)`,
 			);
 			console.log(
-				`Tasks:        ${String(status.tasks.done)}/${String(status.tasks.total)} done`,
+				`Tasks:        ${String(status.tasks.done)}/${String(status.tasks.total)} done, ${String(status.tasks.blocked)} blocked`,
 			);
 			console.log(
 				`Checklist:    ${formatBoolean(status.checklist.defined)} (${String(status.checklist.done)}/${String(status.checklist.total)})`,
@@ -161,8 +238,9 @@ const progressSubcommand: CommandDef<typeof noArgs, typeof progressOpts> = {
 				const name = phase.name.padEnd(20);
 				const percent = String(phase.percent).padStart(3);
 				const ratio = `(${String(phase.done)}/${String(phase.total)})`;
+				const blocked = phase.blocked ? " ⚠ blocked" : "";
 
-				console.log(`${name} [${bar}] ${percent}% ${ratio}`);
+				console.log(`${name} [${bar}] ${percent}% ${ratio}${blocked}`);
 			}
 		} catch (err: unknown) {
 			console.error(err instanceof Error ? err.message : String(err));
@@ -241,6 +319,9 @@ export const planCommand: CommandDef = {
 	subcommands: [
 		initSubcommand,
 		addTaskSubcommand,
+		startSubcommand,
+		completeSubcommand,
+		reopenSubcommand,
 		statusSubcommand,
 		progressSubcommand,
 		gateSubcommand,

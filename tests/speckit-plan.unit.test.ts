@@ -345,18 +345,41 @@ describe("planStatus", () => {
 		doc = addTask(doc, "FEAT");
 		doc = addTask(doc, "FEAT");
 
-		// Add tasks to change nodes
+		// Add nested task nodes to change nodes
 		const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
 		const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
 		if (chg1) {
-			chg1.plan = [
-				{ description: "Task 1", done: false },
-				{ description: "Task 2", done: true },
-			];
+			chg1.subsystem = {
+				nodes: [
+					{
+						id: "CHG-1-1",
+						type: "change",
+						name: "Task 1",
+						lifecycle: { complete: false },
+					},
+					{
+						id: "CHG-1-2",
+						type: "change",
+						name: "Task 2",
+						lifecycle: { complete: true },
+					},
+				],
+				relationships: [],
+			};
 		}
 		const chg2 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-2");
 		if (chg2) {
-			chg2.plan = [{ description: "Task 3", done: false }];
+			chg2.subsystem = {
+				nodes: [
+					{
+						id: "CHG-2-1",
+						type: "change",
+						name: "Task 3",
+						lifecycle: { proposed: true },
+					},
+				],
+				relationships: [],
+			};
 		}
 
 		const status = planStatus(doc, "FEAT");
@@ -397,7 +420,7 @@ describe("planProgress", () => {
 		assert.deepEqual(progress, []);
 	});
 
-	it("tasks with no items show 0%", () => {
+	it("tasks with no completion show 0%", () => {
 		const doc = initDocument("FEAT", "My Feature");
 		const updated = addTask(doc, "FEAT");
 
@@ -405,23 +428,51 @@ describe("planProgress", () => {
 		assert.equal(progress.length, 1);
 		assert.equal(progress[0].percent, 0);
 		assert.equal(progress[0].done, 0);
-		assert.equal(progress[0].total, 0);
+		assert.equal(progress[0].total, 1);
 	});
 
-	it("task with 4/5 items shows 80%", () => {
+	it("task with 4/5 child tasks complete shows 80%", () => {
 		const doc = initDocument("FEAT", "My Feature");
 		const updated = addTask(doc, "FEAT");
 
 		const protImpl = updated.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
 		const chg = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
 		if (chg) {
-			chg.plan = [
-				{ description: "T1", done: true },
-				{ description: "T2", done: true },
-				{ description: "T3", done: true },
-				{ description: "T4", done: true },
-				{ description: "T5", done: false },
-			];
+			chg.subsystem = {
+				nodes: [
+					{
+						id: "CHG-1-1",
+						type: "change",
+						name: "T1",
+						lifecycle: { complete: true },
+					},
+					{
+						id: "CHG-1-2",
+						type: "change",
+						name: "T2",
+						lifecycle: { complete: true },
+					},
+					{
+						id: "CHG-1-3",
+						type: "change",
+						name: "T3",
+						lifecycle: { complete: true },
+					},
+					{
+						id: "CHG-1-4",
+						type: "change",
+						name: "T4",
+						lifecycle: { complete: true },
+					},
+					{
+						id: "CHG-1-5",
+						type: "change",
+						name: "T5",
+						lifecycle: { in_progress: true },
+					},
+				],
+				relationships: [],
+			};
 		}
 
 		const progress = planProgress(updated, "FEAT");
@@ -546,16 +597,16 @@ describe("checkGate", () => {
 		assert.equal(result.ready, true);
 	});
 
-	it("task 2 with incomplete task 1 items: not ready", () => {
+	it("task 2 with incomplete task 1: not ready", () => {
 		let doc = initDocument("FEAT", "My Feature");
 		doc = addTask(doc, "FEAT");
 		doc = addTask(doc, "FEAT");
 
-		// Add incomplete items to task 1
+		// Leave task 1 incomplete
 		const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
 		const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
 		if (chg1) {
-			chg1.plan = [{ description: "T1", done: false }];
+			chg1.lifecycle = { in_progress: true };
 		}
 
 		const result = checkGate(doc, "FEAT", 2);
@@ -568,16 +619,16 @@ describe("checkGate", () => {
 		assert.equal((issue as any).remaining, 1);
 	});
 
-	it("task 2 with all task 1 items done: ready (if no other issues)", () => {
+	it("task 2 with task 1 complete: ready (if no other issues)", () => {
 		let doc = initDocument("FEAT", "My Feature");
 		doc = addTask(doc, "FEAT");
 		doc = addTask(doc, "FEAT");
 
-		// Add complete items to task 1
+		// Mark task 1 complete
 		const protImpl = doc.nodes?.find((n) => n.id === "FEAT-PROT-IMPL");
 		const chg1 = protImpl?.subsystem?.nodes?.find((n) => n.id === "CHG-1");
 		if (chg1) {
-			chg1.plan = [{ description: "T1", done: true }];
+			chg1.lifecycle = { complete: true };
 		}
 
 		const result = checkGate(doc, "FEAT", 2);

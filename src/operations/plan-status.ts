@@ -20,6 +20,18 @@ export const PlanStatusSchema = z.object({
 	tasks: z.object({
 		total: z.number(),
 		done: z.number(),
+		blocked: z.number(),
+		blockedTasks: z.array(
+			z.object({
+				taskId: z.string(),
+				reasons: z.array(
+					z.object({
+						kind: z.enum(["dependency_unmet", "gate_not_ready"]),
+						nodeId: z.string(),
+					}),
+				),
+			}),
+		),
 	}),
 	checklist: z.object({
 		defined: z.boolean(),

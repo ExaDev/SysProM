@@ -29,6 +29,7 @@ export {
 export {
 	initDocument,
 	addTask,
+	setTaskLifecycle,
 	planStatus,
 	planProgress,
 	checkGate,
@@ -38,4 +39,6 @@ export {
 	type PhaseProgress,
 	type GateIssue,
 	type GateResult,
+	type BlockageReason,
+	type TaskBlockage,
 } from "./plan.js";
