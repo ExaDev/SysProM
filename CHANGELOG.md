@@ -1,3 +1,9 @@
+## [1.22.1](https://github.com/ExaDev/SysProM/compare/v1.22.0...v1.22.1) (2026-04-01)
+
+### Documentation
+
+* **sysprom:** record graph-native task lifecycle migration ([3e72d6a](https://github.com/ExaDev/SysProM/commit/3e72d6a59105cd7cfdc33d0d4b6de588260f7bd4))
+
 ## [1.22.0](https://github.com/ExaDev/SysProM/compare/v1.21.2...v1.22.0) (2026-04-01)
 
 ### Features
