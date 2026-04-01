@@ -1,3 +1,15 @@
+## [1.22.0](https://github.com/ExaDev/SysProM/compare/v1.21.2...v1.22.0) (2026-04-01)
+
+### Features
+
+* **core:** remove plan-array task model and legacy task command ([d7dee8d](https://github.com/ExaDev/SysProM/commit/d7dee8dbdb59fd000751e49778780959c12fb664))
+* **plan:** add lifecycle task transitions and derived blockage status ([006b009](https://github.com/ExaDev/SysProM/commit/006b009937820aa8fbe19de460f756da63d2cd3d))
+* **speckit:** model parsed and generated tasks as lifecycle change nodes ([908a297](https://github.com/ExaDev/SysProM/commit/908a29786e13484a37f2d6b39cb1b8008240e9d3))
+
+### Tests
+
+* align fixtures with lifecycle-based task model ([9b66f56](https://github.com/ExaDev/SysProM/commit/9b66f567e9e819118ec8a4e286c085d257287120))
+
 ## [1.21.2](https://github.com/ExaDev/SysProM/compare/v1.21.1...v1.21.2) (2026-04-01)
 
 ### Build System
