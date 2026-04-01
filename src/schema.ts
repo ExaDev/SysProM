@@ -407,14 +407,6 @@ export const NodeBase = z
 				"IDs of nodes included in this projection. Applicable to view nodes.",
 			)
 			.optional(),
-		input: z
-			.string()
-			.describe("ID of the input artefact. Applicable to artefact_flow nodes.")
-			.optional(),
-		output: z
-			.string()
-			.describe("ID of the output artefact. Applicable to artefact_flow nodes.")
-			.optional(),
 		external_references: z
 			.array(ExternalReference)
 			.describe("External resources related to this node.")

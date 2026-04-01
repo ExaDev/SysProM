@@ -330,17 +330,6 @@ function renderNode(
 		lines.push("");
 	}
 
-	// Artefact flow
-	if (n.input) {
-		lines.push(`- Input: ${n.input}`);
-	}
-	if (n.output) {
-		lines.push(`- Output: ${n.output}`);
-	}
-	if (n.input || n.output) {
-		lines.push("");
-	}
-
 	// Inline external references
 	if (n.external_references && n.external_references.length > 0) {
 		lines.push(...renderExternalReferences(n.external_references));

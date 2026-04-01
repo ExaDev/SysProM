@@ -217,21 +217,18 @@ describe("json-to-md edge cases", () => {
 		rmSync(tmpDir, { recursive: true, force: true });
 	});
 
-	it("renders artefact_flow with input and output", () => {
+	it("renders artefact_flow node without legacy input/output fields", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
 					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Flow",
-					input: "ART1",
-					output: "ART2",
 				},
 			],
 		};
 		const md = jsonToMarkdownSingle(doc);
-		assert.ok(md.includes("- Input: ART1"));
-		assert.ok(md.includes("- Output: ART2"));
+		assert.ok(md.includes("### FLOW1"));
 	});
 
 	it("renders inline external references on nodes", () => {
@@ -361,23 +358,20 @@ describe("md-to-json edge cases", () => {
 		assert.equal(ch1.propagation.structure, false);
 	});
 
-	it("round-trips artefact_flow input/output", () => {
+	it("round-trips artefact_flow without legacy input/output fields", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
 					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Flow",
-					input: "A1",
-					output: "A2",
 				},
 			],
 		};
 		const md = jsonToMarkdownSingle(doc);
 		const result = markdownSingleToJson(md);
 		const af = result.nodes.find((n) => n.id === "FLOW1");
-		assert.equal(af?.input, "A1");
-		assert.equal(af?.output, "A2");
+		assert.equal(af?.type, "artefact_flow");
 	});
 
 	it("parses relationship with single value (- Refines: X)", () => {

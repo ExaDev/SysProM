@@ -210,10 +210,6 @@
 						},
 						"type": "array"
 					},
-					"input": {
-						"description": "ID of the input artefact. Applicable to artefact_flow nodes.",
-						"type": "string"
-					},
 					"lifecycle": {
 						"additionalProperties": {
 							"anyOf": [
@@ -305,10 +301,6 @@
 							"type": "object"
 						},
 						"type": "array"
-					},
-					"output": {
-						"description": "ID of the output artefact. Applicable to artefact_flow nodes.",
-						"type": "string"
 					},
 					"plan": {
 						"description": "Execution plan as a sequence of tasks. Applicable to change nodes.",

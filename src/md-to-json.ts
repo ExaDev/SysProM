@@ -395,12 +395,6 @@ function parseNodeFromSection(
 	const includes = parseListItems(body, "Includes");
 	if (includes.length > 0) node.includes = includes;
 
-	// Artefact flow
-	const input = parseSingleValue(body, "- Input");
-	if (input) node.input = input;
-	const output = parseSingleValue(body, "- Output");
-	if (output) node.output = output;
-
 	// Lifecycle and propagation from child sections
 	for (const child of section.children) {
 		if (child.heading === "Lifecycle") {

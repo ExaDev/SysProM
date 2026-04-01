@@ -417,8 +417,6 @@ server.registerTool(
 				"plan",
 				"propagation",
 				"includes",
-				"input",
-				"output",
 				"external_references",
 			];
 			const droppedFields: string[] = [];

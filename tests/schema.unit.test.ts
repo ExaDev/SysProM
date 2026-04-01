@@ -252,15 +252,13 @@ describe("view nodes", () => {
 });
 
 describe("artefact flow nodes", () => {
-	it("accepts artefact_flow with input and output", () => {
+	it("accepts artefact_flow without dedicated input/output fields", () => {
 		valid({
 			nodes: [
 				{
 					id: "FLOW1",
 					type: "artefact_flow",
 					name: "Request to Plan",
-					input: "ART1",
-					output: "ART2",
 				},
 			],
 		});
