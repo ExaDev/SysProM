@@ -1,3 +1,13 @@
+## [1.20.0](https://github.com/ExaDev/SysProM/compare/v1.19.0...v1.20.0) (2026-04-01)
+
+### Features
+
+* add orchestrates relationship type ([09079f1](https://github.com/ExaDev/SysProM/commit/09079f1f078f15d082f3467db29fd08c00152090))
+
+### Tests
+
+* format orchestrates invalid endpoints ([5f90c83](https://github.com/ExaDev/SysProM/commit/5f90c83c2b5c65cd05cc1244f7c7cd733a30377b))
+
 ## [1.19.0](https://github.com/ExaDev/SysProM/compare/v1.18.0...v1.19.0) (2026-03-31)
 
 ### Features
