@@ -1,11 +1,10 @@
+npx lint-staged || {
+  echo "lint-staged failed. Fix the reported issues and stage again."
+  exit 1
+}
+
 staged=$(git diff --cached --name-only --diff-filter=ACMR -- 'src/**/*.ts' 'scripts/**/*.ts' | tr '\n' ' ')
 if [ -n "$staged" ]; then
-  npx eslint --fix --no-error-on-unmatched-pattern $staged || {
-    echo "ESLint found unfixable errors. Fix them manually and stage again."
-    exit 1
-  }
-  echo "$staged" | xargs git add
-
   tsc_output=$(pnpm _typecheck 2>&1) || {
     staged_pattern=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' | paste -sd'|' -)
     relevant=$(echo "$tsc_output" | grep -E "^($staged_pattern)")

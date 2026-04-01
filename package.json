@@ -61,6 +61,11 @@
 		"validate": "turbo run _validate",
 		"prepare": "husky"
 	},
+	"lint-staged": {
+		"*.{js,cjs,mjs,ts,tsx}": [
+			"eslint --fix --no-error-on-unmatched-pattern"
+		]
+	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "1.27.1",
 		"commander": "14.0.3",
@@ -87,6 +92,7 @@
 		"eslint-plugin-prettier": "5.5.5",
 		"eslint-plugin-sonarjs": "^4.0.2",
 		"husky": "9.1.7",
+		"lint-staged": "16.4.0",
 		"prettier": "3.8.1",
 		"semantic-release": "25.0.3",
 		"tsx": "4.21.0",
