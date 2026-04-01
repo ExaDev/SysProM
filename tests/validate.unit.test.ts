@@ -318,7 +318,10 @@ describe("validate", () => {
 		);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
-		assert.match(result.issues[0] ?? "", /Invalid endpoint types for orchestrates/);
+		assert.match(
+			result.issues[0] ?? "",
+			/Invalid endpoint types for orchestrates/,
+		);
 	});
 
 	it("orchestrates rejects artefact → milestone", () => {
@@ -331,7 +334,10 @@ describe("validate", () => {
 		);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
-		assert.match(result.issues[0] ?? "", /Invalid endpoint types for orchestrates/);
+		assert.match(
+			result.issues[0] ?? "",
+			/Invalid endpoint types for orchestrates/,
+		);
 	});
 
 	it("validates a product-system provenance chain from intent to implementation", () => {
