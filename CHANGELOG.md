@@ -1,3 +1,24 @@
+## [1.21.0](https://github.com/ExaDev/SysProM/compare/v1.20.0...v1.21.0) (2026-04-01)
+
+### Features
+
+* **schema:** support view read-model depends_on links ([7f5d48c](https://github.com/ExaDev/SysProM/commit/7f5d48cf3398c0d97fccdb2406077cabca1bdf26))
+
+### Code Refactoring
+
+* **lifecycle:** infer state exclusively from lifecycle data ([c938b6c](https://github.com/ExaDev/SysProM/commit/c938b6c902c2a59e794664556153f6a494ddd802))
+* **schema:** prune unused relationship types from core model ([9b1146b](https://github.com/ExaDev/SysProM/commit/9b1146bce143320de438f373024f20ebece3a621))
+* **schema:** remove artefact_flow node type ([ec52247](https://github.com/ExaDev/SysProM/commit/ec52247c61ed05f2ca517abfe04f626d7af0791d))
+* **schema:** remove legacy artefact flow input/output fields ([82acf86](https://github.com/ExaDev/SysProM/commit/82acf86a0f793bd803fb2a070f473d4d9e054b67))
+* **schema:** remove node status in favour of lifecycle states ([69aec39](https://github.com/ExaDev/SysProM/commit/69aec39b987d4c33109bc175088cbfc3549173a9))
+* **schema:** remove version node type and selects relationship ([864d2f4](https://github.com/ExaDev/SysProM/commit/864d2f4ec096176a51e1878be1f08758926d9d36))
+
+### Miscellaneous Chores
+
+* **lint:** fix infer lifecycle test formatting ([ff49f6a](https://github.com/ExaDev/SysProM/commit/ff49f6af61c085262766a269ad90932ea65aae8e))
+* **lint:** run eslint --fix on staged json and markdown ([13676aa](https://github.com/ExaDev/SysProM/commit/13676aaa4b3e0cd93d440918b31b51475968fdac))
+* **tooling:** run eslint --fix via lint-staged on staged files ([7e745e3](https://github.com/ExaDev/SysProM/commit/7e745e3844c6a0483af22ebdd0e6be59fb52e45a))
+
 ## [1.20.0](https://github.com/ExaDev/SysProM/compare/v1.19.0...v1.20.0) (2026-04-01)
 
 ### Features
