@@ -2,6 +2,8 @@ import eslint from "@eslint/js";
 import type { Rule } from "eslint";
 import { defineConfig } from "eslint/config";
 import eslintComments from "@eslint-community/eslint-plugin-eslint-comments";
+import markdown from "@eslint/markdown";
+import json from "@eslint/json";
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import jsdoc from "eslint-plugin-jsdoc";
 import prettier from "eslint-plugin-prettier/recommended";
@@ -123,13 +125,27 @@ const fixupSonarjs = fixupConfigRules(sonarjs.configs.recommended);
 const fixupJsdDoc = fixupConfigRules(
 	jsdoc.configs["flat/recommended-typescript-error"],
 );
+const typedTsFiles = ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"];
+const codeFiles = ["**/*.js", "**/*.cjs", "**/*.mjs", ...typedTsFiles];
+const typedTsConfigs = [
+	...tseslint.configs.strictTypeChecked,
+	...tseslint.configs.stylisticTypeChecked,
+].map((config) => ({
+	...config,
+	files: typedTsFiles,
+}));
 
 export default defineConfig(
 	eslint.configs.recommended,
-	tseslint.configs.strictTypeChecked,
-	tseslint.configs.stylisticTypeChecked,
-	...fixupSonarjs,
-	...fixupPrettier,
+	...typedTsConfigs,
+	...fixupSonarjs.map((config) => ({
+		...config,
+		files: codeFiles,
+	})),
+	...fixupPrettier.map((config) => ({
+		...config,
+		files: codeFiles,
+	})),
 	{
 		files: ["src/**/*.ts"],
 		...fixupJsdDoc[0],
@@ -169,6 +185,30 @@ export default defineConfig(
 	},
 	{
 		plugins: {
+			json,
+		},
+	},
+	{
+		files: ["**/*.json"],
+		language: "json/json",
+		rules: {
+			"json/no-duplicate-keys": "error",
+			"no-irregular-whitespace": "off",
+		},
+	},
+	{
+		files: ["**/*.md"],
+		plugins: {
+			markdown,
+		},
+		language: "markdown/commonmark",
+		rules: {
+			"no-irregular-whitespace": "off",
+		},
+	},
+	{
+		files: codeFiles,
+		plugins: {
 			barrel: barrelPlugin,
 			"eslint-comments": fixupPluginRules(eslintComments),
 		},
@@ -197,6 +237,7 @@ export default defineConfig(
 		},
 	},
 	{
+		files: typedTsFiles,
 		rules: {
 			"@typescript-eslint/ban-ts-comment": "error",
 			"@typescript-eslint/consistent-type-assertions": [
