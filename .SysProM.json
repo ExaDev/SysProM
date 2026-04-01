@@ -1651,21 +1651,6 @@
 						"type": "must_follow"
 					},
 					{
-						"from": "ROLE1",
-						"to": "STG1",
-						"type": "performs"
-					},
-					{
-						"from": "ROLE2",
-						"to": "STG2",
-						"type": "performs"
-					},
-					{
-						"from": "ROLE3",
-						"to": "STG3",
-						"type": "performs"
-					},
-					{
 						"from": "GATE1",
 						"to": "INV1",
 						"type": "governed_by"

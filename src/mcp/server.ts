@@ -638,8 +638,7 @@ server.registerTool(
 server.registerTool(
 	"infer-lifecycle",
 	{
-		description:
-			"Infer lifecycle state for nodes based on status and lifecycle fields",
+		description: "Infer lifecycle state for nodes based on lifecycle fields",
 		inputSchema: z.object({
 			path: z.string().describe("Path to SysProM file"),
 		}),

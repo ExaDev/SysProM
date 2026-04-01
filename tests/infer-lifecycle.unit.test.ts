@@ -4,9 +4,16 @@ import { inferLifecycleOp } from "../src/operations/infer-lifecycle.js";
 import type { SysProMDocument } from "../src/schema.js";
 
 describe("inferLifecycleOp", () => {
-	it("infers early phase from proposed status", () => {
+	it("infers early phase from proposed lifecycle state", () => {
 		const doc: SysProMDocument = {
-			nodes: [{ id: "INT1", type: "intent", name: "Test", status: "proposed" }],
+			nodes: [
+				{
+					id: "INT1",
+					type: "intent",
+					name: "Test",
+					lifecycle: { proposed: true },
+				},
+			],
 		};
 
 		const result = inferLifecycleOp({ doc });
@@ -17,10 +24,15 @@ describe("inferLifecycleOp", () => {
 		assert.strictEqual(int1.inferredState, "proposed");
 	});
 
-	it("infers late phase from implemented status", () => {
+	it("infers late phase from implemented lifecycle state", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "CAP1", type: "capability", name: "Test", status: "implemented" },
+				{
+					id: "CAP1",
+					type: "capability",
+					name: "Test",
+					lifecycle: { implemented: true },
+				},
 			],
 		};
 
@@ -32,10 +44,15 @@ describe("inferLifecycleOp", () => {
 		assert.strictEqual(cap1.inferredState, "implemented");
 	});
 
-	it("infers terminal phase from retired status", () => {
+	it("infers terminal phase from retired lifecycle state", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "ELEM1", type: "element", name: "Test", status: "retired" },
+				{
+					id: "ELEM1",
+					type: "element",
+					name: "Test",
+					lifecycle: { retired: true },
+				},
 			],
 		};
 
@@ -71,14 +88,13 @@ describe("inferLifecycleOp", () => {
 		assert.strictEqual(chg1.inferredPhase, "late");
 	});
 
-	it("prefers lifecycle over status when both present", () => {
+	it("uses the most advanced lifecycle state when multiple are present", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
 					id: "DEC1",
 					type: "decision",
 					name: "Test",
-					status: "active",
 					lifecycle: { proposed: true, deprecated: "2024-01-15" },
 				},
 			],
@@ -92,7 +108,7 @@ describe("inferLifecycleOp", () => {
 		assert.strictEqual(dec1.inferredPhase, "terminal");
 	});
 
-	it("returns unknown phase for node without status or lifecycle", () => {
+	it("returns unknown phase for node without lifecycle", () => {
 		const doc: SysProMDocument = {
 			nodes: [{ id: "INT1", type: "intent", name: "Test" }],
 		};
@@ -108,10 +124,25 @@ describe("inferLifecycleOp", () => {
 	it("calculates correct summary statistics", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "INT1", type: "intent", name: "Test", status: "proposed" },
-				{ id: "INT2", type: "intent", name: "Test", status: "active" },
-				{ id: "INT3", type: "intent", name: "Test", status: "implemented" },
-				{ id: "INT4", type: "intent", name: "Test", status: "retired" },
+				{
+					id: "INT1",
+					type: "intent",
+					name: "Test",
+					lifecycle: { proposed: true },
+				},
+				{ id: "INT2", type: "intent", name: "Test", lifecycle: { active: true } },
+				{
+					id: "INT3",
+					type: "intent",
+					name: "Test",
+					lifecycle: { implemented: true },
+				},
+				{
+					id: "INT4",
+					type: "intent",
+					name: "Test",
+					lifecycle: { retired: true },
+				},
 				{ id: "INT5", type: "intent", name: "Test" },
 			],
 		};
@@ -125,11 +156,21 @@ describe("inferLifecycleOp", () => {
 		assert.strictEqual(result.summary.unknown, 1);
 	});
 
-	it("handles middle phase statuses", () => {
+	it("handles middle phase lifecycle states", () => {
 		const doc: SysProMDocument = {
 			nodes: [
-				{ id: "INT1", type: "intent", name: "Test", status: "in_progress" },
-				{ id: "INT2", type: "intent", name: "Test", status: "experimental" },
+				{
+					id: "INT1",
+					type: "intent",
+					name: "Test",
+					lifecycle: { in_progress: true },
+				},
+				{
+					id: "INT2",
+					type: "intent",
+					name: "Test",
+					lifecycle: { experimental: true },
+				},
 			],
 		};
 

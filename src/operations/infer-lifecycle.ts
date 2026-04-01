@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { defineOperation } from "./define-operation.js";
-import { SysProMDocument, NodeStatus } from "../schema.js";
+import { SysProMDocument } from "../schema.js";
 
 /**
  * Lifecycle inference result for a single node.
@@ -9,7 +9,6 @@ const LifecycleResult = z.object({
 	id: z.string(),
 	type: z.string(),
 	name: z.string(),
-	status: NodeStatus.optional(),
 	lifecycle: z
 		.record(z.string(), z.union([z.boolean(), z.string()]))
 		.optional(),
@@ -80,14 +79,13 @@ function getMostAdvancedState(
 }
 
 /**
- * Infer lifecycle state for all nodes based on status and lifecycle fields.
+ * Infer lifecycle state for all nodes based on lifecycle fields.
  *
  * Returns inferred state, phase classification, and summary statistics.
  */
 export const inferLifecycleOp = defineOperation({
 	name: "infer-lifecycle",
-	description:
-		"Infer lifecycle state for nodes based on status and lifecycle fields",
+	description: "Infer lifecycle state for nodes based on lifecycle fields",
 	input: z.object({
 		doc: SysProMDocument,
 	}),
@@ -103,7 +101,7 @@ export const inferLifecycleOp = defineOperation({
 		};
 
 		for (const node of input.doc.nodes) {
-			// Determine inferred state from lifecycle or status
+			// Determine inferred state from lifecycle only
 			let inferredState: string;
 			let inferredPhase: "early" | "middle" | "late" | "terminal" | "unknown";
 
@@ -112,9 +110,6 @@ export const inferLifecycleOp = defineOperation({
 			if (lifecycleState) {
 				inferredState = lifecycleState;
 				inferredPhase = PHASE_MAP[lifecycleState] ?? "unknown";
-			} else if (node.status) {
-				inferredState = node.status;
-				inferredPhase = PHASE_MAP[node.status] ?? "unknown";
 			} else {
 				inferredState = "undefined";
 				inferredPhase = "unknown";
@@ -126,7 +121,6 @@ export const inferLifecycleOp = defineOperation({
 				id: node.id,
 				type: node.type,
 				name: node.name,
-				status: node.status,
 				lifecycle: node.lifecycle,
 				inferredState,
 				inferredPhase,
