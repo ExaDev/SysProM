@@ -530,59 +530,43 @@ describe("generateTasks", () => {
 				subsystem: {
 					nodes: [
 						{
-							id: "PH-1",
-							type: "stage",
+							id: "CHG-1",
+							type: "change",
 							name: "Setup",
+							subsystem: {
+								nodes: [
+									{
+										id: "CHG-1-1",
+										type: "change",
+										name: "Create project structure",
+										lifecycle: { proposed: true },
+									},
+								],
+								relationships: [],
+							},
 						},
 						{
-							id: "PH-2",
-							type: "stage",
+							id: "CHG-2",
+							type: "change",
 							name: "Core Auth",
-						},
-						{
-							id: "CHG-PH1",
-							type: "change",
-							name: "Phase 1 Tasks",
-							plan: [
-								{ description: "Create project structure", done: false },
-								{ description: "Initialize TypeScript", done: false },
-							],
-						},
-						{
-							id: "CHG-PH2",
-							type: "change",
-							name: "Phase 2 Tasks",
-							plan: [
-								{ description: "Create User model", done: false },
-								{ description: "Implement login endpoint", done: false },
-							],
+							subsystem: {
+								nodes: [
+									{
+										id: "CHG-2-1",
+										type: "change",
+										name: "Create User model",
+										lifecycle: { proposed: true },
+									},
+								],
+								relationships: [],
+							},
 						},
 					],
 					relationships: [
 						{
-							from: "PH-1",
-							to: "TEST-PROT-IMPL",
-							type: "part_of",
-						},
-						{
-							from: "PH-2",
-							to: "TEST-PROT-IMPL",
-							type: "part_of",
-						},
-						{
-							from: "PH-2",
-							to: "PH-1",
+							from: "CHG-2",
+							to: "CHG-1",
 							type: "must_follow",
-						},
-						{
-							from: "CHG-PH1",
-							to: "PH-1",
-							type: "realises",
-						},
-						{
-							from: "CHG-PH2",
-							to: "PH-2",
-							type: "realises",
 						},
 					],
 				},
@@ -604,29 +588,23 @@ describe("generateTasks", () => {
 				subsystem: {
 					nodes: [
 						{
-							id: "PH-1",
-							type: "stage",
-							name: "Phase 1",
-						},
-						{
 							id: "CHG-1",
 							type: "change",
 							name: "Tasks",
-							plan: [{ description: "Incomplete task", done: false }],
+							subsystem: {
+								nodes: [
+									{
+										id: "CHG-1-1",
+										type: "change",
+										name: "Incomplete task",
+										lifecycle: { proposed: true },
+									},
+								],
+								relationships: [],
+							},
 						},
 					],
-					relationships: [
-						{
-							from: "PH-1",
-							to: "TEST-PROT-IMPL",
-							type: "part_of",
-						},
-						{
-							from: "CHG-1",
-							to: "PH-1",
-							type: "realises",
-						},
-					],
+					relationships: [],
 				},
 			},
 		];
@@ -645,29 +623,23 @@ describe("generateTasks", () => {
 				subsystem: {
 					nodes: [
 						{
-							id: "PH-1",
-							type: "stage",
-							name: "Phase 1",
-						},
-						{
 							id: "CHG-1",
 							type: "change",
 							name: "Tasks",
-							plan: [{ description: "Completed task", done: true }],
+							subsystem: {
+								nodes: [
+									{
+										id: "CHG-1-1",
+										type: "change",
+										name: "Completed task",
+										lifecycle: { complete: true },
+									},
+								],
+								relationships: [],
+							},
 						},
 					],
-					relationships: [
-						{
-							from: "PH-1",
-							to: "TEST-PROT-IMPL",
-							type: "part_of",
-						},
-						{
-							from: "CHG-1",
-							to: "PH-1",
-							type: "realises",
-						},
-					],
+					relationships: [],
 				},
 			},
 		];
@@ -686,29 +658,23 @@ describe("generateTasks", () => {
 				subsystem: {
 					nodes: [
 						{
-							id: "PH-1",
-							type: "stage",
-							name: "Phase 1",
-						},
-						{
 							id: "CHG-1",
 							type: "change",
 							name: "Tasks",
-							plan: [{ description: "Create project structure", done: false }],
+							subsystem: {
+								nodes: [
+									{
+										id: "CHG-1-1",
+										type: "change",
+										name: "Create project structure",
+										lifecycle: { proposed: true },
+									},
+								],
+								relationships: [],
+							},
 						},
 					],
-					relationships: [
-						{
-							from: "PH-1",
-							to: "TEST-PROT-IMPL",
-							type: "part_of",
-						},
-						{
-							from: "CHG-1",
-							to: "PH-1",
-							type: "realises",
-						},
-					],
+					relationships: [],
 				},
 			},
 		];

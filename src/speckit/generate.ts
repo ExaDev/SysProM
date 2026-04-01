@@ -122,20 +122,15 @@ function getIdSuffix(id: string): string {
 	return parts[parts.length - 1] ?? "000";
 }
 
-/**
- * Parse tasks from a change node's plan array.
- * @param node - The change node.
- * @returns Array of task descriptions and done flags.
- * @example
- * ```ts
- * const tasks = parseTasks(changeNode);
- * ```
- */
-function parseTasks(node: Node): { description: string; done: boolean }[] {
-	return (node.plan ?? []).map((task) => ({
-		description: textToString(task.description),
-		done: task.done ?? false,
-	}));
+function childTaskNodes(change: Node): Node[] {
+	return (change.subsystem?.nodes ?? []).filter((n) => n.type === "change");
+}
+
+function isDone(node: Node): boolean {
+	return (
+		node.lifecycle?.complete === true ||
+		typeof node.lifecycle?.complete === "string"
+	);
 }
 
 /**
@@ -586,13 +581,13 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 	}
 
 	// Recursive helper to render a change node and its tasks, including nested child changes.
-	// Render tasks from a change node's plan array.
+	// Render tasks from child change nodes.
 	function renderPlanItems(
 		change: Node,
 		taskCounter: { value: number },
 	): string {
 		let result = "";
-		const tasks = parseTasks(change);
+		const tasks = childTaskNodes(change);
 		for (const task of tasks) {
 			// Find capability that this change implements.
 			let usStory: string | null = null;
@@ -609,7 +604,7 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 				}
 			}
 
-			const checkbox = task.done ? "[x]" : "[ ]";
+			const checkbox = isDone(task) ? "[x]" : "[ ]";
 			const taskNum = String(taskCounter.value).padStart(3, "0");
 			let taskLine = `- ${checkbox} T${taskNum}`;
 
@@ -617,7 +612,7 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 				taskLine += ` [US${usStory}]`;
 			}
 
-			taskLine += ` ${textToString(task.description)}`;
+			taskLine += ` ${task.name}`;
 			result += taskLine + "\n";
 			taskCounter.value++;
 		}
@@ -642,11 +637,13 @@ export function generateTasks(doc: SysProMDocument, prefix: string): string {
 		if (result.endsWith("\n")) result += "\n";
 		else result += "\n\n";
 
-		// Recurse into child change nodes.
+		// Recurse into child phase nodes only (task nodes are rendered as checkboxes above).
 		if (change.subsystem?.nodes && change.subsystem.nodes.length > 0) {
-			const childChanges = change.subsystem.nodes.filter(
-				(n) => n.type === "change",
-			);
+			const childChanges = change.subsystem.nodes.filter((n) => {
+				if (n.type !== "change") return false;
+				const children = n.subsystem?.nodes ?? [];
+				return children.some((child) => child.type === "change");
+			});
 			for (const childChange of childChanges) {
 				result += renderChangeNode(childChange, headingLevel + 1, taskCounter);
 			}

@@ -697,7 +697,7 @@ export function parsePlan(content: string, idPrefix: string): ParseResult {
 // ---------------------------------------------------------------------------
 
 /**
- * Parse a Spec-Kit tasks file into SysProM change nodes with task plans.
+ * Parse a Spec-Kit tasks file into SysProM change nodes with nested task nodes.
  * @param content - Markdown file content.
  * @param idPrefix - ID prefix for generated nodes.
  * @returns The result.
@@ -760,22 +760,34 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
 		}
 	}
 
-	// Create change nodes for each phase (with LOCAL IDs in subsystem)
-	// Use numeric indices (CHG-1, CHG-2, etc.) for phase changes
+	const toTaskNode = (
+		parentId: string,
+		index: number,
+		task: CheckboxItem,
+	): Node => ({
+		id: `${parentId}-${String(index + 1)}`,
+		type: "change",
+		name: task.text,
+		lifecycle: task.done ? { complete: true } : { proposed: true },
+	});
+
+	// Create change nodes for each phase (with local IDs in subsystem)
+	// Use numeric indices (CHG-1, CHG-2, etc.) for phase changes.
 	for (let i = 0; i < phases.length; i++) {
 		const phase = phases[i];
 		const tasks = changesByPhase[phase.phaseNum] ?? [];
-		const plan = tasks.map((t) => ({
-			description: t.text,
-			done: t.done,
-		}));
-
 		const changeLocalId = `CHG-${String(phase.phaseNum)}`;
 		subsystemNodes.push({
 			id: changeLocalId,
 			type: "change",
 			name: phase.title,
-			plan,
+			lifecycle: { introduced: true },
+			subsystem: {
+				nodes: tasks.map((task, index) =>
+					toTaskNode(changeLocalId, index, task),
+				),
+				relationships: [],
+			},
 		});
 
 		// Wire must_follow between consecutive phase changes
@@ -789,19 +801,20 @@ export function parseTasks(content: string, idPrefix: string): ParseResult {
 		}
 	}
 
-	// Create change nodes for user stories (with LOCAL IDs in subsystem)
+	// Create change nodes for user stories (with local IDs in subsystem)
 	for (const [storyKey, tasks] of Object.entries(changesByStory)) {
-		const plan = tasks.map((t) => ({
-			description: t.text,
-			done: t.done,
-		}));
-
 		const changeLocalId = `CHG-${storyKey}`;
 		subsystemNodes.push({
 			id: changeLocalId,
 			type: "change",
 			name: storyKey,
-			plan,
+			lifecycle: { introduced: true },
+			subsystem: {
+				nodes: tasks.map((task, index) =>
+					toTaskNode(changeLocalId, index, task),
+				),
+				relationships: [],
+			},
 		});
 
 		// Link to the capability at the top level (using GLOBAL ID format)

@@ -492,7 +492,7 @@ describe("parseTasks", () => {
 		}
 	});
 
-	it("creates change nodes with task plans", () => {
+	it("creates nested task nodes with lifecycle states", () => {
 		const result = parseTasks(SAMPLE_TASKS, "TEST");
 		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
 		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
@@ -505,19 +505,20 @@ describe("parseTasks", () => {
 		);
 
 		for (const change of changeNodes ?? []) {
-			assert(change.plan, `change ${change.id} should have plan array`);
-			assert(Array.isArray(change.plan), "plan should be an array");
-			for (const task of change.plan) {
+			const tasks = change.subsystem?.nodes?.filter((n) => n.type === "change");
+			assert(tasks, `change ${change.id} should have nested task nodes`);
+			for (const task of tasks) {
 				assert(
-					typeof task.done === "boolean",
-					"each task should have done boolean",
+					task.lifecycle?.complete === true ||
+						task.lifecycle?.proposed === true,
+					"each task should have lifecycle state",
 				);
-				assert(task.description, "each task should have description");
+				assert(task.name, "each task should have name");
 			}
 		}
 	});
 
-	it("T003 and T006 are marked done in their plan arrays", () => {
+	it("T003 and T006 are marked complete in nested tasks", () => {
 		const result = parseTasks(SAMPLE_TASKS, "TEST");
 		const protocolNode = result.nodes.find((n) => n.id === "TEST-PROT-IMPL");
 		assert.ok(protocolNode?.subsystem, "protocol should have subsystem");
@@ -527,21 +528,23 @@ describe("parseTasks", () => {
 
 		let foundCompleted = false;
 		for (const change of changeNodes ?? []) {
-			for (const task of change.plan || []) {
-				const desc = task.description;
+			const tasks =
+				change.subsystem?.nodes?.filter((n) => n.type === "change") ?? [];
+			for (const task of tasks) {
+				const desc = task.name;
 				if (
 					(desc.includes("T003") ||
 						desc.includes("Configure linting") ||
 						desc.includes("T006") ||
 						desc.includes("Write login tests")) &&
-					task.done
+					task.lifecycle?.complete === true
 				) {
 					foundCompleted = true;
 				}
 			}
 		}
 
-		assert(foundCompleted, "completed tasks should be marked with done: true");
+		assert(foundCompleted, "completed tasks should be marked complete");
 	});
 
 	it("total task count matches", () => {
@@ -554,7 +557,8 @@ describe("parseTasks", () => {
 
 		let totalTasks = 0;
 		for (const change of changeNodes ?? []) {
-			totalTasks += (change.plan || []).length;
+			totalTasks +=
+				change.subsystem?.nodes?.filter((n) => n.type === "change").length ?? 0;
 		}
 
 		// 8 tasks total: T001-T008
