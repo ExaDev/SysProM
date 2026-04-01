@@ -203,7 +203,7 @@ describe("text utilities", () => {
 });
 
 // ---------------------------------------------------------------------------
-// json-to-md — artefact flow, inline external refs, jsonToMarkdown wrapper
+// json-to-md — inline external refs, jsonToMarkdown wrapper
 // ---------------------------------------------------------------------------
 
 describe("json-to-md edge cases", () => {
@@ -215,20 +215,6 @@ describe("json-to-md edge cases", () => {
 
 	afterEach(() => {
 		rmSync(tmpDir, { recursive: true, force: true });
-	});
-
-	it("renders artefact_flow node without legacy input/output fields", () => {
-		const doc: SysProMDocument = {
-			nodes: [
-				{
-					id: "FLOW1",
-					type: "artefact_flow",
-					name: "Flow",
-				},
-			],
-		};
-		const md = jsonToMarkdownSingle(doc);
-		assert.ok(md.includes("### FLOW1"));
 	});
 
 	it("renders inline external references on nodes", () => {
@@ -356,22 +342,6 @@ describe("md-to-json edge cases", () => {
 		assert.ok(ch1?.propagation);
 		assert.equal(ch1.propagation.concept, true);
 		assert.equal(ch1.propagation.structure, false);
-	});
-
-	it("round-trips artefact_flow without legacy input/output fields", () => {
-		const doc: SysProMDocument = {
-			nodes: [
-				{
-					id: "FLOW1",
-					type: "artefact_flow",
-					name: "Flow",
-				},
-			],
-		};
-		const md = jsonToMarkdownSingle(doc);
-		const result = markdownSingleToJson(md);
-		const af = result.nodes.find((n) => n.id === "FLOW1");
-		assert.equal(af?.type, "artefact_flow");
 	});
 
 	it("parses relationship with single value (- Refines: X)", () => {

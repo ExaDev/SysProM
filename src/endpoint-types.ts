@@ -62,7 +62,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"gate",
 			"mode",
 			"artefact",
-			"artefact_flow",
 			"decision",
 			"change",
 		],
@@ -81,7 +80,6 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"gate",
 			"mode",
 			"artefact",
-			"artefact_flow",
 			"decision",
 			"change",
 		],
@@ -214,7 +212,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Modifies — mutation and change
 	modifies: {
-		from: ["change", "artefact_flow", "stage"],
+		from: ["change", "stage"],
 		to: [
 			"intent",
 			"concept",
@@ -227,10 +225,9 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Produces — generation
 	produces: {
-		from: ["stage", "artefact_flow", "realisation", "concept", "capability"],
+		from: ["stage", "realisation", "concept", "capability"],
 		to: ["artefact", "concept"],
 	},
-
 };
 
 /**

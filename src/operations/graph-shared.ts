@@ -130,7 +130,6 @@ const NODE_TYPE_SHAPES: Record<string, MermaidShape> = {
 	gate: "rectangle",
 	mode: "rectangle",
 	artefact: "rectangle",
-	artefact_flow: "rectangle",
 	decision: "rhombus",
 	change: "rectangle",
 	view: "rectangle",

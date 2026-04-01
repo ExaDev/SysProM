@@ -122,7 +122,6 @@ describe("node types", () => {
 		"gate",
 		"mode",
 		"artefact",
-		"artefact_flow",
 		"decision",
 		"change",
 		"view",
@@ -245,20 +244,6 @@ describe("view nodes", () => {
 					type: "view",
 					name: "Domain View",
 					includes: ["INT1", "CON1", "CAP1", "ELEM1", "REAL1"],
-				},
-			],
-		});
-	});
-});
-
-describe("artefact flow nodes", () => {
-	it("accepts artefact_flow without dedicated input/output fields", () => {
-		valid({
-			nodes: [
-				{
-					id: "FLOW1",
-					type: "artefact_flow",
-					name: "Request to Plan",
 				},
 			],
 		});
