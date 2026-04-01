@@ -209,7 +209,7 @@ describe("decision nodes", () => {
 });
 
 describe("change nodes", () => {
-	it("accepts full change with scope, operations, plan, propagation", () => {
+	it("accepts full change with scope, operations, propagation", () => {
 		valid({
 			nodes: [
 				{
@@ -222,11 +222,6 @@ describe("change nodes", () => {
 						{ type: "update", target: "ELEM1" },
 						{ type: "remove", target: "ELEM2" },
 						{ type: "link", description: "Link ELEM3 to CAP1" },
-					],
-					plan: [
-						{ description: "Design interface", done: true },
-						{ description: "Implement", done: false },
-						{ description: "Test" },
 					],
 					propagation: {
 						concept: true,

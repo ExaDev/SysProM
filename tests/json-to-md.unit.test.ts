@@ -122,11 +122,7 @@ function full(): SysProMDocument {
 				description: "A change.",
 				scope: ["ELEM1"],
 				operations: [{ type: "add", target: "ELEM1" }],
-				plan: [
-					{ description: "Step one", done: true },
-					{ description: "Step two", done: false },
-				],
-				lifecycle: { defined: true, introduced: true, complete: false },
+				lifecycle: { defined: true, introduced: true, in_progress: true },
 			},
 			{
 				id: "VIEW1",
@@ -327,8 +323,9 @@ describe("json-to-md single file", () => {
 		assert.ok(md.includes("- ELEM1"));
 		assert.ok(md.includes("Operations:"));
 		assert.ok(md.includes("- add ELEM1"));
-		assert.ok(md.includes("- [x] Step one"));
-		assert.ok(md.includes("- [ ] Step two"));
+		assert.ok(md.includes("### Lifecycle"));
+		assert.ok(md.includes("- [x] introduced"));
+		assert.ok(md.includes("- [x] in progress"));
 	});
 
 	it("renders relationships", () => {
@@ -478,12 +475,13 @@ describe("json-to-md multi-doc", () => {
 		assert.ok(dec.includes("- [x] proposed"));
 	});
 
-	it("CHANGES.md contains change with plan", () => {
+	it("CHANGES.md contains change lifecycle", () => {
 		jsonToMarkdownMultiDoc(full(), tmpDir);
 		const chg = readFileSync(join(tmpDir, "CHANGES.md"), "utf8");
 		assert.ok(chg.includes("### CHG1 — Test Change"));
-		assert.ok(chg.includes("- [x] Step one"));
-		assert.ok(chg.includes("- [ ] Step two"));
+		assert.ok(chg.includes("### Lifecycle"));
+		assert.ok(chg.includes("- [x] introduced"));
+		assert.ok(chg.includes("- [x] in progress"));
 	});
 
 	it("renders node relationships in the correct file", () => {

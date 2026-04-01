@@ -93,11 +93,7 @@ function fixture(): SysProMDocument {
 				description: "A change.",
 				scope: ["ELEM1"],
 				operations: [{ type: "add", target: "ELEM1" }],
-				plan: [
-					{ description: "Step one", done: true },
-					{ description: "Step two", done: false },
-				],
-				lifecycle: { defined: true, introduced: true, complete: false },
+				lifecycle: { defined: true, introduced: true, in_progress: true },
 			},
 			{
 				id: "VIEW1",
@@ -168,10 +164,13 @@ function assertChangeFields(result: SysProMDocument) {
 	assert.ok(ch1, "CHG1 missing");
 	assert.ok(ch1.scope, "CHG1 missing scope");
 	assert.ok(ch1.scope.includes("ELEM1"), "CHG1 scope should include ELEM1");
-	assert.ok(ch1.plan, "CHG1 missing plan");
-	assert.equal(ch1.plan.length, 2, "CHG1 should have 2 plan items");
-	assert.equal(ch1.plan[0].done, true, "CHG1 plan[0] should be done");
-	assert.equal(ch1.plan[1].done, false, "CHG1 plan[1] should not be done");
+	assert.ok(ch1.lifecycle, "CHG1 missing lifecycle");
+	assert.equal(ch1.lifecycle.defined, true, "CHG1 lifecycle.defined mismatch");
+	assert.equal(
+		ch1.lifecycle.in_progress,
+		true,
+		"CHG1 lifecycle.in_progress mismatch",
+	);
 }
 
 function assertLifecycle(result: SysProMDocument) {

@@ -95,7 +95,7 @@ describe("inferCompletenessOp", () => {
 		assert.ok(chg1.issues.some((i) => i.includes("no scope")));
 	});
 
-	it("returns 1.0 score for change with decision link and plan", () => {
+	it("returns 1.0 score for change with decision link and scope", () => {
 		const doc: SysProMDocument = {
 			nodes: [
 				{
@@ -103,7 +103,6 @@ describe("inferCompletenessOp", () => {
 					type: "change",
 					name: "Test Change",
 					scope: ["INT1"],
-					plan: [{ description: "Step 1", done: true }],
 				},
 				{ id: "DEC1", type: "decision", name: "Test Decision" },
 			],
