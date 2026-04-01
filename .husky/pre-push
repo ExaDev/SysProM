@@ -1,1 +1,6 @@
+pnpm spm sync --input .SysProM.json --output ./.SysProM --dry-run --report || {
+	echo "Pre-push blocked: SysProM JSON/Markdown representations are not in sync."
+	exit 1
+}
+
 pnpm validate
