@@ -83,7 +83,7 @@
 		"@eslint/eslintrc": "3.3.5",
 		"@eslint/js": "10.0.1",
 		"@eslint/json": "1.2.0",
-		"@eslint/markdown": "7.5.1",
+		"@eslint/markdown": "8.0.1",
 		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/exec": "7.1.0",
 		"@semantic-release/git": "10.0.1",
