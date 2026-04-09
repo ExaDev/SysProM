@@ -1,3 +1,9 @@
+## [1.27.2](https://github.com/ExaDev/SysProM/compare/v1.27.1...v1.27.2) (2026-04-09)
+
+### Continuous Integration
+
+* **actions:** bump actions/setup-node from 4 to 6 ([509b7b5](https://github.com/ExaDev/SysProM/commit/509b7b5de0722bf177d2f479d12cefc47a5abbc3))
+
 ## [1.27.1](https://github.com/ExaDev/SysProM/compare/v1.27.0...v1.27.1) (2026-04-09)
 
 ### Documentation
