@@ -775,3 +775,12 @@ Scope:
 
 - [x] complete
 
+### CHG43 — Add missing CLI flags for update/add commands
+
+- Implements: [DEC45](./DECISIONS.md#dec45--cli-field-coverage-for-updateadd-commands)
+
+Context: Incrementally resolving open GitHub issues by adding missing CLI flags.
+
+Scope:
+- CLI commands: update node, add realisation, add change
+

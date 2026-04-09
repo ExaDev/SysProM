@@ -3915,6 +3915,29 @@
 			],
 			"name": "Evolution View",
 			"type": "view"
+		},
+		{
+			"context": "Several update and add commands had undocumented or missing CLI flags that users expected to be available, forcing them to edit JSON directly.",
+			"id": "DEC45",
+			"name": "CLI field coverage for update/add commands",
+			"options": [
+				{
+					"description": "Systematically add all missing fields to CLI commands as they become needed",
+					"id": "OPT-A"
+				}
+			],
+			"rationale": "Improves UX by closing gaps between schema capabilities and CLI exposure; reduces need for manual JSON editing",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"context": "Incrementally resolving open GitHub issues by adding missing CLI flags.",
+			"id": "CHG43",
+			"name": "Add missing CLI flags for update/add commands",
+			"scope": [
+				"CLI commands: update node, add realisation, add change"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5051,6 +5074,11 @@
 		{
 			"from": "CHG42",
 			"to": "DEC44",
+			"type": "implements"
+		},
+		{
+			"from": "CHG43",
+			"to": "DEC45",
 			"type": "implements"
 		}
 	]

@@ -923,3 +923,14 @@ Rationale: A single graph-native model keeps task semantics structurally consist
 
 - [x] implemented
 
+### DEC45 — CLI field coverage for update/add commands
+
+Context: Several update and add commands had undocumented or missing CLI flags that users expected to be available, forcing them to edit JSON directly.
+
+Options:
+- OPT-A: Systematically add all missing fields to CLI commands as they become needed
+
+Chosen: OPT-A
+
+Rationale: Improves UX by closing gaps between schema capabilities and CLI exposure; reduces need for manual JSON editing
+
