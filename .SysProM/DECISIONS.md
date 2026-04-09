@@ -982,3 +982,15 @@ Chosen: OPT-A
 
 Rationale: Direct schema updates are simple, maintainable, and follow the existing pattern of endpoint type validation.
 
+### DEC50 — Milestone relationship type integration
+
+Context: Issue #26 reported that milestones were isolated from the graph, only supporting precedes relationships with other milestones. This prevented meaningful connections to concepts, capabilities, intents, and other system elements.
+
+Options:
+- OPT-A: Extend milestone support across multiple relationship types
+- OPT-B: Create a separate milestone-specific relationship type
+
+Chosen: OPT-A
+
+Rationale: Extending existing relationship types is more consistent, leverages semantic meaning already defined, and provides maximum expressivity without introducing new abstractions.
+

@@ -812,3 +812,10 @@ Scope:
 Scope:
 - src/endpoint-types.ts
 
+### CHG48 — Integrate milestones into full relationship type ecosystem
+
+- Implements: [DEC50](./DECISIONS.md#dec50--milestone-relationship-type-integration)
+
+Scope:
+- src/endpoint-types.ts
+

@@ -4042,6 +4042,32 @@
 				"src/endpoint-types.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "Issue #26 reported that milestones were isolated from the graph, only supporting precedes relationships with other milestones. This prevented meaningful connections to concepts, capabilities, intents, and other system elements.",
+			"id": "DEC50",
+			"name": "Milestone relationship type integration",
+			"options": [
+				{
+					"description": "Extend milestone support across multiple relationship types",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Create a separate milestone-specific relationship type",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Extending existing relationship types is more consistent, leverages semantic meaning already defined, and provides maximum expressivity without introducing new abstractions.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG48",
+			"name": "Integrate milestones into full relationship type ecosystem",
+			"scope": [
+				"src/endpoint-types.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5203,6 +5229,11 @@
 		{
 			"from": "CHG47",
 			"to": "DEC49",
+			"type": "implements"
+		},
+		{
+			"from": "CHG48",
+			"to": "DEC50",
 			"type": "implements"
 		}
 	]
