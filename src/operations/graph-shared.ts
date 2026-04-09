@@ -146,6 +146,25 @@ export function mermaidShapeForNode(node: Node): MermaidShape {
 }
 
 /**
+ * Escape a Mermaid label by wrapping in quotes if it contains special characters.
+ * Mermaid shape delimiters and other special chars need escaping: ( ) { } [ ] / \
+ * Wrapping in double quotes allows these characters to be rendered as-is.
+ * @param label - The label text to escape
+ * @returns The label, quoted if it contains special characters
+ * @example
+ * escapeMermaidLabel("Firebase (Tenant)") // returns '"Firebase (Tenant)"'
+ */
+function escapeMermaidLabel(label: string): string {
+	// Check if label contains any Mermaid special characters that need escaping
+	const specialChars = ["(", ")", "{", "}", "[", "]", "/", "\\"];
+	if (specialChars.some((char) => label.includes(char))) {
+		// Wrap in double quotes to escape
+		return `"${label}"`;
+	}
+	return label;
+}
+
+/**
  * Render a Mermaid node definition for a node id/name/shape.
  * @param id - Node id
  * @param name - Node name
@@ -161,16 +180,17 @@ export function renderMermaidNode(
 ): string {
 	const safeId = sanitiseMermaidId(id);
 	const label = mode === "compact" ? id : `${id}: ${name}`;
+	const escapedLabel = escapeMermaidLabel(label);
 	switch (shape) {
 		case "rounded":
-			return `${safeId}([${label}])`;
+			return `${safeId}([${escapedLabel}])`;
 		case "rhombus":
-			return `${safeId}{{${label}}}`;
+			return `${safeId}{{${escapedLabel}}}`;
 		case "parallelogram":
-			return `${safeId}[/${label}/]`;
+			return `${safeId}[/${escapedLabel}/]`;
 		case "rectangle":
 		default:
-			return `${safeId}[${label}]`;
+			return `${safeId}[${escapedLabel}]`;
 	}
 }
 
