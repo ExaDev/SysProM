@@ -161,12 +161,19 @@ export const validateOp = defineOperation({
 			}
 		}
 
-		// INV13: Decisions must have options and selected
+		// INV13: Decisions must have options and selected (if decided)
 		for (const n of input.doc.nodes.filter((n) => n.type === "decision")) {
 			if (!n.options || n.options.length === 0) {
 				issues.push(`${n.id} (${n.name}): decision has no options`);
 			}
-			if (!n.selected) {
+			// Only require selected option if the decision is in a "decided" state
+			// Decided states: accepted, implemented, adopted
+			// Undecided states allowed: proposed, experimental, deferred
+			const isDecided =
+				hasLifecycleState(n, "accepted") ||
+				hasLifecycleState(n, "implemented") ||
+				hasLifecycleState(n, "adopted");
+			if (isDecided && !n.selected) {
 				issues.push(`${n.id} (${n.name}): decision has no selected option`);
 			}
 		}

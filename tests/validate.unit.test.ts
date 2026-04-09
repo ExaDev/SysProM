@@ -78,18 +78,34 @@ describe("validate", () => {
 		assert.ok(result.issues.some((i) => i.includes("has no options")));
 	});
 
-	it("decisions without selected detected", () => {
+	it("decisions without selected detected (when decided)", () => {
 		const doc = makeDoc([
 			{
 				id: "DEC1",
 				type: "decision",
 				name: "Dec",
 				options: [{ id: "a", description: "A" }],
+				lifecycle: { accepted: true },
 			},
 		]);
 		const result = validateOp({ doc });
 		assert.equal(result.valid, false);
 		assert.ok(result.issues.some((i) => i.includes("has no selected")));
+	});
+
+	it("undecided decisions without selected allowed", () => {
+		const doc = makeDoc([
+			{
+				id: "DEC1",
+				type: "decision",
+				name: "Dec",
+				options: [{ id: "a", description: "A" }],
+				// No lifecycle state means undecided (like proposed)
+			},
+		]);
+		const result = validateOp({ doc });
+		assert.equal(result.valid, true);
+		assert.ok(!result.issues.some((i) => i.includes("has no selected")));
 	});
 
 	it("realises accepts capability → stage", () => {
