@@ -1,3 +1,13 @@
+## [1.27.1](https://github.com/ExaDev/SysProM/compare/v1.27.0...v1.27.1) (2026-04-09)
+
+### Documentation
+
+* **sysprom:** record decision and change for issue [#26](https://github.com/ExaDev/SysProM/issues/26) ([8aeddca](https://github.com/ExaDev/SysProM/commit/8aeddcac7f87179ea59fc4574832123d41acfae1))
+
+### Miscellaneous Chores
+
+* **schema:** extend milestone support across relationship types ([3b571c0](https://github.com/ExaDev/SysProM/commit/3b571c0016f5e12b3cb47c7d11e686e37cf80835)), closes [#26](https://github.com/ExaDev/SysProM/issues/26)
+
 ## [1.27.0](https://github.com/ExaDev/SysProM/compare/v1.26.0...v1.27.0) (2026-04-09)
 
 ### Features
