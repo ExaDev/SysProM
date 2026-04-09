@@ -7,6 +7,7 @@ import {
 	queryNodesOp,
 	queryNodeOp,
 	queryRelationshipsOp,
+	queryRelationshipTypesOp,
 	traceFromNodeOp,
 	timelineOp,
 	nodeHistoryOp,
@@ -245,6 +246,30 @@ const timelineSubcommand: CommandDef = {
 	},
 };
 
+const relationshipTypesSubcommand: CommandDef = {
+	name: "relationship-types",
+	description: queryRelationshipTypesOp.def.description,
+	apiLink: queryRelationshipTypesOp.def.name,
+	opts: readOpts,
+	action(_rawArgs: unknown, rawOpts: unknown) {
+		const opts = readOpts.parse(rawOpts);
+		const relTypes = queryRelationshipTypesOp({});
+		if (opts.json) {
+			console.log(JSON.stringify(relTypes, null, 2));
+		} else {
+			for (const relType of relTypes) {
+				console.log(pc.bold(relType.type));
+				console.log(
+					`  ${pc.dim("from")}: ${relType.from.map((t) => pc.cyan(t)).join(", ")}`,
+				);
+				console.log(
+					`  ${pc.dim("to")}: ${relType.to.map((t) => pc.cyan(t)).join(", ")}`,
+				);
+			}
+		}
+	},
+};
+
 const stateAtSubcommand: CommandDef = {
 	name: "state-at",
 	description: stateAtOp.def.description,
@@ -283,6 +308,7 @@ export const queryCommand: CommandDef = {
 		nodesSubcommand,
 		nodeSubcommand,
 		relsSubcommand,
+		relationshipTypesSubcommand,
 		traceSubcommand,
 		timelineSubcommand,
 		stateAtSubcommand,

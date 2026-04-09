@@ -26,6 +26,7 @@ export { planGateOp, type GateResultOutput } from "./plan-gate.js";
 export { queryNodesOp } from "./query-nodes.js";
 export { queryNodeOp, type NodeDetail } from "./query-node.js";
 export { queryRelationshipsOp } from "./query-relationships.js";
+export { queryRelationshipTypesOp } from "./query-relationship-types.js";
 export { traceFromNodeOp, type TraceNode } from "./trace-from-node.js";
 
 // Temporal operations
