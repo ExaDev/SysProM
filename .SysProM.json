@@ -4068,6 +4068,32 @@
 				"src/endpoint-types.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "Mermaid supports click directives that make diagram nodes into hyperlinks. SysProM generates diagrams in two contexts: embedded in Markdown and standalone. Users want clickable nodes to navigate documentation.",
+			"id": "DEC51",
+			"name": "Mermaid click directives for diagram hyperlinks",
+			"options": [
+				{
+					"description": "Add click directives with two modes — anchor-based for embedded diagrams and external-reference-based for standalone",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Always link to external references only",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Anchor-based links provide the best UX for embedded diagrams since clicking navigates directly to the node definition. External reference links serve standalone use cases.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG49",
+			"name": "Implement Mermaid click directive support",
+			"scope": [
+				"src/operations/graph-shared.ts,src/operations/graph.ts,src/json-to-md.ts,src/cli/commands/graph.ts,src/cli/commands/json2md.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5234,6 +5260,11 @@
 		{
 			"from": "CHG48",
 			"to": "DEC50",
+			"type": "implements"
+		},
+		{
+			"from": "CHG49",
+			"to": "DEC51",
 			"type": "implements"
 		}
 	]

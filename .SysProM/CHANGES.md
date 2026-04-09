@@ -819,3 +819,10 @@ Scope:
 Scope:
 - src/endpoint-types.ts
 
+### CHG49 — Implement Mermaid click directive support
+
+- Implements: [DEC51](./DECISIONS.md#dec51--mermaid-click-directives-for-diagram-hyperlinks)
+
+Scope:
+- src/operations/graph-shared.ts,src/operations/graph.ts,src/json-to-md.ts,src/cli/commands/graph.ts,src/cli/commands/json2md.ts
+

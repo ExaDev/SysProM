@@ -994,3 +994,15 @@ Chosen: OPT-A
 
 Rationale: Extending existing relationship types is more consistent, leverages semantic meaning already defined, and provides maximum expressivity without introducing new abstractions.
 
+### DEC51 — Mermaid click directives for diagram hyperlinks
+
+Context: Mermaid supports click directives that make diagram nodes into hyperlinks. SysProM generates diagrams in two contexts: embedded in Markdown and standalone. Users want clickable nodes to navigate documentation.
+
+Options:
+- OPT-A: Add click directives with two modes — anchor-based for embedded diagrams and external-reference-based for standalone
+- OPT-B: Always link to external references only
+
+Chosen: OPT-A
+
+Rationale: Anchor-based links provide the best UX for embedded diagrams since clicking navigates directly to the node definition. External reference links serve standalone use cases.
+
