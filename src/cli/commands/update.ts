@@ -63,6 +63,7 @@ const updateNodeArgs = z.object({
 	id: z.string().describe("node ID to update"),
 });
 const updateNodeOpts = mutationOpts.extend({
+	name: z.string().optional().describe("update node name"),
 	description: z.string().optional().describe("update node description"),
 	status: NodeStatus.optional().describe("set lifecycle state to true"),
 	context: z.string().optional().describe("update node context"),
@@ -118,6 +119,7 @@ const nodeSubcommand: CommandDef = {
 
 		const fields: Record<string, unknown> = {};
 
+		if (opts.name !== undefined) fields.name = opts.name;
 		if (opts.description !== undefined) fields.description = opts.description;
 		if (opts.context !== undefined) fields.context = opts.context;
 		if (opts.rationale !== undefined) fields.rationale = opts.rationale;
@@ -135,7 +137,7 @@ const nodeSubcommand: CommandDef = {
 		if (Object.keys(fields).length === 0) {
 			console.error("No fields specified to update.");
 			console.error(
-				"Use --description, --status, --context, --rationale, --selected, or --lifecycle.",
+				"Use --name, --description, --status, --context, --rationale, --selected, or --lifecycle.",
 			);
 			process.exit(1);
 		}
