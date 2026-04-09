@@ -1,3 +1,18 @@
+## [1.27.0](https://github.com/ExaDev/SysProM/compare/v1.26.0...v1.27.0) (2026-04-09)
+
+### Features
+
+* **cli:** add commands to manage external references ([04818d4](https://github.com/ExaDev/SysProM/commit/04818d49a3080ec80b93022a033e1fa76f94cb83)), closes [#22](https://github.com/ExaDev/SysProM/issues/22)
+
+### Documentation
+
+* **sysprom:** record decisions and changes for issues [#22](https://github.com/ExaDev/SysProM/issues/22), [#23](https://github.com/ExaDev/SysProM/issues/23), [#25](https://github.com/ExaDev/SysProM/issues/25) ([ad1bcdc](https://github.com/ExaDev/SysProM/commit/ad1bcdc33ca2d48fac1fd5c724efb4467184107d))
+
+### Miscellaneous Chores
+
+* **schema:** add milestone as valid depends_on source type ([6aae747](https://github.com/ExaDev/SysProM/commit/6aae7476ee7dd6f33890a295647757ef8957a65b)), closes [#23](https://github.com/ExaDev/SysProM/issues/23)
+* **schema:** add role support for constrained_by and governed_by ([72d0c3e](https://github.com/ExaDev/SysProM/commit/72d0c3eeb35a1d2a2dec1708cffc8a7ae125ed51)), closes [#25](https://github.com/ExaDev/SysProM/issues/25)
+
 ## [1.26.0](https://github.com/ExaDev/SysProM/compare/v1.25.1...v1.26.0) (2026-04-09)
 
 ### Features
