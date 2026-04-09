@@ -1,3 +1,9 @@
+## [1.23.1](https://github.com/ExaDev/SysProM/compare/v1.23.0...v1.23.1) (2026-04-09)
+
+### Bug Fixes
+
+* **mermaid:** escape special characters in node labels ([b96f1e5](https://github.com/ExaDev/SysProM/commit/b96f1e57b582ac5d23fb6d529bb555e42b037db6)), closes [ExaDev/SysProM#21](https://github.com/ExaDev/SysProM/issues/21)
+
 ## [1.23.0](https://github.com/ExaDev/SysProM/compare/v1.22.1...v1.23.0) (2026-04-09)
 
 ### Features
