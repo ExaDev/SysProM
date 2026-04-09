@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import { buildCommander } from "./define-command.js";
+import { formatCliError } from "./shared.js";
 import type { CommandDef } from "./define-command.js";
 
 let cachedVersion: string | undefined;
@@ -94,3 +95,15 @@ program
 	.action(async () => {
 		await import("../mcp/server.js");
 	});
+
+// Global error handlers for uncaught exceptions
+process.on("uncaughtException", (error) => {
+	console.error(formatCliError(error, false));
+	process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+	const error = reason instanceof Error ? reason : new Error(String(reason));
+	console.error(formatCliError(error, false));
+	process.exit(1);
+});

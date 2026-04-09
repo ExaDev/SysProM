@@ -251,3 +251,31 @@ export function persistDoc(
 		}
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Error formatting and reporting
+// ---------------------------------------------------------------------------
+
+const ISSUE_URL = "https://github.com/ExaDev/SysProM/issues/new";
+
+/**
+ * Format an error message for CLI output with issue filing guidance.
+ * If the error appears to be unexpected (not a user error), suggests filing an issue.
+ * @param error - The error to format
+ * @param isUserError - Whether this is a user error (e.g. invalid input); if false, suggests filing an issue
+ * @returns Formatted error message
+ * @example
+ * ```ts
+ * try { ... } catch (err: unknown) {
+ *   console.error(formatCliError(err, false)); // Not a user error - suggest issue
+ *   process.exit(1);
+ * }
+ * ```
+ */
+export function formatCliError(error: unknown, isUserError = false): string {
+	const message = error instanceof Error ? error.message : String(error);
+	if (isUserError) {
+		return message;
+	}
+	return `${message}\n\nIf this was unexpected or bad UX, please file an issue:\n${ISSUE_URL}`;
+}

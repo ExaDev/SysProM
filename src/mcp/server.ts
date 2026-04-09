@@ -27,22 +27,28 @@ import {
 
 /**
  * Wrap an error with a descriptive prefix and attach the original as cause.
+ * Adds issue filing guidance for unexpected errors.
  * @param prefix - The error prefix (e.g., "Failed to add node")
  * @param error - The caught error
+ * @param isUserError - Whether this is a user error; if false, suggests filing an issue
  * @example
  * ```ts
  * try {
  *   someOperation();
  * } catch (error) {
- *   wrapError("Failed to do X", error);
+ *   wrapError("Failed to do X", error, false); // Not a user error - suggest issue
  * }
  * ```
  */
-function wrapError(prefix: string, error: unknown): never {
-	throw new Error(
-		`${prefix}: ${error instanceof Error ? error.message : String(error)}`,
-		{ cause: error },
-	);
+function wrapError(prefix: string, error: unknown, isUserError = false): never {
+	const message = error instanceof Error ? error.message : String(error);
+	const fullMessage = `${prefix}: ${message}`;
+	const issueUrl = "https://github.com/ExaDev/SysProM/issues/new";
+	const errorMsg = isUserError
+		? fullMessage
+		: `${fullMessage}\n\nIf this was unexpected or bad UX, please file an issue: ${issueUrl}`;
+
+	throw new Error(errorMsg, { cause: error });
 }
 
 // Create MCP server instance
