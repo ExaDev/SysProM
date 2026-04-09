@@ -11,6 +11,8 @@ export { updateNodeOp } from "./update-node.js";
 export { addRelationshipOp } from "./add-relationship.js";
 export { removeRelationshipOp } from "./remove-relationship.js";
 export { updateMetadataOp } from "./update-metadata.js";
+export { addExternalReferenceOp } from "./add-external-reference.js";
+export { removeExternalReferenceOp } from "./remove-external-reference.js";
 export { nextIdOp } from "./next-id.js";
 export { initDocumentOp } from "./init-document.js";
 export { planInitOp } from "./plan-init.js";

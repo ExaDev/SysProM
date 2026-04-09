@@ -1,11 +1,17 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
-import { RelationshipType, NodeStatus } from "../../schema.js";
+import {
+	RelationshipType,
+	NodeStatus,
+	ExternalReferenceRole,
+} from "../../schema.js";
 import {
 	updateNodeOp,
 	addRelationshipOp,
 	removeRelationshipOp,
 	updateMetadataOp,
+	addExternalReferenceOp,
+	removeExternalReferenceOp,
 } from "../../operations/index.js";
 import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 
@@ -94,6 +100,27 @@ const metaOpts = mutationOpts.extend({
 	fields: z
 		.array(z.string())
 		.describe("metadata field updates (key=value format)"),
+});
+
+const addRefArgs = z.object({
+	id: z.string().describe("node ID to add reference to"),
+});
+const addRefOpts = mutationOpts.extend({
+	role: ExternalReferenceRole.describe("reference role"),
+	identifier: z
+		.string()
+		.describe("reference identifier (URI, file path, etc.)"),
+	description: z
+		.string()
+		.optional()
+		.describe("optional description of the reference"),
+});
+
+const removeRefArgs = z.object({
+	id: z.string().describe("node ID to remove reference from"),
+});
+const removeRefOpts = mutationOpts.extend({
+	identifier: z.string().describe("identifier of the reference to remove"),
 });
 
 // ---------------------------------------------------------------------------
@@ -266,6 +293,84 @@ const metaSubcommand: CommandDef = {
 	},
 };
 
+const addRefSubcommand: CommandDef = {
+	name: "add-ref",
+	description: addExternalReferenceOp.def.description,
+	apiLink: addExternalReferenceOp.def.name,
+	args: addRefArgs,
+	opts: addRefOpts,
+	action(rawArgs: unknown, rawOpts: unknown) {
+		const args = addRefArgs.parse(rawArgs);
+		const opts = addRefOpts.parse(rawOpts);
+		const loaded = loadDoc(opts.path);
+		const { doc } = loaded;
+
+		const newDoc = addExternalReferenceOp({
+			doc,
+			nodeId: args.id,
+			role: opts.role,
+			identifier: opts.identifier,
+			description: opts.description,
+		});
+
+		persistDoc(newDoc, loaded, opts);
+
+		if (opts.json) {
+			const node = newDoc.nodes.find((n) => n.id === args.id);
+			const ref = node?.external_references?.find(
+				(r) => r.identifier === opts.identifier,
+			);
+			console.log(JSON.stringify(ref, null, 2));
+		} else {
+			console.log(
+				`${opts.dryRun ? "[dry-run] Would add" : "Added"} external reference to ${args.id}: ${opts.role} → ${opts.identifier}`,
+			);
+		}
+	},
+};
+
+const removeRefSubcommand: CommandDef = {
+	name: "remove-ref",
+	description: removeExternalReferenceOp.def.description,
+	apiLink: removeExternalReferenceOp.def.name,
+	args: removeRefArgs,
+	opts: removeRefOpts,
+	action(rawArgs: unknown, rawOpts: unknown) {
+		const args = removeRefArgs.parse(rawArgs);
+		const opts = removeRefOpts.parse(rawOpts);
+		const loaded = loadDoc(opts.path);
+		const { doc } = loaded;
+
+		removeExternalReferenceOp({
+			doc,
+			nodeId: args.id,
+			identifier: opts.identifier,
+		});
+
+		const newDoc = removeExternalReferenceOp({
+			doc,
+			nodeId: args.id,
+			identifier: opts.identifier,
+		});
+
+		persistDoc(newDoc, loaded, opts);
+
+		if (opts.json) {
+			console.log(
+				JSON.stringify(
+					{ nodeId: args.id, identifier: opts.identifier },
+					null,
+					2,
+				),
+			);
+		} else {
+			console.log(
+				`${opts.dryRun ? "[dry-run] Would remove" : "Removed"} external reference from ${args.id}: ${opts.identifier}`,
+			);
+		}
+	},
+};
+
 // ---------------------------------------------------------------------------
 // Main command
 // ---------------------------------------------------------------------------
@@ -277,6 +382,8 @@ export const updateCommand: CommandDef = {
 		nodeSubcommand,
 		addRelSubcommand,
 		removeRelSubcommand,
+		addRefSubcommand,
+		removeRefSubcommand,
 		metaSubcommand,
 	],
 };
