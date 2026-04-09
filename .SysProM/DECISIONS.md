@@ -958,3 +958,27 @@ Chosen: OPT-A
 
 Rationale: Lifecycle-aware validation is simpler, requires no schema changes, and aligns with the semantic meaning of undecided lifecycle states.
 
+### DEC48 — CLI: manage external references
+
+Context: Issue #22 reported that users must edit JSON directly to manage external references. These references are critical for linking nodes to source documents, ADRs, standards, and code files.
+
+Options:
+- OPT-A: Add update add-ref and update remove-ref subcommands
+- OPT-B: Create a new manage-refs command
+
+Chosen: OPT-A
+
+Rationale: Adding subcommands follows the existing update command pattern, is simpler, and maintains consistency with other mutation operations.
+
+### DEC49 — Expand relationship endpoint type support
+
+Context: Issues #23 and #25 reported missing node type support in relationship definitions. Milestones couldn't use depends_on, and roles couldn't use constrained_by or governed_by.
+
+Options:
+- OPT-A: Add milestone to depends_on sources, and role to constrained_by and governed_by sources
+- OPT-B: Create a mapping configuration for endpoint types
+
+Chosen: OPT-A
+
+Rationale: Direct schema updates are simple, maintainable, and follow the existing pattern of endpoint type validation.
+

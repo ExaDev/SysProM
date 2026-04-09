@@ -798,3 +798,17 @@ Scope:
 Scope:
 - src/operations/validate.ts,tests/validate.unit.test.ts
 
+### CHG46 — Add external reference management commands
+
+- Implements: [DEC48](./DECISIONS.md#dec48--cli-manage-external-references)
+
+Scope:
+- src/operations/add-external-reference.ts,src/operations/remove-external-reference.ts,src/cli/commands/update.ts
+
+### CHG47 — Extend endpoint type support for relationships
+
+- Implements: [DEC49](./DECISIONS.md#dec49--expand-relationship-endpoint-type-support)
+
+Scope:
+- src/endpoint-types.ts
+

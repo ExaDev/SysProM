@@ -3990,6 +3990,58 @@
 				"src/operations/validate.ts,tests/validate.unit.test.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "Issue #22 reported that users must edit JSON directly to manage external references. These references are critical for linking nodes to source documents, ADRs, standards, and code files.",
+			"id": "DEC48",
+			"name": "CLI: manage external references",
+			"options": [
+				{
+					"description": "Add update add-ref and update remove-ref subcommands",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Create a new manage-refs command",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Adding subcommands follows the existing update command pattern, is simpler, and maintains consistency with other mutation operations.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG46",
+			"name": "Add external reference management commands",
+			"scope": [
+				"src/operations/add-external-reference.ts,src/operations/remove-external-reference.ts,src/cli/commands/update.ts"
+			],
+			"type": "change"
+		},
+		{
+			"context": "Issues #23 and #25 reported missing node type support in relationship definitions. Milestones couldn't use depends_on, and roles couldn't use constrained_by or governed_by.",
+			"id": "DEC49",
+			"name": "Expand relationship endpoint type support",
+			"options": [
+				{
+					"description": "Add milestone to depends_on sources, and role to constrained_by and governed_by sources",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Create a mapping configuration for endpoint types",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Direct schema updates are simple, maintainable, and follow the existing pattern of endpoint type validation.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG47",
+			"name": "Extend endpoint type support for relationships",
+			"scope": [
+				"src/endpoint-types.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5141,6 +5193,16 @@
 		{
 			"from": "CHG45",
 			"to": "DEC47",
+			"type": "implements"
+		},
+		{
+			"from": "CHG46",
+			"to": "DEC48",
+			"type": "implements"
+		},
+		{
+			"from": "CHG47",
+			"to": "DEC49",
 			"type": "implements"
 		}
 	]
