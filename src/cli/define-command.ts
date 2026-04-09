@@ -238,12 +238,10 @@ function registerOption(
 		const opt = new Option(`--${flagName} <value>`).choices(choices);
 		if (!optional) opt.makeOptionMandatory(true);
 		cmd.addOption(opt);
-	} else if (optional) {
-		cmd.addOption(new Option(`--${flagName} <value>`).hideHelp());
 	} else {
-		cmd.addOption(
-			new Option(`--${flagName} <value>`).makeOptionMandatory(true).hideHelp(),
-		);
+		const opt = new Option(`--${flagName} <value>`, desc);
+		if (!optional) opt.makeOptionMandatory(true);
+		cmd.addOption(opt);
 	}
 }
 
