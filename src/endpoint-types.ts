@@ -61,6 +61,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"role",
 			"gate",
 			"mode",
+			"milestone",
 			"artefact",
 			"decision",
 			"change",
