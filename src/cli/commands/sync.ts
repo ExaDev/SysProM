@@ -1,5 +1,11 @@
 import * as z from "zod";
-import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from "node:fs";
+import {
+	readFileSync,
+	writeFileSync,
+	existsSync,
+	mkdirSync,
+	statSync,
+} from "node:fs";
 import { resolve, extname } from "node:path";
 import type { CommandDef } from "../define-command.js";
 import {
@@ -9,7 +15,10 @@ import {
 } from "../../operations/index.js";
 import { detectChanges } from "../../sync.js";
 import { markdownToJson } from "../../md-to-json.js";
-import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc } from "../../json-to-md.js";
+import {
+	jsonToMarkdownSingle,
+	jsonToMarkdownMultiDoc,
+} from "../../json-to-md.js";
 import { canonicalise } from "../../canonical-json.js";
 import { SysProMDocument } from "../../schema.js";
 
@@ -38,8 +47,10 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 		throw new Error("JSON file is not a valid SysProM document");
 	}
 
-	// Parse Markdown to document
-	const mdDoc = markdownToJson(mdPath);
+	// Parse Markdown to document, or create empty doc if it doesn't exist yet
+	const mdDoc = existsSync(mdPath)
+		? markdownToJson(mdPath)
+		: { nodes: [], relationships: [] };
 
 	// Detect which side changed
 	const changes = detectChanges(jsonPath, mdPath);
@@ -52,6 +63,9 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 		mdChanged: changes.mdChanged,
 		strategy,
 	});
+
+	// Track if markdown file existed before sync
+	const mdExistedBefore = existsSync(mdPath);
 
 	// Write results if not dry-run
 	if (!dryRun) {
@@ -66,7 +80,7 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 			// Update Markdown
 			// If output path is an existing directory or doesn't look like a .md file,
 			// write multi-doc output into the directory. Otherwise write single-file MD.
-			if (existsSync(mdPath) && statSync(mdPath).isDirectory()) {
+			if (mdExistedBefore && statSync(mdPath).isDirectory()) {
 				jsonToMarkdownMultiDoc(result.synced, mdPath);
 			} else if (extname(mdPath) === ".md") {
 				const mdContent = jsonToMarkdownSingle(result.synced);
@@ -77,6 +91,11 @@ export function syncCommand(input: SyncCommandInput): BidirectionalSyncResult {
 				jsonToMarkdownMultiDoc(result.synced, mdPath);
 			}
 		}
+	}
+
+	// If markdown file didn't exist before but does now (we created it), mark mdChanged as true
+	if (!mdExistedBefore && existsSync(mdPath) && !dryRun) {
+		result.mdChanged = true;
 	}
 
 	return result;

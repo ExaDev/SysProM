@@ -1,4 +1,4 @@
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { markdownToJson } from "./md-to-json.js";
 import { SysProMDocument } from "./schema.js";
@@ -61,8 +61,10 @@ export function detectChanges(
 		throw new Error("JSON file is not a valid SysProM document");
 	}
 
-	// Parse Markdown to document
-	const mdDoc = markdownToJson(mdPath);
+	// Parse Markdown to document (or treat as empty if it doesn't exist)
+	const mdDoc = existsSync(mdPath)
+		? markdownToJson(mdPath)
+		: { nodes: [], relationships: [] };
 
 	// Compare parsed documents
 	const jsonHash = normaliseHash(jsonDoc);
@@ -72,6 +74,15 @@ export function detectChanges(
 	if (jsonHash === mdHash) {
 		return {
 			jsonChanged: false,
+			mdChanged: false,
+			conflict: false,
+		};
+	}
+
+	// If markdown file doesn't exist, treat as if JSON changed (JSON is the source)
+	if (!existsSync(mdPath)) {
+		return {
+			jsonChanged: true,
 			mdChanged: false,
 			conflict: false,
 		};
