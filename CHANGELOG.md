@@ -1,3 +1,13 @@
+## [1.26.0](https://github.com/ExaDev/SysProM/compare/v1.25.1...v1.26.0) (2026-04-09)
+
+### Features
+
+* **cli:** add query relationship-types command ([142662d](https://github.com/ExaDev/SysProM/commit/142662d43787efdd1cbb78f0d96494d0be915e7c)), closes [#19](https://github.com/ExaDev/SysProM/issues/19)
+
+### Documentation
+
+* **sysprom:** record decisions and changes for issues [#19](https://github.com/ExaDev/SysProM/issues/19) and [#24](https://github.com/ExaDev/SysProM/issues/24) ([d412bd7](https://github.com/ExaDev/SysProM/commit/d412bd75821a256db7182aaee2e5eaa4e52db327))
+
 ## [1.25.1](https://github.com/ExaDev/SysProM/compare/v1.25.0...v1.25.1) (2026-04-09)
 
 ### Bug Fixes
