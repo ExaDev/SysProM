@@ -1,3 +1,18 @@
+## [1.25.0](https://github.com/ExaDev/SysProM/compare/v1.24.0...v1.25.0) (2026-04-09)
+
+### Features
+
+* **cli:** add --name flag to update node command ([5762a8a](https://github.com/ExaDev/SysProM/commit/5762a8af28d276cb2e378fae5021bf83079810d3)), closes [ExaDev/SysProM#17](https://github.com/ExaDev/SysProM/issues/17)
+* **cli:** add --selected flag to update node command ([55f8dc5](https://github.com/ExaDev/SysProM/commit/55f8dc52fc944c8bbfc4a1c56b82c58e48a5315d)), closes [ExaDev/SysProM#16](https://github.com/ExaDev/SysProM/issues/16)
+
+### Bug Fixes
+
+* **cli:** show all options in help, including companion flags ([a38e373](https://github.com/ExaDev/SysProM/commit/a38e3732905c4153c228c5a03efb1fda2b959902)), closes [ExaDev/SysProM#18](https://github.com/ExaDev/SysProM/issues/18)
+
+### Miscellaneous Chores
+
+* **sysprom:** sync JSON and Markdown representations ([c77c962](https://github.com/ExaDev/SysProM/commit/c77c9626fe167d2268e2a86ad9a187f9122693d4))
+
 ## [1.24.0](https://github.com/ExaDev/SysProM/compare/v1.23.1...v1.24.0) (2026-04-09)
 
 ### Features
