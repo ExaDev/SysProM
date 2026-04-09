@@ -341,12 +341,6 @@ const removeRefSubcommand: CommandDef = {
 		const loaded = loadDoc(opts.path);
 		const { doc } = loaded;
 
-		removeExternalReferenceOp({
-			doc,
-			nodeId: args.id,
-			identifier: opts.identifier,
-		});
-
 		const newDoc = removeExternalReferenceOp({
 			doc,
 			nodeId: args.id,
