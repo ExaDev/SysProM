@@ -784,3 +784,17 @@ Context: Incrementally resolving open GitHub issues by adding missing CLI flags.
 Scope:
 - CLI commands: update node, add realisation, add change
 
+### CHG44 — Implement query relationship-types command
+
+- Implements: [DEC46](./DECISIONS.md#dec46--cli-expose-relationship-endpoint-type-discovery)
+
+Scope:
+- src/operations/query-relationship-types.ts,src/cli/commands/query.ts
+
+### CHG45 — Make decision validation lifecycle-aware
+
+- Implements: [DEC47](./DECISIONS.md#dec47--validator-allow-intentionally-undecided-decisions)
+
+Scope:
+- src/operations/validate.ts,tests/validate.unit.test.ts
+

@@ -934,3 +934,27 @@ Chosen: OPT-A
 
 Rationale: Improves UX by closing gaps between schema capabilities and CLI exposure; reduces need for manual JSON editing
 
+### DEC46 — CLI: expose relationship endpoint type discovery
+
+Context: Issue #19 reported that users have no way to discover valid relationship endpoint types from help text. They only learn what is valid after attempting to add a relationship and getting an error.
+
+Options:
+- OPT-A: Create a new query subcommand to list valid endpoint types for all relationship types
+- OPT-B: Add endpoint type documentation directly to the add-rel help output
+
+Chosen: OPT-A
+
+Rationale: A new query subcommand is more discoverable via help text, provides structured data output, and follows the CLI's existing pattern of query subcommands for different node and relationship types.
+
+### DEC47 — Validator: allow intentionally undecided decisions
+
+Context: Issue #24 reported that the validator requires all decisions to have a selected option, but some decisions are intentionally undecided (proposed, experimental, deferred states).
+
+Options:
+- OPT-A: Make selected option requirement lifecycle-aware — only require it for decided states (accepted, implemented, adopted)
+- OPT-B: Add a new field to mark decisions as intentionally undecided
+
+Chosen: OPT-A
+
+Rationale: Lifecycle-aware validation is simpler, requires no schema changes, and aligns with the semantic meaning of undecided lifecycle states.
+

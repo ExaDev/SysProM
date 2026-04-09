@@ -3938,6 +3938,58 @@
 				"CLI commands: update node, add realisation, add change"
 			],
 			"type": "change"
+		},
+		{
+			"context": "Issue #19 reported that users have no way to discover valid relationship endpoint types from help text. They only learn what is valid after attempting to add a relationship and getting an error.",
+			"id": "DEC46",
+			"name": "CLI: expose relationship endpoint type discovery",
+			"options": [
+				{
+					"description": "Create a new query subcommand to list valid endpoint types for all relationship types",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Add endpoint type documentation directly to the add-rel help output",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "A new query subcommand is more discoverable via help text, provides structured data output, and follows the CLI's existing pattern of query subcommands for different node and relationship types.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG44",
+			"name": "Implement query relationship-types command",
+			"scope": [
+				"src/operations/query-relationship-types.ts,src/cli/commands/query.ts"
+			],
+			"type": "change"
+		},
+		{
+			"context": "Issue #24 reported that the validator requires all decisions to have a selected option, but some decisions are intentionally undecided (proposed, experimental, deferred states).",
+			"id": "DEC47",
+			"name": "Validator: allow intentionally undecided decisions",
+			"options": [
+				{
+					"description": "Make selected option requirement lifecycle-aware — only require it for decided states (accepted, implemented, adopted)",
+					"id": "OPT-A"
+				},
+				{
+					"description": "Add a new field to mark decisions as intentionally undecided",
+					"id": "OPT-B"
+				}
+			],
+			"rationale": "Lifecycle-aware validation is simpler, requires no schema changes, and aligns with the semantic meaning of undecided lifecycle states.",
+			"selected": "OPT-A",
+			"type": "decision"
+		},
+		{
+			"id": "CHG45",
+			"name": "Make decision validation lifecycle-aware",
+			"scope": [
+				"src/operations/validate.ts,tests/validate.unit.test.ts"
+			],
+			"type": "change"
 		}
 	],
 	"relationships": [
@@ -5079,6 +5131,16 @@
 		{
 			"from": "CHG43",
 			"to": "DEC45",
+			"type": "implements"
+		},
+		{
+			"from": "CHG44",
+			"to": "DEC46",
+			"type": "implements"
+		},
+		{
+			"from": "CHG45",
+			"to": "DEC47",
 			"type": "implements"
 		}
 	]
