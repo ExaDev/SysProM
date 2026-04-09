@@ -1,3 +1,23 @@
+## [1.23.0](https://github.com/ExaDev/SysProM/compare/v1.22.1...v1.23.0) (2026-04-09)
+
+### Features
+
+* **cli:** set sync check exit code on drift ([0ac42d7](https://github.com/ExaDev/SysProM/commit/0ac42d731f8c60eaf70759eee17663ac52c4335d))
+* **cli:** support directory output for sync command ([a995834](https://github.com/ExaDev/SysProM/commit/a995834f7786805db0c04498dbf60bc4c15905a7))
+
+### Bug Fixes
+
+* **sync:** handle non-existent markdown files correctly ([bfa58f5](https://github.com/ExaDev/SysProM/commit/bfa58f5b143e443d49e655a53dbeb5970e0d4598))
+
+### Tests
+
+* **sync:** add tests for directory and single-file sync output ([432e056](https://github.com/ExaDev/SysProM/commit/432e056f4896bfa8688b0f97792cc8e76048c574))
+
+### Miscellaneous Chores
+
+* **hooks:** enforce SysProM sync check before push ([373c8ac](https://github.com/ExaDev/SysProM/commit/373c8ac2433e3c56ae925b17a370c0db01647dbd))
+* **sysprom:** sync JSON and Markdown representations (update DIAGRAMS and STATE) ([6d600d2](https://github.com/ExaDev/SysProM/commit/6d600d26ad94da9141f7cd97c1c3f58917707542))
+
 ## [1.22.1](https://github.com/ExaDev/SysProM/compare/v1.22.0...v1.22.1) (2026-04-01)
 
 ### Documentation
