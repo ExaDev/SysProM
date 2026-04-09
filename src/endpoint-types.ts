@@ -21,6 +21,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"realisation",
 			"principle",
 			"policy",
+			"milestone",
 		],
 		to: [
 			"intent",
@@ -35,14 +36,35 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Realises — implementation hierarchy
 	realises: {
-		from: ["capability", "element", "realisation", "artefact", "mode"],
-		to: ["capability", "element", "realisation", "concept", "stage"],
+		from: [
+			"capability",
+			"element",
+			"realisation",
+			"artefact",
+			"mode",
+			"milestone",
+		],
+		to: [
+			"capability",
+			"element",
+			"realisation",
+			"concept",
+			"stage",
+			"milestone",
+		],
 	},
 
 	// Implements — operationalisation
 	implements: {
-		from: ["element", "realisation", "change", "stage"],
-		to: ["capability", "element", "realisation", "decision", "change"],
+		from: ["element", "realisation", "change", "stage", "milestone"],
+		to: [
+			"capability",
+			"element",
+			"realisation",
+			"decision",
+			"change",
+			"milestone",
+		],
 	},
 
 	// Depends on — broad dependency across all node types
@@ -99,13 +121,14 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"change",
 			"invariant",
 			"role",
+			"milestone",
 		],
 		to: ["invariant", "principle", "policy", "protocol", "concept"],
 	},
 
 	// Affects — broad impact relationships
 	affects: {
-		from: ["decision", "change", "artefact", "stage"],
+		from: ["decision", "change", "artefact", "stage", "milestone"],
 		to: [
 			"intent",
 			"concept",
@@ -178,6 +201,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"role",
 			"gate",
 			"mode",
+			"milestone",
 		],
 		to: [
 			"intent",
@@ -193,6 +217,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"role",
 			"gate",
 			"mode",
+			"milestone",
 		],
 	},
 
@@ -210,13 +235,14 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 			"policy",
 			"artefact",
 			"role",
+			"milestone",
 		],
 		to: ["policy", "protocol", "role", "principle", "invariant", "concept"],
 	},
 
 	// Modifies — mutation and change
 	modifies: {
-		from: ["change", "stage"],
+		from: ["change", "stage", "milestone"],
 		to: [
 			"intent",
 			"concept",
@@ -229,7 +255,7 @@ export const RELATIONSHIP_ENDPOINT_TYPES: Record<
 
 	// Produces — generation
 	produces: {
-		from: ["stage", "realisation", "concept", "capability"],
+		from: ["stage", "realisation", "concept", "capability", "milestone"],
 		to: ["artefact", "concept"],
 	},
 };
