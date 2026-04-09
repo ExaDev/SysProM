@@ -9,6 +9,8 @@ import {
 	mermaidClassForNode,
 	dotNodeAttrsWithMode,
 	renderRelationshipLabel,
+	renderMermaidClickDirectives,
+	type MermaidClickMap,
 } from "./graph-shared.js";
 
 const DEPENDENCY_REL_TYPES = new Set([
@@ -57,6 +59,7 @@ function generateDependencyMermaid(
 	nodes: Node[],
 	rels: Relationship[],
 	labelMode: "friendly" | "compact",
+	clickMap?: MermaidClickMap,
 ): string {
 	const lines: string[] = [];
 	lines.push("graph LR");
@@ -81,6 +84,8 @@ function generateDependencyMermaid(
 		const label = renderRelationshipLabel(rel);
 		lines.push(`  ${fromId} -->|${label}| ${toId}`);
 	}
+
+	lines.push(...renderMermaidClickDirectives(nodes, clickMap));
 
 	return lines.join("\n");
 }
@@ -127,14 +132,18 @@ export const graphDependencyOp = defineOperation({
 		seedIds: z.array(z.string()).optional(),
 		layout: z.enum(["LR", "TD", "RL", "BT"]).default("LR"),
 		labelMode: z.enum(["friendly", "compact"]).default("friendly"),
+		clickTargets: z.record(z.string(), z.string()).optional(),
 	}),
 	output: z.string(),
-	fn({ doc, format, seedIds, layout, labelMode }) {
+	fn({ doc, format, seedIds, layout, labelMode, clickTargets }) {
 		const { nodes, rels } = collectDependencyGraph(doc, seedIds);
 		if (format === "dot") {
 			return generateDependencyDot(nodes, rels, layout, labelMode);
 		}
-		const mermaid = generateDependencyMermaid(nodes, rels, labelMode);
+		const clickMap = clickTargets
+			? new Map(Object.entries(clickTargets))
+			: undefined;
+		const mermaid = generateDependencyMermaid(nodes, rels, labelMode, clickMap);
 		const mermaidLines = mermaid.split("\n");
 		mermaidLines[0] = `graph ${layout}`;
 		return mermaidLines.join("\n");

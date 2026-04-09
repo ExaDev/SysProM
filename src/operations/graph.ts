@@ -12,9 +12,11 @@ import {
 	filterNodes,
 	filterRelationships,
 	applyConnectedOnly,
+	renderRelationshipLabel,
+	renderMermaidClickDirectives,
 	type GraphFilterOptions,
+	type MermaidClickMap,
 } from "./graph-shared.js";
-import { renderRelationshipLabel } from "./graph-shared.js";
 
 // ---------------------------------------------------------------------------
 // DOT generation
@@ -96,6 +98,7 @@ function generateMermaid(
 	cluster: boolean,
 	layout: string,
 	labelMode: "friendly" | "compact",
+	clickMap?: MermaidClickMap,
 ): string {
 	const lines: string[] = [];
 	lines.push(`graph ${layout}`);
@@ -154,6 +157,8 @@ function generateMermaid(
 		lines.push(`  ${edge}`);
 	}
 
+	lines.push(...renderMermaidClickDirectives(nodes, clickMap));
+
 	return lines.join("\n");
 }
 
@@ -168,6 +173,7 @@ function generateGraph(
 	layout: string,
 	cluster: boolean,
 	labelMode: "friendly" | "compact",
+	clickMap?: MermaidClickMap,
 ): string {
 	let nodes = filterNodes(doc.nodes, filterOpts);
 	const nodeIds = new Set(nodes.map((n) => n.id));
@@ -188,7 +194,7 @@ function generateGraph(
 		return generateDot(nodes, rels, cluster, dotLayout, labelMode);
 	}
 
-	return generateMermaid(nodes, rels, cluster, layout, labelMode);
+	return generateMermaid(nodes, rels, cluster, layout, labelMode, clickMap);
 }
 
 /** Generate a graph of a SysProM document in Mermaid or DOT format, with optional filtering. */
@@ -207,6 +213,7 @@ export const graphOp = defineOperation({
 		cluster: z.boolean().default(true),
 		labelMode: z.enum(["friendly", "compact"]).default("friendly"),
 		connectedOnly: z.boolean().default(false),
+		clickTargets: z.record(z.string(), z.string()).optional(),
 	}),
 	output: z.string(),
 	fn({
@@ -220,6 +227,7 @@ export const graphOp = defineOperation({
 		cluster,
 		labelMode,
 		connectedOnly,
+		clickTargets,
 	}) {
 		const filterOpts: GraphFilterOptions = {
 			nodeTypes,
@@ -227,6 +235,17 @@ export const graphOp = defineOperation({
 			relTypes: relTypes ?? (typeFilter ? [typeFilter] : undefined),
 			connectedOnly,
 		};
-		return generateGraph(doc, format, filterOpts, layout, cluster, labelMode);
+		const clickMap = clickTargets
+			? new Map(Object.entries(clickTargets))
+			: undefined;
+		return generateGraph(
+			doc,
+			format,
+			filterOpts,
+			layout,
+			cluster,
+			labelMode,
+			clickMap,
+		);
 	},
 });

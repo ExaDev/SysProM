@@ -9,6 +9,8 @@ import {
 	mermaidClassForNode,
 	dotNodeAttrsWithMode,
 	renderRelationshipLabel,
+	renderMermaidClickDirectives,
+	type MermaidClickMap,
 } from "./graph-shared.js";
 
 const REFINEMENT_REL_TYPES = new Set(["refines", "realises", "implements"]);
@@ -51,6 +53,7 @@ function generateRefinementMermaid(
 	nodes: Node[],
 	rels: Relationship[],
 	labelMode: "friendly" | "compact",
+	clickMap?: MermaidClickMap,
 ): string {
 	const lines: string[] = [];
 	lines.push("graph TD");
@@ -75,6 +78,8 @@ function generateRefinementMermaid(
 		const label = renderRelationshipLabel(rel);
 		lines.push(`  ${fromId} -->|${label}| ${toId}`);
 	}
+
+	lines.push(...renderMermaidClickDirectives(nodes, clickMap));
 
 	return lines.join("\n");
 }
@@ -121,14 +126,18 @@ export const graphRefinementOp = defineOperation({
 		seedIds: z.array(z.string()).optional(),
 		layout: z.enum(["LR", "TD", "RL", "BT"]).default("TD"),
 		labelMode: z.enum(["friendly", "compact"]).default("friendly"),
+		clickTargets: z.record(z.string(), z.string()).optional(),
 	}),
 	output: z.string(),
-	fn({ doc, format, seedIds, layout, labelMode }) {
+	fn({ doc, format, seedIds, layout, labelMode, clickTargets }) {
 		const { nodes, rels } = collectRefinementChain(doc, seedIds);
 		if (format === "dot") {
 			return generateRefinementDot(nodes, rels, layout, labelMode);
 		}
-		const mermaid = generateRefinementMermaid(nodes, rels, labelMode);
+		const clickMap = clickTargets
+			? new Map(Object.entries(clickTargets))
+			: undefined;
+		const mermaid = generateRefinementMermaid(nodes, rels, labelMode, clickMap);
 		const mermaidLines = mermaid.split("\n");
 		mermaidLines[0] = `graph ${layout}`;
 		return mermaidLines.join("\n");

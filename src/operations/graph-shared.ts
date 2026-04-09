@@ -357,3 +357,45 @@ export function applyConnectedOnly(
 	}
 	return nodes.filter((n) => connectedIds.has(n.id));
 }
+
+// ---------------------------------------------------------------------------
+// Mermaid click directives (hyperlinks on nodes)
+// ---------------------------------------------------------------------------
+
+/** Map from raw node ID to click target URL. */
+export type MermaidClickMap = Map<string, string>;
+
+/**
+ * Render Mermaid click directives for nodes that have a click target.
+ * @param nodes - Nodes to render click directives for
+ * @param clickMap - Map from node ID to target URL
+ * @returns Lines like `click INT1 "url" "tooltip"`
+ */
+export function renderMermaidClickDirectives(
+	nodes: Node[],
+	clickMap: MermaidClickMap | undefined,
+): string[] {
+	if (!clickMap || clickMap.size === 0) return [];
+	const lines: string[] = [""];
+	for (const node of nodes) {
+		const url = clickMap.get(node.id);
+		if (!url) continue;
+		const safeId = sanitiseMermaidId(node.id);
+		lines.push(`  click ${safeId} "${url}" "${node.name}"`);
+	}
+	return lines;
+}
+
+/**
+ * Build a MermaidClickMap from nodes' external_references.
+ * Uses the first external reference's identifier as the URL.
+ * @param nodes - Nodes to extract external references from
+ */
+export function buildExternalRefClickMap(nodes: Node[]): MermaidClickMap {
+	const map: MermaidClickMap = new Map();
+	for (const node of nodes) {
+		const ref = node.external_references?.[0];
+		if (ref) map.set(node.id, ref.identifier);
+	}
+	return map;
+}

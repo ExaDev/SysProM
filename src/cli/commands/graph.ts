@@ -2,6 +2,7 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { graphOp } from "../../operations/index.js";
+import { buildExternalRefClickMap } from "../../operations/graph-shared.js";
 import { noArgs, readOpts, loadDoc } from "../shared.js";
 
 const optsSchema = readOpts.extend({
@@ -40,6 +41,10 @@ const optsSchema = readOpts.extend({
 		.boolean()
 		.optional()
 		.describe("Only show nodes that have relationships"),
+	links: z
+		.boolean()
+		.optional()
+		.describe("Add click hyperlinks from external references to Mermaid nodes"),
 });
 
 export const graphCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
@@ -60,9 +65,15 @@ export const graphCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
 				? opts.relTypes.split(",").map((s) => s.trim())
 				: undefined;
 
+			const format = opts.format ?? "mermaid";
+			const clickTargets =
+				opts.links && format === "mermaid"
+					? Object.fromEntries(buildExternalRefClickMap(doc.nodes))
+					: undefined;
+
 			const output = graphOp({
 				doc,
-				format: opts.format ?? "mermaid",
+				format,
 				typeFilter: opts.type,
 				nodeTypes,
 				nodeIds,
@@ -71,6 +82,7 @@ export const graphCommand: CommandDef<typeof noArgs, typeof optsSchema> = {
 				cluster: opts.cluster ?? true,
 				labelMode: opts.labelMode ?? "friendly",
 				connectedOnly: opts.connectedOnly ?? false,
+				clickTargets,
 			});
 			console.log(output);
 		} catch (err: unknown) {

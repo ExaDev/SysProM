@@ -526,6 +526,7 @@ interface DiagramOptions {
 	refinementLayout?: DiagramLayout;
 	decisionLayout?: DiagramLayout;
 	dependencyLayout?: DiagramLayout;
+	clickTargets?: Record<string, string>;
 }
 
 function generateDiagramsFile(
@@ -555,6 +556,7 @@ function generateDiagramsFile(
 			labelMode: opts?.labelMode ?? "friendly",
 			cluster: true,
 			connectedOnly: false,
+			clickTargets: opts?.clickTargets,
 		}),
 	);
 	lines.push("```");
@@ -565,6 +567,7 @@ function generateDiagramsFile(
 		format: "mermaid",
 		layout: opts?.refinementLayout ?? "TD",
 		labelMode: opts?.labelMode ?? "friendly",
+		clickTargets: opts?.clickTargets,
 	});
 	if (refinement.includes("-->")) {
 		lines.push("## Refinement Chain");
@@ -580,6 +583,7 @@ function generateDiagramsFile(
 		format: "mermaid",
 		layout: opts?.decisionLayout ?? "TD",
 		labelMode: opts?.labelMode ?? "friendly",
+		clickTargets: opts?.clickTargets,
 	});
 	if (decisions.includes("-->")) {
 		lines.push("## Decision Map");
@@ -595,6 +599,7 @@ function generateDiagramsFile(
 		format: "mermaid",
 		layout: opts?.dependencyLayout ?? "LR",
 		labelMode: opts?.labelMode ?? "friendly",
+		clickTargets: opts?.clickTargets,
 	});
 	if (dependencies.includes("-->") || dependencies.includes("-.->")) {
 		lines.push("## Dependency Graph");
@@ -612,10 +617,29 @@ function generateDiagramsFile(
 // Public API
 // ---------------------------------------------------------------------------
 
+/** Build a click target map from node anchors for use in embedded diagrams. */
+function buildAnchorClickMap(
+	nodes: Node[],
+	nodeMap: NodeLocationMap,
+	currentFile: string,
+): Record<string, string> {
+	const targets: Record<string, string> = {};
+	for (const node of nodes) {
+		const loc = nodeMap.get(node.id);
+		if (!loc) continue;
+		targets[node.id] =
+			loc.file === "" || loc.file === currentFile
+				? `#${loc.anchor}`
+				: `./${loc.file}#${loc.anchor}`;
+	}
+	return targets;
+}
+
 /** Options for controlling JSON-to-Markdown conversion. */
 export interface ConvertOptions {
 	form: "single-file" | "multi-doc";
 	embedDiagrams?: boolean;
+	diagramLinks?: boolean;
 	labelMode?: "friendly" | "compact";
 	relationshipLayout?: DiagramLayout;
 	refinementLayout?: DiagramLayout;
@@ -625,6 +649,7 @@ export interface ConvertOptions {
 
 interface MarkdownRenderOptions {
 	embedDiagrams?: boolean;
+	diagramLinks?: boolean;
 	labelMode?: "friendly" | "compact";
 	relationshipLayout?: DiagramLayout;
 	refinementLayout?: DiagramLayout;
@@ -690,6 +715,9 @@ export function jsonToMarkdownSingle(
 		doc.relationships &&
 		doc.relationships.length > 0
 	) {
+		const clickTargets = options?.diagramLinks
+			? buildAnchorClickMap(doc.nodes, nodeMap, "")
+			: undefined;
 		lines.push("## Diagrams");
 		lines.push("");
 		lines.push("### Relationship Graph");
@@ -703,6 +731,7 @@ export function jsonToMarkdownSingle(
 				labelMode: options?.labelMode ?? "friendly",
 				cluster: true,
 				connectedOnly: false,
+				clickTargets,
 			}),
 		);
 		lines.push("```");
@@ -782,6 +811,9 @@ export function jsonToMarkdownMultiDoc(
 		doc.relationships &&
 		doc.relationships.length > 0
 	) {
+		const clickTargets = options?.diagramLinks
+			? buildAnchorClickMap(doc.nodes, nodeMap, "DIAGRAMS.md")
+			: undefined;
 		writeFileSync(
 			join(outDir, "DIAGRAMS.md"),
 			generateDiagramsFile(doc, {
@@ -790,6 +822,7 @@ export function jsonToMarkdownMultiDoc(
 				refinementLayout: options?.refinementLayout,
 				decisionLayout: options?.decisionLayout,
 				dependencyLayout: options?.dependencyLayout,
+				clickTargets,
 			}),
 		);
 	}
@@ -870,6 +903,7 @@ export function jsonToMarkdown(
 			output,
 			jsonToMarkdownSingle(doc, {
 				embedDiagrams: options.embedDiagrams,
+				diagramLinks: options.diagramLinks,
 				labelMode: options.labelMode,
 				relationshipLayout: options.relationshipLayout,
 				refinementLayout: options.refinementLayout,
@@ -880,6 +914,7 @@ export function jsonToMarkdown(
 	} else {
 		jsonToMarkdownMultiDoc(doc, output, {
 			embedDiagrams: options.embedDiagrams,
+			diagramLinks: options.diagramLinks,
 			labelMode: options.labelMode,
 			relationshipLayout: options.relationshipLayout,
 			refinementLayout: options.refinementLayout,

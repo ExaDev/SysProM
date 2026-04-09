@@ -39,6 +39,10 @@ const optsSchema = z
 			.enum(["LR", "TD", "RL", "BT"])
 			.optional()
 			.describe("Override layout for dependency diagrams"),
+		diagramLinks: z
+			.boolean()
+			.optional()
+			.describe("Add click hyperlinks to Mermaid diagram nodes"),
 	})
 	.strict();
 
@@ -80,6 +84,7 @@ export const json2mdCommand: CommandDef<z.ZodObject, typeof optsSchema> = {
 		jsonToMarkdown(raw, outputPath, {
 			form,
 			embedDiagrams: opts.embedDiagrams,
+			diagramLinks: opts.diagramLinks,
 			// forward labelMode for embedded diagrams (default friendly)
 			labelMode: opts.labelMode ?? "friendly",
 			relationshipLayout: opts.relationshipLayout,
