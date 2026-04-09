@@ -67,6 +67,10 @@ const updateNodeOpts = mutationOpts.extend({
 	status: NodeStatus.optional().describe("set lifecycle state to true"),
 	context: z.string().optional().describe("update node context"),
 	rationale: z.string().optional().describe("update node rationale"),
+	selected: z
+		.string()
+		.optional()
+		.describe("set selected option on decision nodes"),
 	lifecycle: z
 		.array(z.string())
 		.optional()
@@ -117,6 +121,7 @@ const nodeSubcommand: CommandDef = {
 		if (opts.description !== undefined) fields.description = opts.description;
 		if (opts.context !== undefined) fields.context = opts.context;
 		if (opts.rationale !== undefined) fields.rationale = opts.rationale;
+		if (opts.selected !== undefined) fields.selected = opts.selected;
 
 		const lifecycleArgs = [...(opts.lifecycle ?? [])];
 		if (opts.status !== undefined) {
@@ -130,7 +135,7 @@ const nodeSubcommand: CommandDef = {
 		if (Object.keys(fields).length === 0) {
 			console.error("No fields specified to update.");
 			console.error(
-				"Use --description, --status, --context, --rationale, or --lifecycle.",
+				"Use --description, --status, --context, --rationale, --selected, or --lifecycle.",
 			);
 			process.exit(1);
 		}
