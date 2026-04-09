@@ -1,3 +1,9 @@
+## [1.24.0](https://github.com/ExaDev/SysProM/compare/v1.23.1...v1.24.0) (2026-04-09)
+
+### Features
+
+* add issue filing guidance to error messages ([dfc1c60](https://github.com/ExaDev/SysProM/commit/dfc1c600615c6faf1c610617302ddf47a2a1aa8a))
+
 ## [1.23.1](https://github.com/ExaDev/SysProM/compare/v1.23.0...v1.23.1) (2026-04-09)
 
 ### Bug Fixes
