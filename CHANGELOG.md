@@ -1,3 +1,9 @@
+## [1.25.1](https://github.com/ExaDev/SysProM/compare/v1.25.0...v1.25.1) (2026-04-09)
+
+### Bug Fixes
+
+* **validate:** allow undecided decisions without selected option ([e08731f](https://github.com/ExaDev/SysProM/commit/e08731f54a7bf9ae2129a81ff99984efd99b5db8)), closes [#24](https://github.com/ExaDev/SysProM/issues/24)
+
 ## [1.25.0](https://github.com/ExaDev/SysProM/compare/v1.24.0...v1.25.0) (2026-04-09)
 
 ### Features
