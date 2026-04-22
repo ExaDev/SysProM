@@ -1,3 +1,9 @@
+## [1.28.2](https://github.com/ExaDev/SysProM/compare/v1.28.1...v1.28.2) (2026-04-22)
+
+### Build System
+
+* **config:** add project .pnpmrc for minimum release age ([0bb5a7f](https://github.com/ExaDev/SysProM/commit/0bb5a7fb8c3a2c0f59371819b4eaf89fe04e32a7))
+
 ## [1.28.1](https://github.com/ExaDev/SysProM/compare/v1.28.0...v1.28.1) (2026-04-22)
 
 ### Bug Fixes
