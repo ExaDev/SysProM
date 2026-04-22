@@ -1,3 +1,22 @@
+## [1.28.0](https://github.com/ExaDev/SysProM/compare/v1.27.2...v1.28.0) (2026-04-22)
+
+### Features
+
+* **graph:** add Mermaid click directives for node hyperlinks ([a352079](https://github.com/ExaDev/SysProM/commit/a352079e5079b43caeabab2890931d293cbee0f3))
+
+### Bug Fixes
+
+* **cli:** remove duplicate removeExternalReferenceOp call ([6a23134](https://github.com/ExaDev/SysProM/commit/6a2313434ccc0a8c6e9e58d897f8e4faf11e42d1))
+* **config:** remove invalid npmrc min-release-age that breaks npx ([470f44b](https://github.com/ExaDev/SysProM/commit/470f44bd1dd2ee84f07da429d0fe58197a3a1c8c))
+
+### Documentation
+
+* **sysprom:** record decision and change for Mermaid click directives ([92504e2](https://github.com/ExaDev/SysProM/commit/92504e2a1f62ea4b0f52d22f32bdacf23be9dcd7))
+
+### Build System
+
+* **config:** enforce 7-day minimum release age for npm and pnpm ([c45fd00](https://github.com/ExaDev/SysProM/commit/c45fd00c4fccbd48e0360c17f1f3517caf77210c))
+
 ## [1.27.2](https://github.com/ExaDev/SysProM/compare/v1.27.1...v1.27.2) (2026-04-09)
 
 ### Continuous Integration
