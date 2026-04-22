@@ -1,3 +1,9 @@
+## [1.28.1](https://github.com/ExaDev/SysProM/compare/v1.28.0...v1.28.1) (2026-04-22)
+
+### Bug Fixes
+
+* **config:** use valid npm min-release-age format without suffix ([6592a40](https://github.com/ExaDev/SysProM/commit/6592a40b5251015b6c89f02f69c18f6dffe12d5b))
+
 ## [1.28.0](https://github.com/ExaDev/SysProM/compare/v1.27.2...v1.28.0) (2026-04-22)
 
 ### Features
