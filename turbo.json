@@ -25,7 +25,12 @@
 		},
 		"_compile": {
 			"dependsOn": ["_typecheck", "@sysprom/core#build"],
-			"inputs": ["src/**/*.ts", "tsconfig.json"],
+			"inputs": [
+				"src/**/*.ts",
+				"packages/core/src/**/*.ts",
+				"tsconfig.json",
+				"tsdown.config.ts"
+			],
 			"outputs": ["dist/**"]
 		},
 		"_schema": {
