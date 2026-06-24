@@ -36,6 +36,7 @@ import {
 	type LayoutMode,
 	type BackboneLayoutOptions,
 } from "./layouts";
+import { placeOrphansAfterLayout } from "./orphanPlacement";
 
 // Register the layout extensions once.
 cytoscape.use(fcose);
@@ -203,6 +204,7 @@ export function CytoscapeGraph({
 		if (layout === "refinement") {
 			runRankedLayout(
 				cy,
+				doc,
 				buildRefinementLayoutOptions(),
 				backboneSubgraph,
 				crossCuttingEdges,
@@ -210,14 +212,15 @@ export function CytoscapeGraph({
 		} else if (layout === "emergent") {
 			runRankedLayout(
 				cy,
+				doc,
 				buildEmergentLayoutOptions(),
 				emergentSubgraph,
 				nonEmergentEdges,
 			);
 		} else if (layout === "subsystem") {
-			cy.layout(toLayoutOptions(buildSubsystemLayoutOptions())).run();
+			runFcoseLayout(cy, doc, buildSubsystemLayoutOptions());
 		} else if (layout === "overview") {
-			cy.layout(toLayoutOptions(buildOverviewLayoutOptions())).run();
+			runFcoseLayout(cy, doc, buildOverviewLayoutOptions());
 		}
 		// layout === "trace" is handled by the dedicated trace effect below.
 	}, [layout, doc, useSubsystemElements]);
@@ -241,6 +244,11 @@ export function CytoscapeGraph({
  * as overlays between already-positioned nodes without influencing the
  * ranking.
  *
+ * After the layout settles, `placeOrphansAfterLayout` repositions view nodes
+ * to the centroid of their `includes` members and places truly-orphan nodes
+ * (no incident layout edges, not in any view) in a loose arc along the
+ * periphery, so no disconnected block forms.
+ *
  * - Refinement passes `backboneSubgraph` + `crossCuttingEdges` (strict
  *   backbone ranking; all governance/impact edges are overlays).
  * - Emergent passes `emergentSubgraph` + `nonEmergentEdges` (backbone plus
@@ -248,10 +256,11 @@ export function CytoscapeGraph({
  *
  * The layout runs against the subgraph (all visible nodes + the selected
  * edges) via `Collection.layout`, which positions every node in the
- * collection — including any nodes connected only by overlay edges.
+ * collection.
  */
 function runRankedLayout(
 	cy: Core,
+	doc: SysProMDocument,
 	options: BackboneLayoutOptions,
 	selectSubgraph: (cy: Core) => Collection,
 	selectOverlays: (cy: Core) => Collection,
@@ -264,7 +273,46 @@ function runRankedLayout(
 		// Restore overlay edges now that nodes have settled; positions are
 		// kept, so the overlays render between the already-placed nodes.
 		overlays.style("display", "element");
-		cy.fit(undefined, 40);
+
+		// Collect the layout edge IDs for orphan detection.
+		const layoutEdgeIds = new Set<string>();
+		subgraph.edges().forEach((edge) => {
+			layoutEdgeIds.add(edge.id());
+		});
+
+		// Place orphans peripherally and views at their members' centroid.
+		// Deferred to the next frame so positions are final after animation.
+		setTimeout(() => {
+			placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			cy.fit(undefined, 40);
+		}, 0);
+	});
+	layout.run();
+}
+
+/**
+ * Run a fcose layout (Subsystem, Overview) with peripheral orphan placement.
+ *
+ * After the layout settles, `placeOrphansAfterLayout` repositions view nodes
+ * to the centroid of their `includes` members and places truly-orphan nodes
+ * in a loose arc along the periphery.
+ */
+function runFcoseLayout(
+	cy: Core,
+	doc: SysProMDocument,
+	options: BackboneLayoutOptions,
+): void {
+	const layout = cy.layout(toLayoutOptions(options));
+	layout.one("layoutstop", () => {
+		const layoutEdgeIds = new Set<string>();
+		cy.edges(":visible").forEach((edge) => {
+			layoutEdgeIds.add(edge.id());
+		});
+		// Deferred to the next frame so positions are final after animation.
+		setTimeout(() => {
+			placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			cy.fit(undefined, 40);
+		}, 0);
 	});
 	layout.run();
 }

@@ -170,9 +170,13 @@ export type BackboneLayoutOptions = DagreLayoutOptions | FcoseLayoutOptions;
  * edge set (backbone plus governance / impact), so far more edges are present
  * than in the Refinement hierarchy. Tuned for clean cluster separation:
  * higher node repulsion and longer ideal edges keep decisions, invariants,
- * and policies from collapsing onto their targets, while `packComponents` is
- * disabled — the broader edge set leaves almost no isolated components, so
- * packing would only add an unnecessary grid pass on the handful that remain.
+ * and policies from collapsing onto their targets.
+ *
+ * `tile` and `packComponents` are disabled: disconnected components would
+ * otherwise be packed into a dense grid square. Instead, the remaining
+ * orphans (nodes with no incident layout edges) are placed peripherally by
+ * `placeOrphansAfterLayout` after the primary layout settles, so they read
+ * as an "unlinked" cluster rather than a grid block.
  */
 export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 	return {
@@ -188,13 +192,19 @@ export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 		edgeElasticity: 0.4,
 		gravity: 0.15,
 		numIter: 4000,
-		tile: true,
+		tile: false,
 		packComponents: false,
 		quality: "default",
 	};
 }
 
-/** Build the fcose compound options for the By subsystem layout. */
+/**
+ * Build the fcose compound options for the By subsystem layout.
+ *
+ * `tile` and `packComponents` are disabled: orphan nodes (those with no
+ * relationship edges) are placed peripherally by `placeOrphansAfterLayout`
+ * after the layout settles, instead of being packed into a grid square.
+ */
 export function buildSubsystemLayoutOptions(): FcoseLayoutOptions {
 	return {
 		name: "fcose",
@@ -209,13 +219,19 @@ export function buildSubsystemLayoutOptions(): FcoseLayoutOptions {
 		edgeElasticity: 0.45,
 		gravity: 0.3,
 		numIter: 2500,
-		tile: true,
-		packComponents: true,
+		tile: false,
+		packComponents: false,
 		quality: "default",
 	};
 }
 
-/** Build the fcose (force-directed) layout options for the Overview mode. */
+/**
+ * Build the fcose (force-directed) layout options for the Overview mode.
+ *
+ * `tile` and `packComponents` are disabled: orphan nodes are placed
+ * peripherally by `placeOrphansAfterLayout` after the layout settles,
+ * instead of being packed into a grid square.
+ */
 export function buildOverviewLayoutOptions(): FcoseLayoutOptions {
 	return {
 		name: "fcose",
@@ -230,8 +246,8 @@ export function buildOverviewLayoutOptions(): FcoseLayoutOptions {
 		edgeElasticity: 0.45,
 		gravity: 0.25,
 		numIter: 2500,
-		tile: true,
-		packComponents: true,
+		tile: false,
+		packComponents: false,
 	};
 }
 
