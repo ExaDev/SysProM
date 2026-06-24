@@ -153,6 +153,10 @@ Setting a node to status: retired via updateNode must report all active nodes th
 
 When both JSON and Markdown representations of a SysProM document exist, mutations via the CLI must automatically keep them in sync. Users should not need to manually run json2md or md2json after every change.
 
+### INV33 — Published Package Contract Stability
+
+The published sysprom package contract is preserved across the monorepo split: the sysprom, spm, and sysprom-mcp CLI binaries continue to install and run, and every name currently importable from sysprom remains exported with its existing signature. Existing Node consumers see no change.
+
 ## Principles
 
 ### PRIN1 — Separate What From Why From How
