@@ -89,7 +89,6 @@ export function CytoscapeGraph({
 			container,
 			elements: [],
 			style: stylesheet,
-			wheelSensitivity: 0.2,
 			minZoom: 0.05,
 			maxZoom: 4,
 			pixelRatio: 1.5,

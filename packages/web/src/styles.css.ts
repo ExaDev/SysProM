@@ -1,6 +1,12 @@
 import { globalStyle, style, createTheme } from "@vanilla-extract/css";
 
-export const [themeClass, theme] = createTheme({
+/**
+ * Raw theme token values — the single source of truth for colours, fonts, and
+ * spacing. Both the vanilla-extract theme (for DOM elements) and the Cytoscape
+ * stylesheet (for canvas rendering, which cannot resolve CSS custom properties)
+ * consume these literals.
+ */
+export const themeTokens = {
 	color: {
 		bg: "#fafafa",
 		surface: "#ffffff",
@@ -23,7 +29,9 @@ export const [themeClass, theme] = createTheme({
 		lg: "16px",
 		xl: "24px",
 	},
-});
+} as const;
+
+export const [themeClass, theme] = createTheme(themeTokens);
 
 globalStyle("*", {
 	boxSizing: "border-box",

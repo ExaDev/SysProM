@@ -5,7 +5,7 @@
  * meaning (pending, deprecated, subsystem-bearing).
  */
 import type { StylesheetJson, StylesheetJsonBlock, Css } from "cytoscape";
-import { theme } from "../styles.css";
+import { themeTokens } from "../styles.css";
 
 /** Node shape literal union from Cytoscape. */
 type NodeShape = Css.NodeShape;
@@ -50,8 +50,8 @@ const TYPE_STYLES: Readonly<Record<string, TypeStyle>> = {
 function typeStyle(type: string): TypeStyle {
 	return (
 		TYPE_STYLES[type] ?? {
-			fill: theme.color.textMuted,
-			border: theme.color.text,
+			fill: themeTokens.color.textMuted,
+			border: themeTokens.color.text,
 			shape: "ellipse",
 		}
 	);
@@ -82,7 +82,7 @@ const REL_STYLES: Readonly<Record<string, RelStyle>> = {
 };
 
 function relStyle(type: string): RelStyle {
-	return REL_STYLES[type] ?? { colour: theme.color.textMuted, width: 1 };
+	return REL_STYLES[type] ?? { colour: themeTokens.color.textMuted, width: 1 };
 }
 
 /**
@@ -97,8 +97,8 @@ export function buildStylesheet(): StylesheetJson {
 			style: {
 				label: "data(name)",
 				"font-size": "10px",
-				"font-family": theme.font.body,
-				color: theme.color.text,
+				"font-family": themeTokens.font.body,
+				color: themeTokens.color.text,
 				"text-valign": "bottom",
 				"text-halign": "center",
 				"text-margin-y": 4,
@@ -119,12 +119,12 @@ export function buildStylesheet(): StylesheetJson {
 				"curve-style": "bezier",
 				"target-arrow-shape": "triangle",
 				"arrow-scale": 0.9,
-				"line-color": theme.color.textMuted,
-				"target-arrow-color": theme.color.textMuted,
+				"line-color": themeTokens.color.textMuted,
+				"target-arrow-color": themeTokens.color.textMuted,
 				width: 1.5,
 				"text-rotation": "autorotate",
 				"font-size": "8px",
-				color: theme.color.textMuted,
+				color: themeTokens.color.textMuted,
 				opacity: 0.7,
 				"transition-property": "opacity, line-color, width",
 				"transition-duration": 150,
@@ -201,8 +201,8 @@ export function buildStylesheet(): StylesheetJson {
 			selector: "node:selected",
 			style: {
 				"border-width": 4,
-				"border-color": theme.color.accent,
-				"overlay-color": theme.color.accent,
+				"border-color": themeTokens.color.accent,
+				"overlay-color": themeTokens.color.accent,
 				"overlay-opacity": 0.2,
 			},
 		},
