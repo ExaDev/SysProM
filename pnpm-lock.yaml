@@ -154,6 +154,9 @@ importers:
       '@sysprom/core':
         specifier: workspace:*
         version: link:../core
+      '@vanilla-extract/css':
+        specifier: 1.20.1
+        version: 1.20.1
       cytoscape:
         specifier: 3.34.0
         version: 3.34.0
