@@ -256,7 +256,7 @@ export default defineConfig(
 		},
 	},
 	{
-		files: ["src/**/*.ts"],
+		files: ["src/**/*.ts", "packages/core/src/**/*.ts"],
 		rules: {
 			"@typescript-eslint/no-unnecessary-condition": "off",
 			"sonarjs/cognitive-complexity": "off",
@@ -271,7 +271,7 @@ export default defineConfig(
 		},
 	},
 	{
-		files: ["tests/**/*.ts"],
+		files: ["tests/**/*.ts", "packages/core/tests/**/*.ts"],
 		rules: {
 			"@typescript-eslint/consistent-type-assertions": [
 				"error",
@@ -310,7 +310,7 @@ export default defineConfig(
 	{
 		ignores: [
 			".claude/worktrees/**",
-			"dist/",
+			"**/dist/",
 			"node_modules/",
 			"docs/",
 			"commitlint.config.ts",

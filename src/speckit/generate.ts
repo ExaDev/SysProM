@@ -1,11 +1,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { SysProMDocument, Node, Relationship } from "../schema.js";
-import { textToString } from "../text.js";
 import {
+	type SysProMDocument,
+	type Node,
+	type Relationship,
+	textToString,
 	hasLifecycleState,
 	primaryLifecycleState,
-} from "../lifecycle-state.js";
+} from "@sysprom/core";
 
 // ============================================================================
 // Helper functions

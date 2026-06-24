@@ -5,7 +5,7 @@ import type {
 	Node,
 	Relationship,
 	NodeStatus,
-} from "../schema.js";
+} from "@sysprom/core";
 
 // ---------------------------------------------------------------------------
 // Helper types

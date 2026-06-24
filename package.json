@@ -71,6 +71,7 @@
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "1.29.0",
+		"@sysprom/core": "workspace:*",
 		"commander": "14.0.3",
 		"picocolors": "1.1.1",
 		"zod": "4.3.6"

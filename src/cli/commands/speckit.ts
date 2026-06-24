@@ -3,7 +3,7 @@ import { resolve, dirname } from "node:path";
 import { existsSync } from "node:fs";
 import type { CommandDef } from "../define-command.js";
 import { loadDocument, saveDocument } from "../../io.js";
-import type { SysProMDocument, Node } from "../../schema.js";
+import type { SysProMDocument, Node } from "@sysprom/core";
 import { parseSpecKitFeature } from "../../speckit/parse.js";
 import { generateSpecKitProject } from "../../speckit/generate.js";
 import { detectSpecKitProject } from "../../speckit/project.js";

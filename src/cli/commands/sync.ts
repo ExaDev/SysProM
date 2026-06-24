@@ -19,8 +19,7 @@ import {
 	jsonToMarkdownSingle,
 	jsonToMarkdownMultiDoc,
 } from "../../json-to-md.js";
-import { canonicalise } from "../../canonical-json.js";
-import { SysProMDocument } from "../../schema.js";
+import { canonicalise, SysProMDocument } from "@sysprom/core";
 
 interface SyncCommandInput {
 	jsonPath: string;

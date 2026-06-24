@@ -1,7 +1,6 @@
 import * as z from "zod";
 import { dirname } from "node:path";
-import { defineOperation } from "./define-operation.js";
-import { SysProMDocument } from "../schema.js";
+import { defineOperation, SysProMDocument } from "@sysprom/core";
 import { parseSpecKitFeature } from "../speckit/parse.js";
 import { detectSpecKitProject } from "../speckit/project.js";
 
