@@ -7,7 +7,7 @@ import {
 	generateTasks,
 	generateChecklist,
 } from "../src/speckit/generate.js";
-import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
+import type { SysProMDocument, Node, Relationship } from "@sysprom/core";
 
 // ============================================================================
 // Helper function to create test documents

@@ -4,9 +4,9 @@ import { mkdtempSync, rmSync, writeFileSync, utimesSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { detectChanges } from "../src/sync.js";
-import { canonicalise } from "../src/canonical-json.js";
+import { canonicalise } from "@sysprom/core";
 import { jsonToMarkdownSingle } from "../src/json-to-md.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function createTestDoc(): SysProMDocument {
 	return {

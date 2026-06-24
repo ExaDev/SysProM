@@ -21,14 +21,12 @@ import {
 	ExternalReference,
 	Metadata,
 	toJSONSchema,
-} from "../src/schema.js";
-import { canonicalise } from "../src/canonical-json.js";
-import {
+	canonicalise,
 	textToString,
 	textToLines,
 	textToMarkdown,
 	markdownToText,
-} from "../src/text.js";
+} from "@sysprom/core";
 
 // ---------------------------------------------------------------------------
 // schema.ts — .is() type guards

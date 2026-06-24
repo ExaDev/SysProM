@@ -14,7 +14,7 @@ import {
 	jsonToMarkdownSingle,
 	jsonToMarkdownMultiDoc,
 } from "../src/json-to-md.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function minimal(): SysProMDocument {
 	return {

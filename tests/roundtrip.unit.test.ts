@@ -11,7 +11,7 @@ import {
 	markdownSingleToJson,
 	markdownMultiDocToJson,
 } from "../src/md-to-json.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function fixture(): SysProMDocument {
 	return {
