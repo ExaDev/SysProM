@@ -6,7 +6,6 @@
  * - **Overview** — fcose (force-directed) for a holistic picture.
  * - **Trace** — Cytoscape built-in breadthfirst from a selected node.
  */
-import ELK from "elkjs";
 import type {
 	LayoutOptions,
 	ShapedLayoutOptions,
@@ -49,6 +48,9 @@ export async function computeElkPositions(
 	nodes: readonly Node[],
 	edges: readonly { readonly source: string; readonly target: string }[],
 ): Promise<Map<string, { readonly x: number; readonly y: number }>> {
+	// Dynamic import so ELK is loaded in its own chunk, only when the Layered
+	// layout runs. This keeps ELK out of the initial bundle.
+	const { default: ELK } = await import("elkjs");
 	const elk = new ELK();
 	const elkNodes = nodes.map((node) => ({
 		id: node.id,
