@@ -224,6 +224,27 @@ export function buildStylesheet(): StylesheetJson {
 			selector: ".highlighted",
 			style: { opacity: 1, "border-width": 4 },
 		},
+		// Compound cluster parents ("By subsystem" layout): transparent
+		// bounding boxes with a labelled title, drawn behind their children.
+		{
+			selector: 'node[type="cluster"]',
+			style: {
+				"background-opacity": 0.05,
+				"border-width": 1,
+				"border-style": "dashed",
+				"border-color": themeTokens.color.textMuted,
+				"font-size": "11px",
+				"font-weight": "bold",
+				color: themeTokens.color.text,
+				"text-valign": "top",
+				"text-halign": "center",
+				"text-margin-y": 6,
+				shape: "round-rectangle",
+				width: 16,
+				height: 16,
+				padding: "8px",
+			},
+		},
 	];
 
 	return [...base, ...typeSelectors, ...relSelectors, ...semantic];

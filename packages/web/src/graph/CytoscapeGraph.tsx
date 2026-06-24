@@ -6,7 +6,7 @@
  * This avoids the cost of tearing down and rebuilding the renderer on every
  * prop change — essential for the 223-node sample document.
  */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cytoscape, {
 	type Core,
 	type Collection,
@@ -36,7 +36,11 @@ import {
 	type LayoutMode,
 	type BackboneLayoutOptions,
 } from "./layouts";
-import { placeOrphansAfterLayout } from "./orphanPlacement";
+import {
+	placeOrphansAfterLayout,
+	enforceClearanceOnCytoscape,
+	type OrphanLabel,
+} from "./orphanPlacement";
 
 // Register the layout extensions once.
 cytoscape.use(fcose);
@@ -92,6 +96,12 @@ export function CytoscapeGraph({
 	const cyRef = useRef<Core | null>(null);
 	const onSelectRef = useRef(onSelect);
 	onSelectRef.current = onSelect;
+	// Orphan-cluster labels rendered as an HTML overlay (canvas text is
+	// unreadable at the zoom levels a full-graph fit produces).
+	const [labels, setLabels] = useState<readonly OrphanLabel[]>([]);
+	// Bumped on every viewport change so the overlay re-renders at the new
+	// pan/zoom, keeping the label chips pinned to their clusters.
+	const [viewportTick, setViewportTick] = useState(0);
 
 	// Initialise the Cytoscape instance exactly once.
 	useEffect(() => {
@@ -132,6 +142,12 @@ export function CytoscapeGraph({
 
 		cy.on("tap", "node", handleNodeTap);
 		cy.on("tap", handleBackgroundTap);
+
+		// Keep the HTML label overlay in sync with pan/zoom.
+		const handleViewport = (): void => {
+			setViewportTick((t) => t + 1);
+		};
+		cy.on("pan zoom", handleViewport);
 
 		return () => {
 			cy.destroy();
@@ -208,6 +224,7 @@ export function CytoscapeGraph({
 				buildRefinementLayoutOptions(),
 				backboneSubgraph,
 				crossCuttingEdges,
+				setLabels,
 			);
 		} else if (layout === "emergent") {
 			runRankedLayout(
@@ -216,11 +233,12 @@ export function CytoscapeGraph({
 				buildEmergentLayoutOptions(),
 				emergentSubgraph,
 				nonEmergentEdges,
+				setLabels,
 			);
 		} else if (layout === "subsystem") {
-			runFcoseLayout(cy, doc, buildSubsystemLayoutOptions());
+			runFcoseLayout(cy, doc, buildSubsystemLayoutOptions(), setLabels);
 		} else if (layout === "overview") {
-			runFcoseLayout(cy, doc, buildOverviewLayoutOptions());
+			runFcoseLayout(cy, doc, buildOverviewLayoutOptions(), setLabels);
 		}
 		// layout === "trace" is handled by the dedicated trace effect below.
 	}, [layout, doc, useSubsystemElements]);
@@ -232,10 +250,96 @@ export function CytoscapeGraph({
 		const cy = cyRef.current;
 		if (!cy) return;
 		if (layout !== "trace" || !traceRootId) return;
-		cy.layout(toLayoutOptions(buildTraceLayoutOptions(traceRootId))).run();
+		setLabels([]);
+		const traceLayout = cy.layout(
+			toLayoutOptions(buildTraceLayoutOptions(traceRootId)),
+		);
+		traceLayout.one("layoutstop", () => {
+			// Enforce the hard node-clearance invariant after the trace settles.
+			setTimeout(() => {
+				enforceClearanceOnCytoscape(cy);
+				cy.fit(undefined, 40);
+			}, 0);
+		});
+		traceLayout.run();
 	}, [layout, traceRootId]);
 
-	return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
+	return (
+		<div style={{ position: "relative", width: "100%", height: "100%" }}>
+			<div
+				ref={containerRef}
+				style={{ width: "100%", height: "100%", zIndex: 1 }}
+			/>
+			<OrphanLabelOverlay
+				cyRef={cyRef}
+				labels={labels}
+				viewportTick={viewportTick}
+			/>
+		</div>
+	);
+}
+
+/**
+ * HTML overlay rendering orphan-cluster label chips pinned to their clusters.
+ * Canvas text is unreadable at the zoom levels a full-graph fit produces, so
+ * labels are rendered as DOM elements whose screen position is recomputed on
+ * every pan/zoom tick from each label's model coordinates via
+ * `cy.renderedPoint`.
+ */
+function OrphanLabelOverlay({
+	cyRef,
+	labels,
+	viewportTick,
+}: {
+	readonly cyRef: React.RefObject<Core | null>;
+	readonly labels: readonly OrphanLabel[];
+	readonly viewportTick: number;
+}): React.ReactElement | null {
+	const cy = cyRef.current;
+	// `viewportTick` forces this component to re-render on pan/zoom so the
+	// label chips recompute their screen positions.
+	if (cy === null || labels.length === 0 || viewportTick < 0) return null;
+	return (
+		<div
+			style={{
+				position: "absolute",
+				inset: 0,
+				pointerEvents: "none",
+				overflow: "hidden",
+				zIndex: 1000,
+			}}
+		>
+			{labels.map((label) => {
+				// Model-to-screen transform: rendered = model * zoom + pan.
+				const zoom = cy.zoom();
+				const pan = cy.pan();
+				const rx = label.x * zoom + pan.x;
+				const ry = label.y * zoom + pan.y;
+				return (
+					<span
+						key={label.id}
+						style={{
+							position: "absolute",
+							left: `${String(rx)}px`,
+							top: `${String(ry)}px`,
+							transform: "translate(-50%, -50%)",
+							padding: "2px 8px",
+							background: "rgba(255,255,255,0.9)",
+							border: "1px solid #868e96",
+							borderRadius: "10px",
+							fontSize: "12px",
+							fontWeight: 600,
+							color: "#212529",
+							whiteSpace: "nowrap",
+							boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+						}}
+					>
+						{label.label}
+					</span>
+				);
+			})}
+		</div>
+	);
 }
 
 /**
@@ -264,6 +368,7 @@ function runRankedLayout(
 	options: BackboneLayoutOptions,
 	selectSubgraph: (cy: Core) => Collection,
 	selectOverlays: (cy: Core) => Collection,
+	onLabels: (labels: readonly OrphanLabel[]) => void,
 ): void {
 	const overlays = selectOverlays(cy);
 	overlays.style("display", "none");
@@ -283,7 +388,8 @@ function runRankedLayout(
 		// Place orphans peripherally and views at their members' centroid.
 		// Deferred to the next frame so positions are final after animation.
 		setTimeout(() => {
-			placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			const labels = placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			onLabels(labels);
 			cy.fit(undefined, 40);
 		}, 0);
 	});
@@ -301,6 +407,7 @@ function runFcoseLayout(
 	cy: Core,
 	doc: SysProMDocument,
 	options: BackboneLayoutOptions,
+	onLabels: (labels: readonly OrphanLabel[]) => void,
 ): void {
 	const layout = cy.layout(toLayoutOptions(options));
 	layout.one("layoutstop", () => {
@@ -310,7 +417,8 @@ function runFcoseLayout(
 		});
 		// Deferred to the next frame so positions are final after animation.
 		setTimeout(() => {
-			placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			const labels = placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			onLabels(labels);
 			cy.fit(undefined, 40);
 		}, 0);
 	});

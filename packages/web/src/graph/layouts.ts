@@ -33,6 +33,7 @@ import {
 	CROSS_CUTTING_REL_TYPES,
 	EMERGENT_REL_TYPES,
 } from "./elements";
+import { MIN_NODE_CLEARANCE } from "./orphanPlacement";
 
 export type LayoutMode =
 	| "refinement"
@@ -57,6 +58,12 @@ interface FcoseLayoutOptions extends ShapedLayoutOptions {
 	tile?: boolean;
 	packComponents?: boolean;
 	quality?: "draft" | "default";
+	/**
+	 * Minimum additional distance between unconnected nodes (fcose's built-in
+	 * spacing knob). Used alongside the post-layout `enforceClearance` pass so
+	 * the layout itself starts from a near-clearance-respecting state.
+	 */
+	nodeSeparation?: number;
 }
 
 /**
@@ -139,14 +146,19 @@ function isEmergentType(type: unknown): boolean {
 	return typeof type === "string" && EMERGENT_REL_TYPES.has(type);
 }
 
-/** Build the dagre options for the Refinement hierarchy (top-down DAG). */
+/**
+ * Build the dagre options for the Refinement hierarchy (top-down DAG).
+ * `nodeSep` is set to the global minimum clearance so the DAG layers respect
+ * the node-to-node spacing invariant from the outset; the post-layout
+ * `enforceClearance` pass then guarantees it across every node pair.
+ */
 export function buildRefinementLayoutOptions(): DagreLayoutOptions {
 	return {
 		name: "dagre",
 		rankDir: "TB",
-		nodeSep: 50,
-		edgeSep: 20,
-		rankSep: 70,
+		nodeSep: MIN_NODE_CLEARANCE,
+		edgeSep: 40,
+		rankSep: 90,
 		ranker: "network-simplex",
 		acyclicer: "greedy",
 		animate: true,
@@ -168,15 +180,22 @@ export type BackboneLayoutOptions = DagreLayoutOptions | FcoseLayoutOptions;
 /**
  * Build the fcose options for the Emergent topology. Ranks on the emergent
  * edge set (backbone plus governance / impact), so far more edges are present
- * than in the Refinement hierarchy. Tuned for clean cluster separation:
- * higher node repulsion and longer ideal edges keep decisions, invariants,
- * and policies from collapsing onto their targets.
+ * than in the Refinement hierarchy. Tuned for clean cluster separation AND
+ * fewer edge crossings: high node repulsion, long ideal edges, low edge
+ * elasticity, and a long iteration budget give the force-directed solver
+ * room to untangle. Lower `edgeElasticity` (0.25) lets edges stretch so the
+ * layout can escape tangled local minima; `idealEdgeLength` 220 keeps
+ * connected groups well separated; `numIter` 8000 gives the solver the
+ * iterations it needs to converge on the larger edge set.
  *
  * `tile` and `packComponents` are disabled: disconnected components would
  * otherwise be packed into a dense grid square. Instead, the remaining
  * orphans (nodes with no incident layout edges) are placed peripherally by
  * `placeOrphansAfterLayout` after the primary layout settles, so they read
- * as an "unlinked" cluster rather than a grid block.
+ * as type-grouped clusters around the edge rather than a grid block.
+ * `nodeSeparation` is set to the global minimum clearance so the layout
+ * itself starts from a near-clearance-respecting state; the post-layout
+ * `enforceClearance` pass then guarantees the invariant.
  */
 export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 	return {
@@ -187,14 +206,15 @@ export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 		fit: true,
 		padding: 40,
 		randomize: true,
-		nodeRepulsion: 45000,
-		idealEdgeLength: 180,
-		edgeElasticity: 0.4,
-		gravity: 0.15,
-		numIter: 4000,
+		nodeRepulsion: 65000,
+		idealEdgeLength: 220,
+		edgeElasticity: 0.25,
+		gravity: 0.12,
+		numIter: 8000,
 		tile: false,
 		packComponents: false,
 		quality: "default",
+		nodeSeparation: MIN_NODE_CLEARANCE,
 	};
 }
 
@@ -222,6 +242,7 @@ export function buildSubsystemLayoutOptions(): FcoseLayoutOptions {
 		tile: false,
 		packComponents: false,
 		quality: "default",
+		nodeSeparation: MIN_NODE_CLEARANCE,
 	};
 }
 
@@ -248,6 +269,7 @@ export function buildOverviewLayoutOptions(): FcoseLayoutOptions {
 		numIter: 2500,
 		tile: false,
 		packComponents: false,
+		nodeSeparation: MIN_NODE_CLEARANCE,
 	};
 }
 
