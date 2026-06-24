@@ -274,3 +274,126 @@ export const sectionTitle = style({
 	fontWeight: 600,
 	margin: `${theme.space.lg} 0 ${theme.space.sm}`,
 });
+
+// --- Interactive graph tab styles ---
+
+export const graphWorkspace = style({
+	display: "flex",
+	gap: theme.space.md,
+	alignItems: "flex-start",
+	marginTop: theme.space.md,
+});
+
+export const graphCanvas = style({
+	flex: 1,
+	height: "70vh",
+	minHeight: "480px",
+	backgroundColor: theme.color.surface,
+	border: `1px solid ${theme.color.border}`,
+	borderRadius: "8px",
+	overflow: "hidden",
+});
+
+export const detailsPanel = style({
+	width: "300px",
+	flexShrink: 0,
+	backgroundColor: theme.color.surface,
+	border: `1px solid ${theme.color.border}`,
+	borderRadius: "8px",
+	padding: theme.space.md,
+	maxHeight: "70vh",
+	overflowY: "auto",
+	fontSize: "13px",
+});
+
+export const filterGroup = style({
+	display: "flex",
+	flexDirection: "column",
+	gap: theme.space.xs,
+	padding: theme.space.sm,
+	border: `1px solid ${theme.color.border}`,
+	borderRadius: "6px",
+	minWidth: "180px",
+});
+
+export const filterGroupLabel = style({
+	fontSize: "12px",
+	fontWeight: 600,
+	color: theme.color.textMuted,
+	textTransform: "uppercase",
+	letterSpacing: "0.04em",
+});
+
+export const filterCheckboxRow = style({
+	display: "flex",
+	alignItems: "center",
+	gap: theme.space.xs,
+	fontSize: "12px",
+});
+
+export const legendGrid = style({
+	display: "flex",
+	flexWrap: "wrap",
+	gap: theme.space.sm,
+	fontSize: "11px",
+	color: theme.color.textMuted,
+});
+
+export const legendItem = style({
+	display: "flex",
+	alignItems: "center",
+	gap: theme.space.xs,
+});
+
+export const legendSwatch = style({
+	display: "inline-block",
+	width: "14px",
+	height: "14px",
+	borderRadius: "3px",
+	border: "1px solid",
+	flexShrink: 0,
+});
+
+export const layoutControls = style({
+	display: "flex",
+	gap: theme.space.xs,
+	flexWrap: "wrap",
+});
+
+export const layoutButton = style({
+	fontFamily: theme.font.body,
+	fontSize: "12px",
+	padding: `${theme.space.xs} ${theme.space.sm}`,
+	border: `1px solid ${theme.color.border}`,
+	borderRadius: "6px",
+	backgroundColor: theme.color.surface,
+	color: theme.color.text,
+	cursor: "pointer",
+	selectors: {
+		'&[data-active="true"]': {
+			backgroundColor: theme.color.accent,
+			color: "#ffffff",
+			borderColor: theme.color.accent,
+		},
+		"&:hover": {
+			borderColor: theme.color.accent,
+		},
+	},
+});
+
+export const detailsField = style({
+	marginBottom: theme.space.sm,
+});
+
+export const detailsLabel = style({
+	fontSize: "11px",
+	color: theme.color.textMuted,
+	textTransform: "uppercase",
+	letterSpacing: "0.04em",
+	marginBottom: "2px",
+});
+
+export const detailsValue = style({
+	fontFamily: theme.font.body,
+	wordBreak: "break-word",
+});
