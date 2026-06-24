@@ -24,12 +24,20 @@ const MermaidView = lazy(() =>
 type View = "interactive" | "mermaid";
 
 const LAYOUT_LABELS: Readonly<Record<LayoutMode, string>> = {
-	layered: "Layered (ELK)",
+	refinement: "Refinement hierarchy",
+	emergent: "Emergent topology",
+	subsystem: "By subsystem",
 	overview: "Overview (fCoSE)",
 	trace: "Trace from selected",
 };
 
-const LAYOUT_MODES: readonly LayoutMode[] = ["layered", "overview", "trace"];
+const LAYOUT_MODES: readonly LayoutMode[] = [
+	"refinement",
+	"emergent",
+	"subsystem",
+	"overview",
+	"trace",
+];
 
 export function GraphsTab({
 	doc,
@@ -37,7 +45,7 @@ export function GraphsTab({
 	readonly doc: SysProMDocument;
 }): React.ReactElement {
 	const [view, setView] = useState<View>("interactive");
-	const [layout, setLayout] = useState<LayoutMode>("overview");
+	const [layout, setLayout] = useState<LayoutMode>("refinement");
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const [showMermaidSource, setShowMermaidSource] = useState(false);
 

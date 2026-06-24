@@ -13,20 +13,30 @@ import cytoscape, {
 	type NodeSingular,
 } from "cytoscape";
 import fcose from "cytoscape-fcose";
-import type { SysProMDocument, Node } from "@sysprom/core";
-import { buildElements, neighbourhoodElementIds } from "./elements";
+import dagre from "cytoscape-dagre";
+import type { SysProMDocument } from "@sysprom/core";
+import {
+	buildElements,
+	buildSubsystemElements,
+	neighbourhoodElementIds,
+} from "./elements";
 import { buildStylesheet } from "./stylesheets";
 import {
-	computeElkPositions,
-	buildPresetLayout,
+	backboneSubgraph,
+	crossCuttingEdges,
+	buildRefinementLayoutOptions,
+	buildEmergentLayoutOptions,
+	buildSubsystemLayoutOptions,
 	buildOverviewLayoutOptions,
 	buildTraceLayoutOptions,
 	toLayoutOptions,
 	type LayoutMode,
+	type BackboneLayoutOptions,
 } from "./layouts";
 
-// Register the fcose layout extension once.
+// Register the layout extensions once.
 cytoscape.use(fcose);
+cytoscape.use(dagre);
 
 /**
  * Type guard narrowing an `EventObject.target` (typed as `any` by Cytoscape)
@@ -106,8 +116,12 @@ export function CytoscapeGraph({
 			onSelectRef.current(target.id());
 		};
 
-		// Background tap (no selector → fires on core): clear selection.
-		const handleBackgroundTap = (): void => {
+		// Background tap: clear selection. A core `tap` fires for every tap
+		// (including on nodes/edges), so guard on the target being the core
+		// itself — otherwise this handler would immediately undo the node-tap
+		// selection above.
+		const handleBackgroundTap = (event: EventObject): void => {
+			if (event.target !== cy) return;
 			clearHighlight(cy);
 			onSelectRef.current(null);
 		};
@@ -121,20 +135,32 @@ export function CytoscapeGraph({
 		};
 	}, []);
 
-	// Update the full element set when the document changes.
+	// Rebuild the element set when the document changes, or when switching
+	// between the flat and subsystem (compound) element sets. The subsystem
+	// layout flattens the recursive document tree into compound clusters and
+	// needs a different element set; the other four layouts share the flat set.
+	const useSubsystemElements = layout === "subsystem";
 	useEffect(() => {
 		const cy = cyRef.current;
 		if (!cy) return;
-		const elements = buildElements(doc);
+		const elements = useSubsystemElements
+			? buildSubsystemElements(doc)
+			: buildElements(doc);
 		cy.elements().remove();
 		cy.add(elements);
-	}, [doc]);
+	}, [doc, useSubsystemElements]);
 
-	// Apply visibility filtering.
+	// Apply visibility filtering. Compound cluster parents (type "cluster") are
+	// always shown; child nodes follow the filter state.
 	useEffect(() => {
 		const cy = cyRef.current;
 		if (!cy) return;
 		cy.nodes().forEach((node) => {
+			if (node.data("type") === "cluster") {
+				node.removeClass("hidden");
+				node.style("display", "element");
+				return;
+			}
 			const visible = visibleNodeIds.has(node.id());
 			if (visible) {
 				node.removeClass("hidden");
@@ -156,13 +182,20 @@ export function CytoscapeGraph({
 		});
 	}, [visibleNodeIds]);
 
-	// Apply the active layout.
+	// Apply the active layout. Refinement and Emergent rank on the backbone
+	// edges only: cross-cutting edges are hidden during layout and restored as
+	// overlays once positions have settled. Subsystem uses a compound fcose.
+	// Overview runs fcose on all edges. Trace runs breadthfirst from a node.
 	useEffect(() => {
 		const cy = cyRef.current;
 		if (!cy) return;
 
-		if (layout === "layered") {
-			void runElkLayered(cy, doc);
+		if (layout === "refinement") {
+			runBackboneLayout(cy, buildRefinementLayoutOptions());
+		} else if (layout === "emergent") {
+			runBackboneLayout(cy, buildEmergentLayoutOptions());
+		} else if (layout === "subsystem") {
+			cy.layout(toLayoutOptions(buildSubsystemLayoutOptions())).run();
 		} else if (layout === "overview") {
 			cy.layout(toLayoutOptions(buildOverviewLayoutOptions())).run();
 		} else {
@@ -171,26 +204,36 @@ export function CytoscapeGraph({
 				cy.layout(toLayoutOptions(buildTraceLayoutOptions(traceRootId))).run();
 			}
 		}
-	}, [layout, traceRootId, doc]);
+	}, [layout, traceRootId, doc, useSubsystemElements]);
 
 	return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
 
 /**
- * Run the ELK layered layout asynchronously, then apply the computed positions
- * via Cytoscape's preset layout.
+ * Run a layout that must rank on the backbone edges only. Cross-cutting edges
+ * are hidden before layout and restored afterwards, so they render as overlays
+ * between already-positioned nodes without influencing the ranking.
+ *
+ * The layout runs against the backbone subgraph (all visible nodes + backbone
+ * edges) via `Collection.layout`, which positions every node in the collection
+ * — including nodes connected only by cross-cutting edges (they appear as
+ * isolated nodes in the backbone subgraph and are packed by the layout).
  */
-async function runElkLayered(cy: Core, doc: SysProMDocument): Promise<void> {
-	const visibleNodes = cy.nodes(":visible");
-	const visibleNodeIds = new Set(visibleNodes.map((n) => n.id()));
-	const nodes: Node[] = doc.nodes.filter((node) => visibleNodeIds.has(node.id));
-	const edges = doc.relationships ?? [];
-	const visibleEdges = edges
-		.filter((rel) => visibleNodeIds.has(rel.from) && visibleNodeIds.has(rel.to))
-		.map((rel) => ({ source: rel.from, target: rel.to }));
-
-	const positions = await computeElkPositions(nodes, visibleEdges);
-	cy.layout(toLayoutOptions(buildPresetLayout(positions))).run();
+function runBackboneLayout(
+	cy: Core,
+	backboneOptions: BackboneLayoutOptions,
+): void {
+	const overlays = crossCuttingEdges(cy);
+	overlays.style("display", "none");
+	const subgraph = backboneSubgraph(cy);
+	const layout = subgraph.layout(toLayoutOptions(backboneOptions));
+	layout.one("layoutstop", () => {
+		// Restore cross-cutting overlays now that nodes have settled; positions
+		// are kept, so the overlays render between the already-placed nodes.
+		overlays.style("display", "element");
+		cy.fit(undefined, 40);
+	});
+	layout.run();
 }
 
 /** Highlight a node's neighbourhood and dim everything else. */

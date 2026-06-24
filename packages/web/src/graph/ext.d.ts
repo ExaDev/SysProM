@@ -1,6 +1,7 @@
 /**
  * Ambient type declarations for Cytoscape extensions that ship without
- * TypeScript definitions.
+ * TypeScript definitions. cytoscape-dagre ships its own index.d.ts and
+ * augments the `cytoscape` namespace directly, so it needs no entry here.
  */
 
 declare module "cytoscape-fcose" {

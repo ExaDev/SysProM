@@ -1,22 +1,35 @@
 /**
- * Layout configurations for the three interactive graph modes.
+ * Layout configurations for the five interactive graph modes.
  *
- * - **Layered** — ELK layered/hierarchical, mapping SysProM abstraction layers
- *   (intent->concept->...->artefact) into ELK layer direction.
- * - **Overview** — fcose (force-directed) for a holistic picture.
- * - **Trace** — Cytoscape built-in breadthfirst from a selected node.
+ * The relationship graph is split into a structural backbone (refines,
+ * part_of, realises, implements, precedes, must_follow) and cross-cutting
+ * overlays (affects, must_preserve, depends_on, constrained_by, governed_by,
+ * supersedes, modifies, produces). The Refinement hierarchy and Emergent
+ * topology layouts rank on the backbone only; cross-cutting edges are hidden
+ * during layout and restored afterwards so they render as overlays between
+ * already-positioned nodes.
+ *
+ * - **Refinement hierarchy** (default) — dagre top-down DAG over backbone edges.
+ * - **Emergent topology** — fcose over backbone edges; clusters surface from connectivity.
+ * - **By subsystem** — fcose compound layout grouping nodes by recursive subsystem.
+ * - **Overview** — fcose over all edges.
+ * - **Trace** — Cytoscape breadthfirst from a selected node.
  */
 import type {
 	LayoutOptions,
 	ShapedLayoutOptions,
-	PresetLayoutOptions,
 	BreadthFirstLayoutOptions,
-	Position,
+	Core,
+	Collection,
 } from "cytoscape";
-import type { Node } from "@sysprom/core";
-import { layerRank } from "./elements";
+import { BACKBONE_REL_TYPES, CROSS_CUTTING_REL_TYPES } from "./elements";
 
-export type LayoutMode = "layered" | "overview" | "trace";
+export type LayoutMode =
+	| "refinement"
+	| "emergent"
+	| "subsystem"
+	| "overview"
+	| "trace";
 
 /**
  * Options for the fcose layout extension. fcose has no bundled TypeScript
@@ -26,86 +39,130 @@ export type LayoutMode = "layered" | "overview" | "trace";
 interface FcoseLayoutOptions extends ShapedLayoutOptions {
 	name: "fcose";
 	randomize?: boolean;
-	nodeRepulsion?: number;
-	idealEdgeLength?: number;
-	edgeElasticity?: number;
+	nodeRepulsion?: number | ((node: unknown) => number);
+	idealEdgeLength?: number | ((edge: unknown) => number);
+	edgeElasticity?: number | ((edge: unknown) => number);
 	gravity?: number;
 	numIter?: number;
 	tile?: boolean;
 	packComponents?: boolean;
+	quality?: "draft" | "default";
 }
 
 /**
- * Run ELK layered layout asynchronously against the visible nodes and edges and
- * resolve with a map of node ID -> {x, y}. The component applies the result via
- * Cytoscape's `preset` layout.
- *
- * The SysProM abstraction-layer rank (intent=0, concept=1, ...) is fed to ELK
- * as `elk.layered.priority.direction` so earlier layers settle above later ones
- * while still respecting the actual edges.
+ * Options for the dagre layout extension (cytoscape-dagre). Declared inline
+ * because cytoscape-dagre's own `.d.ts` lives in node_modules and is not
+ * exported as a value type we can extend here; this mirrors its documented
+ * option set and is passed straight through to Cytoscape at runtime.
  */
-export async function computeElkPositions(
-	nodes: readonly Node[],
-	edges: readonly { readonly source: string; readonly target: string }[],
-): Promise<Map<string, { readonly x: number; readonly y: number }>> {
-	// Dynamic import so ELK is loaded in its own chunk, only when the Layered
-	// layout runs. This keeps ELK out of the initial bundle.
-	const { default: ELK } = await import("elkjs");
-	const elk = new ELK();
-	const elkNodes = nodes.map((node) => ({
-		id: node.id,
-		width: 40,
-		height: 40,
-		layoutOptions: {
-			"elk.layered.priority.direction": String(layerRank(node.type)),
-		},
-	}));
-	const elkEdges = edges.map((edge, index) => ({
-		id: `e${String(index)}`,
-		sources: [edge.source],
-		targets: [edge.target],
-	}));
-	const elkGraph = {
-		id: "root",
-		layoutOptions: {
-			"elk.algorithm": "layered",
-			"elk.direction": "DOWN",
-			"elk.layered.spacing.nodeNodeBetweenLayers": "70",
-			"elk.spacing.nodeNode": "50",
-			"elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-			"elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
-		},
-		children: elkNodes,
-		edges: elkEdges,
-	};
-	const result = await elk.layout(elkGraph);
-	const positions = new Map<
-		string,
-		{ readonly x: number; readonly y: number }
-	>();
-	for (const child of result.children ?? []) {
-		const x = child.x ?? 0;
-		const y = child.y ?? 0;
-		positions.set(child.id, { x: x + 20, y: y + 20 });
-	}
-	return positions;
+interface DagreLayoutOptions extends ShapedLayoutOptions {
+	name: "dagre";
+	rankDir?: "TB" | "BT" | "LR" | "RL";
+	nodeSep?: number;
+	edgeSep?: number;
+	rankSep?: number;
+	ranker?: "network-simplex" | "tight-tree" | "longest-path";
+	acyclicer?: "greedy";
+	fit?: boolean;
+	padding?: number;
+	spacingFactor?: number;
 }
 
-/** Build a Cytoscape `preset` layout that applies the given positions. */
-export function buildPresetLayout(
-	positions: ReadonlyMap<string, { readonly x: number; readonly y: number }>,
-): PresetLayoutOptions {
-	const positionFunction = (nodeId: string): Position => {
-		const pos = positions.get(nodeId);
-		return pos ?? { x: 0, y: 0 };
-	};
+/**
+ * Select the visible elements that drive a layout: all visible nodes plus only
+ * the edges whose type is in the backbone set. Cross-cutting edges are
+ * excluded so they cannot influence the ranking/cluster computation.
+ */
+export function backboneSubgraph(cy: Core): Collection {
+	const visibleNodes = cy.nodes(":visible");
+	const backboneEdges = cy
+		.edges(":visible")
+		.filter((edge) => isBackboneType(edge.data("type")));
+	return visibleNodes.union(backboneEdges);
+}
+
+/**
+ * Select cross-cutting edges (visible) for the hide/restore overlay dance.
+ */
+export function crossCuttingEdges(cy: Core): Collection {
+	return cy
+		.edges(":visible")
+		.filter((edge) => isCrossCuttingType(edge.data("type")));
+}
+
+function isBackboneType(type: unknown): boolean {
+	return typeof type === "string" && BACKBONE_REL_TYPES.has(type);
+}
+
+function isCrossCuttingType(type: unknown): boolean {
+	return typeof type === "string" && CROSS_CUTTING_REL_TYPES.has(type);
+}
+
+/** Build the dagre options for the Refinement hierarchy (top-down DAG). */
+export function buildRefinementLayoutOptions(): DagreLayoutOptions {
 	return {
-		name: "preset",
+		name: "dagre",
+		rankDir: "TB",
+		nodeSep: 50,
+		edgeSep: 20,
+		rankSep: 70,
+		ranker: "network-simplex",
+		acyclicer: "greedy",
 		animate: true,
-		animationDuration: 400,
+		animationDuration: 500,
+		animationEasing: "ease-out",
 		fit: true,
 		padding: 40,
-		positions: positionFunction,
+		spacingFactor: 1.1,
+	};
+}
+
+/**
+ * Union of the layout-option shapes that can drive a backbone-ranking layout
+ * (dagre for the hierarchy, fcose for the emergent topology). Used as the
+ * parameter type of `runBackboneLayout` in CytoscapeGraph.
+ */
+export type BackboneLayoutOptions = DagreLayoutOptions | FcoseLayoutOptions;
+
+/** Build the fcose options for the Emergent topology (backbone-driven clusters). */
+export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
+	return {
+		name: "fcose",
+		animate: true,
+		animationDuration: 600,
+		animationEasing: "ease-out",
+		fit: true,
+		padding: 40,
+		randomize: true,
+		nodeRepulsion: 12000,
+		idealEdgeLength: 120,
+		edgeElasticity: 0.45,
+		gravity: 0.2,
+		numIter: 3000,
+		tile: true,
+		packComponents: true,
+		quality: "default",
+	};
+}
+
+/** Build the fcose compound options for the By subsystem layout. */
+export function buildSubsystemLayoutOptions(): FcoseLayoutOptions {
+	return {
+		name: "fcose",
+		animate: true,
+		animationDuration: 700,
+		animationEasing: "ease-out",
+		fit: true,
+		padding: 40,
+		randomize: true,
+		nodeRepulsion: 6000,
+		idealEdgeLength: 80,
+		edgeElasticity: 0.45,
+		gravity: 0.3,
+		numIter: 2500,
+		tile: true,
+		packComponents: true,
+		quality: "default",
 	};
 }
 
