@@ -4,13 +4,19 @@
  * The relationship graph is split into a structural backbone (refines,
  * part_of, realises, implements, precedes, must_follow) and cross-cutting
  * overlays (affects, must_preserve, depends_on, constrained_by, governed_by,
- * supersedes, modifies, produces). The Refinement hierarchy and Emergent
- * topology layouts rank on the backbone only; cross-cutting edges are hidden
- * during layout and restored afterwards so they render as overlays between
- * already-positioned nodes.
+ * supersedes, modifies, produces).
+ *
+ * The Refinement hierarchy ranks on the backbone only; the Emergent topology
+ * ranks on the backbone *plus* the governance / impact edges
+ * (`EMERGENT_REL_TYPES` — everything except `supersedes`), so that decisions,
+ * changes, invariants, principles, and policies cluster near the nodes they
+ * affect or constrain rather than being packed into a disconnected grid. In
+ * both modes the edges not used for ranking are hidden during layout and
+ * restored afterwards so they render as overlays between already-positioned
+ * nodes.
  *
  * - **Refinement hierarchy** (default) — dagre top-down DAG over backbone edges.
- * - **Emergent topology** — fcose over backbone edges; clusters surface from connectivity.
+ * - **Emergent topology** — fcose over emergent edges; clusters surface from connectivity.
  * - **By subsystem** — fcose compound layout grouping nodes by recursive subsystem.
  * - **Overview** — fcose over all edges.
  * - **Trace** — Cytoscape breadthfirst from a selected node.
@@ -22,7 +28,11 @@ import type {
 	Core,
 	Collection,
 } from "cytoscape";
-import { BACKBONE_REL_TYPES, CROSS_CUTTING_REL_TYPES } from "./elements";
+import {
+	BACKBONE_REL_TYPES,
+	CROSS_CUTTING_REL_TYPES,
+	EMERGENT_REL_TYPES,
+} from "./elements";
 
 export type LayoutMode =
 	| "refinement"
@@ -82,12 +92,39 @@ export function backboneSubgraph(cy: Core): Collection {
 }
 
 /**
- * Select cross-cutting edges (visible) for the hide/restore overlay dance.
+ * Select the visible elements that drive the Emergent topology layout: all
+ * visible nodes plus the edges whose type is in the emergent set (backbone
+ * plus governance / impact — everything except `supersedes`). This keeps
+ * decisions, changes, invariants, and policies connected to their targets so
+ * they cluster naturally instead of being packed into a disconnected grid.
+ */
+export function emergentSubgraph(cy: Core): Collection {
+	const visibleNodes = cy.nodes(":visible");
+	const emergentEdges = cy
+		.edges(":visible")
+		.filter((edge) => isEmergentType(edge.data("type")));
+	return visibleNodes.union(emergentEdges);
+}
+
+/**
+ * Select cross-cutting edges (visible) for the Refinement hide/restore overlay
+ * dance — the full set of non-backbone types.
  */
 export function crossCuttingEdges(cy: Core): Collection {
 	return cy
 		.edges(":visible")
 		.filter((edge) => isCrossCuttingType(edge.data("type")));
+}
+
+/**
+ * Select the edges hidden during the Emergent layout: only `supersedes`, the
+ * single relationship type excluded from `EMERGENT_REL_TYPES`. These are
+ * restored afterwards so they render as overlays between positioned nodes.
+ */
+export function nonEmergentEdges(cy: Core): Collection {
+	return cy
+		.edges(":visible")
+		.filter((edge) => !isEmergentType(edge.data("type")));
 }
 
 function isBackboneType(type: unknown): boolean {
@@ -96,6 +133,10 @@ function isBackboneType(type: unknown): boolean {
 
 function isCrossCuttingType(type: unknown): boolean {
 	return typeof type === "string" && CROSS_CUTTING_REL_TYPES.has(type);
+}
+
+function isEmergentType(type: unknown): boolean {
+	return typeof type === "string" && EMERGENT_REL_TYPES.has(type);
 }
 
 /** Build the dagre options for the Refinement hierarchy (top-down DAG). */
@@ -124,7 +165,15 @@ export function buildRefinementLayoutOptions(): DagreLayoutOptions {
  */
 export type BackboneLayoutOptions = DagreLayoutOptions | FcoseLayoutOptions;
 
-/** Build the fcose options for the Emergent topology (backbone-driven clusters). */
+/**
+ * Build the fcose options for the Emergent topology. Ranks on the emergent
+ * edge set (backbone plus governance / impact), so far more edges are present
+ * than in the Refinement hierarchy. Tuned for clean cluster separation:
+ * higher node repulsion and longer ideal edges keep decisions, invariants,
+ * and policies from collapsing onto their targets, while `packComponents` is
+ * disabled — the broader edge set leaves almost no isolated components, so
+ * packing would only add an unnecessary grid pass on the handful that remain.
+ */
 export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 	return {
 		name: "fcose",
@@ -134,13 +183,13 @@ export function buildEmergentLayoutOptions(): FcoseLayoutOptions {
 		fit: true,
 		padding: 40,
 		randomize: true,
-		nodeRepulsion: 12000,
-		idealEdgeLength: 120,
-		edgeElasticity: 0.45,
-		gravity: 0.2,
-		numIter: 3000,
+		nodeRepulsion: 45000,
+		idealEdgeLength: 180,
+		edgeElasticity: 0.4,
+		gravity: 0.15,
+		numIter: 4000,
 		tile: true,
-		packComponents: true,
+		packComponents: false,
 		quality: "default",
 	};
 }

@@ -45,6 +45,30 @@ export const CROSS_CUTTING_REL_TYPES: ReadonlySet<string> = new Set([
 	"produces",
 ]);
 
+/**
+ * Emergent topology relationship types — the backbone plus the governance /
+ * constraint / dependency / impact edges that connect decisions, changes,
+ * invariants, principles, and policies to the rest of the model. Every
+ * relationship type is included *except* `supersedes`, which is pure
+ * historical replacement and adds noise without contributing to clustering.
+ *
+ * The Refinement hierarchy uses the strict backbone (a clean top-down tree);
+ * the Emergent topology uses this broader set so that decisions cluster near
+ * the capabilities they affect, invariants near the nodes they constrain, and
+ * changes near the nodes they modify — instead of being packed into a
+ * disconnected grid block.
+ */
+export const EMERGENT_REL_TYPES: ReadonlySet<string> = new Set([
+	...BACKBONE_REL_TYPES,
+	"affects",
+	"must_preserve",
+	"depends_on",
+	"constrained_by",
+	"governed_by",
+	"modifies",
+	"produces",
+]);
+
 /** True if a relationship type belongs to the structural backbone. */
 export function isBackboneRelationship(type: string): boolean {
 	return BACKBONE_REL_TYPES.has(type);
@@ -53,6 +77,14 @@ export function isBackboneRelationship(type: string): boolean {
 /** True if a relationship type is cross-cutting (governance / constraint / impact). */
 export function isCrossCuttingRelationship(type: string): boolean {
 	return CROSS_CUTTING_REL_TYPES.has(type);
+}
+
+/**
+ * True if a relationship type drives the Emergent topology layout — the
+ * backbone plus governance / impact edges (everything except `supersedes`).
+ */
+export function isEmergentRelationship(type: string): boolean {
+	return EMERGENT_REL_TYPES.has(type);
 }
 
 /** Determine whether a node status indicates incompleteness (dashed style). */

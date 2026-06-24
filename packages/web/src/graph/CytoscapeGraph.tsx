@@ -9,6 +9,7 @@
 import React, { useEffect, useRef } from "react";
 import cytoscape, {
 	type Core,
+	type Collection,
 	type EventObject,
 	type NodeSingular,
 } from "cytoscape";
@@ -24,6 +25,8 @@ import { buildStylesheet } from "./stylesheets";
 import {
 	backboneSubgraph,
 	crossCuttingEdges,
+	emergentSubgraph,
+	nonEmergentEdges,
 	buildRefinementLayoutOptions,
 	buildEmergentLayoutOptions,
 	buildSubsystemLayoutOptions,
@@ -182,18 +185,31 @@ export function CytoscapeGraph({
 		});
 	}, [visibleNodeIds]);
 
-	// Apply the active layout. Refinement and Emergent rank on the backbone
-	// edges only: cross-cutting edges are hidden during layout and restored as
-	// overlays once positions have settled. Subsystem uses a compound fcose.
-	// Overview runs fcose on all edges. Trace runs breadthfirst from a node.
+	// Apply the active layout. Refinement ranks on the strict backbone edges
+	// (a clean top-down DAG); Emergent ranks on the broader emergent edge set
+	// (backbone plus governance / impact) so decisions, changes, invariants,
+	// and policies cluster near their targets. In both modes the edges not
+	// used for ranking are hidden during layout and restored as overlays once
+	// positions have settled. Subsystem uses a compound fcose. Overview runs
+	// fcose on all edges. Trace runs breadthfirst from a node.
 	useEffect(() => {
 		const cy = cyRef.current;
 		if (!cy) return;
 
 		if (layout === "refinement") {
-			runBackboneLayout(cy, buildRefinementLayoutOptions());
+			runRankedLayout(
+				cy,
+				buildRefinementLayoutOptions(),
+				backboneSubgraph,
+				crossCuttingEdges,
+			);
 		} else if (layout === "emergent") {
-			runBackboneLayout(cy, buildEmergentLayoutOptions());
+			runRankedLayout(
+				cy,
+				buildEmergentLayoutOptions(),
+				emergentSubgraph,
+				nonEmergentEdges,
+			);
 		} else if (layout === "subsystem") {
 			cy.layout(toLayoutOptions(buildSubsystemLayoutOptions())).run();
 		} else if (layout === "overview") {
@@ -210,26 +226,33 @@ export function CytoscapeGraph({
 }
 
 /**
- * Run a layout that must rank on the backbone edges only. Cross-cutting edges
- * are hidden before layout and restored afterwards, so they render as overlays
- * between already-positioned nodes without influencing the ranking.
+ * Run a layout that ranks on a selected subgraph of edges. The edges not used
+ * for ranking are hidden before layout and restored afterwards, so they render
+ * as overlays between already-positioned nodes without influencing the
+ * ranking.
  *
- * The layout runs against the backbone subgraph (all visible nodes + backbone
- * edges) via `Collection.layout`, which positions every node in the collection
- * — including nodes connected only by cross-cutting edges (they appear as
- * isolated nodes in the backbone subgraph and are packed by the layout).
+ * - Refinement passes `backboneSubgraph` + `crossCuttingEdges` (strict
+ *   backbone ranking; all governance/impact edges are overlays).
+ * - Emergent passes `emergentSubgraph` + `nonEmergentEdges` (backbone plus
+ *   governance/impact ranking; only `supersedes` edges are overlays).
+ *
+ * The layout runs against the subgraph (all visible nodes + the selected
+ * edges) via `Collection.layout`, which positions every node in the
+ * collection — including any nodes connected only by overlay edges.
  */
-function runBackboneLayout(
+function runRankedLayout(
 	cy: Core,
-	backboneOptions: BackboneLayoutOptions,
+	options: BackboneLayoutOptions,
+	selectSubgraph: (cy: Core) => Collection,
+	selectOverlays: (cy: Core) => Collection,
 ): void {
-	const overlays = crossCuttingEdges(cy);
+	const overlays = selectOverlays(cy);
 	overlays.style("display", "none");
-	const subgraph = backboneSubgraph(cy);
-	const layout = subgraph.layout(toLayoutOptions(backboneOptions));
+	const subgraph = selectSubgraph(cy);
+	const layout = subgraph.layout(toLayoutOptions(options));
 	layout.one("layoutstop", () => {
-		// Restore cross-cutting overlays now that nodes have settled; positions
-		// are kept, so the overlays render between the already-placed nodes.
+		// Restore overlay edges now that nodes have settled; positions are
+		// kept, so the overlays render between the already-placed nodes.
 		overlays.style("display", "element");
 		cy.fit(undefined, 40);
 	});
