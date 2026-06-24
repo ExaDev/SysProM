@@ -192,10 +192,14 @@ export function CytoscapeGraph({
 	// used for ranking are hidden during layout and restored as overlays once
 	// positions have settled. Subsystem uses a compound fcose. Overview runs
 	// fcose on all edges. Trace runs breadthfirst from a node.
+	// Structural layouts — refinement, emergent, subsystem, overview. This
+	// effect deliberately does NOT depend on `traceRootId`: `traceRootId`
+	// follows the current selection, so depending on it here would re-run the
+	// layout every time a node is clicked. Selecting a node must only highlight
+	// its neighbourhood, not re-arrange the graph.
 	useEffect(() => {
 		const cy = cyRef.current;
 		if (!cy) return;
-
 		if (layout === "refinement") {
 			runRankedLayout(
 				cy,
@@ -214,13 +218,19 @@ export function CytoscapeGraph({
 			cy.layout(toLayoutOptions(buildSubsystemLayoutOptions())).run();
 		} else if (layout === "overview") {
 			cy.layout(toLayoutOptions(buildOverviewLayoutOptions())).run();
-		} else {
-			// layout === "trace"
-			if (traceRootId) {
-				cy.layout(toLayoutOptions(buildTraceLayoutOptions(traceRootId))).run();
-			}
 		}
-	}, [layout, traceRootId, doc, useSubsystemElements]);
+		// layout === "trace" is handled by the dedicated trace effect below.
+	}, [layout, doc, useSubsystemElements]);
+
+	// Trace layout — the only layout keyed on `traceRootId`, so the graph
+	// re-traces when the selected root changes. Guarded to trace mode so that
+	// selecting a node in any other layout never triggers a re-layout.
+	useEffect(() => {
+		const cy = cyRef.current;
+		if (!cy) return;
+		if (layout !== "trace" || !traceRootId) return;
+		cy.layout(toLayoutOptions(buildTraceLayoutOptions(traceRootId))).run();
+	}, [layout, traceRootId]);
 
 	return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
