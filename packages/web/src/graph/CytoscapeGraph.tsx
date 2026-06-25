@@ -481,53 +481,44 @@ async function runElkLayeredLayout(
 
 	const result = await runElkLayout(visibleNodes, visibleEdges);
 
-	// Apply node positions via the preset layout so Cytoscape animates to them.
-	const positionMap = new Map<string, { x: number; y: number }>();
+	// Apply node positions directly by id. Cytoscape's `preset` layout exposes a
+	// `positions(node)` callback whose parameter the bundled .d.ts types as a
+	// string id but which is actually a NodeSingular at runtime — so a Map keyed
+	// by string id silently missed every lookup and collapsed every node to
+	// (0,0). Setting positions by id avoids that trap entirely.
 	for (const [id, pos] of result.positions) {
-		positionMap.set(id, { x: pos.x, y: pos.y });
+		const node = cy.getElementById(id);
+		if (node.empty()) continue;
+		node.position({ x: pos.x, y: pos.y });
 	}
-	const presetLayout = cy.layout({
-		name: "preset",
-		animate: true,
-		animationDuration: 500,
-		animationEasing: "ease-out",
-		fit: false,
-		padding: 40,
-		positions: (nodeId): { x: number; y: number } => {
-			const pos = positionMap.get(nodeId);
-			return pos ?? { x: 0, y: 0 };
-		},
-	});
-	presetLayout.one("layoutstop", () => {
-		// Apply ELK's orthogonal edge routes as per-edge segment data.
-		for (const route of result.routes) {
-			const edgeId = `${route.source}->${route.target}:${route.type}`;
-			const edge = cy.getElementById(edgeId);
-			if (edge.empty()) continue;
-			edge.data("segmentDistances", [...route.segmentDistances]);
-			edge.data("segmentWeights", [...route.segmentWeights]);
-			edge.addClass("elk-routed");
+
+	// Apply ELK's orthogonal edge routes as per-edge segment data.
+	for (const route of result.routes) {
+		const edgeId = `${route.source}->${route.target}:${route.type}`;
+		const edge = cy.getElementById(edgeId);
+		if (edge.empty()) continue;
+		edge.data("segmentDistances", [...route.segmentDistances]);
+		edge.data("segmentWeights", [...route.segmentWeights]);
+		edge.addClass("elk-routed");
+	}
+
+	// Collect the layout edge IDs (all visible edges except supersedes, which
+	// ELK did not route) for orphan detection.
+	const layoutEdgeIds = new Set<string>();
+	cy.edges(":visible").forEach((edge) => {
+		if (edge.data("type") !== "supersedes") {
+			layoutEdgeIds.add(edge.id());
 		}
-
-		// Collect the layout edge IDs (all visible edges except supersedes, which
-		// ELK did not route) for orphan detection.
-		const layoutEdgeIds = new Set<string>();
-		cy.edges(":visible").forEach((edge) => {
-			if (edge.data("type") !== "supersedes") {
-				layoutEdgeIds.add(edge.id());
-			}
-		});
-
-		// Run the standard post-layout passes so the ELK view is consistent
-		// with the other layouts: peripheral orphan clusters + view centroids +
-		// minimum node clearance.
-		setTimeout(() => {
-			const labels = placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
-			onLabels(labels);
-			cy.fit(undefined, 40);
-		}, 0);
 	});
-	presetLayout.run();
+
+	// Run the standard post-layout passes so the ELK view is consistent with
+	// the other layouts: peripheral orphan clusters + view centroids + minimum
+	// node clearance. Deferred a frame so the direct positions above are final.
+	setTimeout(() => {
+		const labels = placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+		onLabels(labels);
+		cy.fit(undefined, 40);
+	}, 0);
 }
 
 /** Highlight a node's neighbourhood and dim everything else. */
