@@ -28,6 +28,7 @@ const LAYOUT_LABELS: Readonly<Record<LayoutMode, string>> = {
 	emergent: "Emergent topology",
 	subsystem: "By subsystem",
 	overview: "Overview (fCoSE)",
+	elk: "ELK Layered",
 	trace: "Trace from selected",
 };
 
@@ -36,6 +37,7 @@ const LAYOUT_MODES: readonly LayoutMode[] = [
 	"emergent",
 	"subsystem",
 	"overview",
+	"elk",
 	"trace",
 ];
 

@@ -166,6 +166,9 @@ importers:
       cytoscape-fcose:
         specifier: 2.2.0
         version: 2.2.0(cytoscape@3.34.0)
+      elkjs:
+        specifier: 0.11.1
+        version: 0.11.1
       mermaid:
         specifier: 11.15.0
         version: 11.15.0
@@ -2644,6 +2647,9 @@ packages:
 
   electron-to-chromium@1.5.376:
     resolution: {integrity: sha512-cUVA7/RvbFTEuw/i3obUwDTRIXojaxkResf+ibByPFxjc6XK3VNtcQXV0NSbAlJ0FMjcJGgftVVB4Qo184EXvA==}
+
+  elkjs@0.11.1:
+    resolution: {integrity: sha512-zxxR9k+rx5ktMwT/FwyLdPCrq7xN6e4VGGHH8hA01vVYKjTFik7nHOxBnAYtrgYUB1RpAiLvA1/U2YraWxyKKg==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -7395,6 +7401,8 @@ snapshots:
   ee-first@1.1.1: {}
 
   electron-to-chromium@1.5.376: {}
+
+  elkjs@0.11.1: {}
 
   emoji-regex@10.6.0: {}
 

@@ -12,6 +12,7 @@ import cytoscape, {
 	type Collection,
 	type EventObject,
 	type NodeSingular,
+	type EdgeSingular,
 } from "cytoscape";
 import fcose from "cytoscape-fcose";
 import dagre from "cytoscape-dagre";
@@ -41,6 +42,7 @@ import {
 	enforceClearanceOnCytoscape,
 	type OrphanLabel,
 } from "./orphanPlacement";
+import { runElkLayout, type VisibleNode, type VisibleEdge } from "./elkLayout";
 
 // Register the layout extensions once.
 cytoscape.use(fcose);
@@ -56,6 +58,18 @@ function isNodeSingular(target: unknown): target is NodeSingular {
 	const fn = target.isNode;
 	if (typeof fn !== "function") return false;
 	return Boolean(fn.call(target));
+}
+
+/**
+ * Extract the `type` data field from a Cytoscape edge, narrowing from `any`
+ * to `string` without a type assertion. Returns `"unknown"` if the field is
+ * absent or not a string — should not happen for well-formed elements but
+ * avoids propagating `any` into the ELK layer.
+ */
+function edgeDataType(edge: EdgeSingular): string {
+	const value: unknown = edge.data("type");
+	if (typeof value === "string") return value;
+	return "unknown";
 }
 
 export interface CytoscapeGraphHandle {
@@ -158,7 +172,7 @@ export function CytoscapeGraph({
 	// Rebuild the element set when the document changes, or when switching
 	// between the flat and subsystem (compound) element sets. The subsystem
 	// layout flattens the recursive document tree into compound clusters and
-	// needs a different element set; the other four layouts share the flat set.
+	// needs a different element set; the other layouts share the flat set.
 	const useSubsystemElements = layout === "subsystem";
 	useEffect(() => {
 		const cy = cyRef.current;
@@ -239,6 +253,8 @@ export function CytoscapeGraph({
 			runFcoseLayout(cy, doc, buildSubsystemLayoutOptions(), setLabels);
 		} else if (layout === "overview") {
 			runFcoseLayout(cy, doc, buildOverviewLayoutOptions(), setLabels);
+		} else if (layout === "elk") {
+			void runElkLayeredLayout(cy, doc, setLabels);
 		}
 		// layout === "trace" is handled by the dedicated trace effect below.
 	}, [layout, doc, useSubsystemElements]);
@@ -423,6 +439,95 @@ function runFcoseLayout(
 		}, 0);
 	});
 	layout.run();
+}
+
+/**
+ * Run the ELK layered layout asynchronously, then apply the computed node
+ * positions via Cytoscape's `preset` layout and render ELK's orthogonal edge
+ * routes as per-edge `segments` curve-style control points.
+ *
+ * After positions settle, the same post-layout passes run as the other
+ * layouts: `placeOrphansAfterLayout` (type-grouped peripheral clusters +
+ * view centroids) and `enforceClearanceOnCytoscape` (minimum node clearance).
+ *
+ * Edges that are not routed by ELK (supersedes, or edges with no sections) are
+ * left as straight beziers — the `elk-routed` class is only applied to edges
+ * that received orthogonal routes.
+ */
+async function runElkLayeredLayout(
+	cy: Core,
+	doc: SysProMDocument,
+	onLabels: (labels: readonly OrphanLabel[]) => void,
+): Promise<void> {
+	// Gather visible nodes and edges in the shape ELK expects.
+	const visibleNodes: VisibleNode[] = cy
+		.nodes(":visible")
+		.map((node): VisibleNode => ({ id: node.id() }));
+	const visibleEdges: VisibleEdge[] = cy.edges(":visible").map(
+		(edge): VisibleEdge => ({
+			id: edge.id(),
+			source: edge.source().id(),
+			target: edge.target().id(),
+			type: edgeDataType(edge),
+		}),
+	);
+
+	// Remove any stale elk-routed class and segment data from a previous run.
+	cy.edges().removeClass("elk-routed");
+	cy.edges().forEach((edge) => {
+		edge.removeData("segmentDistances");
+		edge.removeData("segmentWeights");
+	});
+
+	const result = await runElkLayout(visibleNodes, visibleEdges);
+
+	// Apply node positions via the preset layout so Cytoscape animates to them.
+	const positionMap = new Map<string, { x: number; y: number }>();
+	for (const [id, pos] of result.positions) {
+		positionMap.set(id, { x: pos.x, y: pos.y });
+	}
+	const presetLayout = cy.layout({
+		name: "preset",
+		animate: true,
+		animationDuration: 500,
+		animationEasing: "ease-out",
+		fit: false,
+		padding: 40,
+		positions: (nodeId): { x: number; y: number } => {
+			const pos = positionMap.get(nodeId);
+			return pos ?? { x: 0, y: 0 };
+		},
+	});
+	presetLayout.one("layoutstop", () => {
+		// Apply ELK's orthogonal edge routes as per-edge segment data.
+		for (const route of result.routes) {
+			const edgeId = `${route.source}->${route.target}:${route.type}`;
+			const edge = cy.getElementById(edgeId);
+			if (edge.empty()) continue;
+			edge.data("segmentDistances", [...route.segmentDistances]);
+			edge.data("segmentWeights", [...route.segmentWeights]);
+			edge.addClass("elk-routed");
+		}
+
+		// Collect the layout edge IDs (all visible edges except supersedes, which
+		// ELK did not route) for orphan detection.
+		const layoutEdgeIds = new Set<string>();
+		cy.edges(":visible").forEach((edge) => {
+			if (edge.data("type") !== "supersedes") {
+				layoutEdgeIds.add(edge.id());
+			}
+		});
+
+		// Run the standard post-layout passes so the ELK view is consistent
+		// with the other layouts: peripheral orphan clusters + view centroids +
+		// minimum node clearance.
+		setTimeout(() => {
+			const labels = placeOrphansAfterLayout(cy, doc, layoutEdgeIds);
+			onLabels(labels);
+			cy.fit(undefined, 40);
+		}, 0);
+	});
+	presetLayout.run();
 }
 
 /** Highlight a node's neighbourhood and dim everything else. */

@@ -19,6 +19,7 @@
  * - **Emergent topology** — fcose over emergent edges; clusters surface from connectivity.
  * - **By subsystem** — fcose compound layout grouping nodes by recursive subsystem.
  * - **Overview** — fcose over all edges.
+ * - **ELK Layered** — ELK layered algorithm with orthogonal edge routing.
  * - **Trace** — Cytoscape breadthfirst from a selected node.
  */
 import type {
@@ -40,6 +41,7 @@ export type LayoutMode =
 	| "emergent"
 	| "subsystem"
 	| "overview"
+	| "elk"
 	| "trace";
 
 /**

@@ -245,6 +245,19 @@ export function buildStylesheet(): StylesheetJson {
 				padding: "8px",
 			},
 		},
+		// ELK-routed edges: when the ELK Layered layout is active, edges carry
+		// per-edge `segment-distances` / `segment-weights` data set from ELK's
+		// orthogonal bend points. The `elk-routed` class switches the curve
+		// style to `segments` so those control points take effect; the base
+		// edge style uses `bezier` which ignores segment data.
+		{
+			selector: "edge.elk-routed",
+			style: {
+				"curve-style": "segments",
+				"segment-distances": "data(segmentDistances)",
+				"segment-weights": "data(segmentWeights)",
+			},
+		},
 	];
 
 	return [...base, ...typeSelectors, ...relSelectors, ...semantic];
