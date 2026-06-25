@@ -6,8 +6,8 @@ import {
 	planStatus,
 	planProgress,
 	checkGate,
-} from "../src/speckit/plan.js";
-import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
+} from "@sysprom/core/speckit/plan.js";
+import type { SysProMDocument, Node, Relationship } from "@sysprom/core";
 
 // ============================================================================
 // Helper function to create test documents

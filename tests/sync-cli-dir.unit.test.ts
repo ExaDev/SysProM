@@ -9,10 +9,10 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { canonicalise } from "../src/canonical-json.js";
+import { canonicalise } from "@sysprom/core";
 import { syncCommand } from "../src/cli/commands/sync.js";
 
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function createTestDoc(): SysProMDocument {
 	return {

@@ -9,11 +9,11 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { canonicalise } from "../src/canonical-json.js";
+import { canonicalise } from "@sysprom/core";
 import { jsonToMarkdownSingle } from "../src/json-to-md.js";
 import { markdownToJson } from "../src/md-to-json.js";
 import { syncCommand } from "../src/cli/commands/sync.js";
-import type { SysProMDocument, Node } from "../src/schema.js";
+import type { SysProMDocument, Node } from "@sysprom/core";
 
 function createTestDoc(): SysProMDocument {
 	return {

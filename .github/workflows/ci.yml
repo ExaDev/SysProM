@@ -33,8 +33,8 @@ jobs:
             turbo-quality-${{ runner.os }}-
       - run: npx turbo run _typecheck _test
 
-  docs:
-    name: Docs
+  site:
+    name: Build site
     runs-on: ubuntu-latest
     needs: quality
     steps:
@@ -47,19 +47,25 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: .turbo
-          key: turbo-docs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: turbo-site-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
           restore-keys: |
-            turbo-docs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
-            turbo-docs-${{ runner.os }}-
+            turbo-site-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-site-${{ runner.os }}-
+      # Web app at the site root (builds @sysprom/core first via the workspace dep)
+      - run: npx turbo run build --filter=web
+      # TypeDoc HTML API docs -> site/
       - run: npx turbo run _docs:cli _docs:api:html
+      # Serve docs under /docs alongside the viewer at /
+      - name: Place docs under the web build
+        run: cp -r site packages/web/dist/docs
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: site/
+          path: packages/web/dist
 
   pages:
     name: Deploy Pages
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: docs
+    needs: site
     runs-on: ubuntu-latest
     environment:
       name: github-pages

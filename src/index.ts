@@ -3,129 +3,37 @@
  *
  * A recursive, decision-driven model for recording where every part of a
  * system came from, what decisions shaped it, and how it reached its current form.
+ *
+ * The pure, browser-safe library logic lives in `@sysprom/core` and is
+ * re-exported here. This root `sysprom` package additionally provides the
+ * Node-bound pieces: filesystem I/O (`loadDocument`/`saveDocument`), the
+ * multi-doc conversion wrappers that read/write directories, document sync,
+ * and Spec-Kit interoperability (which reads/writes spec files).
  * @packageDocumentation
  */
 
-// Schema types and validators
-export {
-	SysProMDocument,
-	Node,
-	Relationship,
-	NodeType,
-	NodeStatus,
-	RelationshipType,
-	ImpactPolarity,
-	Text,
-	Option,
-	Operation,
-	ExternalReference,
-	ExternalReferenceRole,
-	Metadata,
-	NODE_TYPE_LABELS,
-	NODE_LABEL_TO_TYPE,
-	RELATIONSHIP_TYPE_LABELS,
-	RELATIONSHIP_LABEL_TO_TYPE,
-	IMPACT_POLARITY_LABELS,
-	EXTERNAL_REFERENCE_ROLE_LABELS,
-	EXTERNAL_REFERENCE_LABEL_TO_ROLE,
-	NODE_STATUSES,
-	NODE_FILE_MAP,
-	NODE_ID_PREFIX,
-	toJSONSchema,
-} from "./schema.js";
+// Re-export the entire pure core so `import { ... } from "sysprom"` keeps
+// working unchanged for every symbol provided today.
+export * from "@sysprom/core";
 
-// Operations (single source of truth for domain logic + metadata)
-export {
-	defineOperation,
-	type OperationDef,
-	type DefinedOperation,
-	addNodeOp,
-	removeNodeOp,
-	updateNodeOp,
-	addRelationshipOp,
-	removeRelationshipOp,
-	updateMetadataOp,
-	nextIdOp,
-	initDocumentOp,
-	planInitOp,
-	planAddTaskOp,
-	planStartTaskOp,
-	planCompleteTaskOp,
-	planReopenTaskOp,
-	planStatusOp,
-	planProgressOp,
-	planGateOp,
-	queryNodesOp,
-	queryNodeOp,
-	queryRelationshipsOp,
-	traceFromNodeOp,
-	timelineOp,
-	nodeHistoryOp,
-	stateAtOp,
-	validateOp,
-	statsOp,
-	searchOp,
-	checkOp,
-	graphOp,
-	renameOp,
-	jsonToMarkdownOp,
-	markdownToJsonOp,
-	speckitImportOp,
-	speckitExportOp,
-	speckitSyncOp,
-	speckitDiffOp,
-	inferCompletenessOp,
-	inferLifecycleOp,
-	inferImpactOp,
-	impactSummaryOp,
-	inferDerivedOp,
-	type RemoveResult,
-	type ValidationResult,
-	type DocumentStats,
-	type NodeDetail,
-	type TraceNode,
-	type TimelineEvent,
-	type NodeState,
-	type PlanStatusResult,
-	type PhaseProgressResult,
-	type GateResultOutput,
-	type SyncResult,
-	type DiffResult,
-	type CompletenessOutput,
-	type LifecycleOutput,
-	type ImpactOutput,
-	type ImpactSummaryOutput,
-	type DerivedOutput,
-} from "./operations/index.js";
+// Conversion — fs wrappers (the pure renderMultiDoc/parseMultiDoc live in core)
+export { jsonToMarkdownMultiDoc, jsonToMarkdown } from "./json-to-md.js";
 
-// Conversion
-export {
-	jsonToMarkdownSingle,
-	jsonToMarkdownMultiDoc,
-	jsonToMarkdown,
-	type ConvertOptions,
-} from "./json-to-md.js";
+export { markdownMultiDocToJson, markdownToJson } from "./md-to-json.js";
 
+// Synchronisation (fs-backed)
 export {
-	markdownSingleToJson,
-	markdownMultiDocToJson,
-	markdownToJson,
-} from "./md-to-json.js";
+	syncDocumentsOp,
+	type BidirectionalSyncResult,
+	type ConflictStrategy,
+} from "./operations/sync.js";
+export { detectChanges, type DetectionResult } from "./sync.js";
 
-// Validation
-export {
-	RELATIONSHIP_ENDPOINT_TYPES,
-	isValidEndpointPair,
-} from "./endpoint-types.js";
-
-// Utilities
-export { canonicalise, type FormatOptions } from "./canonical-json.js";
-export {
-	textToString,
-	textToLines,
-	textToMarkdown,
-	markdownToText,
-} from "./text.js";
+// Spec-Kit interoperability operations (fs-backed)
+export { speckitImportOp } from "./operations/speckit-import.js";
+export { speckitExportOp } from "./operations/speckit-export.js";
+export { speckitSyncOp, type SyncResult } from "./operations/speckit-sync.js";
+export { speckitDiffOp, type DiffResult } from "./operations/speckit-diff.js";
 
 // IO
 export {

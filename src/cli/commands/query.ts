@@ -1,7 +1,13 @@
 import pc from "picocolors";
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
-import { textToString } from "../../text.js";
+import {
+	textToString,
+	NodeType,
+	NodeStatus,
+	type Node,
+	primaryLifecycleState,
+} from "@sysprom/core";
 import { readOpts, loadDoc } from "../shared.js";
 import {
 	queryNodesOp,
@@ -13,9 +19,6 @@ import {
 	nodeHistoryOp,
 	stateAtOp,
 } from "../../operations/index.js";
-import { NodeType, NodeStatus } from "../../schema.js";
-import type { Node } from "../../schema.js";
-import { primaryLifecycleState } from "../../lifecycle-state.js";
 
 // ---------------------------------------------------------------------------
 // Presentation helpers

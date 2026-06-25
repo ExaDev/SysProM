@@ -2,7 +2,7 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { graphOp } from "../../operations/index.js";
-import { buildExternalRefClickMap } from "../../operations/graph-shared.js";
+import { buildExternalRefClickMap } from "@sysprom/core/operations/graph-shared.js";
 import { noArgs, readOpts, loadDoc } from "../shared.js";
 
 const optsSchema = readOpts.extend({

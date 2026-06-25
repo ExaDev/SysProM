@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { addRelationshipOp, validateOp } from "../src/index.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 describe("CHG33: Graph Mutation Safety Guards", () => {
 	describe("Duplicate relationship detection", () => {
