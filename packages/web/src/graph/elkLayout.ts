@@ -21,6 +21,7 @@ import type {
 	ElkExtendedEdge,
 	ElkEdgeSection,
 	ElkPoint,
+	ELK,
 } from "elkjs/lib/elk-api";
 
 import { MIN_NODE_CLEARANCE } from "./orphanPlacement";
@@ -339,6 +340,65 @@ export function processElkResult(
 }
 
 /**
+ * Type guard: narrow `unknown` to a constructable ELK factory.
+ */
+function isConstructor(value: unknown): value is new () => ELK {
+	return typeof value === "function";
+}
+
+/**
+ * Type guard: narrow `unknown` to a module namespace object with a
+ * `default` property that is a constructable ELK factory.
+ */
+function hasDefaultCtor(value: unknown): value is { default: new () => ELK } {
+	if (!isStringRecord(value)) return false;
+	return isConstructor(value.default);
+}
+
+/**
+ * Type guard: narrow `unknown` to a module namespace object with an
+ * `e` property (Vite's UMD interop wrapper) whose `default` is the ELK
+ * constructor.
+ */
+function hasViteUmdE(
+	value: unknown,
+): value is { e: { default: new () => ELK } } {
+	if (!isStringRecord(value)) return false;
+	const e = value.e;
+	if (!isStringRecord(e)) return false;
+	return isConstructor(e.default);
+}
+
+/**
+ * Lazy-load the ELK bundled build (main-thread, no web worker) and resolve the
+ * constructor. The bundled build is a UMD module; under Vite's ESM interop the
+ * default export can be nested at different levels depending on the bundler
+ * phase (dev vs. build). This loader handles all known shapes.
+ *
+ * The dynamic import puts ELK into its own Vite chunk, loaded only when this
+ * function is called — keeping the initial bundle small.
+ */
+async function loadElk(): Promise<ELK> {
+	const mod: unknown = await import("elkjs/lib/elk.bundled.js");
+	// Shape 1: mod.default is the constructor (ESM default export).
+	if (hasDefaultCtor(mod)) {
+		return new mod.default();
+	}
+	// Shape 2: mod.e.default — Vite wraps UMD inner modules in an `e` namespace.
+	if (hasViteUmdE(mod)) {
+		return new mod.e.default();
+	}
+	// Shape 3: mod itself is the constructor (UMD global-style).
+	if (isConstructor(mod)) {
+		return new mod();
+	}
+	throw new Error(
+		"Could not resolve ELK constructor from bundled module. " +
+			`Module keys: ${mod !== null && typeof mod === "object" ? Object.keys(mod).join(", ") : typeof mod}`,
+	);
+}
+
+/**
  * Lazy-load the ELK bundled build (main-thread, no web worker) and run the
  * layered layout. Returns node positions and orthogonal edge routes ready for
  * application to Cytoscape.
@@ -350,8 +410,7 @@ export async function runElkLayout(
 	nodes: readonly VisibleNode[],
 	edges: readonly VisibleEdge[],
 ): Promise<ElkLayoutResult> {
-	const { default: ELK } = await import("elkjs/lib/elk.bundled.js");
-	const elk = new ELK();
+	const elk = await loadElk();
 
 	const { graph, edgeMapping } = buildElkGraph(nodes, edges);
 	const result = await elk.layout(graph);

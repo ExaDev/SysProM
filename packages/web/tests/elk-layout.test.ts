@@ -63,6 +63,7 @@ void describe("ELK layout", () => {
 
 		void it("includes the layered algorithm in layout options", () => {
 			const { graph } = buildElkGraph([{ id: "A" }], []);
+			assert.ok(graph.layoutOptions);
 			assert.equal(graph.layoutOptions["elk.algorithm"], "layered");
 			assert.equal(graph.layoutOptions["elk.edgeRouting"], "orthogonal");
 		});
