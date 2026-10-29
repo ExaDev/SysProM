@@ -2,7 +2,7 @@
 
 /sɪs.prɒm/
 
-[![npm](https://img.shields.io/badge/npm-cb3837?logo=npm)](https://www.npmjs.com/package/sysprom)[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github)](https://github.com/ExaDev/SysProM)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/ExaDev/SysProM) [![npm](https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=white)](https://www.npmjs.com/package/sysprom) [![Release](https://img.shields.io/github/v/release/ExaDev/SysProM)](https://github.com/ExaDev/SysProM/releases/latest) [![CI](https://img.shields.io/github/actions/workflow/status/ExaDev/SysProM/ci.yml?branch=main)](https://github.com/ExaDev/SysProM/actions)
 
 A recursive, decision-driven model for recording where every part of a system came from, what decisions shaped it, and how it reached its current form.
 
