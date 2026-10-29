@@ -1,3 +1,9 @@
+## [1.28.3](https://github.com/ExaDev/SysProM/compare/v1.28.2...v1.28.3) (2026-10-29)
+
+### Documentation
+
+* add the standard badge row to the README ([6e14b14](https://github.com/ExaDev/SysProM/commit/6e14b1459472da5e1f0aea0950213d605652afa5))
+
 ## [1.28.2](https://github.com/ExaDev/SysProM/compare/v1.28.1...v1.28.2) (2026-04-22)
 
 ### Build System
