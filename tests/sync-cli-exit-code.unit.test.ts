@@ -10,9 +10,9 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { canonicalise } from "../src/canonical-json.js";
+import { canonicalise } from "@sysprom/core";
 import { jsonToMarkdownSingle } from "../src/json-to-md.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function runSyncCli(args: string[]): number | null {
 	const projectRoot = resolve(import.meta.dirname, "..");

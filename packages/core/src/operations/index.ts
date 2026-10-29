@@ -1,0 +1,78 @@
+export {
+	defineOperation,
+	type OperationDef,
+	type DefinedOperation,
+} from "./define-operation.js";
+
+// Mutation operations
+export { addNodeOp } from "./add-node.js";
+export { removeNodeOp, type RemoveResult } from "./remove-node.js";
+export { updateNodeOp } from "./update-node.js";
+export { addRelationshipOp } from "./add-relationship.js";
+export { removeRelationshipOp } from "./remove-relationship.js";
+export { updateMetadataOp } from "./update-metadata.js";
+export { addExternalReferenceOp } from "./add-external-reference.js";
+export { removeExternalReferenceOp } from "./remove-external-reference.js";
+export { nextIdOp } from "./next-id.js";
+export { initDocumentOp } from "./init-document.js";
+export { planInitOp } from "./plan-init.js";
+export { planAddTaskOp } from "./plan-add-task.js";
+export { planStartTaskOp } from "./plan-start-task.js";
+export { planCompleteTaskOp } from "./plan-complete-task.js";
+export { planReopenTaskOp } from "./plan-reopen-task.js";
+export { planStatusOp, type PlanStatusResult } from "./plan-status.js";
+export { planProgressOp, type PhaseProgressResult } from "./plan-progress.js";
+export { planGateOp, type GateResultOutput } from "./plan-gate.js";
+
+// Query operations
+export { queryNodesOp } from "./query-nodes.js";
+export { queryNodeOp, type NodeDetail } from "./query-node.js";
+export { queryRelationshipsOp } from "./query-relationships.js";
+export { queryRelationshipTypesOp } from "./query-relationship-types.js";
+export { traceFromNodeOp, type TraceNode } from "./trace-from-node.js";
+
+// Temporal operations
+export { timelineOp, type TimelineEvent } from "./timeline.js";
+export { nodeHistoryOp } from "./node-history.js";
+export { stateAtOp, type NodeState } from "./state-at.js";
+
+// Inspection operations
+export { validateOp, type ValidationResult } from "./validate.js";
+export { statsOp, type DocumentStats } from "./stats.js";
+
+// New API operations (previously CLI-only)
+export { searchOp } from "./search.js";
+export { checkOp } from "./check.js";
+export { graphOp } from "./graph.js";
+export { graphRefinementOp } from "./graph-refinement.js";
+export { graphDecisionOp } from "./graph-decision.js";
+export { graphDependencyOp } from "./graph-dependency.js";
+export { renameOp } from "./rename.js";
+
+// Conversion operations
+export { jsonToMarkdownOp } from "./json-to-markdown.js";
+export { markdownToJsonOp } from "./markdown-to-json.js";
+
+// Inference operations
+export {
+	inferCompletenessOp,
+	type CompletenessResult,
+	type CompletenessOutput,
+} from "./infer-completeness.js";
+export {
+	inferLifecycleOp,
+	type LifecycleResult,
+	type LifecycleOutput,
+} from "./infer-lifecycle.js";
+export {
+	inferImpactOp,
+	impactSummaryOp,
+	type ImpactNode,
+	type ImpactOutput,
+	type ImpactSummaryOutput,
+} from "./infer-impact.js";
+export {
+	inferDerivedOp,
+	type DerivedRelationship,
+	type DerivedOutput,
+} from "./infer-derived.js";

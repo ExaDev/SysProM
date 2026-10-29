@@ -1,6 +1,5 @@
 import * as z from "zod";
-import { defineOperation } from "./define-operation.js";
-import { SysProMDocument } from "../schema.js";
+import { defineOperation, SysProMDocument } from "@sysprom/core";
 
 /**
  * Conflict resolution strategy when both documents have diverged.

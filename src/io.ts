@@ -1,9 +1,8 @@
 import { readFileSync, writeFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { SysProMDocument } from "./schema.js";
+import { SysProMDocument, canonicalise } from "@sysprom/core";
 import { markdownSingleToJson, markdownMultiDocToJson } from "./md-to-json.js";
 import { jsonToMarkdownSingle, jsonToMarkdownMultiDoc } from "./json-to-md.js";
-import { canonicalise } from "./canonical-json.js";
 
 /** Supported serialisation formats for SysProM documents. */
 export type Format = "json" | "single-md" | "multi-md";

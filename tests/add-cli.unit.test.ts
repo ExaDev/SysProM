@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { addNodeOp } from "../src/index.js";
-import type { SysProMDocument } from "../src/schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 function makeDoc(): SysProMDocument {
 	return {

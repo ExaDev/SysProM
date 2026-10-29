@@ -2,7 +2,7 @@ import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
 import { searchOp } from "../../operations/index.js";
 import { readOpts, loadDoc } from "../shared.js";
-import { textToString } from "../../text.js";
+import { textToString } from "@sysprom/core";
 
 const argsSchema = z.object({
 	term: z.string().describe("Search term"),

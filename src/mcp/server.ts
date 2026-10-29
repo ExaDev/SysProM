@@ -4,8 +4,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod";
 import { loadDocument, saveDocument } from "../io.js";
-import { NodeType, RelationshipType, SysProMDocument } from "../schema.js";
 import {
+	NodeType,
+	RelationshipType,
+	SysProMDocument,
 	validateOp,
 	statsOp,
 	queryNodesOp,
@@ -23,7 +25,7 @@ import {
 	inferImpactOp,
 	impactSummaryOp,
 	inferDerivedOp,
-} from "../operations/index.js";
+} from "@sysprom/core";
 
 /**
  * Wrap an error with a descriptive prefix and attach the original as cause.

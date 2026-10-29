@@ -1,8 +1,7 @@
 import { writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { canonicalise } from "./canonical-json.js";
-import { toJSONSchema } from "./schema.js";
+import { canonicalise, toJSONSchema } from "@sysprom/core";
 
 const schema = toJSONSchema();
 const outPath = resolve(

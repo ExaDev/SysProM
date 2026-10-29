@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import type { CommandDef } from "../define-command.js";
 import { saveDocument } from "../../io.js";
 import { loadDoc, mutationOpts, persistDoc, noArgs } from "../shared.js";
-import type { SysProMDocument } from "../../schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 import {
 	planInitOp,
 	planAddTaskOp,

@@ -310,35 +310,88 @@ export type Relationship = z.infer<typeof Relationship>;
 // ---------------------------------------------------------------------------
 // Recursive schemas — defined raw, then wrapped with defineSchema after both
 // exist so TypeScript can resolve the circular type inference.
+//
+// `tsc` cannot serialise Zod's anonymous inferred recursive types into `.d.ts`
+// (it emits `/*elided*/ any` for the recursive fields), so the public types
+// `SysProMDocument` and `Node` are declared below as explicit named recursive
+// `interface`s. The raw schema expressions (`_rawSysProMDocumentSchema`,
+// `NodeBase`) are left UNANNOTATED so their true inferred output can be
+// captured for a compile-time drift check against the interfaces; the
+// recursive consts actually consumed (`SysProMDocumentSchema`, `NodeSchema`)
+// are then annotated as `z.ZodType<NamedType>` so every downstream use (the
+// `.is()` guard, `z.array(...)`, `.optional()`, `defineSchema(...)`) names the
+// clean interface instead of the unserialisable anonymous recursive type.
 // ---------------------------------------------------------------------------
 
-const SysProMDocumentSchema = z
-	.object({
-		$schema: z
-			.string()
-			.describe("Schema URI for self-identification.")
-			.optional(),
-		metadata: Metadata.optional(),
-		get nodes(): z.ZodArray<typeof NodeSchema> {
-			return z.array(NodeSchema).describe("All nodes in the graph.");
-		},
-		relationships: z
-			.array(Relationship)
-			.describe("Typed, directed connections between nodes.")
-			.optional(),
-		external_references: z
-			.array(ExternalReference)
-			.describe(
-				"References to resources outside the graph, declared at system level.",
-			)
-			.optional(),
-	})
-	.meta({
-		id: "SysProM",
-		title: "SysProM: System Provenance Model",
-		description:
-			"JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
-	});
+/**
+ * A complete SysProM document with metadata, nodes, relationships, and
+ * external references.
+ *
+ * Strict object (from `z.object`): no string index signature.
+ */
+export interface SysProMDocument {
+	$schema?: string;
+	metadata?: Metadata;
+	nodes: Node[];
+	relationships?: Relationship[];
+	external_references?: ExternalReference[];
+}
+
+/**
+ * A uniquely identifiable entity within the SysProM graph.
+ *
+ * Loose object (from `z.looseObject`): carries a string index signature
+ * `[x: string]: unknown`, mirroring Zod's inferred output for loose objects.
+ */
+export interface Node {
+	[x: string]: unknown;
+	id: string;
+	type: NodeType;
+	name: string;
+	description?: Text;
+	// `status?: never` mirrors `z.never().optional()`: the field may be absent
+	// or `undefined`, never any other value. Using `never` (rather than the
+	// redundant `?: undefined`, which the linter rejects) is bidirectionally
+	// assignable to the schema's inferred output and keeps the drift check green.
+	status?: never;
+	lifecycle?: Record<string, boolean | string>;
+	context?: Text;
+	options?: Option[];
+	selected?: string;
+	rationale?: Text;
+	scope?: string[];
+	operations?: Operation[];
+	propagation?: Record<string, boolean>;
+	includes?: string[];
+	external_references?: ExternalReference[];
+	subsystem?: SysProMDocument;
+}
+
+// Raw, unannotated schema expressions. Their inferred types are the ground
+// truth for the drift checks below — do NOT annotate these or the check
+// becomes tautological. `NodeBase` is exported because `update-node.ts` calls
+// `.partial()` on it; it remains the unannotated raw loose object so the drift
+// check sees the schema's true inferred output.
+const _rawSysProMDocumentSchema = z.object({
+	$schema: z
+		.string()
+		.describe("Schema URI for self-identification.")
+		.optional(),
+	metadata: Metadata.optional(),
+	get nodes(): z.ZodArray<typeof NodeSchema> {
+		return z.array(NodeSchema).describe("All nodes in the graph.");
+	},
+	relationships: z
+		.array(Relationship)
+		.describe("Typed, directed connections between nodes.")
+		.optional(),
+	external_references: z
+		.array(ExternalReference)
+		.describe(
+			"References to resources outside the graph, declared at system level.",
+		)
+		.optional(),
+});
 
 /** Base node object schema without ID-prefix refinement. Supports .partial(). */
 export const NodeBase = z
@@ -403,7 +456,39 @@ export const NodeBase = z
 	})
 	.describe("A uniquely identifiable entity within the system.");
 
-const NodeSchema = NodeBase.superRefine((node, ctx) => {
+// Compile-time drift check: the named interfaces must be bidirectionally
+// assignable to the schemas' true inferred output. `satisfies` evaluates the
+// conditional type: when the assignability holds it resolves to `null` (and
+// `null satisfies null` passes); on any divergence it resolves to `never` (and
+// `null satisfies never` errors, failing the build). Forward checks
+// (interface <: output) catch missing required fields; backward checks
+// (output <: interface) catch extra required fields or narrower optionality.
+// Not re-exported from index.ts, so it stays out of the public API surface.
+type RawDocOutput = z.infer<typeof _rawSysProMDocumentSchema>;
+type RawNodeOutput = z.infer<typeof NodeBase>;
+export const _schemaDriftChecks = {
+	docForward: null satisfies SysProMDocument extends RawDocOutput
+		? null
+		: never,
+	docBackward: null satisfies RawDocOutput extends SysProMDocument
+		? null
+		: never,
+	nodeForward: null satisfies Node extends RawNodeOutput ? null : never,
+	nodeBackward: null satisfies RawNodeOutput extends Node ? null : never,
+};
+
+// Public recursive schema consts, annotated so `z.infer` and the `.is()` guard
+// resolve to the named interfaces. `.meta`/`.describe`/`.superRefine` are all
+// available on `z.ZodType`.
+const SysProMDocumentSchema: z.ZodType<SysProMDocument> =
+	_rawSysProMDocumentSchema.meta({
+		id: "SysProM",
+		title: "SysProM: System Provenance Model",
+		description:
+			"JSON Schema for SysProM — a recursive, decision-driven model for recording system provenance.",
+	});
+
+const NodeSchema: z.ZodType<Node> = NodeBase.superRefine((node, ctx) => {
 	const prefix = NODE_ID_PREFIX[node.type];
 	if (!prefix) return; // Unknown type — skip validation
 	const pattern = new RegExp(`^${prefix}\\d+(-[A-Z][A-Z0-9_]*)*$`);
@@ -425,18 +510,12 @@ const NodeSchema = NodeBase.superRefine((node, ctx) => {
  */
 export const SysProMDocument = defineSchema(SysProMDocumentSchema);
 
-/** A complete SysProM document with metadata, nodes, relationships, and external references. */
-export type SysProMDocument = z.infer<typeof SysProMDocument>;
-
 /**
  * Zod schema for a single node in the SysProM graph. Nodes are typed entities
  * with optional lifecycle, decisions, operations, and recursive subsystems.
  * Includes a `.is()` type guard for runtime validation.
  */
 export const Node = defineSchema(NodeSchema);
-
-/** A uniquely identifiable entity within the SysProM graph. */
-export type Node = z.infer<typeof Node>;
 
 // ---------------------------------------------------------------------------
 // Domain constants

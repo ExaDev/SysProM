@@ -4094,6 +4094,51 @@
 				"src/operations/graph-shared.ts,src/operations/graph.ts,src/json-to-md.ts,src/cli/commands/graph.ts,src/cli/commands/json2md.ts"
 			],
 			"type": "change"
+		},
+		{
+			"context": "We want a GitHub Pages-hosted web app for visualising SysProM documents. The single sysprom package cannot be imported by a browser app because the library modules call node:fs, node:path, and node:crypto directly (io.ts, sync.ts, the multi-doc conversions, three speckit ops), and the operations barrel re-exports syncDocumentsOp, dragging node:fs into every barrel import.",
+			"id": "DEC52",
+			"name": "Adopt pnpm workspace monorepo with a browser-safe core and a Vite viewer",
+			"options": [
+				{
+					"description": "Convert to a pnpm workspace; extract a browser-safe @sysprom/core; keep filesystem access in @sysprom/node; preserve the sysprom package via a cli re-export; add an unpublished Vite viewer",
+					"id": "MONO"
+				},
+				{
+					"description": "Keep sysprom as-is; build the viewer in a second repo that imports sysprom from npm",
+					"id": "SEPARATE"
+				},
+				{
+					"description": "Add the viewer as a subpath of the current single package with node:fs polyfills for the browser",
+					"id": "SINGLE"
+				}
+			],
+			"rationale": "A workspace lets the viewer consume core source directly via workspace links with no npm publish lag, and forces the filesystem isolation the library already needs so domain logic is isomorphic behind a storage boundary. A separate repo adds a publish lag for every core change the UI needs. A single-package browser entry needs node:fs and node:path polyfills rather than fixing the boundary. pnpm and Turbo are already in use, so the workspace conversion cost is low; all packages ship together, so unified versioning applies.",
+			"selected": "MONO",
+			"type": "decision"
+		},
+		{
+			"id": "CHG50",
+			"lifecycle": {
+				"introduced": true
+			},
+			"name": "Convert to monorepo; extract browser-safe core; add Vite viewer",
+			"scope": [
+				"packages/core",
+				"packages/node",
+				"packages/cli",
+				"packages/mcp",
+				"packages/web",
+				"build",
+				"ci"
+			],
+			"type": "change"
+		},
+		{
+			"description": "The published sysprom package contract is preserved across the monorepo split: the sysprom, spm, and sysprom-mcp CLI binaries continue to install and run, and every name currently importable from sysprom remains exported with its existing signature. Existing Node consumers see no change.",
+			"id": "INV33",
+			"name": "Published Package Contract Stability",
+			"type": "invariant"
 		}
 	],
 	"relationships": [
@@ -5266,6 +5311,16 @@
 			"from": "CHG49",
 			"to": "DEC51",
 			"type": "implements"
+		},
+		{
+			"from": "CHG50",
+			"to": "DEC52",
+			"type": "implements"
+		},
+		{
+			"from": "DEC52",
+			"to": "INV33",
+			"type": "must_preserve"
 		}
 	]
 }

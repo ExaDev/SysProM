@@ -26,6 +26,8 @@ export {
 	generateSpecKitProject,
 } from "./generate.js";
 
+// plan.ts moved to @sysprom/core (it is pure); re-export so existing
+// `import { ... } from "sysprom/src/speckit"` callers keep resolving.
 export {
 	initDocument,
 	addTask,
@@ -41,4 +43,4 @@ export {
 	type GateResult,
 	type BlockageReason,
 	type TaskBlockage,
-} from "./plan.js";
+} from "@sysprom/core/speckit/plan.js";

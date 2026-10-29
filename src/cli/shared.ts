@@ -3,7 +3,7 @@ import { readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { loadDocument, saveDocument, type Format } from "../io.js";
 import { jsonToMarkdownMultiDoc } from "../json-to-md.js";
-import type { SysProMDocument } from "../schema.js";
+import type { SysProMDocument } from "@sysprom/core";
 
 // ---------------------------------------------------------------------------
 // Reusable CLI schemas — shared across all commands

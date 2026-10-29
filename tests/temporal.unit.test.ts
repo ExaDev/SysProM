@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { timelineOp, nodeHistoryOp, stateAtOp } from "../src/index.js";
-import type { SysProMDocument, Node, Relationship } from "../src/schema.js";
+import type { SysProMDocument, Node, Relationship } from "@sysprom/core";
 
 function makeDoc(
 	nodes: Node[] = [],

@@ -4,7 +4,7 @@ import {
 	RelationshipType,
 	NodeStatus,
 	ExternalReferenceRole,
-} from "../../schema.js";
+} from "@sysprom/core";
 import {
 	updateNodeOp,
 	addRelationshipOp,

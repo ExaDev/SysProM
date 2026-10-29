@@ -1006,3 +1006,18 @@ Chosen: OPT-A
 
 Rationale: Anchor-based links provide the best UX for embedded diagrams since clicking navigates directly to the node definition. External reference links serve standalone use cases.
 
+### DEC52 — Adopt pnpm workspace monorepo with a browser-safe core and a Vite viewer
+
+- Must preserve: [INV33](./INVARIANTS.md#inv33--published-package-contract-stability)
+
+Context: We want a GitHub Pages-hosted web app for visualising SysProM documents. The single sysprom package cannot be imported by a browser app because the library modules call node:fs, node:path, and node:crypto directly (io.ts, sync.ts, the multi-doc conversions, three speckit ops), and the operations barrel re-exports syncDocumentsOp, dragging node:fs into every barrel import.
+
+Options:
+- MONO: Convert to a pnpm workspace; extract a browser-safe @sysprom/core; keep filesystem access in @sysprom/node; preserve the sysprom package via a cli re-export; add an unpublished Vite viewer
+- SEPARATE: Keep sysprom as-is; build the viewer in a second repo that imports sysprom from npm
+- SINGLE: Add the viewer as a subpath of the current single package with node:fs polyfills for the browser
+
+Chosen: MONO
+
+Rationale: A workspace lets the viewer consume core source directly via workspace links with no npm publish lag, and forces the filesystem isolation the library already needs so domain logic is isomorphic behind a storage boundary. A separate repo adds a publish lag for every core change the UI needs. A single-package browser entry needs node:fs and node:path polyfills rather than fixing the boundary. pnpm and Turbo are already in use, so the workspace conversion cost is low; all packages ship together, so unified versioning applies.
+

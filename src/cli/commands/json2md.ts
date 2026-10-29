@@ -3,7 +3,7 @@ import * as z from "zod";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { CommandDef } from "../define-command.js";
-import { SysProMDocument } from "../../schema.js";
+import { SysProMDocument } from "@sysprom/core";
 import { jsonToMarkdown } from "../../json-to-md.js";
 import { jsonToMarkdownOp } from "../../operations/index.js";
 

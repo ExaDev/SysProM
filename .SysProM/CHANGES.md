@@ -826,3 +826,20 @@ Scope:
 Scope:
 - src/operations/graph-shared.ts,src/operations/graph.ts,src/json-to-md.ts,src/cli/commands/graph.ts,src/cli/commands/json2md.ts
 
+### CHG50 — Convert to monorepo; extract browser-safe core; add Vite viewer
+
+- Implements: [DEC52](./DECISIONS.md#dec52--adopt-pnpm-workspace-monorepo-with-a-browser-safe-core-and-a-vite-viewer)
+
+Scope:
+- packages/core
+- packages/node
+- packages/cli
+- packages/mcp
+- packages/web
+- build
+- ci
+
+#### Lifecycle
+
+- [x] introduced
+

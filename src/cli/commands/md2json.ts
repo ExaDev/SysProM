@@ -3,7 +3,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { CommandDef } from "../define-command.js";
 import { markdownToJson } from "../../md-to-json.js";
-import { canonicalise } from "../../canonical-json.js";
+import { canonicalise } from "@sysprom/core";
 import { markdownToJsonOp } from "../../operations/index.js";
 
 const optsSchema = z

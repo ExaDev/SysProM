@@ -1,6 +1,6 @@
 import * as z from "zod";
 import type { CommandDef } from "../define-command.js";
-import { NodeType, NodeStatus, type Node } from "../../schema.js";
+import { NodeType, NodeStatus, type Node } from "@sysprom/core";
 import { addNodeOp, nextIdOp } from "../../operations/index.js";
 import { mutationOpts, loadDoc, persistDoc } from "../shared.js";
 

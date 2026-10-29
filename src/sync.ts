@@ -1,7 +1,7 @@
 import { readFileSync, statSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { markdownToJson } from "./md-to-json.js";
-import { SysProMDocument } from "./schema.js";
+import { SysProMDocument } from "@sysprom/core";
 
 /**
  * Result of detecting changes between JSON and Markdown representations.

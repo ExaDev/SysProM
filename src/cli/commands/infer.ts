@@ -7,11 +7,11 @@ import {
 	inferLifecycleOp,
 	inferImpactOp,
 	inferDerivedOp,
+	type CompletenessResult,
+	type LifecycleResult,
+	type ImpactNode,
+	type DerivedRelationship,
 } from "../../operations/index.js";
-import type { CompletenessResult } from "../../operations/infer-completeness.js";
-import type { LifecycleResult } from "../../operations/infer-lifecycle.js";
-import type { ImpactNode } from "../../operations/infer-impact.js";
-import type { DerivedRelationship } from "../../operations/infer-derived.js";
 
 // ---------------------------------------------------------------------------
 // Presentation helpers
